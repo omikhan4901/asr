@@ -1,166 +1,172 @@
-# N-Best Rescoring for Low-Resource Bangla ASR
+# Inference-Only Rescoring for Bangla Long-Form ASR
 
-## What this project is testing
+Companion code for *"Inference-Only Rescoring for Bangla Long-Form ASR:
+Characterizing Oracle Headroom and MBR Consensus Recovery"* (CSE499
+capstone, North South University).
 
-Whisper (and ASR models generally) perform worse on low-resource languages
-like Bangla than on English. Fully fine-tuning a model to close that gap is
-expensive and has to be repeated whenever the base checkpoint or data
-changes. This project tests a cheaper alternative: **N-best rescoring** —
-instead of trusting Whisper's single top transcription, ask it for its top 5
-candidate guesses, then use a second, lighter-weight method to pick the best
-one out of those 5.
+**Headline result (eval split, N=2,271):** 1-best WER 34.85% → MBR-rescored
+32.29% → Oracle ceiling 28.72%, with zero gradient updates. MBR recovers
+~41.8% of available oracle headroom and lands within ~1 point of a cited
+LoRA fine-tune baseline (31.32%, Bhuiyan et al., arXiv:2605.08214).
 
-The question the paper is actually answering: *is there a smarter way to
-pick, or does Whisper's own top pick already win most of the time?*
+A live demo (upload a video, get back Bangla `.srt` subtitles built on this
+exact pipeline) is deployed at: **[add your Vercel URL here once live]**
 
-## Pipeline overview
+---
+
+## What this is
+
+Standard practice for improving low-resource ASR is fine-tuning — full
+weight updates or LoRA — which costs real GPU-hours and risks catastrophic
+forgetting. This project asks a narrower question instead: **without
+touching a single model weight**, how much error can be recovered just by
+generating multiple candidate transcriptions per utterance and picking a
+better one via consensus?
+
+The short answer: about 42% of a real, measured headroom — but not more,
+and the paper is explicit about why (Section V, "Discussion and
+Limitations").
+
+## Pipeline
 
 ```
-raw 1-hour audio (train_NNN.wav)
-+ untimed paragraph transcript (train_NNN.txt)
-            │
-            ▼
-  preprocess_chunk_align.py   →  aligned_chunks.csv
-  (VAD chunking → Whisper transcribe → fuzzy-align to ground truth)
-            │
-            ▼
-  data_loader.py              →  train_split.csv / eval_split.csv
-  (group-aware split by source recording, prevents leakage)
-            │
-            ▼
-  inference.py                →  nbest_candidates.jsonl
-  (batched beam search, 5 candidates per utterance)
-            │
-            ▼
-  evaluation.py                →  baseline_oracle_results.json
-  (1-best WER/CER vs. Oracle WER/CER — the actual research question)
+121 raw Bangla recordings + untimed reference transcripts
+        │
+        ▼
+PHASE 1 — preprocess_chunk_align.py
+  Silero VAD chunking (0.5–25.0s, cut only at silence)
+  → rough ASR pass (alignment hypothesis only)
+  → sequential fuzzy alignment (RapidFuzz, τ ≥ 50 confidence gate)
+        │
+        ▼
+aligned_chunks.csv — 11,129 utterances (72.7% retention of 15,312 raw chunks)
+        │
+        ▼
+data_loader.py — group-aware split (by SOURCE RECORDING, not chunk,
+                  to prevent train/eval leakage)
+        │
+   ┌────┴────┐
+   ▼         ▼
+train_split.csv    eval_split.csv
+(8,858 utt.)        (2,271 utt.)
+   │                    │
+   ▼                    ▼
+PHASE 2 — modal_inference.py (both splits, identical config)
+  10 shards → 10x A10G containers, parallel
+  num_beams=12, sampling_temperature=0.7, batch_size=2
+  per-utterance write + volume.commit() (resumable — a container
+  timeout only loses the in-flight batch, not completed work)
+   │                    │
+   ▼                    ▼
+train_nbest_candidates.jsonl   eval_nbest_candidates.jsonl
+   │                    │
+   └─────────┬──────────┘
+             ▼
+PHASE 3 — evaluation.py (1-best baseline + Oracle ceiling)
+          mbr_rescore.py (probability-weighted MBR consensus)
+             │
+             ▼
+      Headline results (see paper Table I / Fig. 6)
 ```
 
-## File by file
+Config (`num_beams=12`, `temperature=0.7`) was not guessed — it's the
+winner of a 100-utterance calibration sweep across 4 configs (`figures2/`
+Fig. 4 in the paper), chosen for maximizing Oracle headroom without
+degrading 1-best WER.
 
-### `preprocess_chunk_align.py`
-Builds a labeled dataset from raw material that has no timestamps at all.
+## Repo layout
 
-- **`VadChunker`** — runs Silero VAD to find speech, greedily packs it into
-  chunks up to 25s, cutting only at silence so words don't get split across
-  chunk boundaries.
-- **`ChunkingPreprocessor`** — transcribes each chunk with a Bangla-adapted
-  Whisper-medium checkpoint in FP16. `transcribe_batch` batches multiple
-  chunks per `generate()` call for GPU throughput, and correctly passes
-  `attention_mask` so padded (shorter) chunks in a batch don't get attended
-  to as if they were real audio.
-- **`align_chunks_sequential`** — since the ground-truth transcript is one
-  untimed paragraph, this fuzzy-matches each chunk's ASR hypothesis against
-  a sliding window of that paragraph (RapidFuzz), advancing a sequential
-  pointer through the corpus. A confidence gate (`MIN_ALIGNMENT_SCORE = 50`)
-  stops a single bad hypothesis from derailing every chunk after it — low-
-  confidence matches don't advance the pointer.
-- **Resumable**: checkpoints completed source files individually; a crash
-  mid-file doesn't leave a half-written, mislabeled row, and reruns skip
-  already-completed files.
+```
+src/
+  preprocess_chunk_align.py   Phase 1 — chunking, transcription, fuzzy alignment
+  data_loader.py               Group-aware train/eval split
+  inference.py                 Single-machine N-best generation (local/Kaggle reference impl.)
+  modal_inference.py           Distributed N-best generation on Modal (actual production path)
+  evaluation.py                WER/CER, 1-best baseline, Oracle ceiling
+  mbr_rescore.py                Probability-weighted MBR consensus (Eq. 1 in the paper)
+  rescoring.py                  Scaffolding for LM/hybrid/learned-reranker variants
+                                 (NOT used in the final paper — see Future Work)
+figures/
+  fig_empirical_pilot_wer.py    Fig. 6 — WER comparison bar chart
+  dataset_funnel.py             Fig. 3 / Fig. 4 — dataset yield + calibration sweep
+  fig_preprocessing_pipeline.drawio
+  fig_nbest_generation_pipeline.drawio
+  fig_system_overview.drawio    Fig. 1 / Fig. 2 in the paper
+web/
+  backend/
+    app.py                      Deployable Modal app (FastAPI + GPU worker)
+    local_server.py             Local-only test server, same API contract as app.py
+    pipeline.py                 SubtitleGenerator — reuses the exact confirmed
+                                 config + MBR formula from src/, per-video not sharded
+    srt_utils.py                Chunk list -> valid .srt file
+  frontend/
+    index.html, script.js, style.css   Static upload UI, polls job status
+data/                           NOT committed — see .gitignore below
+```
 
-Output: `aligned_chunks.csv` (`audio_path, gt, align_score`) plus a full
-audit manifest and a stats file.
+## Running it
 
-### `data_loader.py`
-Loads `aligned_chunks.csv` and produces train/eval splits.
+**Phase 1 (preprocessing):**
+```
+python src/preprocess_chunk_align.py --audio_dir <path> --annotation_dir <path> --output_dir data/processed/chunks
+```
 
-- Recovers each chunk's source recording from its filename (`train_001_000`
-  → `train_001`).
-- Splits with `GroupShuffleSplit` **at the source-recording level**, not the
-  chunk level — this is the important part. Chunks from the same hour-long
-  recording share a speaker, recording conditions, and often vocabulary; a
-  naive row-level split would let eval-time performance benefit from context
-  the model effectively already saw in training.
-- Asserts zero source-file overlap between train and eval as a hard check,
-  not just a hope.
+**Split:**
+```
+python src/data_loader.py --aligned_csv data/processed/chunks/aligned_chunks.csv --output_dir data/processed/splits
+```
 
-### `inference.py`
-The actual experiment: generates N-best candidates per utterance.
+**Phase 2 (N-best generation, Modal):**
+```
+modal run modal_inference.py --split-csv-path train_split.csv --output-jsonl train_nbest_candidates.jsonl
+modal run modal_inference.py --split-csv-path eval_split.csv --output-jsonl eval_nbest_candidates.jsonl
+```
 
-- **`NBestGenerator`** — loads the Whisper checkpoint, sets beam-search
-  parameters directly on `model.generation_config` (required for beam search
-  to reliably engage — passing them only as `generate()` kwargs was found
-  not to be enough), and forces Bangla transcription via
-  `get_decoder_prompt_ids` rather than the `language=`/`lang_to_id` path,
-  which some fine-tuned checkpoints' `generation_config.json` doesn't
-  support.
-- **`--diverse_beam_search`** — switches from plain (deterministic) beam
-  search to stochastic beam search (`do_sample=True`, `num_beams>1`).
-  Group Beam Search was tried first but turned out to require a Hub-hosted
-  custom generation strategy that wasn't usable in this environment, so
-  sampling is the fallback diversity mechanism.
-- Batched, resumable at the utterance level (checkpoint + immediate flush
-  per batch), with a `--limit` timing-test mode to extrapolate full-run cost
-  before committing GPU time.
+**Phase 3 (scoring):**
+```
+python src/evaluation.py --nbest_jsonl eval_nbest_candidates.jsonl --output_dir data/processed/results
+python src/mbr_rescore.py --nbest_jsonl eval_nbest_candidates.jsonl --output_dir data/processed/results/mbr
+```
 
-Output: `nbest_candidates.jsonl` — 5 ranked, scored candidates per utterance.
+**Demo backend (local test):**
+```
+cd web/backend
+uvicorn local_server:app --reload --port 8000
+```
 
-### `evaluation.py`
-Scores the N-best output.
+**Demo backend (Modal deploy):**
+```
+modal deploy web/backend/app.py
+```
+Copy the printed URL into `web/frontend/index.html`:
+```html
+<script>window.ASR_API_BASE = "https://<your-modal-url>.modal.run";</script>
+```
 
-- **1-best baseline**: WER/CER of Whisper's own top-ranked candidate.
-- **Oracle**: WER/CER if you always picked whichever of the 5 candidates
-  happened to be closest to the ground truth — the theoretical ceiling any
-  rescoring method could reach.
-- Shared normalization applied to both hypothesis and reference before
-  scoring, so comparisons aren't confounded by punctuation/whitespace
-  differences.
-- Warns automatically if the Oracle/1-best gap is under 2 WER points, since
-  that means the 5 candidates are too similar for any rescoring method to
-  meaningfully choose between.
+**Demo frontend (Vercel):** deploy `web/frontend/` as a static site. No
+build step required — it's plain HTML/CSS/JS.
 
-## Current status: the diversity collapse finding
+## Known limitations (from the paper, Section V–VI — stated, not hidden)
 
-On two pilot subsets (58 and 100 utterances), **Oracle WER equaled 1-best
-WER to two decimal places** under plain beam search. Manually inspecting
-candidates confirmed this wasn't a scoring bug — the 5 beams were near-
-identical, with log-probabilities differing only in the 6th/7th decimal
-place. Switching to stochastic sampling (`temperature=1.0`) didn't break it.
+- MBR recovers ~42% of Oracle headroom, not more — it operates purely on
+  acoustic probability and text similarity, so it can't distinguish a
+  genuinely correct consensus from several beams confidently agreeing on
+  the same hallucination.
+- The remaining ~58% headroom is explicitly scoped as future work:
+  KenLM n-gram interpolation and a learned (GBDT/LLM-based) reranker over
+  acoustic confidence + entropy features. `src/rescoring.py` has scaffolding
+  for both, deliberately not run for the paper's final numbers due to time
+  constraints.
+- Full end-to-end fine-tuning is explicitly out of scope for this paper by
+  design (that's the whole point — see Abstract) but is the natural next
+  step, and is already known to reach 24.41% WER (cited, not reproduced
+  here).
+- The demo's subtitle segments are chunk-level (up to 25s), not
+  sentence-level — noted directly in the frontend's footer.
 
-This matters because Variants 1–3 of the planned rescoring comparison
-(LM-likelihood rescoring, MBR decoding, and a hybrid of the two) can only
-*select* among existing candidates. If the candidates are functionally
-identical, there's nothing for any of those methods to find — a small or
-zero WER improvement from them wouldn't reflect on the methods' quality, it
-would just reflect an already-collapsed candidate pool.
+## Citation context
 
-## What's actually blocking progress right now
-
-Not infrastructure — the core open question is whether this collapse is
-avoidable at all:
-
-1. **`temperature=1.8` pilot** — not yet run. Cheapest next test.
-2. **Nucleus (top-p) sampling pilot** — not yet run. Structurally different
-   from raising temperature on a peaked softmax, worth trying independently.
-3. **Full-corpus N-best generation + Variants 1–3** — intentionally on hold
-   until 1–2 resolve, since running them now would likely just confirm what
-   the pilots already suggest, at real GPU cost.
-4. **Variant 4 (learned reranker)** and **GEC (generative correction)** —
-   worth piloting regardless of how 1–2 turn out. GEC in particular doesn't
-   depend on the beam pool's diversity at all, since it synthesizes a
-   correction rather than selecting among existing candidates.
-
-If the collapse holds under all of 1–2, the paper's contribution shifts from
-"we improved Bangla ASR via rescoring" to a diagnostic finding: standard
-N-best rescoring has near-zero headroom on confidently-decoded, clearly
-narrated Bangla speech, independent of how sophisticated the rescoring
-method is — which is a real, defensible result in its own right, and points
-toward GEC as the more promising direction for future work.
-
-## Known issues already fixed
-- `attention_mask` wasn't being passed during batched Whisper transcription
-  in an earlier draft of `preprocess_chunk_align.py`, which risked
-  batch-composition-dependent transcription quality on shorter chunks.
-  Fixed.
-- `inference.py`'s beam-search parameters weren't reliably taking effect
-  when passed only as `generate()` kwargs. Fixed by setting them on
-  `generation_config` directly.
-
-## Explored and set aside
-- **CTC forced alignment** as a replacement for the VAD + Whisper +
-  fuzzy-match preprocessing stage — would remove the alignment step's
-  circularity (alignment quality currently depends on the same ASR system
-  being evaluated), but judged to need a near-complete rebuild of the
-  preprocessing stage for the payoff it offers right now. Left as a
-  documented future-work item rather than pursued further.
+Baseline (34.07%), LoRA fine-tune (31.32%), and full fine-tune (24.41%)
+comparison numbers are cited from Bhuiyan et al., "Bangla-WhisperDiar,"
+arXiv:2605.08214 — not reproduced by this project. Marked with `*` in every
+figure that includes them.

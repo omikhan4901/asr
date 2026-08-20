@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ক্যাপশন — Bangla Subtitles from Video</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Tiro+Bangla&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grain"></div>
+
+<header class="nav">
+  <div class="nav-mark">ক্যাপশন<span class="nav-mark-sub">/kôyapshôn</span></div>
+  <div class="nav-tag">Bangla speech &rarr; .srt</div>
+</header>
+
+<main>
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">00:00:00,000 &mdash; built on rescored Bangla ASR</p>
+      <h1>Your Bangla video,<br><em>captioned</em> to the second.</h1>
+      <p class="hero-sub">
+        Upload a video. We transcribe it with a Whisper-based Bangla ASR
+        pipeline, rescore every segment for accuracy, and hand back a clean
+        <code>.srt</code> file — timestamps included.
+      </p>
+    </div>
+
+    <!-- Signature element: mock video frame with a live crawling caption bar -->
+    <div class="frame-mock" aria-hidden="true">
+      <div class="frame-inner">
+        <div class="frame-scan"></div>
+        <div class="caption-bar">
+          <span id="captionText">আপলোড করুন আপনার ভিডিও</span>
+        </div>
+      </div>
+      <div class="frame-label">preview — this is your output format</div>
+    </div>
+  </section>
+
+  <!-- ============ UPLOAD ============ -->
+  <section class="upload-section" id="uploadSection">
+    <p class="eyebrow">00:00:14,320 &mdash; drop a file to begin</p>
+
+    <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload a video file">
+      <input type="file" id="fileInput" accept="video/*,audio/*" hidden>
+      <div class="dropzone-inner">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+          <path d="M12 16V4M12 4l-4 4M12 4l4 4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p class="dropzone-title">Drop your video here</p>
+        <p class="dropzone-sub">or click to browse &mdash; MP4, MOV, MKV, WAV, MP3</p>
+      </div>
+    </div>
+
+    <div class="filebar" id="filebar" hidden>
+      <span id="fileName">—</span>
+      <button class="btn-primary" id="startBtn">Generate subtitles</button>
+    </div>
+  </section>
+
+  <!-- ============ PROCESSING (async status) ============ -->
+  <section class="processing-section" id="processingSection" hidden>
+    <p class="eyebrow">00:00:28,900 &mdash; working on it</p>
+
+    <div class="proc-frame">
+      <div class="proc-inner">
+        <div class="proc-scan"></div>
+        <div class="caption-bar">
+          <span id="procCaptionText">শুরু হচ্ছে&hellip;</span>
+        </div>
+      </div>
+    </div>
+
+    <ul class="steps" id="steps">
+      <li data-step="upload"><span class="dot"></span><span class="step-label">Uploading media</span><span class="step-time"></span></li>
+      <li data-step="audio"><span class="dot"></span><span class="step-label">Extracting audio</span><span class="step-time"></span></li>
+      <li data-step="chunk"><span class="dot"></span><span class="step-label">Segmenting speech</span><span class="step-time"></span></li>
+      <li data-step="asr"><span class="dot"></span><span class="step-label">Transcribing (N-best beam search)</span><span class="step-time"></span></li>
+      <li data-step="rescore"><span class="dot"></span><span class="step-label">Rescoring candidates (MBR)</span><span class="step-time"></span></li>
+      <li data-step="srt"><span class="dot"></span><span class="step-label">Building .srt file</span><span class="step-time"></span></li>
+    </ul>
+
+    <p class="proc-note" id="procNote">This runs the same rescoring pipeline described in the paper — no shortcuts taken for the demo.</p>
+  </section>
+
+  <!-- ============ RESULT ============ -->
+  <section class="result-section" id="resultSection" hidden>
+    <p class="eyebrow">00:00:00,000 &mdash; ready</p>
+    <h2>Your captions are ready.</h2>
+    <div class="result-card">
+      <div class="result-meta">
+        <div><span class="meta-label">Segments</span><span class="meta-val" id="metaSegments">—</span></div>
+        <div><span class="meta-label">Duration</span><span class="meta-val" id="metaDuration">—</span></div>
+        <div><span class="meta-label">Method</span><span class="meta-val">MBR rescoring</span></div>
+      </div>
+      <a class="btn-primary" id="downloadBtn" href="#" download>Download .srt</a>
+      <button class="btn-ghost" id="resetBtn">Caption another video</button>
+    </div>
+    <pre class="srt-preview" id="srtPreview"></pre>
+  </section>
+
+  <!-- ============ ERROR ============ -->
+  <section class="error-section" id="errorSection" hidden>
+    <p class="eyebrow">something went wrong</p>
+    <p class="error-msg" id="errorMsg"></p>
+    <button class="btn-ghost" id="errorResetBtn">Try again</button>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <span>Segments are chunk-level (up to 25s) in this release — sentence-level splitting is noted as future work.</span>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

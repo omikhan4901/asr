@@ -108,7 +108,7 @@ class NBestGenerator:
         self.model.generation_config.return_dict_in_generate = True
         # Explicit rather than relying on the default — this directly scales
         # sequences_scores, worth knowing the exact value for your writeup.
-        self.model.generation_config.length_penalty = 1.0
+        self.model.generation_config.length_penalty = 1.5
 
         # Plain (greedy/deterministic) beam search frequently collapses to
         # near-identical hypotheses on confident, clearly-articulated audio
@@ -125,9 +125,24 @@ class NBestGenerator:
         # search instead: do_sample=True combined with num_beams>1 samples
         # from the token distribution at each expansion step instead of
         # always taking the argmax, which directly breaks beam collapse.
-        # This is long-standing, version-stable core `generate()` behavior
-        # (no remote code, no Hub dependency) and still returns properly
-        # ranked, scored sequences via sequences_scores.
+        #
+        # IMPORTANT — single-call trade-off: do_sample is one flag for the
+        # WHOLE call, so there's no way within one generate() to make rank 0
+        # deterministic while ranks 1..N-1 are sampled (that requires two
+        # separate calls, which costs an extra encoder+decoder pass — see
+        # git history for that version if this one isn't fast enough).
+        # Temperature is therefore the real dial here: at temperature=1.0,
+        # sampling is aggressive enough that even the top-ranked beam is
+        # noticeably worse than true deterministic decoding (observed: WER
+        # jumped from ~30% to 40.04% on a 10-utterance pilot purely from
+        # this contamination, not a real regression). Lowering temperature
+        # keeps beam-search scoring dominant at each step, so the top beam
+        # stays closer to deterministic quality (baseline stays lower) while
+        # still injecting enough randomness for the other beams to diverge.
+        # This is a genuine trade-off, not a free lunch: push temperature
+        # too low and beams collapse again (Oracle gap -> 0). Tune via
+        # --sampling_temperature; default here starts lower (0.7) than our
+        # earlier 1.0 specifically to prioritize a believable baseline.
         if self.diverse_beam_search:
             self.model.generation_config.do_sample = True
             self.model.generation_config.temperature = self.sampling_temperature
@@ -160,7 +175,7 @@ class NBestGenerator:
              item1_beam0, item1_beam1, ..., item1_beamN-1, ...]
         i.e. num_return_sequences consecutive rows per input item, in input order.
         """
-        batch_size = len(audio_arrays)
+        batch_size = len(audio_arrays) 
         inputs = self.processor(audio_arrays, sampling_rate=SAMPLE_RATE, return_tensors="pt")
         input_features = inputs.input_features.to(self.device, dtype=torch.float16)
 
@@ -168,10 +183,13 @@ class NBestGenerator:
             outputs = self.model.generate(
                 input_features,
                 max_new_tokens=self.max_new_tokens,
-                # num_beams / num_return_sequences / output_scores /
-                # return_dict_in_generate / do_sample / temperature are
-                # already baked into generation_config — not repeated here
-                # to avoid any ambiguity about which value wins.
+                # Explicitly force the generation kwargs here to override HF defaults
+                num_beams=self.num_beams,
+                num_return_sequences=self.num_beams,
+                do_sample=self.diverse_beam_search,
+                temperature=self.sampling_temperature if self.diverse_beam_search else 1.0,
+                output_scores=True,
+                return_dict_in_generate=True, 
             )
 
         if not self._debug_printed:
@@ -312,6 +330,10 @@ def run_nbest_generation(
             for _, row in batch_df.iterrows():
                 try:
                     arr, _ = librosa.load(row["audio_path"], sr=SAMPLE_RATE)
+                    # --- NEW: Add 200ms of absolute silence to both ends ---
+                    pad_length = int(0.2 * SAMPLE_RATE)
+                    arr = np.pad(arr, (pad_length, pad_length), mode='constant')
+                    # -------------------------------------------------------
                     audio_arrays.append(arr)
                     valid_rows.append(row)
                 except Exception as e:
@@ -389,7 +411,7 @@ if __name__ == "__main__":
     parser.add_argument("--model_id", type=str, default="bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium")
     parser.add_argument("--language", type=str, default="bn")
     parser.add_argument("--num_beams", type=int, default=5)
-    parser.add_argument("--batch_size", type=int, default=8,
+    parser.add_argument("--batch_size", type=int, default=1,
                          help="Number of utterances processed together per generate() call. "
                               "Start at 8, try 16 if VRAM allows — watch nvidia-smi for headroom.")
     parser.add_argument("--max_new_tokens", type=int, default=320,
@@ -405,11 +427,14 @@ if __name__ == "__main__":
     parser.add_argument("--diversity_penalty", type=float, default=1.0,
                          help="Unused (kept for compatibility) — group beam search was replaced by "
                               "sampling-based diversity; see --sampling_temperature instead.")
-    parser.add_argument("--sampling_temperature", type=float, default=1.0,
+    parser.add_argument("--sampling_temperature", type=float, default=0.7,
                          help="Sampling temperature used with --diverse_beam_search (do_sample=True + "
-                              "num_beams>1). Higher = more diverse/riskier candidates. 1.0 is a "
-                              "reasonable starting point; try 0.7-0.8 if diversity comes at too much "
-                              "cost to candidate quality, or 1.2+ if beams are still too similar.")
+                              "num_beams>1), single fast call. Lower = top beam (your baseline) stays "
+                              "closer to true deterministic quality but candidates diverge less; "
+                              "higher = more diversity but a noisier, worse baseline (1.0 measured "
+                              "40.04%% WER vs. deterministic's ~30%% on a 10-utt pilot). Start at 0.7; "
+                              "raise toward 1.0 only if the Oracle gap stays near 0, and watch the "
+                              "baseline number when you do.")
     args = parser.parse_args()
 
     run_nbest_generation(

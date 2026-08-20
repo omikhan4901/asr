@@ -11,7 +11,7 @@
 // result: { n_segments, duration_seconds, srt_preview } | null
 // ============================================================
 
-const API_BASE = window.ASR_API_BASE || "https://mehboobehsankhan--bangla-subtitle-generator-web-dev.modal.run"; // set window.ASR_API_BASE before this script loads to point at your deployed Modal endpoint
+const API_BASE = window.ASR_API_BASE || "https://mehboobehsankhan--bangla-subtitle-generator-web.modal.run"; // set window.ASR_API_BASE before this script loads to point at your deployed Modal endpoint
 
 const els = {
   dropzone: document.getElementById("dropzone"),

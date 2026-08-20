@@ -45,8 +45,8 @@ aligned_chunks.csv — 11,129 utterances (72.7% retention of 15,312 raw chunks)
 data_loader.py — group-aware split (by SOURCE RECORDING, not chunk,
                   to prevent train/eval leakage)
         │
-   ┌────┴────┐
-   ▼         ▼
+   ┌────┴───────────────┐
+   ▼                    ▼   
 train_split.csv    eval_split.csv
 (8,858 utt.)        (2,271 utt.)
    │                    │

@@ -1,205 +1,238 @@
-// ============================================================
-// Bangla Subtitle Generator — frontend logic
-//
-// Expects a backend exposing (see web/backend/app.py):
-//   POST /jobs                    multipart file=<video>  -> { job_id }
-//   GET  /jobs/{job_id}           -> { status, stage, progress, error, result }
-//   GET  /jobs/{job_id}/download  -> the .srt file
-//
-// status: "queued" | "processing" | "done" | "error"
-// stage:  "upload" | "audio" | "chunk" | "asr" | "rescore" | "srt" | null
-// result: { n_segments, duration_seconds, srt_preview } | null
-// ============================================================
+/*
+ * Frontend Controller for Bangla ASR Subtitle Generator.
+ */
 
-const API_BASE = window.ASR_API_BASE || "https://mehboobehsankhan--bangla-subtitle-generator-web.modal.run"; // set window.ASR_API_BASE before this script loads to point at your deployed Modal endpoint
-
-const els = {
-  dropzone: document.getElementById("dropzone"),
-  fileInput: document.getElementById("fileInput"),
-  filebar: document.getElementById("filebar"),
-  fileName: document.getElementById("fileName"),
-  startBtn: document.getElementById("startBtn"),
-
-  uploadSection: document.getElementById("uploadSection"),
-  processingSection: document.getElementById("processingSection"),
-  resultSection: document.getElementById("resultSection"),
-  errorSection: document.getElementById("errorSection"),
-
-  steps: document.getElementById("steps"),
-  procCaptionText: document.getElementById("procCaptionText"),
-
-  metaSegments: document.getElementById("metaSegments"),
-  metaDuration: document.getElementById("metaDuration"),
-  downloadBtn: document.getElementById("downloadBtn"),
-  srtPreview: document.getElementById("srtPreview"),
-  resetBtn: document.getElementById("resetBtn"),
-
-  errorMsg: document.getElementById("errorMsg"),
-  errorResetBtn: document.getElementById("errorResetBtn"),
-};
-
-let selectedFile = null;
-let pollTimer = null;
+// Dynamically connect to local FastAPI backend or custom remote host
+const API_BASE = window.ASR_API_BASE || (
+  ["http:", "https:"].includes(window.location.protocol)
+    ? window.location.origin
+    : "http://127.0.0.1:8000"
+);
 
 const STEP_ORDER = ["upload", "audio", "chunk", "asr", "rescore", "srt"];
 
-const PROCESSING_CAPTIONS = [
-  "শুরু হচ্ছে…",
-  "অডিও আলাদা করা হচ্ছে…",
-  "কথা ভাগ করা হচ্ছে…",
-  "প্রতিলিপি তৈরি হচ্ছে…",
-  "সেরা প্রার্থী বাছাই হচ্ছে…",
-  "সাবটাইটেল তৈরি হচ্ছে…",
-];
-let captionIdx = 0;
-let captionTimer = null;
+// DOM Elements
+const dropzone = document.getElementById("dropzone");
+const fileInput = document.getElementById("fileInput");
+const filebar = document.getElementById("filebar");
+const fileName = document.getElementById("fileName");
+const startBtn = document.getElementById("startBtn");
 
-function cycleProcessingCaption() {
-  els.procCaptionText.style.opacity = 0;
-  setTimeout(() => {
-    captionIdx = (captionIdx + 1) % PROCESSING_CAPTIONS.length;
-    els.procCaptionText.textContent = PROCESSING_CAPTIONS[captionIdx];
-    els.procCaptionText.style.opacity = 1;
-  }, 220);
+const uploadSection = document.getElementById("uploadSection");
+const processingSection = document.getElementById("processingSection");
+const procCaptionText = document.getElementById("procCaptionText");
+const procNote = document.getElementById("procNote");
+const stepItems = document.querySelectorAll("#steps li");
+
+const resultSection = document.getElementById("resultSection");
+const metaSegments = document.getElementById("metaSegments");
+const metaDuration = document.getElementById("metaDuration");
+const downloadBtn = document.getElementById("downloadBtn");
+const resetBtn = document.getElementById("resetBtn");
+const srtPreview = document.getElementById("srtPreview");
+
+const errorSection = document.getElementById("errorSection");
+const errorMsg = document.getElementById("errorMsg");
+const errorResetBtn = document.getElementById("errorResetBtn");
+
+let selectedFile = null;
+let currentJobId = null;
+let pollTimer = null;
+let stageStartTimes = {};
+
+function formatBytes(bytes) {
+  if (!bytes) return "0 B";
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+  return (bytes / (1024 * 1024)).toFixed(1) + " MB";
 }
 
-function showSection(name) {
-  ["uploadSection", "processingSection", "resultSection", "errorSection"].forEach((s) => {
-    els[s].hidden = s !== name;
+function handleFile(file) {
+  if (!file) return;
+  selectedFile = file;
+  fileName.textContent = `${file.name} (${formatBytes(file.size)})`;
+  filebar.hidden = false;
+  startBtn.disabled = false;
+  dropzone.style.borderColor = "var(--accent)";
+}
+
+function resetToUpload() {
+  if (pollTimer) clearInterval(pollTimer);
+  selectedFile = null;
+  currentJobId = null;
+  stageStartTimes = {};
+  fileInput.value = "";
+
+  dropzone.style.borderColor = "";
+  filebar.hidden = true;
+  uploadSection.hidden = false;
+  processingSection.hidden = true;
+  resultSection.hidden = true;
+  errorSection.hidden = true;
+
+  // Reset steps
+  stepItems.forEach((li) => {
+    li.classList.remove("active", "done");
+    const timeSpan = li.querySelector(".step-time");
+    if (timeSpan) timeSpan.textContent = "";
   });
 }
 
-// ---------- file selection ----------
+function updateStepStatus(activeStep, isComplete = false) {
+  let pastActive = false;
 
-function setFile(file) {
-  if (!file) return;
-  selectedFile = file;
-  els.fileName.textContent = `${file.name} — ${(file.size / (1024 * 1024)).toFixed(1)} MB`;
-  els.filebar.hidden = false;
+  STEP_ORDER.forEach((stepId) => {
+    const li = document.querySelector(`#steps li[data-step="${stepId}"]`);
+    if (!li) return;
+
+    if (isComplete) {
+      li.classList.remove("active");
+      li.classList.add("done");
+    } else if (stepId === activeStep) {
+      li.classList.add("active");
+      li.classList.remove("done");
+      pastActive = true;
+    } else if (!pastActive) {
+      li.classList.remove("active");
+      li.classList.add("done");
+    } else {
+      li.classList.remove("active", "done");
+    }
+  });
+
+  const banglaLabels = {
+    upload: "আপলোড হচ্ছে...",
+    audio: "অডিও আলাদা করা হচ্ছে...",
+    chunk: "স্পিচ সেগমেন্ট করা হচ্ছে...",
+    asr: "ট্রান্সক্রিপশন চলছে...",
+    rescore: "MBR রিস্কোরিং চলছে...",
+    srt: "সাবটাইটেল তৈরি হচ্ছে...",
+  };
+
+  if (procCaptionText) {
+    procCaptionText.textContent = isComplete
+      ? "সম্পূর্ণ হয়েছে!"
+      : (banglaLabels[activeStep] || "কাজ চলছে...");
+  }
 }
 
-els.dropzone.addEventListener("click", () => els.fileInput.click());
-els.dropzone.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); els.fileInput.click(); }
-});
-els.fileInput.addEventListener("change", (e) => setFile(e.target.files[0]));
+function showError(msg) {
+  if (pollTimer) clearInterval(pollTimer);
+  uploadSection.hidden = true;
+  processingSection.hidden = true;
+  resultSection.hidden = true;
+  errorSection.hidden = false;
+  errorMsg.textContent = msg || "An unexpected error occurred.";
+}
 
-["dragenter", "dragover"].forEach((evt) =>
-  els.dropzone.addEventListener(evt, (e) => { e.preventDefault(); els.dropzone.classList.add("drag-over"); })
-);
-["dragleave", "drop"].forEach((evt) =>
-  els.dropzone.addEventListener(evt, (e) => { e.preventDefault(); els.dropzone.classList.remove("drag-over"); })
-);
-els.dropzone.addEventListener("drop", (e) => {
-  const file = e.dataTransfer.files[0];
-  setFile(file);
-});
-
-// ---------- start job ----------
-
-els.startBtn.addEventListener("click", async () => {
+async function uploadAndProcess() {
   if (!selectedFile) return;
-  showSection("processingSection");
-  resetSteps();
-  setStepState("upload", "active");
-  captionIdx = 0;
-  els.procCaptionText.textContent = PROCESSING_CAPTIONS[0];
-  captionTimer = setInterval(cycleProcessingCaption, 3200);
+
+  uploadSection.hidden = true;
+  processingSection.hidden = false;
+  resultSection.hidden = true;
+  errorSection.hidden = true;
+
+  updateStepStatus("upload");
+  stageStartTimes["upload"] = Date.now();
+
+  const formData = new FormData();
+  formData.append("file", selectedFile);
 
   try {
-    const formData = new FormData();
-    formData.append("file", selectedFile);
+    const res = await fetch(`${API_BASE}/jobs`, {
+      method: "POST",
+      body: formData,
+    });
 
-    const res = await fetch(`${API_BASE}/jobs`, { method: "POST", body: formData });
-    if (!res.ok) throw new Error(`Upload failed (${res.status})`);
-    const { job_id } = await res.json();
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || `Server returned status ${res.status}`);
+    }
 
-    setStepState("upload", "done");
-    pollJob(job_id);
+    const data = await res.json();
+    currentJobId = data.job_id;
+    startPolling(currentJobId);
   } catch (err) {
-    showError(err.message || "Could not start the job. Check your connection and try again.");
+    showError(`Could not start job: ${err.message}. Is the server running on ${API_BASE}?`);
   }
-});
+}
 
-// ---------- polling ----------
+function startPolling(jobId) {
+  if (pollTimer) clearInterval(pollTimer);
 
-function pollJob(jobId) {
   pollTimer = setInterval(async () => {
     try {
       const res = await fetch(`${API_BASE}/jobs/${jobId}`);
-      if (!res.ok) throw new Error(`Status check failed (${res.status})`);
-      const data = await res.json();
-      applyStatus(data, jobId);
-    } catch (err) {
-      clearInterval(pollTimer);
-      clearInterval(captionTimer);
-      showError(err.message || "Lost connection while checking job status.");
+      if (!res.ok) return;
+
+      const job = await res.json();
+
+      if (job.status === "processing" || job.status === "pending") {
+        const stage = job.stage || "upload";
+        updateStepStatus(stage);
+
+        const prog = job.progress;
+        if (prog && prog.total > 0 && procNote) {
+          procNote.textContent = `${prog.stage.toUpperCase()}: ${prog.current} of ${prog.total} items processed (${prog.percent}%).`;
+        }
+      } else if (job.status === "completed") {
+        clearInterval(pollTimer);
+        updateStepStatus("srt", true);
+        showResults(job.result);
+      } else if (job.status === "failed") {
+        clearInterval(pollTimer);
+        showError(job.error || "Subtitle generation failed on server.");
+      }
+    } catch (e) {
+      console.warn("Polling error:", e);
     }
-  }, 2000);
+  }, 1500);
 }
 
-function applyStatus(data, jobId) {
-  if (data.stage) {
-    const idx = STEP_ORDER.indexOf(data.stage);
-    STEP_ORDER.forEach((s, i) => {
-      if (i < idx) setStepState(s, "done");
-      else if (i === idx) setStepState(s, "active");
-    });
+function showResults(result) {
+  processingSection.hidden = true;
+  resultSection.hidden = false;
+
+  metaSegments.textContent = result.num_chunks ?? "-";
+  metaDuration.textContent = result.total_speech_s ? `${result.total_speech_s}s` : "-";
+  srtPreview.textContent = result.preview || "(Empty subtitle output)";
+
+  downloadBtn.href = `${API_BASE}/jobs/${currentJobId}/download`;
+  downloadBtn.setAttribute("download", `${selectedFile.name.replace(/\.[^/.]+$/, "")}.srt`);
+}
+
+// Event Listeners
+dropzone.addEventListener("click", () => fileInput.click());
+dropzone.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    fileInput.click();
   }
+});
 
-  if (data.status === "done") {
-    clearInterval(pollTimer);
-    clearInterval(captionTimer);
-    STEP_ORDER.forEach((s) => setStepState(s, "done"));
-    setTimeout(() => showResult(data.result, jobId), 400);
-  } else if (data.status === "error") {
-    clearInterval(pollTimer);
-    clearInterval(captionTimer);
-    showError(data.error || "Processing failed unexpectedly.");
+dropzone.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  dropzone.classList.add("drag-over");
+});
+
+dropzone.addEventListener("dragleave", () => {
+  dropzone.classList.remove("drag-over");
+});
+
+dropzone.addEventListener("drop", (e) => {
+  e.preventDefault();
+  dropzone.classList.remove("drag-over");
+  if (e.dataTransfer.files.length) {
+    handleFile(e.dataTransfer.files[0]);
   }
-}
+});
 
-function resetSteps() {
-  els.steps.querySelectorAll("li").forEach((li) => li.classList.remove("active", "done"));
-}
-function setStepState(step, state) {
-  const li = els.steps.querySelector(`[data-step="${step}"]`);
-  if (!li) return;
-  li.classList.remove("active", "done");
-  li.classList.add(state);
-}
+fileInput.addEventListener("change", (e) => {
+  if (e.target.files.length) {
+    handleFile(e.target.files[0]);
+  }
+});
 
-// ---------- result ----------
-
-function showResult(result, jobId) {
-  els.metaSegments.textContent = result?.n_segments ?? "—";
-  els.metaDuration.textContent = result?.duration_seconds
-    ? formatDuration(result.duration_seconds)
-    : "—";
-  els.srtPreview.textContent = result?.srt_preview || "";
-  els.downloadBtn.href = `${API_BASE}/jobs/${jobId}/download`;
-  showSection("resultSection");
-}
-
-function formatDuration(sec) {
-  const m = Math.floor(sec / 60);
-  const s = Math.round(sec % 60);
-  return `${m}m ${s}s`;
-}
-
-// ---------- error / reset ----------
-
-function showError(msg) {
-  els.errorMsg.textContent = msg;
-  showSection("errorSection");
-}
-
-function resetAll() {
-  selectedFile = null;
-  els.fileInput.value = "";
-  els.filebar.hidden = true;
-  showSection("uploadSection");
-}
-
-els.resetBtn.addEventListener("click", resetAll);
-els.errorResetBtn.addEventListener("click", resetAll);
+startBtn.addEventListener("click", uploadAndProcess);
+resetBtn.addEventListener("click", resetToUpload);
+errorResetBtn.addEventListener("click", resetToUpload);

@@ -1,234 +1,137 @@
 """
-End-to-end single-video processing pipeline for the web demo.
-
-Reuses the exact generation config confirmed as the project's winning
-setup (num_beams=12, sampling_temperature=0.7, diverse beam search via
-do_sample) and the probability-weighted MBR formula from
-src/mbr_rescore.py, applied per-chunk to one uploaded video instead of a
-sharded batch job.
-
-DEPLOYMENT NOTE: this uses the actual Silero VAD model (same as Phase 1's
-preprocess_chunk_align.py), not a lighter substitute — the deployed demo
-should reflect the real pipeline, not an approximation of it.
+Web Subtitle Generation Pipeline orchestrating audio extraction, VAD chunking,
+Whisper diverse beam candidate generation, and MBR consensus rescoring.
 """
 
-import subprocess
+import sys
 import tempfile
-import os
 from pathlib import Path
-
+from typing import Callable, Dict, List, Optional
 import numpy as np
-import librosa
-import torch
-import jiwer
-from transformers import WhisperForConditionalGeneration, WhisperProcessor, GenerationConfig
-from silero_vad import load_silero_vad, get_speech_timestamps
 
-SAMPLE_RATE = 16000
-MODEL_ID = "bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium"
+# Ensure project root and src are on python path
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+src_dir = PROJECT_ROOT / "src"
+if str(src_dir) not in sys.path:
+    sys.path.insert(0, str(src_dir))
 
-# Confirmed winning config from the project's calibration sweep
-NUM_BEAMS = 12
-SAMPLING_TEMPERATURE = 0.7
-LENGTH_PENALTY = 1.5
-MAX_NEW_TOKENS = 320
-MAX_CHUNK_SECONDS = 25.0
-MIN_CHUNK_SECONDS = 0.5
+from bangla_asr.common.audio import extract_audio_from_video, load_audio
+from bangla_asr.config import AudioConfig, VADConfig, WhisperConfig, MBRConfig
+from bangla_asr.models.autoregressive.whisper_model import WhisperASRModel
+from bangla_asr.models.autoregressive.generator import BatchedNBestGenerator
+from bangla_asr.preprocessing.vad import SileroVADChunker
+from bangla_asr.rescoring.mbr import MBRSelector
 
-
-def extract_audio(video_path: str, out_wav_path: str):
-    """ffmpeg: any video/audio container -> 16kHz mono WAV."""
-    cmd = [
-        "ffmpeg", "-y", "-i", video_path,
-        "-ar", str(SAMPLE_RATE), "-ac", "1", "-vn",
-        out_wav_path,
-    ]
-    result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
-    if result.returncode != 0:
-        raise RuntimeError(f"ffmpeg audio extraction failed: {result.stderr[-800:]}")
-
-
-def chunk_audio(audio: np.ndarray, sr: int, vad_model) -> list[dict]:
-    """
-    Silero VAD speech-interval detection (same model as Phase 1), then
-    greedily packs intervals into bounded chunks matching Phase 1's bounds
-    (0.5s - 25.0s), cutting only at detected silence.
-    """
-    audio_tensor = torch.from_numpy(audio).float()
-    speech_timestamps = get_speech_timestamps(
-        audio_tensor, vad_model, sampling_rate=sr, return_seconds=True
-    )  # [{"start": float_sec, "end": float_sec}, ...]
-
-    if not speech_timestamps:
-        return [{"start": 0.0, "end": len(audio) / sr, "audio": audio}]
-
-    chunks = []
-    cur_start, cur_end = speech_timestamps[0]["start"], speech_timestamps[0]["end"]
-    for seg in speech_timestamps[1:]:
-        proposed_len = seg["end"] - cur_start
-        if proposed_len <= MAX_CHUNK_SECONDS:
-            cur_end = seg["end"]
-        else:
-            chunks.append((cur_start, cur_end))
-            cur_start, cur_end = seg["start"], seg["end"]
-    chunks.append((cur_start, cur_end))
-
-    result = []
-    for s, e in chunks:
-        dur = e - s
-        if dur < MIN_CHUNK_SECONDS:
-            continue
-        start_sample, end_sample = int(s * sr), int(e * sr)
-        result.append({"start": s, "end": e, "audio": audio[start_sample:end_sample]})
-    return result
-
-
-def normalize_bangla_text(text: str) -> str:
-    import re
-    text = str(text).strip()
-    text = re.sub(r"[।,\-.?!:;\"'()]", "", text)
-    text = re.sub(r"\s+", " ", text).strip()
-    return text
-
-
-def softmax(x: np.ndarray) -> np.ndarray:
-    x = x - x.max()
-    e = np.exp(x)
-    return e / e.sum()
-
-
-def mbr_select(candidates: list[dict]) -> dict:
-    """Same probability-weighted MBR formula as src/mbr_rescore.py."""
-    texts = [normalize_bangla_text(c["text"]) for c in candidates]
-    logprobs = np.array([c["logprob"] for c in candidates])
-    weights = softmax(logprobs)
-
-    n = len(texts)
-    risks = np.zeros(n)
-    for i in range(n):
-        for j in range(n):
-            if i == j:
-                continue
-            try:
-                loss = jiwer.wer(texts[j], texts[i])
-            except Exception:
-                loss = 1.0
-            risks[i] += weights[j] * loss
-
-    best_idx = int(np.argmin(risks))
-    return candidates[best_idx]
+try:
+    from web.backend.srt_utils import chunks_to_srt, get_srt_preview
+except ImportError:
+    from srt_utils import chunks_to_srt, get_srt_preview
 
 
 class SubtitleGenerator:
-    """Loads the model once; call .process_video() per request."""
+    """Production subtitle generator using the unified bangla_asr library."""
 
-    def __init__(self):
-        if not torch.cuda.is_available():
-            raise RuntimeError("CUDA not available.")
-        self.device = torch.device("cuda")
+    def __init__(
+        self,
+        audio_config: AudioConfig = AudioConfig(),
+        whisper_config: WhisperConfig = WhisperConfig(num_beams=12, diverse_beam_search=True, sampling_temperature=0.7),
+        mbr_config: MBRConfig = MBRConfig(temperature=0.5),
+        device: Optional[str] = None,
+    ):
+        self.audio_cfg = audio_config
+        self.whisper_cfg = whisper_config
+        self.mbr_cfg = mbr_config
 
-        self.processor = WhisperProcessor.from_pretrained(MODEL_ID)
-        self.model = WhisperForConditionalGeneration.from_pretrained(
-            MODEL_ID, torch_dtype=torch.float16, attn_implementation="sdpa",
-        ).to(self.device)
+        print("Initializing SubtitleGenerator models...")
+        self.vad_chunker = SileroVADChunker(audio_config=self.audio_cfg)
+        self.model_wrapper = WhisperASRModel(config=self.whisper_cfg, device=device)
+        self.generator = BatchedNBestGenerator(
+            model_wrapper=self.model_wrapper,
+            audio_config=self.audio_cfg,
+            whisper_config=self.whisper_cfg,
+        )
+        self.mbr_selector = MBRSelector(config=self.mbr_cfg)
+        print("SubtitleGenerator initialized.")
 
-        # Load the BASE checkpoint's generation_config directly, not the
-        # fine-tuned model's own — bengaliAI's checkpoint ships an
-        # old-style generation_config.json that loads without error but is
-        # incompatible with the language=/task= generate() API (see:
-        # github.com/huggingface/transformers/issues/25084). This matches
-        # the fix already proven working in inference_batched.py.
-        base_gen_config = GenerationConfig.from_pretrained("openai/whisper-medium")
-        self.model.generation_config = base_gen_config
-        self.model.generation_config.forced_decoder_ids = None
-
-        self.model.eval()
-
-        # Same VAD model as Phase 1 — loaded once per container, reused
-        # across all requests this container handles.
-        self.vad_model = load_silero_vad()
-
-    def _generate_nbest(self, audio: np.ndarray) -> list[dict]:
-        inputs = self.processor([audio], sampling_rate=SAMPLE_RATE, return_tensors="pt")
-        input_features = inputs.input_features.to(self.device, dtype=torch.float16)
-
-        with torch.no_grad():
-            outputs = self.model.generate(
-                input_features,
-                max_new_tokens=MAX_NEW_TOKENS,
-                language="bn",
-                task="transcribe",
-                num_beams=NUM_BEAMS,
-                num_return_sequences=NUM_BEAMS,
-                early_stopping=True,
-                length_penalty=LENGTH_PENALTY,
-                do_sample=True,
-                temperature=SAMPLING_TEMPERATURE,
-                output_scores=True,
-                return_dict_in_generate=True,
-            )
-
-        texts = self.processor.batch_decode(outputs.sequences, skip_special_tokens=True)
-
-        # Same safety fallback as modal_inference.py / inference.py: with
-        # do_sample=True, Whisper's generate() can return a plain
-        # GenerateEncoderDecoderOutput (no sequences_scores attribute) even
-        # with num_beams>1, instead of the beam-search-shaped output.
-        if hasattr(outputs, "sequences_scores") and outputs.sequences_scores is not None:
-            logprobs = outputs.sequences_scores.float().cpu().numpy().tolist()
-        else:
-            beam_indices = getattr(outputs, "beam_indices", None)
-            transition_scores = self.model.compute_transition_scores(
-                outputs.sequences, outputs.scores, beam_indices, normalize_logits=True,
-            )
-            valid_mask = transition_scores > -1e9
-            summed = torch.where(valid_mask, transition_scores, torch.zeros_like(transition_scores)).sum(dim=1)
-            lengths = valid_mask.sum(dim=1).clamp(min=1)
-            logprobs = (summed / lengths).float().cpu().numpy().tolist()
-
-        return [{"text": t.strip(), "logprob": lp, "rank": i} for i, (t, lp) in enumerate(zip(texts, logprobs))]
-
-    def process_video(self, video_path: str, progress_cb=None) -> dict:
+    def process_video(
+        self,
+        video_path: str,
+        progress_cb: Optional[Callable[[str, int, int], None]] = None,
+    ) -> Dict:
         """
-        progress_cb(stage: str, current: int|None, total: int|None) is
-        called at each pipeline stage so the caller (app.py) can update the
-        job-status store for the frontend's async polling.
+        Executes end-to-end subtitle generation:
+          1. Extract audio via ffmpeg
+          2. VAD segmenting
+          3. Whisper N-best generation (with 200ms padding)
+          4. MBR consensus rescoring
+          5. SRT generation
         """
-        def report(stage, current=None, total=None):
+        if progress_cb:
+            progress_cb("audio", 0, 1)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            wav_path = Path(tmpdir) / "extracted.wav"
+            extract_audio_from_video(video_path, wav_path, sample_rate=self.audio_cfg.sample_rate)
+
             if progress_cb:
-                progress_cb(stage, current, total)
+                progress_cb("audio", 1, 1)
+                progress_cb("chunk", 0, 1)
 
-        report("audio")
-        with tempfile.TemporaryDirectory() as tmp:
-            wav_path = os.path.join(tmp, "audio.wav")
-            extract_audio(video_path, wav_path)
-            audio, _ = librosa.load(wav_path, sr=SAMPLE_RATE)
+            audio_arr, sr = load_audio(wav_path, target_sr=self.audio_cfg.sample_rate)
+            raw_chunks = self.vad_chunker.segment_audio(audio_arr)
 
-        total_duration = len(audio) / SAMPLE_RATE
+            total_chunks = len(raw_chunks)
+            if progress_cb:
+                progress_cb("chunk", total_chunks, total_chunks)
 
-        report("chunk")
-        chunks = chunk_audio(audio, SAMPLE_RATE, self.vad_model)
-        if not chunks:
-            raise RuntimeError("No speech detected in this video.")
+            if total_chunks == 0:
+                return {"srt_content": "", "preview": "", "num_chunks": 0, "total_speech_s": 0.0}
 
-        report("asr", 0, len(chunks))
-        for i, chunk in enumerate(chunks):
-            chunk["candidates"] = self._generate_nbest(chunk["audio"])
-            report("asr", i + 1, len(chunks))
+            # Batch generation
+            if progress_cb:
+                progress_cb("asr", 0, total_chunks)
 
-        report("rescore", 0, len(chunks))
-        for i, chunk in enumerate(chunks):
-            selected = mbr_select(chunk["candidates"])
-            chunk["text"] = selected["text"]
-            report("rescore", i + 1, len(chunks))
+            chunk_audios = [c["audio"] for c in raw_chunks]
+            batch_size = self.whisper_cfg.batch_size
+            all_candidates = []
 
-        report("srt")
-        from srt_utils import chunks_to_srt, srt_preview
-        srt_text = chunks_to_srt(chunks)
+            for i in range(0, total_chunks, batch_size):
+                batch = chunk_audios[i:i + batch_size]
+                cands_batch = self.generator.generate_batch(batch)
+                all_candidates.extend(cands_batch)
+                if progress_cb:
+                    progress_cb("asr", min(i + len(batch), total_chunks), total_chunks)
 
-        return {
-            "srt_text": srt_text,
-            "srt_preview": srt_preview(srt_text),
-            "n_segments": len([c for c in chunks if c.get("text", "").strip()]),
-            "duration_seconds": total_duration,
-        }
+            # MBR Rescoring
+            if progress_cb:
+                progress_cb("rescore", 0, total_chunks)
+
+            subtitled_chunks = []
+            for i, (meta, candidates) in enumerate(zip(raw_chunks, all_candidates)):
+                chosen = self.mbr_selector.select(candidates)
+                subtitled_chunks.append({
+                    "start": meta["start_sec"],
+                    "end": meta["end_sec"],
+                    "text": chosen["text"],
+                })
+                if progress_cb:
+                    progress_cb("rescore", i + 1, total_chunks)
+
+            if progress_cb:
+                progress_cb("srt", 0, 1)
+
+            srt_content = chunks_to_srt(subtitled_chunks)
+            preview = get_srt_preview(srt_content)
+
+            if progress_cb:
+                progress_cb("srt", 1, 1)
+
+            total_speech_sec = sum(c["duration_sec"] for c in raw_chunks)
+            return {
+                "srt_content": srt_content,
+                "preview": preview,
+                "num_chunks": total_chunks,
+                "total_speech_s": round(total_speech_sec, 2),
+            }

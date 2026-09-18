@@ -1,0 +1,132 @@
+# STARTING POINT — not a dictionary.
+# High-frequency Bangla function words, common verbs/nouns used in this
+# repo's tests, and PLACEHOLDER clinical terms. Replace with a real
+# frequency list (e.g. a large OSCAR/IndicCorp unigram dump) before
+# treating garbled detection as trustworthy.
+#
+# One token per line. Comments start with #.
+
+# Pronouns / particles
+আমি
+আমার
+আমাকে
+তুমি
+তোমার
+সে
+তার
+তারা
+আমরা
+আপনি
+এই
+সেই
+যে
+যা
+কি
+কী
+কে
+না
+হ্যাঁ
+তো
+তোই
+ও
+এবং
+কিন্তু
+বা
+যদি
+তাহলে
+কেন
+কখন
+কোথায়
+কিভাবে
+
+# Copula / light verbs / common verbs
+আছে
+নেই
+হয়
+হওয়া
+করা
+করে
+করতে
+যাওয়া
+যায়
+যাই
+যাও
+আসা
+আসে
+দেওয়া
+দেয়
+নেওয়া
+নাও
+খাওয়া
+খাই
+খাও
+গাই
+গাওয়া
+পড়া
+পড়ি
+পড়ো
+বলা
+বলে
+শোনা
+দেখা
+লেখা
+থাকা
+থাকে
+
+# Everyday nouns used in tests / examples
+গান
+বই
+কথা
+মানুষ
+দিন
+রাত
+বাংলা
+বাংলায়
+দেশ
+বাড়ি
+হাসপাতাল
+ডাক্তার
+রোগী
+ওষুধ
+পানি
+খাবার
+
+# Fillers (also in the PLACEHOLDER lexicon)
+মানে
+আসলে
+হুম
+
+# Extra common adjectives / adverbs so ordinary substitutions stay "minor"
+ভালো
+খারাপ
+বড়
+ছোট
+অতিরিক্ত
+নতুন
+পুরনো
+এক
+দুই
+তিন
+চার
+পাঁচ
+অনেক
+সব
+আর
+এখন
+পরে
+আগে
+খুব
+
+# PLACEHOLDER clinical / polarity terms (must not be classified as garbled)
+ইনসুলিন
+ডোজ
+উচ্চ
+নিম্ন
+রক্তচাপ
+উচ্চরক্তচাপ
+নিম্নরক্তচাপ
+ডায়াবেটিস
+হার্ট
+প্রেসার
+নেগেটিভ
+পজিটিভ

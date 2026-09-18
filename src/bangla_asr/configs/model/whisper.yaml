@@ -1,0 +1,10 @@
+# Published Whisper baseline. Changing these defaults will break 34.85 → 32.29 reproduction.
+model_family: whisper
+model_id: bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium
+num_beams: 12
+sampling_temperature: 0.7
+diverse_beam_search: true
+length_penalty: 1.5
+max_new_tokens: 320
+language: bn
+task: transcribe

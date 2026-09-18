@@ -1,97 +1,127 @@
 """
-Local-only test server — same endpoints/contract as the Modal app.py, but
-runs entirely on your machine (no Modal Volume, no Dict, no spawn). Reuses
-SubtitleGenerator from pipeline.py unchanged, so a successful local run
-here is a real test of the actual pipeline logic, not a mock.
-
-Run:
-    cd web/backend
-    pip install fastapi uvicorn python-multipart torch transformers accelerate librosa soundfile jiwer numpy silero-vad
-    uvicorn local_server:app --reload --port 8000
-
-Requires ffmpeg on your system PATH (same as the Modal image installs via apt).
-Requires CUDA — this will raise clearly if torch.cuda.is_available() is False,
-same as every other script in this project.
+Local FastAPI development server matching the Modal web contract.
+Implements thread-safe GPU locking and streaming upload handlers.
 """
 
 import os
-import uuid
+import shutil
+import sys
 import threading
-import traceback
+import time
+import uuid
 from pathlib import Path
+from typing import Dict
 
-from fastapi import FastAPI, UploadFile, File, HTTPException
+# Ensure project root and src are on python path
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+src_dir = PROJECT_ROOT / "src"
+if str(src_dir) not in sys.path:
+    sys.path.insert(0, str(src_dir))
+
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import Response
+from fastapi.responses import PlainTextResponse
+from fastapi.staticfiles import StaticFiles
+import uvicorn
 
-from pipeline import SubtitleGenerator
+try:
+    from web.backend.pipeline import SubtitleGenerator
+except ImportError:
+    from pipeline import SubtitleGenerator
 
-app = FastAPI()
+LOCAL_DATA_DIR = PROJECT_ROOT / "data/web_local"
+UPLOADS_DIR = LOCAL_DATA_DIR / "uploads"
+SRT_DIR = LOCAL_DATA_DIR / "srts"
+UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
+SRT_DIR.mkdir(parents=True, exist_ok=True)
+
+MAX_UPLOAD_MB = 300
+gpu_lock = threading.Lock()
+jobs: Dict[str, Dict] = {}
+
+app = FastAPI(title="Bangla ASR Subtitle Generator (Local Dev)")
+
 app.add_middleware(
-    CORSMiddleware, allow_origins=["*"],
-    allow_methods=["*"], allow_headers=["*"],
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-DATA_DIR = Path("local_data")
-(DATA_DIR / "uploads").mkdir(parents=True, exist_ok=True)
-(DATA_DIR / "outputs").mkdir(parents=True, exist_ok=True)
-
-# In-memory job store — fine for local single-process testing; this is the
-# local stand-in for Modal's job_store Dict.
-jobs: dict[str, dict] = {}
-
-# Loaded once at server startup (same as @modal.enter() does per-container).
-print("Loading model + VAD (this happens once, may take a minute)...")
-generator = SubtitleGenerator()
-print("✅ Ready.")
+_generator: SubtitleGenerator = None
 
 
-def _update_job(job_id: str, **fields):
-    jobs[job_id].update(fields)
+def get_generator() -> SubtitleGenerator:
+    global _generator
+    if _generator is None:
+        _generator = SubtitleGenerator()
+    return _generator
 
 
 def _run_job(job_id: str, video_path: str):
-    def progress_cb(stage, current=None, total=None):
-        fields = {"status": "processing", "stage": stage}
-        if current is not None and total is not None:
-            fields["progress"] = {"current": current, "total": total}
-        _update_job(job_id, **fields)
+    def progress_cb(stage: str, current: int, total: int):
+        jobs[job_id]["stage"] = stage
+        jobs[job_id]["progress"] = {
+            "stage": stage,
+            "current": current,
+            "total": total,
+            "percent": int(current / max(1, total) * 100),
+        }
 
     try:
-        _update_job(job_id, status="processing", stage="audio")
-        result = generator.process_video(video_path, progress_cb=progress_cb)
+        jobs[job_id]["status"] = "processing"
+        jobs[job_id]["stage"] = "queued"
 
-        srt_path = DATA_DIR / "outputs" / f"{job_id}.srt"
-        srt_path.write_text(result["srt_text"], encoding="utf-8")
+        with gpu_lock:
+            generator = get_generator()
+            result = generator.process_video(video_path, progress_cb=progress_cb)
 
-        _update_job(
-            job_id,
-            status="done",
-            stage="srt",
-            result={
-                "n_segments": result["n_segments"],
-                "duration_seconds": result["duration_seconds"],
-                "srt_preview": result["srt_preview"],
-                "srt_path": str(srt_path),
-            },
-        )
-    except Exception as e:
-        traceback.print_exc()
-        _update_job(job_id, status="error", error=str(e))
+        srt_path = SRT_DIR / f"{job_id}.srt"
+        srt_path.write_text(result["srt_content"], encoding="utf-8")
+
+        jobs[job_id]["status"] = "completed"
+        jobs[job_id]["stage"] = "done"
+        jobs[job_id]["result"] = {
+            "num_chunks": result["num_chunks"],
+            "total_speech_s": result["total_speech_s"],
+            "preview": result["preview"],
+            "srt_path": str(srt_path),
+        }
+    except Exception as exc:
+        jobs[job_id]["status"] = "failed"
+        jobs[job_id]["error"] = str(exc)
+        print(f"[Job {job_id}] Failed: {exc}")
 
 
 @app.post("/jobs")
 async def create_job(file: UploadFile = File(...)):
     job_id = uuid.uuid4().hex[:12]
-    video_path = DATA_DIR / "uploads" / f"{job_id}_{file.filename}"
+    safe_name = Path(file.filename or "upload").name
+    video_path = UPLOADS_DIR / f"{job_id}_{safe_name}"
 
-    contents = await file.read()
-    video_path.write_bytes(contents)
+    # Stream upload to disk in 1MB chunks to prevent memory bloat
+    total_bytes = 0
+    max_bytes = MAX_UPLOAD_MB * 1024 * 1024
 
-    jobs[job_id] = {"status": "queued", "stage": "upload", "result": None, "error": None}
+    with open(video_path, "wb") as f_out:
+        while chunk := await file.read(1024 * 1024):
+            total_bytes += len(chunk)
+            if total_bytes > max_bytes:
+                video_path.unlink(missing_ok=True)
+                raise HTTPException(status_code=413, detail=f"File exceeds {MAX_UPLOAD_MB}MB limit.")
+            f_out.write(chunk)
 
-    # Background thread instead of Modal's .spawn() — same effect locally:
-    # the HTTP response returns immediately, processing continues async.
+    jobs[job_id] = {
+        "job_id": job_id,
+        "status": "pending",
+        "stage": "upload",
+        "progress": {"stage": "upload", "current": 1, "total": 1, "percent": 100},
+        "created_at": time.time(),
+    }
+
     thread = threading.Thread(target=_run_job, args=(job_id, str(video_path)), daemon=True)
     thread.start()
 
@@ -99,24 +129,37 @@ async def create_job(file: UploadFile = File(...)):
 
 
 @app.get("/jobs/{job_id}")
-async def get_status(job_id: str):
+async def get_job_status(job_id: str):
     if job_id not in jobs:
         raise HTTPException(status_code=404, detail="Job not found")
     return jobs[job_id]
 
 
 @app.get("/jobs/{job_id}/download")
-async def download(job_id: str):
-    job = jobs.get(job_id)
-    if not job or job.get("status") != "done":
-        raise HTTPException(status_code=404, detail="Result not ready")
+async def download_srt(job_id: str):
+    if job_id not in jobs:
+        raise HTTPException(status_code=404, detail="Job not found")
+    job = jobs[job_id]
+    if job.get("status") != "completed":
+        raise HTTPException(status_code=400, detail="Job is not completed")
 
     srt_path = Path(job["result"]["srt_path"])
     if not srt_path.exists():
-        raise HTTPException(status_code=404, detail="File missing")
+        raise HTTPException(status_code=500, detail="SRT file missing")
 
-    return Response(
-        content=srt_path.read_text(encoding="utf-8"),
-        media_type="application/x-subrip",
+    content = srt_path.read_text(encoding="utf-8")
+    return PlainTextResponse(
+        content=content,
+        media_type="text/plain; charset=utf-8",
         headers={"Content-Disposition": f'attachment; filename="{job_id}.srt"'},
     )
+
+
+# Mount static frontend directory so http://127.0.0.1:8000 serves the UI directly
+FRONTEND_DIR = PROJECT_ROOT / "web/frontend"
+if FRONTEND_DIR.exists():
+    app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8000)

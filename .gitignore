@@ -30,6 +30,8 @@ secrets/
 
 # ── Model / HF cache (if ever pointed at a local dir instead of ~/.cache) ──
 models/
+!src/bangla_asr/models/
+!src/bangla_asr/models/**
 *.ckpt
 *.bin
 *.safetensors

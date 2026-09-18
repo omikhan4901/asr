@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bangla_asr"
+version = "1.0.0"
+description = "Inference-only rescoring and candidate optimization for Bangla long-form ASR"
+readme = "Readme.md"
+requires-python = ">=3.9"
+authors = [{ name = "Bangla ASR Research Team" }]
+dependencies = [
+    "torch",
+    "transformers",
+    "accelerate",
+    "numpy",
+    "pandas",
+    "rapidfuzz",
+    "jiwer",
+    "tqdm",
+]
+
+[project.optional-dependencies]
+audio = ["torchaudio", "soundfile", "librosa"]
+vad = ["silero-vad"]
+web = ["fastapi", "uvicorn", "python-multipart"]
+distributed = ["modal"]
+ctc = ["pyctcdecode"]
+config = ["pyyaml"]
+all = [
+    "torchaudio",
+    "soundfile",
+    "librosa",
+    "silero-vad",
+    "fastapi",
+    "uvicorn",
+    "python-multipart",
+    "modal",
+    "matplotlib",
+    "pyctcdecode",
+    "pyyaml",
+]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+bangla_asr = ["configs/**/*.yaml", "metrics/lexicons/*.yaml", "metrics/lexicons/*.txt"]

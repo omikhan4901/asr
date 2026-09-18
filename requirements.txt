@@ -12,6 +12,7 @@ numpy
 rapidfuzz
 jiwer
 pandas
+tqdm
 
 # Voice activity detection
 # NOTE: preprocess_chunk_align.py loads Silero VAD via torch.hub
@@ -30,8 +31,13 @@ matplotlib
 # Distributed inference (Phase 2)
 modal
 
+# Optional: CTC N-best (Wav2Vec2 beam search). Without this, n>1 raises.
+# pyctcdecode
+
+# Optional: YAML experiment overlays / lexicons (JSON always works)
+# pyyaml
+
 # Web demo backend (app.py / local_server.py)
 fastapi
 uvicorn
 python-multipart
- 

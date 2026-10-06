@@ -25,6 +25,14 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
+# The 22 recordings of the 499A eval split (recording-level, seed 42). Kept fixed so
+# 499A and 499B numbers refer to the same recordings.
+EVAL_RECORDINGS_499A = [
+    "train_001", "train_006", "train_012", "train_013", "train_014", "train_021", "train_033", "train_039",
+    "train_048", "train_051", "train_064", "train_072", "train_076", "train_079", "train_081", "train_088",
+    "train_090", "train_091", "train_092", "train_095", "train_108", "train_120",
+]
+
 COLS = ["utt_id", "recording", "audio_path", "start", "end", "duration", "n_words", "text",
         "mean_score", "min_score", "low_score_frac", "unaligned_words"]
 
@@ -33,8 +41,8 @@ def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--fa_dir", default="data/processed_fa")
     p.add_argument("--out_dir", default="data/splits_fa")
-    p.add_argument("--old_eval_csv", default="data/processed_naive_vad/splits/eval_split.csv",
-                   help="499A eval split; its recordings become the eval set")
+    p.add_argument("--eval_recordings", nargs="*", default=EVAL_RECORDINGS_499A,
+                   help="Recordings used as eval (default: the 22 of the 499A eval split)")
     p.add_argument("--annotation_dir", default="data/raw/train/annotation",
                    help="All recordings with transcripts (dev is drawn from these, so it does not depend on progress)")
     p.add_argument("--n_dev", type=int, default=6, help="Recordings held out from train for tuning")
@@ -53,8 +61,7 @@ def main():
     df["utt_id"] = df["recording"] + "_" + df.groupby("recording").cumcount().map("{:04d}".format)
     df = df[COLS]
 
-    old_eval = pd.read_csv(args.old_eval_csv, encoding="utf-8-sig")
-    eval_recs = sorted({u.rsplit("_", 1)[0] for u in old_eval["utt_id"]})
+    eval_recs = sorted(args.eval_recordings)
     all_recs = sorted(f.stem for f in Path(args.annotation_dir).glob("*.txt"))
     others = sorted(set(all_recs) - set(eval_recs))
     rng = np.random.default_rng(args.seed)

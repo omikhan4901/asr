@@ -10,6 +10,7 @@ import sys
 import time
 from pathlib import Path
 import pandas as pd
+import torch
 from tqdm import tqdm
 
 # Add src to sys.path
@@ -87,6 +88,17 @@ def main():
 
             try:
                 batch_candidates = generator.generate_batch(audio_arrays)
+            except torch.cuda.OutOfMemoryError:
+                # Long chunks x 12 beams can exceed 12 GB together; retry one at a time.
+                torch.cuda.empty_cache()
+                batch_candidates = []
+                try:
+                    for arr in audio_arrays:
+                        batch_candidates.extend(generator.generate_batch([arr]))
+                        torch.cuda.empty_cache()
+                except Exception as exc:
+                    print(f"Generation error on batch (also failed one at a time): {exc}")
+                    continue
             except Exception as exc:
                 print(f"Generation error on batch: {exc}")
                 continue

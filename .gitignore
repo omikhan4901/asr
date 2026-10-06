@@ -72,3 +72,7 @@ dist/
 .DS_Store
 Thumbs.db
 
+
+# Run outputs
+logs/
+results/

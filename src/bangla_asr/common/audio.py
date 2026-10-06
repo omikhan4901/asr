@@ -124,3 +124,32 @@ def extract_audio_from_video(
     result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
     if result.returncode != 0:
         raise RuntimeError(f"ffmpeg audio extraction failed: {result.stderr[-800:]}")
+
+
+def load_segment(
+    file_path: Union[str, Path],
+    start_s: float,
+    end_s: float,
+    target_sr: int = 16000,
+) -> np.ndarray:
+    """Reads only [start_s, end_s) of a long recording as mono float32 at target_sr."""
+    import soundfile as sf
+
+    info = sf.info(str(file_path))
+    sr = info.samplerate
+    audio, _ = sf.read(str(file_path), start=max(0, int(start_s * sr)), stop=int(end_s * sr), dtype="float32")
+    if audio.ndim > 1:
+        audio = audio.mean(axis=1)
+    if sr != target_sr:
+        import librosa
+        audio = librosa.resample(audio, orig_sr=sr, target_sr=target_sr)
+    return audio.astype(np.float32)
+
+
+def load_row_audio(row, target_sr: int = 16000) -> np.ndarray:
+    """Audio for a manifest row: a slice if it has start/end, else the whole file."""
+    start = row.get("start") if hasattr(row, "get") else None
+    end = row.get("end") if hasattr(row, "get") else None
+    if start is not None and end is not None and not (np.isnan(float(start)) or np.isnan(float(end))):
+        return load_segment(row["audio_path"], float(start), float(end), target_sr)
+    return load_audio(row["audio_path"], target_sr=target_sr)[0]

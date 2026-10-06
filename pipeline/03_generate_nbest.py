@@ -15,7 +15,7 @@ from tqdm import tqdm
 # Add src to sys.path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from bangla_asr.common.audio import load_audio
+from bangla_asr.common.audio import load_row_audio
 from bangla_asr.config import AudioConfig, WhisperConfig
 from bangla_asr.models.autoregressive.whisper_model import WhisperASRModel
 from bangla_asr.models.autoregressive.generator import BatchedNBestGenerator
@@ -23,8 +23,10 @@ from bangla_asr.models.autoregressive.generator import BatchedNBestGenerator
 
 def main():
     parser = argparse.ArgumentParser(description="Step 3: Generate N-best candidates with diverse beam search.")
-    parser.add_argument("--split_csv", type=str, default="data/processed/splits/eval_split.csv")
-    parser.add_argument("--output_jsonl", type=str, default="data/processed/nbest/eval_nbest_candidates.jsonl")
+    parser.add_argument("--split_csv", type=str, default="data/splits_fa/eval.csv",
+                        help="Manifest from 02_split.py (start/end slices) or any CSV with audio_path + text/gt")
+    parser.add_argument("--output_jsonl", type=str, default="data/nbest_fa/eval_nbest.jsonl")
+    parser.add_argument("--model_id", type=str, default=None, help="Override WhisperConfig.model_id")
     parser.add_argument("--num_beams", type=int, default=12, help="Winning beam count from calibration sweep")
     parser.add_argument("--temperature", type=float, default=0.7, help="Stochastic beam sampling temperature")
     parser.add_argument("--batch_size", type=int, default=2)
@@ -48,7 +50,10 @@ def main():
     remaining_df = df[~df["utt_id"].isin(completed_ids)].reset_index(drop=True)
     print(f"Loaded {len(df)} total utterances ({len(completed_ids)} already done, {len(remaining_df)} remaining).")
 
+    ref_col = "text" if "text" in df.columns else "gt"
+    cfg_kwargs = {"model_id": args.model_id} if args.model_id else {}
     whisper_cfg = WhisperConfig(
+        **cfg_kwargs,
         num_beams=args.num_beams,
         diverse_beam_search=True,
         sampling_temperature=args.temperature,
@@ -68,7 +73,7 @@ def main():
 
             for _, row in batch_df.iterrows():
                 try:
-                    arr, _ = load_audio(row["audio_path"], target_sr=16000)
+                    arr = load_row_audio(row)
                     audio_arrays.append(arr)
                     valid_rows.append(row)
                 except Exception as exc:
@@ -87,7 +92,8 @@ def main():
                 record = {
                     "utt_id": row["utt_id"],
                     "audio_path": row["audio_path"],
-                    "ground_truth": row["gt"],
+                    "group": str(row.get("recording", row.get("group", row["utt_id"]))),
+                    "ground_truth": row[ref_col],
                     "candidates": candidates,
                 }
                 f_out.write(json.dumps(record, ensure_ascii=False) + "\n")

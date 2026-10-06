@@ -2,21 +2,30 @@
 # Phase 1 batch: split -> test-set downloads -> 12-best + plateau analysis -> zero-shot baselines.
 # Run AFTER pipeline/01_segment.py has finished, from the repo root, in Git Bash:
 #     bash runs/day1.sh
-# Every step is resumable: if anything stops, run the same command again.
-# A failed step is logged and skipped; the rest continue. Summary at the end.
+#
+# Breakable: stop any time (Ctrl+C, shutdown, power cut) and run the same command
+# again. Finished steps are skipped (marker files in logs/day1/done/), and the
+# long steps continue from the last finished batch inside the step.
+# A failed step is logged and skipped; it is retried on the next run.
 
 cd "$(dirname "$0")/.." || exit 1
 export PYTHONPATH=src PYTHONIOENCODING=utf-8
 PY=./Scripts/python.exe
 LOG=logs/day1
-mkdir -p "$LOG"
+mkdir -p "$LOG/done"
 STATUS="$LOG/status.txt"
 : > "$STATUS"
+trap 'echo; echo "Stopped. Progress is saved; run  bash runs/day1.sh  again to continue."; exit 130' INT
 
 step() {  # step <name> <command...>
   local name=$1; shift
+  if [ -f "$LOG/done/$name" ]; then
+    echo "SKIP    $name (already done)" | tee -a "$STATUS"
+    return
+  fi
   echo "=== $(date '+%a %H:%M') START $name"
-  if "$@" > "$LOG/$name.log" 2>&1; then
+  if "$@" >> "$LOG/$name.log" 2>&1; then
+    touch "$LOG/done/$name"
     echo "OK      $name" | tee -a "$STATUS"
   else
     echo "FAILED  $name   (see $LOG/$name.log)" | tee -a "$STATUS"
@@ -53,6 +62,7 @@ for m in $MODELS; do
 done
 
 # 7) One table of everything
+rm -f "$LOG/done/summary"   # always rebuild the table
 step summary          $PY analysis/collect_results.py
 
 echo

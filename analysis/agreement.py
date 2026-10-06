@@ -32,6 +32,7 @@ from tqdm import tqdm
 
 sys.path.insert(0, "src")
 from bangla_asr.common.metrics import align_tokens  # noqa: E402
+from bangla_asr.common.safe_io import read_jsonl  # noqa: E402
 from bangla_asr.common.text import normalize_bangla_text  # noqa: E402
 from bangla_asr.config import MBRConfig  # noqa: E402
 from bangla_asr.rescoring.mbr import MBRSelector  # noqa: E402
@@ -56,7 +57,7 @@ def main():
     p.add_argument("--mbr_temperature", type=float, default=0.5)
     args = p.parse_args()
 
-    recs = [json.loads(l) for l in open(args.nbest, encoding="utf-8") if l.strip()]
+    recs = read_jsonl(args.nbest)
     selector = MBRSelector(MBRConfig(temperature=args.mbr_temperature))
     n_max = max(len(r["candidates"]) for r in recs)
     hist = np.zeros(n_max + 1, int)

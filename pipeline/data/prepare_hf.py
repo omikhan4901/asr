@@ -18,6 +18,7 @@ Example:
 
 import argparse
 import io
+import os
 import sys
 from pathlib import Path
 
@@ -104,7 +105,9 @@ def main():
                     dur = sf.info(str(wav)).duration
                 else:
                     audio = decode(rec[acol])
-                    sf.write(str(wav), audio, 16000)
+                    tmp = wav.with_name(wav.name + ".tmp")
+                    sf.write(str(tmp), audio, 16000, format="WAV")
+                    os.replace(tmp, wav)
                     dur = len(audio) / 16000
                 text = rec[tcol]
                 if isinstance(text, list):

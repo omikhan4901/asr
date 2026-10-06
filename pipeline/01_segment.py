@@ -32,6 +32,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from bangla_asr.common.audio import load_audio
+from bangla_asr.common.safe_io import atomic_write_text
 from bangla_asr.config import ForcedAlignConfig
 from bangla_asr.preprocessing.forced_align import MMSForcedAligner, chunk_words
 
@@ -86,10 +87,10 @@ def main():
             c["recording"] = wav.stem
             c["audio_path"] = str(wav).replace("\\", "/")
 
-        (out / "words" / f"{wav.stem}.json").write_text(
-            json.dumps([asdict(w) for w in aligned], ensure_ascii=False), encoding="utf-8")
-        (out / "chunks" / f"{wav.stem}.json").write_text(
-            json.dumps(chunks, ensure_ascii=False, indent=1), encoding="utf-8")
+        atomic_write_text(out / "words" / f"{wav.stem}.json",
+                          json.dumps([asdict(w) for w in aligned], ensure_ascii=False))
+        atomic_write_text(out / "chunks" / f"{wav.stem}.json",
+                          json.dumps(chunks, ensure_ascii=False, indent=1))
 
         n_al = sum(w.aligned for w in aligned)
         covered = sum(c["duration"] for c in chunks)

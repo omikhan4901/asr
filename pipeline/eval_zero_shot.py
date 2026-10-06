@@ -29,6 +29,7 @@ from tqdm import tqdm
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from bangla_asr.common.audio import load_row_audio
+from bangla_asr.common.safe_io import atomic_write_text, read_jsonl, repair_jsonl
 from bangla_asr.common.stats import corpus_rates, edit_counts
 
 
@@ -98,9 +99,8 @@ def main():
         df = df.head(args.limit)
     ref_col = "text" if "text" in df.columns else "gt"
     group_col = "recording" if "recording" in df.columns else ("group" if "group" in df.columns else "utt_id")
-    done = set()
-    if pred_path.exists():
-        done = {json.loads(l)["utt_id"] for l in pred_path.open(encoding="utf-8") if l.strip()}
+    repair_jsonl(pred_path)  # drop a half-written line left by a power cut
+    done = {r["utt_id"] for r in read_jsonl(pred_path)}
     todo = df[~df["utt_id"].isin(done)]
     # Sort by duration so batches pad less (much faster).
     if "duration" in todo.columns:
@@ -130,7 +130,7 @@ def main():
     else:
         family, elapsed, audio_s = args.family, None, None
 
-    preds = [json.loads(l) for l in pred_path.open(encoding="utf-8") if l.strip()]
+    preds = read_jsonl(pred_path)
     ids = set(df["utt_id"])
     preds = [r for r in preds if r["utt_id"] in ids]
     scored = [dict(edit_counts(r["hyp"], r["ref"]), group=r["group"]) for r in preds]
@@ -140,7 +140,7 @@ def main():
     if elapsed:
         metrics.update({"last_run_seconds": round(elapsed, 1), "last_run_audio_hours": round(audio_s / 3600, 3),
                         "last_run_rtf": round(elapsed / max(1e-9, audio_s), 4)})
-    (out / "metrics.json").write_text(json.dumps(metrics, ensure_ascii=False, indent=2), encoding="utf-8")
+    atomic_write_text(out / "metrics.json", json.dumps(metrics, ensure_ascii=False, indent=2))
     lo, hi = metrics.get("wer_ci95", [float("nan")] * 2)
     print(f"WER {100 * metrics['wer']:.2f}% [{100 * lo:.2f}, {100 * hi:.2f}]  CER {100 * metrics['cer']:.2f}%  "
           f"({metrics['n_utterances']} utt, {metrics.get('n_groups')} groups)")

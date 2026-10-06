@@ -25,13 +25,9 @@ def load_aligned_manifest(csv_path: Union[str, Path]) -> pd.DataFrame:
 
 def load_nbest_jsonl(jsonl_path: Union[str, Path]) -> List[Dict]:
     """Reads JSONL N-best records containing utt_id, audio_path, ground_truth, and candidates."""
-    records = []
-    with open(jsonl_path, "r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if line:
-                records.append(json.loads(line))
-    return records
+    from bangla_asr.common.safe_io import read_jsonl
+
+    return read_jsonl(jsonl_path)  # skips a half-written line left by a power cut
 
 
 def save_nbest_jsonl(records: List[Dict], jsonl_path: Union[str, Path]) -> None:

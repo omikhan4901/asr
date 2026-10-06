@@ -16,6 +16,7 @@ from tqdm import tqdm
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from bangla_asr.common.audio import load_row_audio
+from bangla_asr.common.safe_io import read_jsonl, repair_jsonl
 from bangla_asr.config import AudioConfig, WhisperConfig
 from bangla_asr.models.autoregressive.whisper_model import WhisperASRModel
 from bangla_asr.models.autoregressive.generator import BatchedNBestGenerator
@@ -36,12 +37,14 @@ def main():
 
     out_file = Path(args.output_jsonl)
     out_file.parent.mkdir(parents=True, exist_ok=True)
-    checkpoint_file = out_file.with_suffix(".checkpoint.json")
-
+    # Resume from the output itself: a power cut can at worst leave a half-written
+    # last line, which repair_jsonl removes before we append again.
     completed_ids = set()
-    if args.resume and checkpoint_file.exists():
-        with open(checkpoint_file, "r", encoding="utf-8") as f:
-            completed_ids = set(json.load(f).get("completed_utt_ids", []))
+    if args.resume:
+        repair_jsonl(out_file)
+        completed_ids = {r["utt_id"] for r in read_jsonl(out_file)}
+    elif out_file.exists():
+        out_file.unlink()
 
     df = pd.read_csv(args.split_csv, encoding="utf-8-sig")
     if args.limit:
@@ -100,8 +103,6 @@ def main():
                 completed_ids.add(row["utt_id"])
 
             f_out.flush()
-            with open(checkpoint_file, "w", encoding="utf-8") as f_chk:
-                json.dump({"completed_utt_ids": sorted(completed_ids)}, f_chk)
 
     print(f"Step 3 Complete. Output candidate pools saved to {out_file}")
 

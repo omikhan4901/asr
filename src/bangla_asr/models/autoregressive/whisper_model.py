@@ -67,6 +67,11 @@ class WhisperASRModel:
         if hasattr(gen_config, "lang_to_id") and hasattr(gen_config, "task_to_id"):
             gen_config.language = self.cfg.language
             gen_config.task = self.cfg.task
+            # Also pass them to generate(): current transformers ignores
+            # generation_config.language for multilingual checkpoints such as
+            # openai/whisper-large-v3-turbo (it auto-detects and wrote Bangla
+            # speech in Devanagari). lang_to_id is guaranteed present here.
+            self.prompt_kwargs = {"language": self.cfg.language, "task": self.cfg.task}
             if hasattr(gen_config, "forced_decoder_ids"):
                 gen_config.forced_decoder_ids = None
         else:

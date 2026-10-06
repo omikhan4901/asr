@@ -88,7 +88,11 @@ def main():
     out_dir = Path(args.out_root, args.preset, args.split)
     out_dir.mkdir(parents=True, exist_ok=True)
     rows, total_s, n = [], 0.0, 0
-    for fname in files:
+    from tqdm import tqdm
+
+    bar = tqdm(desc=f"{args.preset}/{args.split} utterances", unit="utt")
+    for fi, fname in enumerate(files, 1):
+        bar.set_postfix_str(f"file {fi}/{len(files)}")
         local = hf_hub_download(cfg["repo"], fname, repo_type="dataset")
         pf = pq.ParquetFile(local)
         cols = pf.schema_arrow.names
@@ -117,6 +121,7 @@ def main():
                              "source_id": str(rec[id_col]) if id_col else "", "duration": round(dur, 3)})
                 n += 1
                 total_s += dur
+                bar.update(1)
                 if (args.limit and n >= args.limit) or (args.max_hours and total_s >= args.max_hours * 3600):
                     break
             else:
@@ -126,6 +131,7 @@ def main():
             continue
         break
 
+    bar.close()
     df = pd.DataFrame(rows)
     df.to_csv(Path(args.out_root, args.preset, f"{args.split}.csv"), index=False, encoding="utf-8-sig")
     print(f"{len(df)} utterances, {total_s / 3600:.2f} h -> {out_dir}  (manifest: {args.preset}/{args.split}.csv)")

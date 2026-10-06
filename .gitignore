@@ -1,5 +1,5 @@
 # ── Data — never commit audio or large generated artifacts ────────────────
-data/
+/data/
 *.wav
 *.mp3
 *.mp4

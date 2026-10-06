@@ -17,8 +17,11 @@ Example:
 
 import argparse
 import json
+import os
 import sys
 import time
+
+os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")  # silence per-batch generate() warnings
 from pathlib import Path
 
 import numpy as np

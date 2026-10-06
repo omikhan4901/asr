@@ -4,6 +4,11 @@ Whisper model loader and configuration manager with robust tokenization & prompt
 
 import torch
 from transformers import GenerationConfig, WhisperForConditionalGeneration, WhisperProcessor
+from transformers.utils import logging as hf_logging
+
+# Per-batch generate() warnings (max_length vs max_new_tokens, duplicate logits
+# processors, tokenizer cleanup) are harmless and flood the batch logs.
+hf_logging.set_verbosity_error()
 
 from bangla_asr.config import WhisperConfig
 

@@ -58,7 +58,13 @@ for m in $MODELS; do
   slug=${m//\//__}
   step "zs_fleurs__$slug"   $PY pipeline/eval_zero_shot.py --manifest data/external/fleurs/test.csv --model $m
   step "zs_kathbath__$slug" $PY pipeline/eval_zero_shot.py --manifest data/external/kathbath/valid.csv --model $m
-  [ "$m" != "$TUG" ] && step "zs_eval__$slug" $PY pipeline/eval_zero_shot.py --manifest data/splits_fa/eval.csv --model $m
+  # Generic multilingual Whisper (large-v3, turbo) writes Bangla in mixed scripts
+  # zero-shot (~65-95% WER); FLEURS/Kathbath rows make that point, so they skip
+  # the 17 h long-form eval (saves ~3-4 GPU-hours). Tugstugi ran it in step 3.
+  case "$m" in
+    "$TUG"|openai/*) ;;
+    *) step "zs_eval__$slug" $PY pipeline/eval_zero_shot.py --manifest data/splits_fa/eval.csv --model $m ;;
+  esac
 done
 
 # 7) One table of everything

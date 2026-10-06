@@ -17,7 +17,7 @@ def load_audio(
 ) -> Tuple[np.ndarray, int]:
     """
     Loads an audio file as a mono 1D float32 numpy array resampled to target_sr.
-    Attempts torchaudio first, then falls back to soundfile / librosa if available.
+    Tries soundfile, then torchaudio, then librosa.
     """
     path_str = str(file_path)
     if not os.path.exists(path_str):
@@ -25,22 +25,8 @@ def load_audio(
     if os.path.getsize(path_str) == 0:
         raise ValueError(f"Audio file is empty: {path_str}")
 
-    # Try torchaudio (standard in PyTorch environments)
-    try:
-        import torchaudio
-        waveform, sr = torchaudio.load(path_str)
-        # Average channels to mono if multi-channel
-        if waveform.shape[0] > 1:
-            waveform = torch.mean(waveform, dim=0, keepdim=True)
-        if sr != target_sr:
-            resampler = torchaudio.transforms.Resample(orig_freq=sr, new_freq=target_sr)
-            waveform = resampler(waveform)
-        audio_array = waveform.squeeze(0).cpu().numpy().astype(np.float32)
-        return audio_array, target_sr
-    except Exception:
-        pass
-
-    # Try soundfile fallback
+    # soundfile first: recent torchaudio.load needs torchcodec and would
+    # raise on every call before falling back
     try:
         import soundfile as sf
         audio_array, sr = sf.read(path_str, dtype="float32")
@@ -59,6 +45,21 @@ def load_audio(
                     np.arange(orig_len),
                     audio_array,
                 ).astype(np.float32)
+        return audio_array, target_sr
+    except Exception:
+        pass
+
+    # torchaudio fallback (other containers)
+    try:
+        import torchaudio
+        waveform, sr = torchaudio.load(path_str)
+        # Average channels to mono if multi-channel
+        if waveform.shape[0] > 1:
+            waveform = torch.mean(waveform, dim=0, keepdim=True)
+        if sr != target_sr:
+            resampler = torchaudio.transforms.Resample(orig_freq=sr, new_freq=target_sr)
+            waveform = resampler(waveform)
+        audio_array = waveform.squeeze(0).cpu().numpy().astype(np.float32)
         return audio_array, target_sr
     except Exception:
         pass

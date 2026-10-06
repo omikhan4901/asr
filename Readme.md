@@ -28,9 +28,9 @@ bangla_asr/
 │       │   ├── audio.py               # Robust audio loading (torchaudio/soundfile/librosa), silence padding
 │       │   ├── text.py                # Bangla text normalization & nukta canonicalization
 │       │   └── metrics.py             # Guarded WER/CER computation with jiwer
-│       ├── preprocessing/             # Phase 1: VAD & Alignment
-│       │   ├── vad.py                 # Silero VAD segmenter with strict max-duration subdivision
-│       │   └── aligner.py             # Sequential RapidFuzz aligner with lookahead recovery
+│       ├── preprocessing/             # Phase 1: Segmentation
+│       │   ├── forced_align.py        # MMS_FA long-form forced alignment + word-boundary chunking
+│       │   └── vad.py                 # Silero VAD chunker (web demo: audio without transcripts)
 │       ├── dataset/                   # Dataset loaders & splitting
 │       │   ├── splitter.py            # Group-aware train/eval partitioner (arbitrary digit chunk support)
 │       │   └── manifest.py            # Ingestion & serialization for manifests and JSONL pools
@@ -49,8 +49,8 @@ bangla_asr/
 │           ├── oracle.py              # Baseline (1-best) and theoretical Oracle ceiling evaluator
 │           └── evaluate_all.py        # Benchmark comparator (1-Best, MBR, BERT, Oracle)
 ├── pipeline/                          # Top-Level Pipeline Runners
-│   ├── 01_preprocess.py               # Chunking, rough transcription, and sequential fuzzy alignment
-│   ├── 02_split_dataset.py            # Group-aware train/eval split (zero speaker/recording leakage)
+│   ├── 01_segment.py                  # Forced-alignment segmentation of long recordings
+│   ├── 02_split_dataset.py            # Recording-level train/eval split (no recording in both splits)
 │   ├── 03_generate_nbest.py           # Local batched N-best candidate generation
 │   ├── 04_modal_nbest.py              # Distributed multi-GPU candidate generation on Modal
 │   ├── 05_rescore_mbr.py              # Run probability-weighted MBR consensus
@@ -92,13 +92,19 @@ pip install fastapi uvicorn python-multipart modal matplotlib
 
 ## Running the Pipeline
 
-### Phase 1: Audio Chunking and Sequential Alignment
+### Phase 1: Forced-Alignment Segmentation
+Aligns each full transcript to its full recording (MMS_FA + uroman), then cuts
+chunks of at most 25 s at word-boundary pauses. The reference of a chunk is
+exactly the transcript words inside it. Resumable; ~15 s per hour-long
+recording on an RTX 3060.
 ```bash
-python pipeline/01_preprocess.py \
+PYTHONPATH=src ./Scripts/python.exe pipeline/01_segment.py \
   --audio_dir data/raw/train/audio \
   --annotation_dir data/raw/train/annotation \
-  --output_dir data/processed/chunks
+  --output_dir data/processed_fa
 ```
+The 499A results were produced by the earlier VAD + fuzzy-alignment pipeline
+(`pipeline/01_preprocess.py`, available in git history).
 
 ### Phase 2: Group-Aware Train/Eval Split
 ```bash

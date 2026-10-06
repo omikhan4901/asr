@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 import numpy as np
 
-from bangla_asr.common.metrics import compute_wer, compute_cer, compute_pairwise_loss
+from bangla_asr.common.metrics import compute_wer, compute_cer, _levenshtein_distance
 from bangla_asr.common.text import normalize_bangla_text
 from bangla_asr.config import MBRConfig
 
@@ -55,14 +55,20 @@ class MBRSelector:
         logprobs = np.array([c.get("logprob", 0.0) for c in candidates], dtype=np.float64)
         weights = softmax_with_temperature(logprobs, temperature=self.cfg.temperature)
 
-        texts = [c.get("text", "") for c in candidates]
+        # Normalize and tokenize each candidate once. Loss L(h_i, h_j) is the WER
+        # of h_i against h_j as reference (same as compute_pairwise_loss): the
+        # empty-loss penalty applies when either side normalizes to nothing.
+        toks = [normalize_bangla_text(c.get("text", "")).split() for c in candidates]
         risks = np.zeros(n, dtype=np.float64)
 
         for i in range(n):
             for j in range(n):
                 if i == j:
                     continue
-                loss = compute_pairwise_loss(texts[i], texts[j], empty_penalty=self.cfg.empty_loss_penalty)
+                if not toks[j] or not toks[i]:
+                    loss = self.cfg.empty_loss_penalty
+                else:
+                    loss = _levenshtein_distance(toks[j], toks[i]) / len(toks[j])
                 risks[i] += weights[j] * loss
 
         best_idx = int(np.argmin(risks))

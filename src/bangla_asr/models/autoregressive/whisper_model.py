@@ -88,20 +88,16 @@ class WhisperASRModel:
         # Do NOT default output_scores/return_dict_in_generate to True here.
         # BatchedNBestGenerator needs sequences_scores and sets both flags
         # itself in its own gen_kwargs (self-contained). transcribe_batch()
-        # below, and pipeline/01_preprocess.py's rough-alignment pass, call
-        # generate() and hand the result straight to batch_decode() expecting
-        # a plain token-id tensor -- if this shared, mutable generation_config
-        # defaulted return_dict_in_generate to True, they would silently get
+        # below calls generate() and hands the result straight to
+        # batch_decode() expecting a plain token-id tensor -- if this shared,
+        # mutable generation_config defaulted return_dict_in_generate to True,
+        # it would silently get
         # a GenerateOutput object instead and batch_decode() would iterate
         # its fields (sequences, then scores, ...) rather than decode tokens,
         # surfacing as "Boolean value of Tensor with more than one value is
         # ambiguous" deep inside the tokenizer.
 
-        if self.cfg.num_beam_groups and self.cfg.num_beam_groups > 1:
-            gen_config.do_sample = False
-            gen_config.num_beam_groups = self.cfg.num_beam_groups
-            gen_config.diversity_penalty = self.cfg.diversity_penalty
-        elif self.cfg.diverse_beam_search:
+        if self.cfg.diverse_beam_search:
             gen_config.do_sample = True
             gen_config.temperature = self.cfg.sampling_temperature
         else:
@@ -118,7 +114,8 @@ class WhisperASRModel:
         max_new_tokens: int = None,
         pad_seconds: float = 0.2,
     ):
-        """Greedy 1-best transcription for alignment / fine-tune evaluation."""
+        """Greedy 1-best transcription. Default cap 440 new tokens (Whisper allows 448
+        including prompt tokens); dense 25 s chunks reach ~250 tokens."""
         from bangla_asr.common.audio import pad_silence
 
         if not audio_arrays:
@@ -141,7 +138,7 @@ class WhisperASRModel:
 
         gen_kwargs = {
             "input_features": input_features,
-            "max_new_tokens": max_new_tokens or min(256, self.cfg.max_new_tokens),
+            "max_new_tokens": max_new_tokens or 440,
             "num_beams": 1,
             "num_return_sequences": 1,
             "do_sample": False,

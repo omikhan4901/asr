@@ -1,14 +1,16 @@
 """
 Guarded evaluation metrics (WER, CER, pairwise loss) for ASR hypotheses.
 
-The Wagner–Fischer table is shared by WER (distance only) and SWER
-(alignment + severity weights). Do not reimplement alignment elsewhere.
+Edit distance uses rapidfuzz's C implementation over token sequences (same
+value as Wagner–Fischer). The pure-Python table below is kept only for
+``align_tokens``, which needs the backtrace for error analysis.
 """
 
 from dataclasses import dataclass
 from typing import List, Optional, Sequence
 import jiwer
 import numpy as np
+from rapidfuzz.distance import Levenshtein
 
 from bangla_asr.common.text import normalize_bangla_text
 
@@ -49,8 +51,8 @@ def _levenshtein_table(ref_tokens: Sequence[str], hyp_tokens: Sequence[str]) -> 
 
 
 def _levenshtein_distance(ref_tokens: Sequence[str], hyp_tokens: Sequence[str]) -> int:
-    """Classic Wagner–Fischer edit distance over token sequences."""
-    return _levenshtein_table(ref_tokens, hyp_tokens)[-1][-1]
+    """Token-level edit distance (unit costs), computed by rapidfuzz."""
+    return Levenshtein.distance(list(ref_tokens), list(hyp_tokens))
 
 
 def align_tokens(

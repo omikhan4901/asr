@@ -18,7 +18,6 @@ import numpy as np
 from bangla_asr.config import (
     AudioConfig,
     VADConfig,
-    AlignmentConfig,
     WhisperConfig,
     MBRConfig,
     BERTRerankerConfig,

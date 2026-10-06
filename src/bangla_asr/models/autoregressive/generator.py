@@ -65,10 +65,6 @@ class BatchedNBestGenerator:
         input_features = inputs.input_features.to(self.device, dtype=torch_dtype)
         attention_mask = inputs.attention_mask.to(self.device) if "attention_mask" in inputs else None
 
-        use_group_diversity = (
-            self.whisper_cfg.num_beam_groups is not None
-            and self.whisper_cfg.num_beam_groups > 1
-        )
         gen_kwargs = {
             "input_features": input_features,
             "max_new_tokens": self.whisper_cfg.max_new_tokens,
@@ -76,19 +72,14 @@ class BatchedNBestGenerator:
             "num_return_sequences": n,
             "early_stopping": True,
             "length_penalty": self.whisper_cfg.length_penalty,
-            "do_sample": bool(self.whisper_cfg.diverse_beam_search) and not use_group_diversity,
-            "temperature": (
-                self.whisper_cfg.sampling_temperature
-                if self.whisper_cfg.diverse_beam_search and not use_group_diversity
-                else 1.0
-            ),
+            # Beam-search multinomial sampling (published N-best setup): with
+            # do_sample=True, sequences_scores are length-penalized beam scores
+            # on the temperature-warped distribution, not calibrated log-posteriors.
+            "do_sample": bool(self.whisper_cfg.diverse_beam_search),
+            "temperature": self.whisper_cfg.sampling_temperature if self.whisper_cfg.diverse_beam_search else 1.0,
             "output_scores": True,
             "return_dict_in_generate": True,
         }
-        if use_group_diversity:
-            gen_kwargs["num_beam_groups"] = self.whisper_cfg.num_beam_groups
-            gen_kwargs["diversity_penalty"] = self.whisper_cfg.diversity_penalty
-            gen_kwargs["do_sample"] = False
         gen_kwargs.update(self.wrapper.prompt_kwargs)
         if attention_mask is not None:
             gen_kwargs["attention_mask"] = attention_mask

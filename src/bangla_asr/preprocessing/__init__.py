@@ -1,4 +1,4 @@
 from bangla_asr.preprocessing.vad import SileroVADChunker
-from bangla_asr.preprocessing.aligner import SequentialFuzzyAligner
+from bangla_asr.preprocessing.forced_align import MMSForcedAligner, chunk_words
 
-__all__ = ["SileroVADChunker", "SequentialFuzzyAligner"]
+__all__ = ["SileroVADChunker", "MMSForcedAligner", "chunk_words"]

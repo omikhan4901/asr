@@ -51,17 +51,33 @@ class VADConfig:
 
 
 @dataclass
-class AlignmentConfig:
-    min_alignment_score: int = 50
-    # Sliding window search bounds relative to sequential corpus pointer
-    search_window_lead: int = 5    # Search backwards up to 5 words
-    search_window_trail: int = 15   # Search forwards up to 15 words
-    # Search recovery if sequential pointer loses track
-    max_recovery_lookahead: int = 60
-    recovery_score_threshold: float = 65.0
-    # On a failed match, advance the corpus pointer by this fraction of the
-    # hypothesis word count so later chunks do not keep aligning to the same span.
-    failure_advance_frac: float = 0.25
+class ForcedAlignConfig:
+    """MMS_FA long-form forced alignment + word-boundary chunking (pipeline/01_segment.py)."""
+
+    # Emissions: window fed to wav2vec2, and context discarded on each side.
+    emission_window_s: float = 30.0
+    emission_context_s: float = 2.5
+    # Alignment windows: audio span per window, and how full of text to make it
+    # (fraction of the window the expected words should occupy at the global
+    # speaking rate; the trailing '*' absorbs the rest).
+    window_s: float = 60.0
+    fill_ratio: float = 0.5
+    min_words_per_window: int = 8
+    # Retry later window offsets when the first words align poorly
+    # (long untranscribed stretches).
+    max_skip_attempts: int = 4
+    probe_words: int = 8
+    good_window_score: float = 0.8
+    # Only commit words ending this far before the window end, then hold back
+    # the last few so they are re-aligned with right-context.
+    commit_margin_s: float = 5.0
+    holdback_words: int = 3
+    # Chunking.
+    max_chunk_s: float = 25.0
+    min_chunk_s: float = 2.0
+    break_pause_s: float = 2.0
+    edge_pad_s: float = 0.2
+    low_word_score: float = 0.4
 
 
 @dataclass
@@ -76,10 +92,6 @@ class WhisperConfig:
     length_penalty: float = 1.5
     diverse_beam_search: bool = True
     sampling_temperature: float = 0.7
-    # True diverse beam search (num_beam_groups). Off by default so the
-    # published sampling-based N-best setup remains the reproducible path.
-    num_beam_groups: int = 1
-    diversity_penalty: float = 0.0
     batch_size: int = 2
     attn_implementation: str = "sdpa"
 
@@ -144,7 +156,6 @@ class BERTRerankerConfig:
 class PipelineConfig:
     audio: AudioConfig = field(default_factory=AudioConfig)
     vad: VADConfig = field(default_factory=VADConfig)
-    alignment: AlignmentConfig = field(default_factory=AlignmentConfig)
     whisper: WhisperConfig = field(default_factory=WhisperConfig)
     whisper_train: WhisperTrainConfig = field(default_factory=WhisperTrainConfig)
     mbr: MBRConfig = field(default_factory=MBRConfig)

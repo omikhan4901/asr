@@ -57,21 +57,10 @@ class ForcedAlignConfig:
     # Emissions: window fed to wav2vec2, and context discarded on each side.
     emission_window_s: float = 30.0
     emission_context_s: float = 2.5
-    # Alignment windows: audio span per window, and how full of text to make it
-    # (fraction of the window the expected words should occupy at the global
-    # speaking rate; the trailing '*' absorbs the rest).
-    window_s: float = 60.0
-    fill_ratio: float = 0.5
-    min_words_per_window: int = 8
-    # Retry later window offsets when the first words align poorly
-    # (long untranscribed stretches).
-    max_skip_attempts: int = 4
-    probe_words: int = 8
-    good_window_score: float = 0.8
-    # Only commit words ending this far before the window end, then hold back
-    # the last few so they are re-aligned with right-context.
-    commit_margin_s: float = 5.0
-    holdback_words: int = 3
+    # Anchors: character k-gram length shared uniquely by the transcript and
+    # the aligner's greedy decode; minimum spacing between cut points.
+    anchor_k: int = 8
+    min_piece_s: float = 4.0
     # Chunking.
     max_chunk_s: float = 25.0
     min_chunk_s: float = 2.0

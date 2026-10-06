@@ -13,7 +13,8 @@ Outputs (in --output_dir):
   segment_log.csv          per-recording timing and coverage
 
 Audio is NOT copied: chunks store (recording audio path, start, end).
-Resumable: recordings whose chunks/<recording>.json exists are skipped.
+Resumable: recordings whose chunks/<recording>.json exists are skipped
+(use --overwrite to redo them).
 
 Example:
   PYTHONPATH=src ./Scripts/python.exe pipeline/01_segment.py --limit 1
@@ -42,6 +43,7 @@ def main():
     p.add_argument("--output_dir", default="data/processed_fa")
     p.add_argument("--limit", type=int, default=None, help="Process at most this many recordings (for testing)")
     p.add_argument("--only", nargs="*", default=None, help="Recording stems to process, e.g. train_001")
+    p.add_argument("--overwrite", action="store_true", help="Re-segment recordings that already have output")
     args = p.parse_args()
 
     cfg = ForcedAlignConfig()
@@ -54,7 +56,7 @@ def main():
         audio_files = [a for a in audio_files if a.stem in set(args.only)]
     todo = [a for a in audio_files
             if (Path(args.annotation_dir) / f"{a.stem}.txt").exists()
-            and not (out / "chunks" / f"{a.stem}.json").exists()]
+            and (args.overwrite or not (out / "chunks" / f"{a.stem}.json").exists())]
     if args.limit is not None:
         todo = todo[: args.limit]
     print(f"{len(audio_files)} recordings found, {len(todo)} to process -> {out}")
@@ -62,6 +64,8 @@ def main():
     aligner = MMSForcedAligner(cfg) if todo else None
     log_rows = []
     log_path = out / "segment_log.csv"
+    if args.overwrite and log_path.exists() and not args.only:
+        log_path.unlink()
 
     for i, wav in enumerate(todo, 1):
         t0 = time.time()
@@ -91,6 +95,8 @@ def main():
             "chunks": len(chunks),
             "chunk_audio_min": round(covered / 60, 2),
             "median_word_score": round(float(pd.Series([w.score for w in aligned if w.aligned]).median()), 4) if n_al else None,
+            "anchors": aligner.last_stats.get("anchors"),
+            "pieces": aligner.last_stats.get("pieces"),
             "seconds": round(time.time() - t0, 1),
         }
         log_rows.append(row)

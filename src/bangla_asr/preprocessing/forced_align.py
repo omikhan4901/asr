@@ -8,10 +8,11 @@ Pipeline (one recording):
      windows so an hour of audio never goes through the model at once.
   2. Transcript words romanized with uroman (MMS_FA's alphabet is Latin).
      Each original word keeps its index, so references stay in Bangla.
-  3. Windowed CTC forced alignment with a moving text pointer. Each window
-     aligns ``* w_i ... w_j *`` against up to ``window_s`` of audio; the
-     ``*`` wildcard absorbs untranscribed audio (music, intros) before and
-     after. Only words that end well inside the window are committed.
+  3. Anchor-based CTC forced alignment: character k-grams that the
+     aligner's own greedy decode and the transcript share uniquely become
+     anchors; the pieces between anchors are force-aligned independently
+     with a ``*`` wildcard at each end, so untranscribed audio (ads, music,
+     crosstalk) is absorbed and an error cannot drift through the file.
   4. Words -> chunks: cut at the longest pause so every chunk fits
      [min_chunk_s, max_chunk_s]. The chunk reference is exactly the
      transcript words inside it.
@@ -61,6 +62,7 @@ class MMSForcedAligner:
         self.uroman = uroman.Uroman()
         # wav2vec2 conv front-end: 320 samples per frame at 16 kHz.
         self.samples_per_frame = 320
+        self.last_stats: Dict[str, int] = {}
 
     # ------------------------------------------------------------------ text
     def romanize_words(self, words: List[str]) -> List[List[int]]:
@@ -152,82 +154,138 @@ class MMSForcedAligner:
             out.append((ws[0].start, ws[-1].end, score))
         return out
 
+    # ------------------------------------------------------------- anchors
+    def _greedy_chars(self, em: torch.Tensor) -> Tuple[List[int], List[int]]:
+        """Greedy CTC decode (excluding '*'): emitted token ids and their frames."""
+        ids = em[:, : self.star_id].argmax(-1).numpy()
+        chars, frames = [], []
+        prev = -1
+        for f, t in enumerate(ids):
+            if t != prev and t != self.blank_id:
+                chars.append(int(t))
+                frames.append(f)
+            prev = t
+        return chars, frames
+
+    @staticmethod
+    def _anchor_chain(ref: List[int], hyp: List[int], k: int) -> List[Tuple[int, int]]:
+        """(ref_pos, hyp_pos) of k-grams unique in both sequences, filtered to the
+        longest chain that is increasing in both (so anchors never cross)."""
+        import bisect
+        from collections import Counter
+
+        rg = [tuple(ref[i:i + k]) for i in range(len(ref) - k + 1)]
+        hg = [tuple(hyp[j:j + k]) for j in range(len(hyp) - k + 1)]
+        rc, hc = Counter(rg), Counter(hg)
+        rpos = {g: i for i, g in enumerate(rg) if rc[g] == 1 and hc.get(g) == 1}
+        pairs = sorted((rpos[g], j) for j, g in enumerate(hg) if g in rpos)
+        # Longest increasing subsequence in hyp position (ref already sorted).
+        tails, tail_idx, back = [], [], [-1] * len(pairs)
+        for i, (_, hj) in enumerate(pairs):
+            p = bisect.bisect_left(tails, hj)
+            if p == len(tails):
+                tails.append(hj)
+                tail_idx.append(i)
+            else:
+                tails[p] = hj
+                tail_idx[p] = i
+            back[i] = tail_idx[p - 1] if p else -1
+        chain = []
+        i = tail_idx[-1] if tail_idx else -1
+        while i != -1:
+            chain.append(pairs[i])
+            i = back[i]
+        return chain[::-1]
+
+    # ------------------------------------------------------------- alignment
     def align(self, audio: np.ndarray, words: List[str]) -> List[AlignedWord]:
-        """Word-level timestamps for the whole transcript."""
+        """Word-level timestamps for the whole transcript (anchor-based).
+
+        1. Greedy-decode the aligner's own emissions to a rough romanized
+           character stream with frame times.
+        2. Anchors: k-grams of characters that occur exactly once in both the
+           romanized transcript and the rough stream, kept only if they form a
+           monotonic chain. Inside an anchor the characters match exactly, so
+           their frames are known.
+        3. Cut points: word starts that fall strictly inside an anchor, placed
+           between the frames of the preceding and the starting character.
+        4. Forced-align each piece between cut points independently with '*'
+           at both ends. A misalignment therefore stays inside one piece
+           instead of drifting through the rest of the recording, and
+           untranscribed audio (ads, music, crosstalk) is absorbed by '*'.
+        """
         cfg = self.cfg
         em = self.emissions(audio)
         n_frames = em.shape[0]
         fps = self.sample_rate / self.samples_per_frame
         tokens = self.romanize_words(words)
-        alignable = [i for i, t in enumerate(tokens) if t]
-        if not alignable:
-            return []
 
-        # Global speaking-rate estimate: alignable words per second of audio.
-        rate = len(alignable) / max(1.0, n_frames / fps)
-        win_f = int(cfg.window_s * fps)
-        margin_f = int(cfg.commit_margin_s * fps)
+        ref = []
+        word_first_char = {}
+        for wi, toks in enumerate(tokens):
+            if toks:
+                word_first_char[wi] = len(ref)
+            ref.extend(toks)
+        if not ref:
+            return []
+        hyp, hyp_f = self._greedy_chars(em)
+        chain = self._anchor_chain(ref, hyp, cfg.anchor_k) if hyp else []
+        ref_to_frame = {}
+        for r, h in chain:
+            for d in range(cfg.anchor_k):
+                ref_to_frame[r + d] = hyp_f[h + d]
+
+        # Cut points: (first word index of the next piece, boundary frame).
+        cuts = []
+        for wi, c in word_first_char.items():
+            if c in ref_to_frame and (c - 1) in ref_to_frame:
+                f_prev, f_cur = ref_to_frame[c - 1], ref_to_frame[c]
+                if f_cur > f_prev:
+                    cuts.append((wi, (f_prev + f_cur) // 2))
+        cuts.sort()
+        # Thin cuts so pieces are at least min_piece_s long (fewer, sturdier pieces).
+        thinned, last_f = [], 0
+        for wi, f in cuts:
+            if f - last_f >= cfg.min_piece_s * fps:
+                thinned.append((wi, f))
+                last_f = f
+        bounds = [(0, 0)] + thinned + [(len(words), n_frames)]
 
         times: Dict[int, Tuple[float, float, float]] = {}
-        f0 = 0
-        k = 0  # pointer into `alignable`
-        while k < len(alignable):
-            n_words = max(cfg.min_words_per_window, int(cfg.fill_ratio * cfg.window_s * rate))
-            best = None
-            # Try a few window offsets; untranscribed stretches (music, ads) can be
-            # longer than the leading star can absorb within one window.
-            for attempt in range(cfg.max_skip_attempts):
-                fa = min(f0 + attempt * (win_f // 2), max(0, n_frames - 1))
-                fb = min(n_frames, fa + win_f)
-                chunk_ids = alignable[k : k + n_words]
-                res = self._align_window(em[fa:fb], [tokens[i] for i in chunk_ids])
-                if res is None:
-                    continue
-                head = [s for _, _, s in res[: cfg.probe_words]]
-                head_score = float(np.mean(head)) if head else 0.0
-                if best is None or head_score > best[0]:
-                    best = (head_score, fa, fb, chunk_ids, res)
-                if head_score >= cfg.good_window_score:
+        alignable = set(word_first_char)
+        i = 0
+        while i < len(bounds) - 1:
+            w0, f0 = bounds[i]
+            j = i + 1
+            # Merge with following pieces while this one is infeasible.
+            while True:
+                w1, f1 = bounds[j]
+                piece_words = [w for w in range(w0, w1) if w in alignable]
+                res = self._align_window(em[f0:f1], [tokens[w] for w in piece_words]) if piece_words else []
+                if res is not None or j == len(bounds) - 1:
                     break
-            if best is None:
-                # Window too short for the remaining text: give up on the tail.
-                break
-            _, fa, fb, chunk_ids, res = best
-            last = len(chunk_ids) == len(alignable) - k
-            # Commit words ending before the window's last margin (all, at the end of text).
-            limit = fb if (last or fb >= n_frames) else fb - margin_f
-            committed = 0
-            for wi, (s, e, sc) in zip(chunk_ids, res):
-                if e + fa > limit and committed >= 1:
-                    break
-                times[wi] = ((fa + s) / fps, (fa + e) / fps, sc)
-                committed += 1
-            if not last and committed > cfg.holdback_words:
-                # Hold back the last few committed words: they are re-aligned in the
-                # next window with right-context, which is more reliable.
-                for wi in chunk_ids[committed - cfg.holdback_words : committed]:
-                    times.pop(wi, None)
-                committed -= cfg.holdback_words
-            k += committed
-            f0 = int(times[alignable[k - 1]][1] * fps) if k > 0 else f0 + win_f // 2
+                j += 1
+            if res:
+                for w, (s, e, sc) in zip(piece_words, res):
+                    times[w] = ((f0 + s) / fps, (f0 + e) / fps, sc)
+            i = j
 
-        # Assemble all words; unalignable ones get the gap between their neighbours.
         result: List[AlignedWord] = []
         prev_end = 0.0
-        for i, w in enumerate(words):
-            if i in times:
-                s, e, sc = times[i]
-                result.append(AlignedWord(i, w, s, e, sc, True))
+        for wi, w in enumerate(words):
+            if wi in times:
+                s, e, sc = times[wi]
+                result.append(AlignedWord(wi, w, s, e, sc, True))
                 prev_end = e
             else:
-                result.append(AlignedWord(i, w, prev_end, prev_end, float("nan"), False))
-        # Give unaligned words the start of the next aligned word as their end.
+                result.append(AlignedWord(wi, w, prev_end, prev_end, float("nan"), False))
         next_start = n_frames / fps
         for wobj in reversed(result):
             if wobj.aligned:
                 next_start = wobj.start
             else:
                 wobj.end = max(wobj.start, next_start)
+        self.last_stats = {"anchors": len(chain), "pieces": len(bounds) - 1}
         return result
 
 

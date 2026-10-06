@@ -9,7 +9,7 @@
 # A failed step is logged and skipped; it is retried on the next run.
 
 cd "$(dirname "$0")/.." || exit 1
-export PYTHONPATH=src PYTHONIOENCODING=utf-8
+export PYTHONPATH=src PYTHONIOENCODING=utf-8 PYTHONUNBUFFERED=1
 PY=./Scripts/python.exe
 LOG=logs/day1
 mkdir -p "$LOG/done"
@@ -23,8 +23,10 @@ step() {  # step <name> <command...>
     echo "SKIP    $name (already done)" | tee -a "$STATUS"
     return
   fi
-  echo "=== $(date '+%a %H:%M') START $name"
-  if "$@" >> "$LOG/$name.log" 2>&1; then
+  echo "=== $(date '+%a %H:%M') START $name   (full log: $LOG/$name.log)"
+  # Show live output (progress bars) on screen and keep a copy in the log.
+  "$@" 2>&1 | tee -a "$LOG/$name.log"
+  if [ "${PIPESTATUS[0]}" -eq 0 ]; then
     touch "$LOG/done/$name"
     echo "OK      $name" | tee -a "$STATUS"
   else

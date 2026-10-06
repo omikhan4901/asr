@@ -85,8 +85,17 @@ class WhisperASRModel:
         gen_config.num_return_sequences = self.cfg.num_beams
         gen_config.early_stopping = True
         gen_config.length_penalty = self.cfg.length_penalty
-        gen_config.output_scores = True
-        gen_config.return_dict_in_generate = True
+        # Do NOT default output_scores/return_dict_in_generate to True here.
+        # BatchedNBestGenerator needs sequences_scores and sets both flags
+        # itself in its own gen_kwargs (self-contained). transcribe_batch()
+        # below, and pipeline/01_preprocess.py's rough-alignment pass, call
+        # generate() and hand the result straight to batch_decode() expecting
+        # a plain token-id tensor -- if this shared, mutable generation_config
+        # defaulted return_dict_in_generate to True, they would silently get
+        # a GenerateOutput object instead and batch_decode() would iterate
+        # its fields (sequences, then scores, ...) rather than decode tokens,
+        # surfacing as "Boolean value of Tensor with more than one value is
+        # ambiguous" deep inside the tokenizer.
 
         if self.cfg.num_beam_groups and self.cfg.num_beam_groups > 1:
             gen_config.do_sample = False

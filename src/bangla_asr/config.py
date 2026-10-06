@@ -29,14 +29,25 @@ class VADConfig:
     # short. Longer pauses become separate ASR/subtitle chunks.
     max_silence_gap_s: float = 0.5
     # Soft duration target. Once a packed chunk reaches this length, the next
-    # pause starts a new chunk even if the hard max has not been hit. This
-    # keeps alignment windows short on continuous audiobook speech.
-    preferred_chunk_duration_s: float = 15.0
+    # pause starts a new chunk even if the hard max has not been hit.
+    # Set close to max_chunk_duration_s (25.0) to match the published
+    # pipeline's chunk distribution (Fig 3.3, mean 22.71s) -- i.e. only split
+    # early on a genuine long pause, not merely because 15s has elapsed.
+    preferred_chunk_duration_s: float = 24.0
     # When continuous speech must be split at max_chunk_duration_s, search
     # backward from that limit for a low-energy boundary rather than cutting
     # at an arbitrary sample in the middle of a word.
     split_search_window_s: float = 1.0
     split_energy_frame_s: float = 0.04
+    # A candidate split point only counts as a genuine pause if its local RMS
+    # is <= this fraction of the un-split span's average RMS. Without this
+    # gate, the backward search always returns *some* point (even the
+    # locally-quietest sample of continuous, pause-free speech, e.g. a
+    # plosive closure), which can silently cut mid-word. When no candidate
+    # clears the bar, the split falls back to a plain hard cut at the
+    # duration cap instead of mislabeling a mid-word dip as a safe boundary.
+    # Heuristic default, not empirically tuned against real Bangla audio.
+    split_quiet_ratio: float = 0.85
 
 
 @dataclass

@@ -85,14 +85,23 @@ class SileroVADChunker:
         chunk_start: int,
         latest_end: int,
         min_samples: int,
+        span_end: int,
     ) -> int:
-        """Returns a low-energy split point at or shortly before latest_end.
+        """Returns a low-energy split point at or shortly before latest_end,
+        or ``chunk_start`` if no candidate is a genuine pause (caller then
+        hard-cuts at the duration cap instead of guessing).
 
         Silero can label a long narrated passage as one continuous speech
         region. Splitting exactly at the duration limit then risks cutting a
         syllable. This bounded backward search keeps the chunk within the
         limit while preferring a local energy trough. It deliberately does
         not look beyond latest_end, so it never creates an oversized chunk.
+
+        The raw argmin alone is not enough: on pause-free speech, it still
+        returns *some* sample (e.g. a plosive closure inside a word), which
+        looks like a safe split but isn't. ``split_quiet_ratio`` gates the
+        result against the average RMS of the whole un-split span
+        (``chunk_start:span_end``) so only a genuine dip is accepted.
         """
         sr = self.audio_cfg.sample_rate
         search_samples = int(max(0.0, self.vad_cfg.split_search_window_s) * sr)
@@ -113,7 +122,18 @@ class SileroVADChunker:
             frame = audio_array[left:right]
             return float(np.sqrt(np.mean(np.square(frame, dtype=np.float64)))) if len(frame) else float("inf")
 
-        return min(candidates, key=rms_at)
+        best_point = min(candidates, key=rms_at)
+        best_rms = rms_at(best_point)
+
+        reference_frame = audio_array[chunk_start:span_end]
+        reference_rms = (
+            float(np.sqrt(np.mean(np.square(reference_frame, dtype=np.float64))))
+            if len(reference_frame)
+            else 0.0
+        )
+        if reference_rms <= 0.0 or best_rms <= self.vad_cfg.split_quiet_ratio * reference_rms:
+            return best_point
+        return chunk_start
 
     def _clip_span(self, start: int, end: int, n_samples: int) -> Tuple[int, int]:
         start = max(0, min(int(start), n_samples))
@@ -141,7 +161,7 @@ class SileroVADChunker:
                 latest_end = min(curr + max_samples, reserved_tail if reserved_tail > curr else curr + max_samples)
                 latest_end = max(curr + 1, latest_end)
                 split = self._find_low_energy_split(
-                    audio_array, curr, latest_end, min_samples
+                    audio_array, curr, latest_end, min_samples, e
                 )
                 if split <= curr:
                     split = min(curr + max_samples, e)
@@ -174,14 +194,55 @@ class SileroVADChunker:
         packed_chunks.append((cur_start, cur_end))
         return packed_chunks
 
+    def _expand_to_min_duration(
+        self,
+        s: int,
+        e: int,
+        min_samples: int,
+        left_bound: int,
+        right_bound: int,
+    ) -> Tuple[int, int]:
+        """Grow an isolated short span with ambient audio up to min_samples.
+
+        Bounded by the neighbouring chunk (or file edge) on each side, so the
+        expansion never overlaps another chunk's audio. If the surrounding
+        room is too tight to fully reach min_samples, it grows as far as it
+        can rather than being discarded — a short valid utterance must still
+        reach Whisper.
+        """
+        deficit = min_samples - (e - s)
+        if deficit <= 0:
+            return s, e
+        avail_left = max(0, s - left_bound)
+        avail_right = max(0, right_bound - e)
+        pad_left = min(deficit // 2, avail_left)
+        pad_right = min(deficit - pad_left, avail_right)
+        remaining = deficit - pad_left - pad_right
+        if remaining > 0:
+            extra = min(remaining, avail_left - pad_left)
+            pad_left += extra
+            remaining -= extra
+        if remaining > 0:
+            extra = min(remaining, avail_right - pad_right)
+            pad_right += extra
+            remaining -= extra
+        return s - pad_left, e + pad_right
+
     def _merge_short_chunks(
         self,
         packed_chunks: List[Tuple[int, int]],
         min_samples: int,
         max_samples: int,
         max_gap_samples: int,
+        n_samples: int,
     ) -> List[Tuple[int, int]]:
-        """Absorb undersized fragments into a neighbour when the gap is small."""
+        """Absorb undersized fragments into a neighbour when the gap is small.
+
+        A fragment that cannot merge into a neighbour is never dropped: it is
+        expanded with ambient audio (bounded by its neighbours / file edges)
+        up to min_samples instead, so isolated short speech still reaches
+        Whisper.
+        """
         if not packed_chunks:
             return []
 
@@ -206,8 +267,11 @@ class SileroVADChunker:
                     merged[i + 1] = (s, ne)
                     i += 1
                     continue
-            if (e - s) >= min_samples:
-                final.append((s, e))
+            if (e - s) < min_samples:
+                left_bound = final[-1][1] if final else 0
+                right_bound = merged[i + 1][0] if i + 1 < len(merged) else n_samples
+                s, e = self._expand_to_min_duration(s, e, min_samples, left_bound, right_bound)
+            final.append((s, e))
             i += 1
         return final
 
@@ -244,7 +308,7 @@ class SileroVADChunker:
             normalized_spans, max_samples, preferred_samples, max_gap_samples
         )
         packed_chunks = self._merge_short_chunks(
-            packed_chunks, min_samples, max_samples, max_gap_samples
+            packed_chunks, min_samples, max_samples, max_gap_samples, len(audio_array)
         )
 
         results = []

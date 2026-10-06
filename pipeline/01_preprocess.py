@@ -10,7 +10,6 @@ import sys
 from pathlib import Path
 import pandas as pd
 from tqdm import tqdm
-import torch
 
 # Add src to sys.path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
@@ -33,6 +32,7 @@ def main():
     parser.add_argument("--max_silence_gap_s", type=float, default=1.0, help="Do not merge speech spans across longer pauses")
     parser.add_argument("--split_search_window_s", type=float, default=1.0, help="Search this far backward for a quiet forced-split boundary")
     parser.add_argument("--min_alignment_score", type=int, default=50, help="RapidFuzz threshold")
+    parser.add_argument("--rough_align_batch_size", type=int, default=8, help="Chunks per batched greedy-decode call during rough alignment (raise if VRAM allows, lower if it OOMs)")
     parser.add_argument("--resume", action=argparse.BooleanOptionalAction, default=True, help="Resume from checkpoint")
     args = parser.parse_args()
 
@@ -88,31 +88,41 @@ def main():
             stem = audio_file.stem
             transcribed_chunks = []
 
+            # Save every chunk's audio first (cheap I/O), then batch the rough
+            # transcription pass through transcribe_batch() instead of one
+            # generate() call per chunk -- greedy batch-size-1 decoding keeps
+            # the GPU at "100% util" while launching tiny sequential kernels,
+            # so throughput barely improves over CPU. Batching multiple
+            # chunks per call is what actually uses the GPU's parallelism.
+            chunk_meta = []
             for idx, c in enumerate(raw_chunks):
                 chunk_filename = f"{stem}_{idx:03d}.wav"
                 chunk_save_path = audio_out_dir / chunk_filename
                 save_audio(chunk_save_path, c["audio"], sample_rate=sr)
-
-                # Rough transcription for alignment
-                inputs = whisper_wrapper.processor(c["audio"], sampling_rate=sr, return_tensors="pt")
-                inp_feat = inputs.input_features.to(whisper_wrapper.device, dtype=torch.float16 if whisper_wrapper.device.type == "cuda" else torch.float32)
-                with torch.no_grad():
-                    gen_ids = whisper_wrapper.model.generate(
-                        inp_feat,
-                        max_new_tokens=256,
-                        **whisper_wrapper.prompt_kwargs,
-                    )
-                hyp_text = whisper_wrapper.processor.batch_decode(gen_ids, skip_special_tokens=True)[0]
-
-                transcribed_chunks.append({
+                chunk_meta.append({
                     "chunk_id": idx,
                     "audio_path": str(chunk_save_path).replace("\\", "/"),
-                    "text": hyp_text.strip(),
+                    "audio": c["audio"],
                     "start": c["start_sec"],
                     "end": c["end_sec"],
                     "duration": c["duration_sec"],
-                    "file_num": file_num,
                 })
+
+            for b_start in range(0, len(chunk_meta), args.rough_align_batch_size):
+                batch = chunk_meta[b_start : b_start + args.rough_align_batch_size]
+                hyp_texts = whisper_wrapper.transcribe_batch(
+                    [m["audio"] for m in batch], sampling_rate=sr
+                )
+                for m, hyp_text in zip(batch, hyp_texts):
+                    transcribed_chunks.append({
+                        "chunk_id": m["chunk_id"],
+                        "audio_path": m["audio_path"],
+                        "text": hyp_text.strip(),
+                        "start": m["start"],
+                        "end": m["end"],
+                        "duration": m["duration"],
+                        "file_num": file_num,
+                    })
 
             # Align with reference transcript
             ref_text = text_file.read_text(encoding="utf-8")

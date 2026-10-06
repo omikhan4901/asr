@@ -1,21 +1,24 @@
 #!/usr/bin/env bash
-# Phase 1 batch: split -> test-set downloads -> 12-best + plateau analysis -> zero-shot baselines.
+# Phase 1: baselines and plateau analysis.
+# split -> test-set downloads -> 12-best + candidate-agreement analysis -> zero-shot baselines.
 # Run AFTER pipeline/01_segment.py has finished, from the repo root, in Git Bash:
-#     bash runs/day1.sh
+#     bash runs/phase1_baselines.sh
 #
 # Breakable: stop any time (Ctrl+C, shutdown, power cut) and run the same command
-# again. Finished steps are skipped (marker files in logs/day1/done/), and the
+# again. Finished steps are skipped (marker files in logs/phase1/done/), and the
 # long steps continue from the last finished batch inside the step.
 # A failed step is logged and skipped; it is retried on the next run.
 
 cd "$(dirname "$0")/.." || exit 1
 export PYTHONPATH=src PYTHONIOENCODING=utf-8 PYTHONUNBUFFERED=1
 PY=./Scripts/python.exe
-LOG=logs/day1
+LOG=logs/phase1
 mkdir -p "$LOG/done"
+# Carry over progress from the earlier name of this script (runs/day1.sh).
+if [ -d logs/day1/done ]; then cp -n logs/day1/done/* "$LOG/done/" 2>/dev/null; fi
 STATUS="$LOG/status.txt"
 : > "$STATUS"
-trap 'echo; echo "Stopped. Progress is saved; run  bash runs/day1.sh  again to continue."; exit 130' INT
+trap 'echo; echo "Stopped. Progress is saved; run  bash runs/phase1_baselines.sh  again to continue."; exit 130' INT
 
 step() {  # step <name> <command...>
   local name=$1; shift

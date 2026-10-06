@@ -54,6 +54,11 @@ venv/
 env/
 pyvenv.cfg
 .ipynb_checkpoints/
+# The repo root doubles as a Windows venv; keep its folders out of git.
+/Include/
+/Scripts/
+/share/
+/etc/
 
 # ── Node / frontend tooling (if you add a build step later) ───────────────
 node_modules/

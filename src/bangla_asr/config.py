@@ -117,99 +117,11 @@ class WhisperTrainConfig:
 
 
 @dataclass
-class Wav2Vec2Config:
-    """CTC acoustic-model settings. Defaults do not affect the Whisper baseline."""
-
-    model_id: str = "arijitx/wav2vec2-xls-r-300m-bengali"
-    kenlm_model_path: Optional[str] = None
-    beam_width: int = 12
-    lm_alpha: float = 0.5
-    lm_beta: float = 1.0
-    batch_size: int = 4
-    attn_implementation: Optional[str] = None
-
-
-@dataclass
-class SWERConfig:
-    """Clinical-severity-weighted error rate. Distinct from Roy 2021 Semantic WER.
-
-    Denominator interpretation (explicit, not hidden):
-        Each reference token contributes ``critical_reference_weight`` (5.0) if
-        it is marked critical, else ``default_reference_weight`` (1.0). The
-        draft specified edit multipliers but not this per-token mass. Review
-        before treating SWER as a frozen metric.
-
-    JUDGMENT CALL — do not silently equalize these two numbers:
-        critical_substitution_weight = 5.0
-        critical_deletion_weight     = 4.0
-        critical_reference_weight    = 5.0
-        For a single critical reference token this yields
-            substitution SWER = 5/5 = 1.0
-            deletion     SWER = 4/5 = 0.8
-        Implication: dropping a critical term is scored as slightly *less*
-        severe than getting it wrong. That was an artifact of the first draft
-        numbers, not a supervisor-approved clinical decision. Change the
-        weights here if you decide they should be equal (or reversed).
-    """
-
-    lexicon_path: Optional[str] = None
-    # See class docstring: substitution 5.0 vs deletion 4.0 is a visible
-    # unresolved clinical decision, not an implementation bug.
-    critical_substitution_weight: float = 5.0
-    garbled_span_weight: float = 5.0
-    minor_substitution_weight: float = 1.0
-    critical_deletion_weight: float = 4.0
-    noncritical_deletion_weight: float = 1.0
-    hallucinated_insertion_weight: float = 3.0
-    filler_insertion_weight: float = 1.0
-    critical_reference_weight: float = 5.0
-    default_reference_weight: float = 1.0
-    # Detector: composite | explicit | character | wordlist_oov | edit_distance
-    garbled_detector: str = "composite"
-    garbled_wordlist_path: Optional[str] = None
-    garbled_edit_threshold: int = 2
-    # If True, composite/wordlist_oov treat every OOV token as garbled
-    # (high false-positive risk with the starter wordlist).
-    treat_oov_as_garbled: bool = False
-
-
-@dataclass
 class MBRConfig:
     # Softmax scaling temperature for acoustic sequence logprobs
     # Temperature < 1.0 sharpens acoustic confidence; > 1.0 flattens towards uniform consensus
     temperature: float = 0.5
     empty_loss_penalty: float = 1.0
-
-
-@dataclass
-class GRPOConfig:
-    """Group Relative Policy Optimization for SWER-improvement correction."""
-
-    model_id: str = "WeiboAI/VibeThinker-3B"
-    learning_rate: float = 1e-6
-    batch_size: int = 1
-    group_size: int = 4
-    max_new_tokens: int = 128
-    sampling_temperature: float = 0.8
-    top_p: float = 0.95
-    kl_coef: float = 0.05
-    reward_scale: float = 1.0
-    reward_clip: float = 2.0
-    max_steps: int = 100
-    eval_every: int = 10
-    checkpoint_every: int = 20
-    checkpoint_dir: str = "checkpoints/grpo"
-    log_dir: str = "logs/grpo"
-    seed: int = 42
-    max_grad_norm: float = 1.0
-    warmup_steps: int = 5
-    early_stopping_patience: int = 5
-    prompt_style: str = "simple"
-    advantage_eps: float = 1e-8
-    # Empty-reference SWER is NaN. True (default) drops those pairs from the
-    # GRPO batch and logs ``excluded_empty_reference``. False maps them to
-    # reward 0.0, which dilutes the batch mean — that was the old behaviour.
-    exclude_empty_reference_from_batch: bool = True
 
 
 @dataclass
@@ -235,8 +147,5 @@ class PipelineConfig:
     alignment: AlignmentConfig = field(default_factory=AlignmentConfig)
     whisper: WhisperConfig = field(default_factory=WhisperConfig)
     whisper_train: WhisperTrainConfig = field(default_factory=WhisperTrainConfig)
-    wav2vec2: Wav2Vec2Config = field(default_factory=Wav2Vec2Config)
     mbr: MBRConfig = field(default_factory=MBRConfig)
-    swer: SWERConfig = field(default_factory=SWERConfig)
-    grpo: GRPOConfig = field(default_factory=GRPOConfig)
     bert: BERTRerankerConfig = field(default_factory=BERTRerankerConfig)

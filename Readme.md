@@ -1,14 +1,16 @@
 # Bangla Long-Form ASR: Inference-Only Rescoring & Discriminative Reranking
 
-**Group textbook (read this if you are new):** `cd handbook && npm install && npm run dev`, then open http://localhost:3000. **Engineering handoff:** [`docs/STATUS.md`](docs/STATUS.md). It lists what is trustworthy, every SWER/GRPO judgment call, remaining resources to source, and the ordered next-step list. This README is the command reference for the published Whisper baseline plus the newer dual-model / SWER / GRPO stages.
-
 Companion codebase for *\"Inference-Only Rescoring for Bangla Long-Form ASR: Characterizing Oracle Headroom and MBR Consensus Recovery\"* (CSE499 capstone, North South University).
 
-**Headline result (eval split, N=2,271):** 
+**Headline result (eval split, N=2,271), as published in 499A:** 
 - **1-Best Baseline WER:** 34.85% (CER: 14.12%)
 - **MBR-Rescored WER:** 32.29% (CER: 13.08%)
 - **Oracle Ceiling WER:** 28.72% (CER: 11.24%)
 - **Headroom Recovery:** Minimum Bayes Risk (MBR) recovers **~41.8%** of the available oracle headroom without a single parameter update, approaching the cited LoRA fine-tune baseline (31.32%, Bhuiyan et al., arXiv:2605.08214).
+
+> **Note:** these numbers used a weaker text normalizer (only `। , . ? !` stripped). With the current
+> normalizer in `common/text.py` (all punctuation, incl. hyphens/quotes) the same N-best file gives
+> 1-best **26.98%**, MBR **24.35%**, oracle **20.57%** (MBR still recovers ~41% of the headroom).
 
 ---
 
@@ -161,73 +163,11 @@ python pipeline/08_evaluate_benchmarks.py \
 
 ---
 
-## Dual acoustic models, SWER, and GRPO correction
-
-Bangla remains the primary track. The published Whisper pipeline above is unchanged (`num_beams=12`, sampling temperature `0.7`, MBR temperature `0.5`). New modules live under `src/bangla_asr/` and do not replace `pipeline/03_generate_nbest.py` … `pipeline/08_evaluate_benchmarks.py`.
-
-### Shared `ASRModel` interface
-Whisper and Wav2Vec2 both implement `transcribe_nbest(audio, n) -> List[Hypothesis]`. Hypothesis dumps still use `{"text", "logprob", "rank"}` so `MBRSelector` is bit-compatible with the 32.29% path.
-
-Install CTC extras before requesting Wav2Vec2 N-best (`n > 1`). Missing `pyctcdecode` raises; it does **not** repeat greedy 1-best.
-
-```bash
-pip install -e ".[ctc]"
-python pipeline/03b_generate_wav2vec2_nbest.py \
-  --split_csv data/processed/splits/eval_split.csv \
-  --output_jsonl data/processed/nbest/eval_wav2vec2_nbest.jsonl \
-  --model_id arijitx/wav2vec2-xls-r-300m-bengali
-```
-
-KenLM is optional (`--kenlm_model_path`). Acoustic-only beam search is still a real N-best list.
-
-### Side-by-side evaluation
-```bash
-python pipeline/09_compare_acoustic_models.py \
-  --whisper_jsonl data/processed/nbest/eval_nbest_candidates.jsonl \
-  --wav2vec2_jsonl data/processed/nbest/eval_wav2vec2_nbest.jsonl \
-  --output_dir data/processed/results/compare_models
-```
-
-CTC beam scores are **not** on the Whisper log-prob scale. Keep `--whisper_mbr_temperature 0.5` for baseline reproduction; set `--wav2vec2_mbr_temperature` separately. CTC 1-best uses stored `greedy_text` (KenLM beam-1 can differ from greedy).
-
-### SWER (clinical-severity-weighted error rate)
-This is **not** Roy 2021 Semantic WER. Implementation: `src/bangla_asr/metrics/swer.py` + `severity_lexicon.py`. The shipped table (`metrics/lexicons/placeholder_bangla.yaml`) is a **PLACEHOLDER**. English clinical lexicons are a parallel track and are not loaded by default.
-
-### GRPO correction (SWER-improvement reward)
-Reward is `SWER(asr, gt) - SWER(correction, gt)`, with `reward_scale` / `reward_clip` in config. Logs are JSONL + CSV only (no W&B).
-
-```bash
-python pipeline/10_train_grpo.py \
-  --train_jsonl data/processed/correction/train.jsonl \
-  --eval_jsonl data/processed/correction/eval.jsonl
-```
-
-Modal (same `bangla-asr-data` volume as N-best generation):
-
-```bash
-modal run src/bangla_asr/training/modal_train.py \
-  --train-jsonl /data/train_correction.jsonl
-```
-
-`correction/react_scaffold.py` is a stub (text-only tools, no clinical KB). Use `--` / `prompt_style: react` only as an API experiment.
-
-### Dataset loaders
-`get_loader("bangla_manifest")` wraps the existing aligned CSV. `get_loader("meddialog_en_asr")` / `"primock"` raise `NotImplementedError` on purpose.
-
-### Tests
+## Tests
 ```bash
 set PYTHONPATH=src
 python tests/test_smoke.py
-python tests/test_asr_interface.py
-python tests/test_wav2vec2_nbest.py
 python tests/test_mbr.py
-python tests/test_compare_models.py
-python tests/test_swer.py
-python tests/test_garbled.py
-python tests/test_reward.py
-python tests/test_loaders.py
-python tests/test_react_scaffold.py
-python tests/test_swer_sanity.py
 ```
 
 ---

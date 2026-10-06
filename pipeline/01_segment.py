@@ -71,7 +71,13 @@ def main():
         t0 = time.time()
         text = (Path(args.annotation_dir) / f"{wav.stem}.txt").read_text(encoding="utf-8-sig")
         words = text.split()
-        audio, sr = load_audio(wav, target_sr=aligner.sample_rate)
+        try:
+            audio, sr = load_audio(wav, target_sr=aligner.sample_rate)
+        except Exception as exc:  # e.g. a 0-byte file in the release
+            print(f"[{i}/{len(todo)}] {wav.stem}: SKIPPED ({exc})")
+            pd.DataFrame([{"recording": wav.stem, "error": str(exc)}]).to_csv(
+                out / "skipped.csv", mode="a", header=not (out / "skipped.csv").exists(), index=False)
+            continue
         dur = len(audio) / sr
 
         aligned = aligner.align(audio, words)

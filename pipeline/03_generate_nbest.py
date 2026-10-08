@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """
-Step 3: Autoregressive N-Best Candidate Generation using Whisper (Batched & Diverse Beam Search).
+Step 3: N-best candidate generation with Whisper (batched).
+
+--decoding sampled  beam-search multinomial sampling at --temperature (the 499A /
+                    Phase 1 setup; candidates are diverse but rank 0 is worse
+                    than greedy)
+--decoding beam     deterministic beam search, the N best beams (no sampling)
 """
 
 import argparse
@@ -17,6 +22,7 @@ from tqdm import tqdm
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from bangla_asr.common.audio import load_row_audio
+from bangla_asr.common.provenance import RunRecord
 from bangla_asr.common.safe_io import read_jsonl, repair_jsonl
 from bangla_asr.config import AudioConfig, WhisperConfig
 from bangla_asr.models.autoregressive.whisper_model import WhisperASRModel
@@ -30,7 +36,8 @@ def main():
     parser.add_argument("--output_jsonl", type=str, default="data/nbest_fa/eval_nbest.jsonl")
     parser.add_argument("--model_id", type=str, default=None, help="Override WhisperConfig.model_id")
     parser.add_argument("--num_beams", type=int, default=12, help="Winning beam count from calibration sweep")
-    parser.add_argument("--temperature", type=float, default=0.7, help="Stochastic beam sampling temperature")
+    parser.add_argument("--decoding", choices=["sampled", "beam"], default="sampled")
+    parser.add_argument("--temperature", type=float, default=0.7, help="Sampling temperature (--decoding sampled)")
     parser.add_argument("--batch_size", type=int, default=2)
     parser.add_argument("--limit", type=int, default=None, help="Optional subset limit for fast testing")
     parser.add_argument("--resume", action=argparse.BooleanOptionalAction, default=True)
@@ -59,63 +66,69 @@ def main():
     whisper_cfg = WhisperConfig(
         **cfg_kwargs,
         num_beams=args.num_beams,
-        diverse_beam_search=True,
+        diverse_beam_search=args.decoding == "sampled",
         sampling_temperature=args.temperature,
         batch_size=args.batch_size,
     )
-    model_wrapper = WhisperASRModel(whisper_cfg)
-    generator = BatchedNBestGenerator(model_wrapper, whisper_config=whisper_cfg)
+    run_rec = RunRecord(out_file.with_suffix(".run_info.json"), inputs=[args.split_csv])
+    with run_rec:
+        model_wrapper = WhisperASRModel(whisper_cfg)
+        generator = BatchedNBestGenerator(model_wrapper, whisper_config=whisper_cfg)
 
-    batch_size = args.batch_size
-    n_batches = (len(remaining_df) + batch_size - 1) // batch_size
+        batch_size = args.batch_size
+        n_batches = (len(remaining_df) + batch_size - 1) // batch_size
 
-    with open(out_file, "a", encoding="utf-8") as f_out:
-        for b_idx in tqdm(range(n_batches), desc="Generating N-best Candidates"):
-            batch_df = remaining_df.iloc[b_idx * batch_size : (b_idx + 1) * batch_size]
-            audio_arrays = []
-            valid_rows = []
+        with open(out_file, "a", encoding="utf-8") as f_out:
+            for b_idx in tqdm(range(n_batches), desc="Generating N-best Candidates"):
+                batch_df = remaining_df.iloc[b_idx * batch_size : (b_idx + 1) * batch_size]
+                audio_arrays = []
+                valid_rows = []
 
-            for _, row in batch_df.iterrows():
-                try:
-                    arr = load_row_audio(row)
-                    audio_arrays.append(arr)
-                    valid_rows.append(row)
-                except Exception as exc:
-                    print(f"Failed to load audio for {row['utt_id']}: {exc}")
+                for _, row in batch_df.iterrows():
+                    try:
+                        arr = load_row_audio(row)
+                        audio_arrays.append(arr)
+                        valid_rows.append(row)
+                    except Exception as exc:
+                        print(f"Failed to load audio for {row['utt_id']}: {exc}")
 
-            if not audio_arrays:
-                continue
-
-            try:
-                batch_candidates = generator.generate_batch(audio_arrays)
-            except torch.cuda.OutOfMemoryError:
-                # Long chunks x 12 beams can exceed 12 GB together; retry one at a time.
-                torch.cuda.empty_cache()
-                batch_candidates = []
-                try:
-                    for arr in audio_arrays:
-                        batch_candidates.extend(generator.generate_batch([arr]))
-                        torch.cuda.empty_cache()
-                except Exception as exc:
-                    print(f"Generation error on batch (also failed one at a time): {exc}")
+                if not audio_arrays:
                     continue
-            except Exception as exc:
-                print(f"Generation error on batch: {exc}")
-                continue
 
-            for row, candidates in zip(valid_rows, batch_candidates):
-                record = {
-                    "utt_id": row["utt_id"],
-                    "audio_path": row["audio_path"],
-                    "group": str(row.get("recording", row.get("group", row["utt_id"]))),
-                    "ground_truth": row[ref_col],
-                    "candidates": candidates,
-                }
-                f_out.write(json.dumps(record, ensure_ascii=False) + "\n")
-                completed_ids.add(row["utt_id"])
+                try:
+                    batch_candidates = generator.generate_batch(audio_arrays)
+                except torch.cuda.OutOfMemoryError:
+                    # Long chunks x 12 beams can exceed 12 GB together; retry one at a time.
+                    torch.cuda.empty_cache()
+                    batch_candidates = []
+                    try:
+                        for arr in audio_arrays:
+                            batch_candidates.extend(generator.generate_batch([arr]))
+                            torch.cuda.empty_cache()
+                    except Exception as exc:
+                        print(f"Generation error on batch (also failed one at a time): {exc}")
+                        continue
+                except Exception as exc:
+                    print(f"Generation error on batch: {exc}")
+                    continue
 
-            f_out.flush()
+                for row, candidates in zip(valid_rows, batch_candidates):
+                    record = {
+                        "utt_id": row["utt_id"],
+                        "audio_path": row["audio_path"],
+                        "group": str(row.get("recording", row.get("group", row["utt_id"]))),
+                        "ground_truth": row[ref_col],
+                        "candidates": candidates,
+                    }
+                    f_out.write(json.dumps(record, ensure_ascii=False) + "\n")
+                    completed_ids.add(row["utt_id"])
 
+                f_out.flush()
+
+        run_rec.outputs = [out_file]
+        run_rec.extra = {"decoding": args.decoding, "num_beams": args.num_beams,
+                        "temperature": args.temperature if args.decoding == "sampled" else None,
+                        "model_id": whisper_cfg.model_id}
     print(f"Step 3 Complete. Output candidate pools saved to {out_file}")
 
 

@@ -62,3 +62,25 @@ def corpus_rates(
         "cer_ci95": [float(np.percentile(cers, 2.5)), float(np.percentile(cers, 97.5))],
     })
     return out
+
+
+def bootstrap_ratio(groups: Sequence, num, den, n_boot: int = 1000, seed: int = 0) -> Dict:
+    """Corpus ratio sum(num) / sum(den) with a cluster-bootstrap 95% CI.
+
+    groups: one cluster id per row (recording or speaker). num, den: one value
+    per row. For a paired comparison of systems A and B on the same rows, pass
+    num = edits_B - edits_A and den = reference words.
+    """
+    num, den = np.asarray(num, float), np.asarray(den, float)
+    uniq = {g: k for k, g in enumerate(dict.fromkeys(groups))}
+    gidx = np.array([uniq[g] for g in groups])
+    G = len(uniq)
+    gn, gd = np.bincount(gidx, num, G), np.bincount(gidx, den, G)
+    samp = np.random.default_rng(seed).integers(0, G, size=(n_boot, G))
+    draws = gn[samp].sum(1) / np.maximum(1e-12, gd[samp].sum(1))
+    return {
+        "value": float(num.sum() / den.sum()) if den.sum() else float("nan"),
+        "ci95": [float(np.percentile(draws, 2.5)), float(np.percentile(draws, 97.5))],
+        "n_groups": G,
+        "draws": draws,
+    }

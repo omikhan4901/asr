@@ -31,23 +31,12 @@ import pandas as pd
 from tqdm import tqdm
 
 sys.path.insert(0, "src")
-from bangla_asr.common.metrics import align_tokens  # noqa: E402
+from bangla_asr.common.agreement import agreement_counts, correct_positions  # noqa: E402
 from bangla_asr.common.safe_io import read_jsonl  # noqa: E402
 from bangla_asr.common.text import normalize_bangla_text  # noqa: E402
 from bangla_asr.config import MBRConfig  # noqa: E402
 from bangla_asr.rescoring.mbr import MBRSelector  # noqa: E402
 from rapidfuzz.distance import Levenshtein  # noqa: E402
-
-
-def correct_positions(ref, hyp):
-    """Set of reference indices the hypothesis gets right, and the 1-best op per index."""
-    ok, ops = set(), {}
-    for o in align_tokens(ref, hyp):
-        if o.ref_index is not None:
-            ops[o.ref_index] = (o.op, o.hyp_token or "")
-            if o.op == "equal":
-                ok.add(o.ref_index)
-    return ok, ops
 
 
 def main():
@@ -74,11 +63,7 @@ def main():
         mbr_text = selector.select(cands)["text"]
         mbr_toks = normalize_bangla_text(mbr_text).split()
 
-        counts = np.zeros(len(ref), int)
-        for t in toks:
-            ok, _ = correct_positions(ref, t)
-            for i in ok:
-                counts[i] += 1
+        counts = agreement_counts(ref, toks)
         ok1, ops1 = correct_positions(ref, toks[0])
         okm, _ = correct_positions(ref, mbr_toks)
 

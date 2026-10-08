@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bangla ASR labeling</title>
+<style>
+  :root { --bg:#fafaf8; --card:#fff; --ink:#1d1d1b; --muted:#6b6b66; --line:#e3e3de; --accent:#2f5d8a; --ok:#2e7d4f; --warn:#a15c00; --mark:#fff1b8; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#161615; --card:#1f1f1d; --ink:#ececea; --muted:#a3a39d; --line:#34342f; --accent:#7fb0e0; --ok:#6cc08f; --warn:#e0a050; --mark:#5a4a10; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 system-ui, "Segoe UI", sans-serif; }
+  .bn { font-family: "Nirmala UI", "Noto Sans Bengali", "Vrinda", sans-serif; }
+  header { display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:12px 16px; border-bottom:1px solid var(--line); background:var(--card); position:sticky; top:0; }
+  header h1 { font-size:16px; margin:0 12px 0 0; }
+  nav button, .btn { border:1px solid var(--line); background:var(--card); color:var(--ink); padding:7px 12px; border-radius:6px; cursor:pointer; font:inherit; font-size:14px; }
+  nav button[aria-pressed=true] { border-color:var(--accent); color:var(--accent); font-weight:600; }
+  .btn.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .spacer { flex:1; }
+  main { max-width:860px; margin:0 auto; padding:20px 16px 60px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:18px; }
+  .meta { color:var(--muted); font-size:14px; display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+  .bar { height:6px; background:var(--line); border-radius:3px; overflow:hidden; margin:10px 0 16px; }
+  .bar > div { height:100%; background:var(--ok); }
+  audio { width:100%; margin:8px 0 12px; }
+  label.f { display:block; font-size:13px; color:var(--muted); margin:12px 0 4px; }
+  .orig { padding:10px 12px; border:1px dashed var(--line); border-radius:6px; font-size:19px; }
+  textarea { width:100%; min-height:110px; font-size:19px; padding:10px 12px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink); }
+  input[type=text] { width:100%; padding:7px 10px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink); font:inherit; }
+  .choices { display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+  .choices button { flex:1 1 180px; text-align:left; }
+  .choices button.sel { border-color:var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+  .row { display:flex; gap:8px; margin-top:16px; align-items:center; flex-wrap:wrap; }
+  .pair { font-size:32px; text-align:center; margin:8px 0 16px; }
+  .pair .arrow { color:var(--muted); margin:0 14px; }
+  .ex { border-top:1px solid var(--line); padding:10px 0; font-size:18px; }
+  .ex b { font-weight:400; background:var(--mark); border-radius:3px; padding:0 3px; }
+  .ex .k { font:13px system-ui, sans-serif; color:var(--muted); display:inline-block; width:90px; }
+  .saved { color:var(--ok); font-size:13px; }
+  .guide h2 { font-size:18px; margin-top:24px; } .guide li { margin:4px 0; }
+  kbd { border:1px solid var(--line); border-bottom-width:2px; border-radius:4px; padding:0 5px; font-size:12px; }
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Bangla ASR labeling · <span id="who"></span></h1>
+  <nav>
+    <button id="tab-guide">Guide</button>
+    <button id="tab-refs">1. References</button>
+    <button id="tab-pairs">2. Word pairs</button>
+  </nav>
+  <span class="spacer"></span>
+  <button class="btn" id="restore">Restore from file</button>
+  <button class="btn primary" id="download">Download my labels</button>
+  <input type="file" id="restore-file" accept=".json" class="hidden">
+</header>
+<main>
+  <section id="view-guide" class="card guide">
+    <p><b>Two tasks.</b> Your work saves automatically in this browser. <b>Click "Download my labels" at the end of every session</b> and send the file to Omi. Do not clear browser data, and use the same browser each time (or "Restore from file" on a new one).</p>
+
+    <h2>Task 1: References (about 2–3 minutes per chunk)</h2>
+    <p>You hear a short chunk from a long recording and see its transcript. Make the text match <b>exactly the words that are spoken</b>.</p>
+    <ul>
+      <li><b>Fix real mistakes only:</b> missing words, extra words (not spoken), wrong words.</li>
+      <li><b>Do not change spelling.</b> If a word is spoken and the transcript writes it in a valid spelling (ছিল / ছিলো, কি / কী, কোন / কোনো), leave it as it is.</li>
+      <li><b>Dialect or colloquial speech: write what is said.</b> If the speaker says কইরা and the text has করে, change it to কইরা. If the speaker says the standard form, keep the standard form.</li>
+      <li><b>Words cut off at the start or end:</b> keep the word if more than half of it is audible, drop it otherwise, and tick "words cut off".</li>
+      <li><b>Numbers:</b> write them as words, as spoken (পঁচিশ, not ২৫).</li>
+      <li><b>English words:</b> write them in Bangla script, as the transcript does (ফোন, not phone).</li>
+      <li>Do not write fillers or hesitations (উম, আ…), laughter, or music.</li>
+      <li>Background speech: transcribe only the main speaker.</li>
+      <li><b>Can't use:</b> choose it if you can't make out the main speech (music, noise, overlap, another language).</li>
+      <li>Listen as many times as you need. Don't guess: if a word is unclear, leave the original and add a note.</li>
+    </ul>
+    <p>Choose <b>Correct as is</b> when you change nothing, <b>Corrected</b> after an edit (picked automatically when you edit), or <b>Can't use</b>. <kbd>Ctrl</kbd>+<kbd>Enter</kbd> saves and goes to the next chunk.</p>
+
+    <h2>Task 2: Word pairs (about 10 seconds per pair)</h2>
+    <p>Each pair is a word from a transcript (left) and the word a speech recognizer wrote instead (right), with example sentences. Decide what the difference is:</p>
+    <ul>
+      <li><kbd>1</kbd> <b>Same word, different spelling</b>: both are ways to write the same word with the same meaning (ছিল / ছিলো, কি / কী, রং / রঙ).</li>
+      <li><kbd>2</kbd> <b>Dialect or colloquial form</b>: the same word, pronounced the regional or spoken way (নিয়ে / নিয়া, তোমার / তুমার, করে / কইরা).</li>
+      <li><kbd>3</kbd> <b>Different word</b>: the meaning or grammar changes (আর / আরো, এখন / এখনো, করে / করা, বাংলা / বাংলাদেশ).</li>
+      <li><kbd>4</kbd> <b>Can't tell</b>.</li>
+    </ul>
+    <p>Judge the words with the help of the examples, not whether the recognizer was right. Some pairs are shared with the other annotators to measure agreement, so decide on your own.</p>
+  </section>
+
+  <section id="view-refs" class="hidden">
+    <div class="meta"><span id="r-pos"></span><span id="r-id"></span><span id="r-dur"></span><span class="spacer"></span><span id="r-saved" class="saved"></span></div>
+    <div class="bar"><div id="r-bar"></div></div>
+    <div class="card">
+      <audio id="r-audio" controls preload="auto"></audio>
+      <label class="f">Original transcript</label>
+      <div id="r-orig" class="orig bn"></div>
+      <label class="f" for="r-text">What is actually said</label>
+      <textarea id="r-text" class="bn" spellcheck="false"></textarea>
+      <div class="choices" id="r-status">
+        <button data-v="correct" class="btn">Correct as is</button>
+        <button data-v="corrected" class="btn">Corrected</button>
+        <button data-v="unusable" class="btn">Can't use</button>
+      </div>
+      <label class="f"><input type="checkbox" id="r-cut"> Words cut off at the start or end</label>
+      <label class="f" for="r-note">Note (optional)</label>
+      <input type="text" id="r-note" class="bn">
+      <div class="row">
+        <button class="btn" id="r-prev">← Previous</button>
+        <button class="btn primary" id="r-next">Save &amp; next →</button>
+        <span class="spacer"></span>
+        <button class="btn" id="r-first">First unfinished</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-pairs" class="hidden">
+    <div class="meta"><span id="p-pos"></span><span id="p-id"></span><span class="spacer"></span><span id="p-saved" class="saved"></span></div>
+    <div class="bar"><div id="p-bar"></div></div>
+    <div class="card">
+      <div class="pair bn"><span id="p-ref"></span><span class="arrow">→</span><span id="p-hyp"></span></div>
+      <div id="p-ex"></div>
+      <div class="choices" id="p-label">
+        <button data-v="spelling" class="btn"><kbd>1</kbd> Same word, different spelling</button>
+        <button data-v="dialect" class="btn"><kbd>2</kbd> Dialect or colloquial form</button>
+        <button data-v="different" class="btn"><kbd>3</kbd> Different word</button>
+        <button data-v="unsure" class="btn"><kbd>4</kbd> Can't tell</button>
+      </div>
+      <label class="f" for="p-note">Note (optional)</label>
+      <input type="text" id="p-note" class="bn">
+      <div class="row">
+        <button class="btn" id="p-prev">← Previous</button>
+        <button class="btn" id="p-next">Next →</button>
+        <span class="spacer"></span>
+        <button class="btn" id="p-first">First unfinished</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="data.js"></script>
+<script>
+const K = window.KIT;
+const KEY = `asr-labels:${K.kit}:${K.annotator}`;
+let S = { refs: {}, pairs: {}, pos: { refs: 0, pairs: 0 }, tab: "guide" };
+try { const saved = JSON.parse(localStorage.getItem(KEY)); if (saved) S = Object.assign(S, saved); } catch (e) {}
+const $ = id => document.getElementById(id);
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+function persist(which, quiet) {
+  try { localStorage.setItem(KEY, JSON.stringify(S)); if (!quiet) $(which + "-saved").textContent = "Saved"; }
+  catch (e) { $(which + "-saved").textContent = "Could not save: download your labels now"; }
+}
+$("who").textContent = K.annotator;
+
+function show(tab) {
+  S.tab = tab;
+  for (const t of ["guide", "refs", "pairs"]) {
+    $("view-" + t).classList.toggle("hidden", t !== tab);
+    $("tab-" + t).setAttribute("aria-pressed", t === tab);
+  }
+  if (tab === "refs") renderRef(); if (tab === "pairs") renderPair();
+  persist(tab === "pairs" ? "p" : "r", true);
+}
+for (const t of ["guide", "refs", "pairs"]) $("tab-" + t).onclick = () => show(t);
+
+// ---- Task 1: references
+function renderRef() {
+  const i = S.pos.refs, it = K.refs[i], L = S.refs[it.id] || {};
+  const done = K.refs.filter(r => S.refs[r.id] && S.refs[r.id].status).length;
+  $("r-pos").textContent = `Chunk ${i + 1} of ${K.refs.length} · ${done} done`;
+  $("r-id").textContent = it.id; $("r-dur").textContent = it.duration + " s";
+  $("r-bar").style.width = (100 * done / K.refs.length) + "%";
+  $("r-audio").src = it.clip;
+  $("r-orig").textContent = it.text;
+  $("r-text").value = L.text !== undefined ? L.text : it.text;
+  $("r-cut").checked = !!L.cut_off; $("r-note").value = L.note || "";
+  setSel("r-status", L.status); $("r-saved").textContent = L.status ? "Saved" : "";
+}
+function setSel(box, v) { for (const b of $(box).querySelectorAll("button")) b.classList.toggle("sel", b.dataset.v === v); }
+function saveRef(status) {
+  const it = K.refs[S.pos.refs], prev = S.refs[it.id] || {};
+  const text = $("r-text").value.trim().replace(/\s+/g, " ");
+  if (!status) status = prev.status || (text !== it.text.trim().replace(/\s+/g, " ") ? "corrected" : "");
+  S.refs[it.id] = { status, text, cut_off: $("r-cut").checked, note: $("r-note").value.trim(), saved_at: new Date().toISOString() };
+  setSel("r-status", status); persist("r");
+}
+$("r-status").onclick = e => { const b = e.target.closest("button"); if (b) saveRef(b.dataset.v); };
+$("r-text").oninput = () => { const it = K.refs[S.pos.refs]; const changed = $("r-text").value.trim().replace(/\s+/g, " ") !== it.text.trim().replace(/\s+/g, " "); saveRef(changed ? "corrected" : (S.refs[it.id] || {}).status === "corrected" ? "correct" : undefined); };
+$("r-cut").onchange = () => saveRef(); $("r-note").oninput = () => saveRef();
+function moveRef(d) { S.pos.refs = Math.max(0, Math.min(K.refs.length - 1, S.pos.refs + d)); renderRef(); persist("r", true); }
+$("r-prev").onclick = () => moveRef(-1);
+$("r-next").onclick = () => { if (!(S.refs[K.refs[S.pos.refs].id] || {}).status) { saveRef(); if (!S.refs[K.refs[S.pos.refs].id].status) { alert("Choose Correct as is, Corrected, or Can't use first."); return; } } moveRef(1); };
+$("r-first").onclick = () => { const k = K.refs.findIndex(r => !(S.refs[r.id] || {}).status); if (k >= 0) { S.pos.refs = k; renderRef(); } };
+
+// ---- Task 2: word pairs
+function hl(words, i) { return words.map((w, k) => k === i ? `<b>${esc(w)}</b>` : esc(w)).join(" "); }
+function renderPair() {
+  const i = S.pos.pairs, it = K.pairs[i], L = S.pairs[it.id] || {};
+  const done = K.pairs.filter(p => S.pairs[p.id] && S.pairs[p.id].label).length;
+  $("p-pos").textContent = `Pair ${i + 1} of ${K.pairs.length} · ${done} done`; $("p-id").textContent = it.id;
+  $("p-bar").style.width = (100 * done / K.pairs.length) + "%";
+  $("p-ref").textContent = it.ref_word; $("p-hyp").textContent = it.hyp_word;
+  $("p-ex").innerHTML = it.examples.map(x =>
+    `<div class="ex bn"><span class="k">Transcript</span>${hl(x.ref, x.ref_i)}<br><span class="k">Recognizer</span>${hl(x.hyp, x.hyp_i)}</div>`).join("");
+  $("p-note").value = L.note || ""; setSel("p-label", L.label); $("p-saved").textContent = L.label ? "Saved" : "";
+}
+function savePair(label, advance) {
+  const it = K.pairs[S.pos.pairs], prev = S.pairs[it.id] || {};
+  S.pairs[it.id] = { label: label || prev.label || "", note: $("p-note").value.trim(), saved_at: new Date().toISOString() };
+  setSel("p-label", S.pairs[it.id].label); persist("p");
+  if (advance && S.pos.pairs < K.pairs.length - 1) { S.pos.pairs++; renderPair(); }
+}
+$("p-label").onclick = e => { const b = e.target.closest("button"); if (b) savePair(b.dataset.v, true); };
+$("p-note").oninput = () => savePair();
+function movePair(d) { S.pos.pairs = Math.max(0, Math.min(K.pairs.length - 1, S.pos.pairs + d)); renderPair(); persist("p", true); }
+$("p-prev").onclick = () => movePair(-1); $("p-next").onclick = () => movePair(1);
+$("p-first").onclick = () => { const k = K.pairs.findIndex(p => !(S.pairs[p.id] || {}).label); if (k >= 0) { S.pos.pairs = k; renderPair(); } };
+
+document.addEventListener("keydown", e => {
+  if (S.tab === "refs" && e.ctrlKey && e.key === "Enter") { e.preventDefault(); $("r-next").click(); }
+  if (S.tab === "pairs" && document.activeElement !== $("p-note") && "1234".includes(e.key) && e.key.length === 1) {
+    savePair(["spelling", "dialect", "different", "unsure"][+e.key - 1], true);
+  }
+});
+
+// ---- Download / restore
+$("download").onclick = () => {
+  const out = { kit: K.kit, annotator: K.annotator, exported_at: new Date().toISOString(), refs: S.refs, pairs: S.pairs };
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(out, null, 1)], { type: "application/json" }));
+  a.download = `labels_${K.annotator}.json`; a.click();
+};
+$("restore").onclick = () => $("restore-file").click();
+$("restore-file").onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try {
+    const d = JSON.parse(await f.text());
+    if (d.annotator !== K.annotator) { alert(`This file belongs to ${d.annotator}, not ${K.annotator}.`); return; }
+    S.refs = Object.assign(S.refs, d.refs || {}); S.pairs = Object.assign(S.pairs, d.pairs || {});
+    persist("r"); show(S.tab); alert("Labels restored.");
+  } catch (err) { alert("Could not read that file."); }
+};
+show(S.tab);
+</script>
+</body>
+</html>

@@ -71,6 +71,7 @@
   <p><b>References (about 2–3 minutes per chunk).</b> You hear a chunk and see its transcript. Make the text match <b>exactly the words that are spoken</b>.</p>
   <ul>
     <li><b>Fix real mistakes only:</b> missing words, extra words that are not spoken, wrong words.</li>
+    <li><b>Ignore punctuation</b> (। , ? ! " and the <code>&gt;&gt;</code> speaker-change marks), even when it is wrong: scoring removes it. If only the punctuation is off, choose <b>Correct as is</b>.</li>
     <li><b>Do not change spelling.</b> If a word is spoken and written in a valid spelling (ছিল / ছিলো, কি / কী, কোন / কোনো), leave it.</li>
     <li><b>Dialect or colloquial speech: write what is said.</b> Speaker says কইরা, text has করে → change to কইরা. If the speaker says the standard form, keep it.</li>
     <li><b>Words cut off at the start or end:</b> keep a word if more than half of it is audible, otherwise remove it; tick "words cut off".</li>
@@ -268,17 +269,19 @@ function renderRef() {
     <label class="f"><input type="checkbox" id="cut" ${(draft ? draft.cut_off : L.cut_off) ? "checked" : ""}> Words cut off at the start or end</label>
     <label class="f" for="nt">Note (optional)</label><input type="text" id="nt" class="bn" value="${esc((draft && draft.note) || L.note || "")}">`);
   const norm = (s) => s.trim().replace(/\s+/g, " ");
+  // Same punctuation set as the scoring normalizer: punctuation-only edits are not corrections.
+  const words = (s) => norm(s.replace(/[।॥,\-–—.?!:;"'‘’“”()[\]{}<>\/\@#$%^&*_+=~`|]/g, " "));
   let status = st;
   const draftSave = () => { try { localStorage.setItem("asr-draft-" + S.item.id, JSON.stringify(collect())); } catch (e) {} };
   const collect = () => ({ status, text: norm($("tx").value), cut_off: $("cut").checked, note: $("nt").value.trim() });
   const mark = (v) => { status = v; for (const b of $("st").children) b.classList.toggle("sel", b.dataset.v === v); draftSave(); };
   $("st").onclick = (e) => { const b = e.target.closest("button"); if (b) mark(b.dataset.v); };
-  $("tx").oninput = () => { const changed = norm($("tx").value) !== norm(p.text); if (changed && status !== "unusable") mark("corrected"); else if (!changed && status === "corrected") mark("correct"); else draftSave(); };
+  $("tx").oninput = () => { const changed = words($("tx").value) !== words(p.text); if (changed && status !== "unusable") mark("corrected"); else if (!changed && status === "corrected") mark("correct"); else draftSave(); };
   $("cut").onchange = draftSave; $("nt").oninput = draftSave;
   $("save").onclick = () => {
     const d = collect();
     if (!d.status) { $("why").textContent = "Choose Correct as is, Corrected, or Can't use."; return; }
-    if (d.status === "correct" && d.text !== norm(p.text)) { $("why").textContent = "You edited the text: choose Corrected."; return; }
+    if (d.status === "correct" && words(d.text) !== words(p.text)) { $("why").textContent = "You changed words: choose Corrected."; return; }
     save(d);
   };
 }

@@ -101,8 +101,10 @@ def refs_results(items, labels, res, n_boot):
     rows = []
     for l in L:
         it, d = ref_items[l["item_id"]], l["data"]
+        # Punctuation-only edits are not corrections: scoring strips punctuation.
+        status = "correct" if d["status"] == "corrected" and words(d["text"]) == words(it["payload"]["text"]) else d["status"]
         rows.append({"id": it["id"], "annotator": l["annotator"], "source": it["meta"]["source"],
-                     "utt_id": it["meta"]["utt_id"], "group": it["meta"]["group"], "status": d["status"],
+                     "utt_id": it["meta"]["utt_id"], "group": it["meta"]["group"], "status": status,
                      "text_original": it["payload"]["text"], "text_verified": d["text"],
                      "cut_off": d.get("cut_off", False), "note": d.get("note", ""), "updated_at": l["updated_at"]})
     R = pd.DataFrame(rows)

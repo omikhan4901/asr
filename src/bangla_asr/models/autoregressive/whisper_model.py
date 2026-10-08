@@ -2,6 +2,8 @@
 Whisper model loader and configuration manager with robust tokenization & prompt IDs.
 """
 
+import re
+from typing import Dict, List
 import torch
 from transformers import GenerationConfig, WhisperForConditionalGeneration, WhisperProcessor
 from transformers.utils import logging as hf_logging
@@ -11,6 +13,18 @@ from transformers.utils import logging as hf_logging
 hf_logging.set_verbosity_error()
 
 from bangla_asr.config import WhisperConfig
+
+
+_MARKERS = re.compile(r"<\|[^|>]*\|>")
+
+
+def strip_markers(text: str) -> str:
+    """Remove Whisper control tokens (<|bn|>, <|notimestamps|>, ...) left in decoded text.
+
+    Some fine-tuned checkpoints (e.g. BanglaASR) do not register them as special
+    tokens, so skip_special_tokens=True does not always remove them.
+    """
+    return _MARKERS.sub("", text).strip()
 
 
 class WhisperASRModel:
@@ -117,6 +131,39 @@ class WhisperASRModel:
         self.model.eval()
         print("Whisper model successfully loaded and configured.")
 
+    @torch.no_grad()
+    def score_texts(self, audio, texts: List[str], sampling_rate: int = 16000) -> List[Dict]:
+        """Exact log-probability of each text given one audio (teacher forcing).
+
+        audio: 1-D array of one utterance (standard 30 s Whisper input). Each text is
+        tokenized after the Bangla transcribe prompt and scored including the
+        end-of-text token. Returns mean_logprob (per token), sum_logprob and
+        n_tokens per text. Used for N-best candidate scores, because current
+        transformers no longer returns sequences_scores / beam_indices for
+        Whisper beam search.
+        """
+        tok = self.processor.tokenizer
+        tok.set_prefix_tokens(language=self.cfg.language, task=self.cfg.task, predict_timestamps=False)
+        ids = [tok(t).input_ids for t in texts]
+        prefix = len(tok.prefix_tokens)
+        L = max(len(x) for x in ids)
+        pad = tok.eos_token_id
+        seq = torch.full((len(ids), L), pad, dtype=torch.long)
+        for k, x in enumerate(ids):
+            seq[k, : len(x)] = torch.tensor(x)
+        seq = seq.to(self.device)
+        dtype = torch.float16 if self.device.type == "cuda" else torch.float32
+        feats = self.processor(audio, sampling_rate=sampling_rate, return_tensors="pt").input_features
+        enc = self.model.get_encoder()(feats.to(self.device, dtype=dtype)).last_hidden_state
+        enc = enc.expand(len(ids), -1, -1)
+        logits = self.model(encoder_outputs=(enc,), decoder_input_ids=seq[:, :-1]).logits.float()
+        lp = torch.log_softmax(logits, -1).gather(-1, seq[:, 1:, None])[..., 0]
+        out = []
+        for k, x in enumerate(ids):
+            v = lp[k, prefix - 1 : len(x) - 1]  # text tokens + end-of-text
+            out.append({"mean_logprob": float(v.mean()), "sum_logprob": float(v.sum()), "n_tokens": int(v.numel())})
+        return out
+
     def transcribe_batch(
         self,
         audio_arrays,
@@ -159,4 +206,4 @@ class WhisperASRModel:
 
         with torch.no_grad():
             gen_ids = self.model.generate(**gen_kwargs)
-        return [t.strip() for t in self.processor.batch_decode(gen_ids, skip_special_tokens=True)]
+        return [strip_markers(t) for t in self.processor.batch_decode(gen_ids, skip_special_tokens=True)]

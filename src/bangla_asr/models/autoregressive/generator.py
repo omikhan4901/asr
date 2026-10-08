@@ -8,7 +8,7 @@ import torch
 
 from bangla_asr.common.audio import pad_silence
 from bangla_asr.config import AudioConfig, WhisperConfig
-from bangla_asr.models.autoregressive.whisper_model import WhisperASRModel
+from bangla_asr.models.autoregressive.whisper_model import WhisperASRModel, strip_markers
 
 
 class BatchedNBestGenerator:
@@ -77,7 +77,7 @@ class BatchedNBestGenerator:
             # on the temperature-warped distribution, not calibrated log-posteriors.
             "do_sample": bool(self.whisper_cfg.diverse_beam_search),
             "temperature": self.whisper_cfg.sampling_temperature if self.whisper_cfg.diverse_beam_search else 1.0,
-            "output_scores": True,
+            "output_scores": False,  # scores come from score_texts() below
             "return_dict_in_generate": True,
         }
         gen_kwargs.update(self.wrapper.prompt_kwargs)
@@ -87,23 +87,15 @@ class BatchedNBestGenerator:
         with torch.no_grad():
             outputs = self.model.generate(**gen_kwargs)
 
-        texts = self.processor.batch_decode(outputs.sequences, skip_special_tokens=True)
-
-        # Extract normalized beam sequence scores
-        if hasattr(outputs, "sequences_scores") and outputs.sequences_scores is not None:
-            avg_logprobs = outputs.sequences_scores.float().cpu().numpy().tolist()
-        else:
-            beam_indices = getattr(outputs, "beam_indices", None)
-            transition_scores = self.model.compute_transition_scores(
-                outputs.sequences,
-                outputs.scores,
-                beam_indices,
-                normalize_logits=True,
-            )
-            valid_mask = transition_scores > -1e9
-            summed = torch.where(valid_mask, transition_scores, torch.zeros_like(transition_scores)).sum(dim=1)
-            lengths = valid_mask.sum(dim=1).clamp(min=1)
-            avg_logprobs = (summed / lengths).float().cpu().numpy().tolist()
+        texts = [strip_markers(t) for t in self.processor.batch_decode(outputs.sequences, skip_special_tokens=True)]
+        # Candidate scores: exact per-token log-probability under the model (T = 1),
+        # by teacher forcing. generate() no longer returns sequences_scores /
+        # beam_indices for Whisper, and transition scores without beam indices
+        # are taken from the wrong beams.
+        avg_logprobs = []
+        for i in range(len(audio_arrays)):
+            scored = self.wrapper.score_texts(padded_audios[i], texts[i * n : (i + 1) * n], sr)
+            avg_logprobs.extend(x["mean_logprob"] for x in scored)
 
         batch_size = len(audio_arrays)
         results = []
@@ -115,7 +107,7 @@ class BatchedNBestGenerator:
             batch_scores = avg_logprobs[start:end]
 
             candidates = [
-                {"text": t.strip(), "logprob": float(s), "rank": rk}
+                {"text": t, "logprob": float(s), "rank": rk}
                 for rk, (t, s) in enumerate(zip(batch_texts, batch_scores))
             ]
             results.append(candidates)

@@ -78,5 +78,6 @@ logs/
 results/
 spotcheck/
 
-# Team labeling kits (contain dataset excerpts)
+# Labeling: local clip cache and old offline kits (dataset excerpts)
 labeling_kit/
+labeling_cache/

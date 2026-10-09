@@ -45,6 +45,12 @@ import signal
 import sys
 import time
 
+if __name__ == "__mp_main__":
+    # DataLoader worker on Windows (spawn re-imports this file): ignore Ctrl+C from the very start.
+    # worker_init_fn runs only after the heavy imports below, and a worker killed while importing
+    # left the trainer waiting forever (2026-10-10, epoch boundary of M1 LoRA).
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
+
 os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")
 from pathlib import Path
 

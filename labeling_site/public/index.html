@@ -74,6 +74,7 @@
     <li><b>Ignore punctuation</b> (। , ? ! " and the <code>&gt;&gt;</code> speaker-change marks), even when it is wrong: scoring removes it. If only the punctuation is off, choose <b>Correct as is</b>.</li>
     <li><b>Do not change spelling.</b> If a word is spoken and written in a valid spelling (ছিল / ছিলো, কি / কী, কোন / কোনো), leave it.</li>
     <li><b>Dialect or colloquial speech: write what is said.</b> Speaker says কইরা, text has করে → change to কইরা. If the speaker says the standard form, keep it.</li>
+    <li><b>Accent is not dialect:</b> if only one sound is pronounced differently (ঠ said like ঢ: ঢেকালো for ঠেকালো), keep the standard spelling and write <code>accent</code> in the note.</li>
     <li><b>Words cut off at the start or end:</b> keep a word if more than half of it is audible, otherwise remove it; tick "words cut off".</li>
     <li><b>Numbers:</b> as words, as spoken (পঁচিশ, not ২৫). <b>English words:</b> in Bangla script, as the transcript does (ফোন).</li>
     <li>No fillers or hesitations (উম, আ…), laughter or music. Background speech: only the main speaker.</li>
@@ -89,7 +90,7 @@
     <li><kbd>2</kbd> <b>Transcript wrong</b>: the recognizer matches the audio, the transcript doesn't.</li>
     <li><kbd>3</kbd> <b>Both wrong</b>: neither matches what is said.</li>
     <li><kbd>4</kbd> <b>Same word, spelling differs</b>: both write the spoken word correctly, just spelled differently (ছিল / ছিলো, কি / কী, দু পাশে / দুপাশে).</li>
-    <li><kbd>5</kbd> <b>Same word, dialect vs standard</b>: one side writes the spoken dialect form, the other the standard form of the same word (করে / কইরা, তোমার / তুমার).</li>
+    <li><kbd>5</kbd> <b>Same word, dialect vs standard</b>: one side writes the spoken dialect form, the other the standard form of the same word (করে / কইরা, তোমার / তুমার). Also use 5 for an accent on one sound (ঢেকালো / ঠেকালো).</li>
     <li><kbd>6</kbd> <b>Can't tell</b>: the audio is unclear here.</li>
   </ul>
   <p>Judge against the audio, not against which version looks nicer. The keys label the selected difference and move to the next one; click a difference to select it. <kbd>Ctrl</kbd>+<kbd>Enter</kbd> saves and goes on when all are labeled.</p>
@@ -98,7 +99,7 @@
   <p><b>Word pairs (about 10 seconds per pair).</b> A word from a transcript (left) and the word a recognizer wrote instead (right), with example sentences. What is the difference?</p>
   <ul>
     <li><kbd>1</kbd> <b>Same word, different spelling</b>: same word and meaning, written two ways (ছিল / ছিলো, কি / কী, রং / রঙ).</li>
-    <li><kbd>2</kbd> <b>Dialect or colloquial form</b>: the same word, said the regional or spoken way (নিয়ে / নিয়া, তোমার / তুমার).</li>
+    <li><kbd>2</kbd> <b>Dialect or colloquial form</b>: the same word, said the regional or spoken way (নিয়ে / নিয়া, তোমার / তুমার), including an accent on one sound (ঠেকালো / ঢেকালো).</li>
     <li><kbd>3</kbd> <b>Different word</b>: the meaning or grammar changes (আর / আরো, এখন / এখনো, করে / করা).</li>
     <li><kbd>4</kbd> <b>Can't tell</b>.</li>
   </ul>

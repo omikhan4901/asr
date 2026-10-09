@@ -160,13 +160,22 @@ def upload():
 
 
 @app.local_entrypoint()
-def upload_run(local: str, run: str):
-    """Upload a locally trained run (final/ + logs, not the resumable checkpoint) to /checkpoints/<run>/ for scoring."""
+def upload_run(local: str, run: str, resume: bool = False):
+    """Upload a local run to /checkpoints/<run>/. Default: a finished run (final/ + logs) for scoring.
+    --resume: an unfinished run with its checkpoint/, to continue training on Modal with
+    train --run <run> (same recipe; 11_finetune.py resumes from the saved step, optimizer and data position)."""
     root = Path(local)
-    if not (root / "final").exists():
-        sys.exit(f"{root}/final not found: the run has not finished (use pipeline/checkpoint_to_model.py for partial/)")
-    files = [p for p in root.rglob("*") if p.is_file()
-             and p.relative_to(root).parts[0] not in ("checkpoint", "checkpoint.old", "checkpoint.tmp")]
+    if resume:
+        if not (root / "checkpoint" / "state.pt").exists():
+            sys.exit(f"{root}/checkpoint/state.pt not found: stop the local run with Ctrl+C first (it saves)")
+        if _exists(f"/checkpoints/{run}/checkpoint"):
+            sys.exit(f"/checkpoints/{run}/checkpoint already exists on the volume; not overwriting it")
+        skip = ("checkpoint.old", "checkpoint.tmp", "final", "partial")
+    else:
+        if not (root / "final").exists():
+            sys.exit(f"{root}/final not found: the run has not finished (use --resume, or checkpoint_to_model.py)")
+        skip = ("checkpoint", "checkpoint.old", "checkpoint.tmp")
+    files = [p for p in root.rglob("*") if p.is_file() and p.relative_to(root).parts[0] not in skip]
     with vol.batch_upload(force=True) as batch:
         for p in files:
             batch.put_file(str(p), f"/checkpoints/{run}/{p.relative_to(root).as_posix()}")

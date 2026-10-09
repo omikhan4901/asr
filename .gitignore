@@ -82,3 +82,6 @@ spotcheck/
 labeling_kit/
 labeling_cache/
 notebooks/*.zip
+
+# Fine-tuning outputs (pipeline/11_finetune.py)
+/checkpoints/

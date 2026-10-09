@@ -27,6 +27,59 @@ def strip_markers(text: str) -> str:
     return _MARKERS.sub("", text).strip()
 
 
+def bangla_generation_config(cfg: WhisperConfig, processor, model):
+    """Generation config with the Bangla transcribe prompt, plus the kwargs to pass to generate().
+
+    Shared by inference (WhisperASRModel) and fine-tuning (pipeline/11_finetune.py)
+    so both decode with the same prompt.
+    """
+    # Prefer the fine-tuned checkpoint's settings. Some regional
+    # checkpoints ship an older Whisper generation_config.json, however,
+    # which lacks lang_to_id/task_to_id and cannot accept language/task
+    # under modern Transformers. Keep a modern base config available to
+    # fill only those compatibility fields.
+    try:
+        gen_config = GenerationConfig.from_pretrained(cfg.model_id)
+    except Exception:
+        gen_config = model.generation_config
+
+    try:
+        modern_base_config = GenerationConfig.from_pretrained(cfg.fallback_base_config)
+    except Exception:
+        modern_base_config = None
+
+    if modern_base_config is not None:
+        for attribute in ("lang_to_id", "task_to_id", "is_multilingual", "no_timestamps_token_id"):
+            if not hasattr(gen_config, attribute) and hasattr(modern_base_config, attribute):
+                setattr(gen_config, attribute, getattr(modern_base_config, attribute))
+
+    # Configure the Whisper prompt directly on a generation config which
+    # has the modern language/task mappings. Do not pass language/task as
+    # generate() kwargs: older fine-tuned configs reject those kwargs
+    # before generation begins.
+    prompt_kwargs = {}
+    if hasattr(gen_config, "lang_to_id") and hasattr(gen_config, "task_to_id"):
+        gen_config.language = cfg.language
+        gen_config.task = cfg.task
+        # Also pass them to generate(): current transformers ignores
+        # generation_config.language for multilingual checkpoints such as
+        # openai/whisper-large-v3-turbo (it auto-detects and wrote Bangla
+        # speech in Devanagari). lang_to_id is guaranteed present here.
+        prompt_kwargs = {"language": cfg.language, "task": cfg.task}
+        if hasattr(gen_config, "forced_decoder_ids"):
+            gen_config.forced_decoder_ids = None
+    else:
+        # Compatibility fallback for an offline setup where the base
+        # generation config could not be downloaded.
+        try:
+            forced_decoder_ids = processor.get_decoder_prompt_ids(language=cfg.language, task=cfg.task)
+        except (AttributeError, ValueError):
+            forced_decoder_ids = None
+        if hasattr(gen_config, "forced_decoder_ids"):
+            gen_config.forced_decoder_ids = forced_decoder_ids
+    return gen_config, prompt_kwargs
+
+
 class WhisperASRModel:
     """Encapsulates WhisperProcessor and WhisperForConditionalGeneration with verified Bangla prompt IDs."""
 
@@ -58,53 +111,7 @@ class WhisperASRModel:
             self.model = PeftModel.from_pretrained(self.model, self.cfg.adapter_path)
         self.model = self.model.to(self.device)
 
-        # Prefer the fine-tuned checkpoint's settings. Some regional
-        # checkpoints ship an older Whisper generation_config.json, however,
-        # which lacks lang_to_id/task_to_id and cannot accept language/task
-        # under modern Transformers. Keep a modern base config available to
-        # fill only those compatibility fields.
-        try:
-            gen_config = GenerationConfig.from_pretrained(self.cfg.model_id)
-        except Exception:
-            gen_config = self.model.generation_config
-
-        try:
-            modern_base_config = GenerationConfig.from_pretrained(self.cfg.fallback_base_config)
-        except Exception:
-            modern_base_config = None
-
-        if modern_base_config is not None:
-            for attribute in ("lang_to_id", "task_to_id", "is_multilingual", "no_timestamps_token_id"):
-                if not hasattr(gen_config, attribute) and hasattr(modern_base_config, attribute):
-                    setattr(gen_config, attribute, getattr(modern_base_config, attribute))
-
-        # Configure the Whisper prompt directly on a generation config which
-        # has the modern language/task mappings. Do not pass language/task as
-        # generate() kwargs: older fine-tuned configs reject those kwargs
-        # before generation begins.
-        self.prompt_kwargs = {}
-        if hasattr(gen_config, "lang_to_id") and hasattr(gen_config, "task_to_id"):
-            gen_config.language = self.cfg.language
-            gen_config.task = self.cfg.task
-            # Also pass them to generate(): current transformers ignores
-            # generation_config.language for multilingual checkpoints such as
-            # openai/whisper-large-v3-turbo (it auto-detects and wrote Bangla
-            # speech in Devanagari). lang_to_id is guaranteed present here.
-            self.prompt_kwargs = {"language": self.cfg.language, "task": self.cfg.task}
-            if hasattr(gen_config, "forced_decoder_ids"):
-                gen_config.forced_decoder_ids = None
-        else:
-            # Compatibility fallback for an offline setup where the base
-            # generation config could not be downloaded.
-            try:
-                forced_decoder_ids = self.processor.get_decoder_prompt_ids(
-                    language=self.cfg.language,
-                    task=self.cfg.task,
-                )
-            except (AttributeError, ValueError):
-                forced_decoder_ids = None
-            if hasattr(gen_config, "forced_decoder_ids"):
-                gen_config.forced_decoder_ids = forced_decoder_ids
+        gen_config, self.prompt_kwargs = bangla_generation_config(self.cfg, self.processor, self.model)
         gen_config.num_beams = self.cfg.num_beams
         gen_config.num_return_sequences = self.cfg.num_beams
         gen_config.early_stopping = True
@@ -127,7 +134,9 @@ class WhisperASRModel:
         else:
             gen_config.do_sample = False
 
-        self.model.generation_config = gen_config
+        # With a LoRA adapter, generate() runs on the wrapped base model and reads its config.
+        base = self.model.get_base_model() if hasattr(self.model, "get_base_model") else self.model
+        base.generation_config = gen_config
         self.model.eval()
         print("Whisper model successfully loaded and configured.")
 

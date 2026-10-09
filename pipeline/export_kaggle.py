@@ -33,6 +33,8 @@ SETS = {  # set name = results/zeroshot/<set name>, as eval_zero_shot.py derives
     "fleurs-test": "data/external/fleurs/test.csv",
     "kathbath-valid": "data/external/kathbath/valid.csv",
     "cv-test": "data/external/cv/test.csv",
+    # DL Sprint training clips (cleaned text): only for learning another model's rewrite rules.
+    "splits_fa-train": "data/splits_fa/train_clean.csv",
 }
 
 
@@ -77,7 +79,7 @@ def zip_set(set_dir, zip_dir):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--sets", default=",".join(SETS))
+    p.add_argument("--sets", default="splits_fa-eval,fleurs-test,kathbath-valid,cv-test")
     p.add_argument("--out_dir", default="data/kaggle_hishab")
     p.add_argument("--no_zip", action="store_true")
     p.add_argument("--limit", type=int, default=None, help="first N rows per set (smoke test)")

@@ -5,8 +5,9 @@ all rules, on every set. Nothing is chosen on a test set: thresholds and kind
 come from the dev grid of pipeline/12_raise_ceiling.py; this only reports the
 variant-only row for the same thresholds.
 
-With --model, the same rules (always learned from tugstugi's train errors) are
-applied to another model's saved greedy transcripts, e.g. the Hishab conformer.
+With --model, the rules are applied to another model's saved greedy transcripts (e.g. the
+Hishab conformer); --rules_from picks whose TRAIN transcripts the rules are learned from
+(default tugstugi; Hishab's own come from notebooks/kaggle_hishab_train.ipynb).
 
 Usage: PYTHONPATH=src ./Scripts/python.exe analysis/phase3_rewrite_ablation.py [--model hishab__titu_stt_bn_conformer_large]
 """
@@ -38,13 +39,16 @@ def norm(t):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", default=TUGP, help="folder name under results/zeroshot/<set>/ whose transcripts are rewritten")
+    ap.add_argument("--rules_from", default=TUGP, help="model whose TRAIN transcripts the rules are learned from")
     args = ap.parse_args()
-    out = Path("results/phase3/rewrite_ablation.json" if args.model == TUGP else f"results/phase3/rewrite_ablation_{args.model}.json")
-    train = f"results/zeroshot/splits_fa-train/{TUGP}/predictions.jsonl"
+    tag = "" if args.model == TUGP else f"_{args.model}"
+    tag += "" if args.rules_from == TUGP else f"__rules_{args.rules_from}"
+    out = Path(f"results/phase3/rewrite_ablation{tag}.json")
+    train = f"results/zeroshot/splits_fa-train/{args.rules_from}/predictions.jsonl"
     with RunRecord(out.with_suffix(".run_info.json"), inputs=[train]) as rec:
         stats = count_pairs((norm(r["ref"]), norm(r["hyp"])) for r in read_jsonl(train))
         rules = {k: select_rules(stats, 2, 0.5, k) for k in ("all", "variant")}
-        res = {"model": args.model, "rules_from": TUGP, "thresholds": {"min_count": 2, "min_p": 0.5},
+        res = {"model": args.model, "rules_from": args.rules_from, "thresholds": {"min_count": 2, "min_p": 0.5},
                "n_rules": {k: len(v) for k, v in rules.items()}, "sets": {}}
         for s in SETS:
             f = Path(f"results/zeroshot/{s}/{args.model}/predictions.jsonl")

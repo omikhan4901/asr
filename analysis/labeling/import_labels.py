@@ -57,11 +57,14 @@ def words(t):
     return normalize_bangla_text(t).split()
 
 
+PRIMARY_KEY = {"items": "id", "labels": "item_id,annotator", "resolutions": "item_id"}  # stable paging order
+
+
 def fetch_all(url, key, table, select):
     h = {"apikey": key, "Authorization": f"Bearer {key}"}
     rows, start = [], 0
     while True:
-        r = requests.get(f"{url}/rest/v1/{table}?select={select}&order=1", timeout=60,
+        r = requests.get(f"{url}/rest/v1/{table}?select={select}&order={PRIMARY_KEY[table]}", timeout=60,
                          headers={**h, "Range": f"{start}-{start + 999}"})
         r.raise_for_status()
         batch = r.json()

@@ -138,7 +138,7 @@ def _prepare():
             os.symlink(target, link)
 
 
-def _run_finetune(method: str, out_dir: str, extra: list[str], budget: float) -> int:
+def _run_finetune(method: str, out_dir: str, extra: list[str], budget: float, launch: dict | None = None) -> int:
     """Run 11_finetune.py under a dollar cap for the whole run (all calls, restarts included):
     Ctrl+C (clean save) before the cap, kill at the cap. Spend so far: <out_dir>/modal_spend.json."""
     import json
@@ -155,6 +155,12 @@ def _run_finetune(method: str, out_dir: str, extra: list[str], budget: float) ->
         sys.exit(f"{out_dir}: ${before:.2f} already spent of a ${budget:.2f} budget "
                  f"(clean stop at ${soft:.2f}). Pass a higher --budget to continue.")
     _prepare()
+    if launch:  # the container has no git: record which local commit launched this call
+        log = Path("/vol") / out_dir / "modal_launches.jsonl"
+        log.parent.mkdir(parents=True, exist_ok=True)
+        with log.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps({**launch, "time": time.strftime("%Y-%m-%dT%H:%M:%S"), "budget": budget,
+                                 "spent_before": round(before, 4), "extra": extra}) + "\n")
     cmd = [sys.executable, f"{REMOTE_PROJ}/pipeline/11_finetune.py", "--method", method,
            "--train_manifest", "data/splits_fa/train_clean.csv", "--dev_manifest", "data/splits_fa/dev.csv",
            "--out_dir", out_dir, "--num_workers", "4", *extra]
@@ -202,32 +208,40 @@ def _run_finetune(method: str, out_dir: str, extra: list[str], budget: float) ->
 
 
 @app.function(image=image, gpu=GPU, cpu=4, memory=24576, volumes={"/vol": vol}, timeout=12 * 3600)
-def train_remote(method: str, run: str, extra: list[str], budget: float) -> int:
-    return _run_finetune(method, f"checkpoints/{run}", extra, budget)
+def train_remote(method: str, run: str, extra: list[str], budget: float, launch: dict) -> int:
+    return _run_finetune(method, f"checkpoints/{run}", extra, budget, launch)
 
 
 @app.function(image=image, gpu=GPU, cpu=4, memory=24576, volumes={"/vol": vol}, timeout=40 * 60)
-def smoke_remote(method: str) -> int:
+def smoke_remote(method: str, launch: dict) -> int:
     # Fresh smoke dir each time: the measured speed and memory must come from this image.
     subprocess.run(["rm", "-rf", f"/vol/checkpoints/smoke_{method}"])
     # No --max_minutes: the budget watchdog stops it (clean stop at ~$0.88, about 21 min after start), so
     # the smoke test also exercises the stop path, the checkpoint save and the partial/ export.
     return _run_finetune(method, f"checkpoints/smoke_{method}",
-                         ["--dev_limit", "64", "--eval_every", "40", "--memory_probe"], budget=1.5)
+                         ["--dev_limit", "64", "--eval_every", "40", "--memory_probe"], budget=1.5, launch=launch)
+
+
+def _git_state() -> dict:
+    """Local commit and whether the files shipped to Modal differ from it (run_info.json cannot see git there)."""
+    def git(*a):
+        return subprocess.run(["git", *a], capture_output=True, text=True).stdout.strip()
+    shipped = ["src/bangla_asr", "pipeline/11_finetune.py", "pipeline/checkpoint_to_model.py", "pipeline/modal_finetune.py"]
+    return {"git_commit": git("rev-parse", "HEAD"), "git_dirty_shipped": bool(git("status", "--porcelain", "--", *shipped))}
 
 
 @app.local_entrypoint()
 def smoke(method: str = "full"):
     """~25 min on one A100, capped at $1.50 (clean stop at ~$0.88): image, model download, unpack, training
     until the budget stop, save, partial/ export. Shows s/step and peak memory for the cost estimate."""
-    print("exit code", smoke_remote.remote(method))
+    print("exit code", smoke_remote.remote(method, _git_state()))
 
 
 @app.local_entrypoint()
 def train(method: str, run: str, budget: float, extra: str = ""):
     """Training run capped at --budget dollars in total for this run (earlier calls count; raise it to
     continue a run that hit its cap); extra = more 11_finetune.py arguments, space-separated."""
-    print("exit code", train_remote.remote(method, run, extra.split(), budget))
+    print("exit code", train_remote.remote(method, run, extra.split(), budget, _git_state()))
 
 
 @app.local_entrypoint()

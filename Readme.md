@@ -1,4 +1,4 @@
-# Bangla Long-Form ASR: Inference-Only Rescoring & Discriminative Reranking
+# Bangla Speech Recognition on Media Recordings: Rescoring, Error Analysis and Fine-Tuning
 
 Companion codebase for *\"Inference-Only Rescoring for Bangla Long-Form ASR: Characterizing Oracle Headroom and MBR Consensus Recovery\"* (CSE499 capstone, North South University).
 

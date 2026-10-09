@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "bangla_asr"
 version = "1.0.0"
-description = "Inference-only rescoring and candidate optimization for Bangla long-form ASR"
+description = "Inference-only rescoring and candidate optimization for Bangla speech recognition on media recordings"
 readme = "Readme.md"
 requires-python = ">=3.9"
 authors = [{ name = "Bangla ASR Research Team" }]

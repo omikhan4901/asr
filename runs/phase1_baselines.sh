@@ -46,10 +46,10 @@ step split            $PY pipeline/02_split.py
 step prep_fleurs      $PY pipeline/data/prepare_hf.py --preset fleurs --split test
 step prep_kathbath    $PY pipeline/data/prepare_hf.py --preset kathbath --split valid
 
-# 3) Baseline 1-best on our long-form eval (sanity check, ~40 min)
+# 3) Baseline 1-best on our DL Sprint eval (sanity check, ~40 min)
 step zs_eval_tugstugi $PY pipeline/eval_zero_shot.py --manifest data/splits_fa/eval.csv --model $TUG
 
-# 4) 12-best on the long-form eval (the published 499A decoding setup; several hours)
+# 4) 12-best on the DL Sprint eval (the published 499A decoding setup; several hours)
 step nbest_eval       $PY pipeline/03_generate_nbest.py --split_csv data/splits_fa/eval.csv \
                           --output_jsonl data/nbest_fa/eval_nbest.jsonl --num_beams 12 --temperature 0.7 --batch_size 2
 
@@ -65,7 +65,7 @@ for m in $MODELS; do
   step "zs_kathbath__$slug" $PY pipeline/eval_zero_shot.py --manifest data/external/kathbath/valid.csv --model $m
   # Generic multilingual Whisper (large-v3, turbo) writes Bangla in mixed scripts
   # zero-shot (~65-95% WER); FLEURS/Kathbath rows make that point, so they skip
-  # the 17 h long-form eval (saves ~3-4 GPU-hours). Tugstugi ran it in step 3.
+  # the 17 h DL Sprint eval (saves ~3-4 GPU-hours). Tugstugi ran it in step 3.
   case "$m" in
     "$TUG"|openai/*) ;;
     *) step "zs_eval__$slug" $PY pipeline/eval_zero_shot.py --manifest data/splits_fa/eval.csv --model $m ;;

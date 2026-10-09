@@ -3,7 +3,7 @@
 Transcribe a test manifest with one model and score it (E2: zero-shot baselines).
 
 Works for Whisper-family models and CTC models (wav2vec2 etc.) on Hugging Face.
-Manifests are the CSVs written by pipeline/02_split.py (long-form chunks with
+Manifests are the CSVs written by pipeline/02_split.py (clips cut from long recordings, with
 start/end) or pipeline/data/prepare_hf.py (one WAV per utterance).
 
 Outputs in --out_dir/<set name>/<model slug>/:

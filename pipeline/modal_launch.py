@@ -1,0 +1,122 @@
+#!/usr/bin/env python3
+"""
+Start Phase 4 jobs on the DEPLOYED Modal app, so they keep running when every window on this PC closes.
+
+`modal run --detach` keeps a client on this PC waiting for the job; killing that client (closing
+VS Code or the terminal) cancelled every job on 2026-10-10. Here the app is deployed once, and each
+job is spawned on it: Modal runs it to the end with nothing waiting on this PC. Each launch is
+appended to logs/modal_calls.jsonl (call id, arguments, git state).
+
+  ./Scripts/python.exe pipeline/modal_launch.py deploy                  (after any code change)
+  ./Scripts/python.exe pipeline/modal_launch.py train --method decoder --run m1_decoder --budget 5
+  ./Scripts/python.exe pipeline/modal_launch.py score --run m1_full --model checkpoints/m1_full/final --budget 3
+  ./Scripts/python.exe pipeline/modal_launch.py score --run m1_lora --adapter checkpoints/m1_lora/final --budget 3
+  ./Scripts/python.exe pipeline/modal_launch.py score --run tugstugi_a100 --out zeroshot --budget 3
+  ./Scripts/python.exe pipeline/modal_launch.py status                  (state of every launched job)
+Live logs: Modal website -> Apps -> bangla-asr-finetune (deployed) -> the function's calls.
+Uploads and downloads stay in modal_finetune.py (modal run ...::upload / pull / pull_results).
+"""
+
+import argparse
+import json
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import modal  # noqa: E402
+
+from modal_finetune import APP, TEST_SETS, TUGSTUGI, _git_state  # noqa: E402
+
+CALLS = Path("logs/modal_calls.jsonl")
+DEPLOYED = Path("logs/modal_deployed.json")
+
+
+def deploy():
+    state = _git_state()
+    if state["git_dirty_shipped"]:
+        sys.exit("Commit the changes to the shipped files first (src/bangla_asr, pipeline/*.py used on Modal), "
+                 "so every job can be traced to a commit.")
+    code = subprocess.run([str(Path("Scripts/modal.exe")), "deploy", "pipeline/modal_finetune.py"]).returncode
+    if code:
+        sys.exit(f"modal deploy failed (exit {code})")
+    DEPLOYED.parent.mkdir(parents=True, exist_ok=True)
+    DEPLOYED.write_text(json.dumps({**state, "time": time.strftime("%Y-%m-%dT%H:%M:%S")}, indent=2))
+    print(f"deployed commit {state['git_commit'][:7]}")
+
+
+def _check_deployed() -> dict:
+    """The deployed code must be the code at HEAD, otherwise the launch record would lie."""
+    if not DEPLOYED.exists():
+        sys.exit("Not deployed yet: run  pipeline/modal_launch.py deploy")
+    dep, now = json.loads(DEPLOYED.read_text()), _git_state()
+    if now["git_dirty_shipped"] or now["git_commit"] != dep["git_commit"]:
+        sys.exit(f"The deployed code ({dep['git_commit'][:7]}) is not the current code ({now['git_commit'][:7]}, "
+                 f"uncommitted changes: {now['git_dirty_shipped']}). Commit, then run  modal_launch.py deploy.")
+    return now
+
+
+def _spawn(fn_name: str, kind: str, record: dict, *args):
+    launch = _check_deployed()
+    call = modal.Function.from_name(APP, fn_name).spawn(*args, launch)
+    entry = {"time": time.strftime("%Y-%m-%dT%H:%M:%S"), "call_id": call.object_id, "kind": kind, **record,
+             "git_commit": launch["git_commit"]}
+    CALLS.parent.mkdir(parents=True, exist_ok=True)
+    with CALLS.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(entry) + "\n")
+    print(f"started {kind} {record['run']} -> call {call.object_id}. Nothing needs to stay open on this PC.")
+
+
+def status():
+    if not CALLS.exists():
+        sys.exit("no jobs launched yet")
+    for line in CALLS.read_text(encoding="utf-8").splitlines():
+        e = json.loads(line)
+        try:
+            out = modal.FunctionCall.from_id(e["call_id"]).get(timeout=0)
+            state = f"finished, exit code {out}"
+        except TimeoutError:
+            state = "running"
+        except Exception as ex:  # cancelled, failed, or results expired (7 days)
+            state = f"{type(ex).__name__}: {str(ex)[:80]}"
+        print(f"{e['time']}  {e['kind']:5}  {e['run']:16} {state}")
+
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    sub = p.add_subparsers(dest="cmd", required=True)
+    sub.add_parser("deploy")
+    sub.add_parser("status")
+    t = sub.add_parser("train")
+    t.add_argument("--method", required=True, choices=["lora", "decoder", "encoder", "full"])
+    t.add_argument("--run", required=True)
+    t.add_argument("--budget", type=float, required=True, help="dollar cap for the whole run (earlier calls count)")
+    t.add_argument("--extra", default="", help="more 11_finetune.py arguments, space-separated")
+    s = sub.add_parser("score")
+    s.add_argument("--run", required=True)
+    s.add_argument("--budget", type=float, required=True)
+    s.add_argument("--model", default=TUGSTUGI, help="HF id or a volume path such as checkpoints/m1_full/final")
+    s.add_argument("--adapter", default="", help="LoRA final/ on the volume")
+    s.add_argument("--sets", default="all", help="comma list or 'all': " + ",".join(TEST_SETS))
+    s.add_argument("--out", default="finetuned", help="results/<out>/ on the volume (zeroshot for the baseline)")
+    a = p.parse_args()
+
+    if a.cmd == "deploy":
+        deploy()
+    elif a.cmd == "status":
+        status()
+    elif a.cmd == "train":
+        _spawn("train_remote", "train", {"run": a.run, "method": a.method, "budget": a.budget, "extra": a.extra},
+               a.method, a.run, a.extra.split(), a.budget)
+    else:
+        sets = TEST_SETS if a.sets == "all" else a.sets.split(",")
+        if set(sets) - set(TEST_SETS):
+            sys.exit(f"unknown sets {set(sets) - set(TEST_SETS)}; choose from {TEST_SETS}")
+        _spawn("score_remote", "score", {"run": a.run, "model": a.model, "adapter": a.adapter, "sets": sets,
+                                         "out": a.out, "budget": a.budget},
+               a.run, a.model, a.adapter, sets, a.out, a.budget)
+
+
+if __name__ == "__main__":
+    main()

@@ -19,16 +19,14 @@ Volume "bangla-asr-ft":
   /results/<out>/<set>/<run>/  predictions.jsonl, metrics.json, run_info.json (resumable)
   /hf/                       Hugging Face cache
 
-Commands (Git Bash, repo root; prefix every command with  PYTHONIOENCODING=utf-8 ./Scripts/modal.exe run):
+Jobs (train, score) are started with pipeline/modal_launch.py on the deployed app, never with
+`modal run --detach`: that keeps a client on this PC waiting, and closing it cancelled every job
+(2026-10-10). This file keeps the data transfers (Git Bash, repo root; prefix every command with
+PYTHONIOENCODING=utf-8 ./Scripts/modal.exe run):
   pipeline/modal_finetune.py::upload                       audio + manifests (skips zips already there)
-  --detach pipeline/modal_finetune.py::smoke --method full   ~$1 test of the training path
-  --detach pipeline/modal_finetune.py::train --method full --run m1_full --budget 5
+  pipeline/modal_finetune.py::upload_run --local checkpoints/m1_lora --run m1_lora [--resume]
   pipeline/modal_finetune.py::pull --run m1_full            (--logs-only: no weights)
-  pipeline/modal_finetune.py::upload_run --local checkpoints/m1_lora --run m1_lora   (final/ + logs)
-  --detach pipeline/modal_finetune.py::score --run m1_full --model checkpoints/m1_full/final --budget 3
-  --detach pipeline/modal_finetune.py::score --run m1_lora --adapter checkpoints/m1_lora/final --budget 3
   pipeline/modal_finetune.py::pull_results --run m1_full    -> results/modal/finetuned/<set>/m1_full/
---detach keeps a job running when this terminal closes or the internet drops.
 
 Money safety: --budget caps a whole run in dollars (all calls and restarts; spend is tracked on the
 volume at the price below). Before the cap the job gets one Ctrl+C: training finishes its step,
@@ -324,30 +322,6 @@ def _git_state() -> dict:
     shipped = ["src/bangla_asr", "pipeline/11_finetune.py", "pipeline/checkpoint_to_model.py",
                "pipeline/eval_zero_shot.py", "pipeline/modal_finetune.py"]
     return {"git_commit": git("rev-parse", "HEAD"), "git_dirty_shipped": bool(git("status", "--porcelain", "--", *shipped))}
-
-
-@app.local_entrypoint()
-def smoke(method: str = "full"):
-    """~25 min on one A100, capped at $1.50 (clean stop at ~$0.88): shows s/step and peak memory."""
-    print("exit code", smoke_remote.remote(method, _git_state()))
-
-
-@app.local_entrypoint()
-def train(method: str, run: str, budget: float, extra: str = ""):
-    """Training run capped at --budget dollars in total (earlier calls count; raise it to continue a run that
-    hit its cap); extra = more 11_finetune.py arguments, space-separated."""
-    print("exit code", train_remote.remote(method, run, extra.split(), budget, _git_state()))
-
-
-@app.local_entrypoint()
-def score(run: str, budget: float, model: str = TUGSTUGI, adapter: str = "", sets: str = "all", out: str = "finetuned"):
-    """Score a model on the test sets with eval_zero_shot.py (greedy, batch 8). --model: HF id or a volume path
-    such as checkpoints/m1_full/final; --adapter: a LoRA final/ on the volume; --sets: comma list or 'all'."""
-    chosen = TEST_SETS if sets == "all" else sets.split(",")
-    unknown = set(chosen) - set(TEST_SETS)
-    if unknown:
-        sys.exit(f"unknown sets {unknown}; choose from {TEST_SETS}")
-    print("exit code", score_remote.remote(run, model, adapter, chosen, out, budget, _git_state()))
 
 
 def _download(entries, base: str, dest: Path, skip=lambda rel: False) -> int:

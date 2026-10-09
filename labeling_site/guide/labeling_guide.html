@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Labeling Guide</title>
+<style>
+  @page { size: A4; margin: 18mm 17mm 18mm 17mm; }
+  :root { --ink:#1d1d1b; --muted:#5f5f5a; --line:#d9d9d2; --soft:#f4f4ef; --accent:#2f5d8a; --ok:#2e7d4f; --bad:#a33a2b; --mark:#fff0b3; }
+  * { box-sizing: border-box; }
+  body { margin:0; color:var(--ink); font: 10.5pt/1.5 "Segoe UI", "Nirmala UI", system-ui, sans-serif; }
+  .bn { font-family: "Nirmala UI", "Noto Sans Bengali", "Vrinda", sans-serif; }
+  h1 { font-size: 22pt; margin: 0 0 4pt; line-height: 1.2; }
+  h2 { font-size: 14pt; margin: 18pt 0 6pt; padding-bottom: 3pt; border-bottom: 1.5pt solid var(--ink); break-after: avoid; }
+  h3 { font-size: 11.5pt; margin: 12pt 0 4pt; break-after: avoid; }
+  p { margin: 0 0 6pt; }
+  ul, ol { margin: 0 0 6pt; padding-left: 16pt; }
+  li { margin: 2pt 0; }
+  table { width: 100%; border-collapse: collapse; margin: 4pt 0 8pt; font-size: 9.8pt; break-inside: auto; }
+  tr { break-inside: avoid; }
+  th, td { text-align: left; vertical-align: top; padding: 4pt 6pt; border-bottom: 0.6pt solid var(--line); }
+  th { font-weight: 600; background: var(--soft); border-bottom: 1pt solid var(--ink); }
+  .muted { color: var(--muted); }
+  .lead { font-size: 11.5pt; }
+  .box { border: 1pt solid var(--ink); border-radius: 4pt; padding: 7pt 10pt; margin: 6pt 0 10pt; break-inside: avoid; }
+  .box.soft { border-color: var(--line); background: var(--soft); }
+  .box b.t { display:block; margin-bottom: 2pt; }
+  .rules { counter-reset: r; list-style: none; padding: 0; }
+  .rules { break-inside: avoid; }
+  .rules li { counter-increment: r; padding-left: 22pt; position: relative; margin: 5pt 0; }
+  .rules li::before { content: counter(r); position: absolute; left: 0; top: 0; width: 15pt; height: 15pt; border-radius: 50%; background: var(--ink); color: #fff; font-size: 8.5pt; font-weight: 700; text-align: center; line-height: 15pt; }
+  kbd { border: 0.7pt solid #999; border-bottom-width: 1.5pt; border-radius: 3pt; padding: 0 4pt; font: 9pt "Segoe UI", sans-serif; background: #fff; }
+  code { font-family: Consolas, monospace; font-size: 9.5pt; background: var(--soft); padding: 0 3pt; border-radius: 2pt; }
+  .ok { color: var(--ok); font-weight: 600; }
+  .no { color: var(--bad); font-weight: 600; }
+  del { color: var(--bad); }
+  ins { text-decoration: none; background: #d8eedf; padding: 0 2pt; border-radius: 2pt; }
+  .hl { background: var(--mark); padding: 0 2pt; border-radius: 2pt; }
+  .cover { border-bottom: 1.5pt solid var(--ink); padding-bottom: 10pt; margin-bottom: 8pt; }
+  .meta { display: flex; gap: 18pt; flex-wrap: wrap; font-size: 9.5pt; color: var(--muted); margin-top: 6pt; }
+  .page-break { break-before: page; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; }
+  .flow { counter-reset: s; list-style: none; padding: 0; }
+  .flow li { counter-increment: s; border: 0.8pt solid var(--line); border-radius: 4pt; padding: 5pt 8pt 5pt 26pt; margin: 4pt 0; position: relative; break-inside: avoid; }
+  .flow li::before { content: counter(s); position: absolute; left: 8pt; top: 5pt; font-weight: 700; }
+  td.c { width: 30%; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>How We Label</h1>
+  <div class="lead">The guide for the Bangla ASR labeling work: references, error audit, word pairs, and settling disagreements.</div>
+  <div class="meta"><span>CSE499B · Omi, Nabigah, Nafisa</span><span>Version 1 · 9 October 2026</span><span>Site: asr-labelling-kappa.vercel.app</span></div>
+</div>
+
+<h2>1. Why this work matters</h2>
+<p>Our labels are the only part of the project that a computer cannot produce. They answer three questions the paper depends on:</p>
+<ul>
+  <li><b>Are the dataset's transcripts right?</b> If a transcript is wrong, the model gets blamed for an error it did not make. Your corrected references tell us how often that happens.</li>
+  <li><b>Are the "spelling errors" really spelling?</b> Our program guesses that about 40% of the model's errors are the same word written differently (<span class="bn">ছিল / ছিলো</span>). Your judgments tell us whether that guess is true. This decides the main claim of the paper (Gate&nbsp;3).</li>
+  <li><b>Can other people trust our labels?</b> Some items are labeled by two or three of us without talking. How often we agree (called κ, "kappa") goes in the paper as proof that the labels are reliable.</li>
+</ul>
+<div class="box"><b class="t">Three things matter more than speed</b>
+1. <b>Consistency:</b> all three of us follow exactly the same rules. A rule we apply differently makes our agreement look bad, even if each of us was "right".<br>
+2. <b>Independence:</b> never discuss an item before all three have labeled it. Disagreements are settled together at the end, on a separate screen.<br>
+3. <b>Honesty:</b> when you are not sure, say so (with a note or "Can't tell"). A guess that looks confident is worse than an honest "unclear".</div>
+<p class="muted">Our labels are used only to <b>measure</b> results, never to train or tune a model. That is why they must reflect the audio, not what we think the model or the paper needs.</p>
+
+<h2>2. The work at a glance</h2>
+<table>
+  <tr><th>Task</th><th>What you do</th><th>Items</th><th>Time per item</th><th>Done by</th></tr>
+  <tr><td><b>1. References</b></td><td>Listen to a clip and make the transcript match exactly what is said.</td><td>900 clips (600 DL Sprint, 100 each FLEURS, Kathbath, Common Voice)</td><td>2–3 min</td><td>one person; 10% by two people</td></tr>
+  <tr><td><b>2. Error audit</b></td><td>For every place where the transcript and the recognizer differ, judge who is right.</td><td>400 clips</td><td>1–2 min</td><td>one person; first 60 by all three</td></tr>
+  <tr><td><b>3. Word pairs</b></td><td>Decide what kind of difference two words are.</td><td>1,000 pairs</td><td>about 10 s</td><td>one person; first 150 by all three</td></tr>
+</table>
+<p>In total that is about <b>2,800 labels, roughly 19 hours each</b>. Shared items are served first, so the agreement check can start early.</p>
+<p><b>Order:</b> References first, then the error audit, then word pairs. References come first because you should hear and fix the clips before you have seen what the recognizer wrote.</p>
+<p><b>Sessions:</b> work in blocks of 45–60 minutes with a break. Use headphones. Labeling quality drops quickly when you are tired; stop and come back.</p>
+
+<h2>3. Using the site</h2>
+<ol class="flow">
+  <li>Open <b>asr-labelling-kappa.vercel.app</b>, enter the <b>team passcode</b> (ask Omi; never post it anywhere) and choose your name.</li>
+  <li>The home screen shows the three tasks with team progress and your own count, the <b>Settle disagreements</b> buttons, and a table of everyone's progress.</li>
+  <li>Press <b>Start</b> on a task. The first time, its guide opens on top; you can reopen it any time with the <b>Guide</b> button in the header.</li>
+  <li>Label the item and press <b>Save &amp; next</b>. Everything saves to the shared database at that moment.</li>
+  <li>To fix an earlier answer, press <b>← Previous</b> or <b>My finished items</b>, open the item, change it and save again.</li>
+</ol>
+<table>
+  <tr><th>Key</th><th>Does</th></tr>
+  <tr><td><kbd>Ctrl</kbd> + <kbd>Space</kbd></td><td>Play / pause the clip (all tasks)</td></tr>
+  <tr><td><kbd>Ctrl</kbd> + <kbd>Enter</kbd></td><td>Save and go to the next item</td></tr>
+  <tr><td><kbd>1</kbd> – <kbd>6</kbd></td><td>Error audit: label the selected difference and move to the next one</td></tr>
+  <tr><td><kbd>1</kbd> – <kbd>4</kbd></td><td>Word pairs: label the pair, save and move on</td></tr>
+</table>
+<p class="muted">References keep an unsaved draft in your browser, so a closed tab does not lose your typing. Only "Save &amp; next" puts it in the shared database.</p>
+
+<div style="break-inside: avoid"><h2>4. The golden rules</h2>
+<p>Almost every hard case is answered by one of these. When unsure, come back to this page.</p>
+<ol class="rules">
+  <li><b>Write what you hear, not what the context suggests.</b> If the speaker clearly says <span class="bn">ভাবে</span> where <span class="bn">ভাবি</span> is meant, write <span class="bn">ভাবে</span> and add the note <code>means ভাবি</code>. Never "fix" a word because the sentence would make more sense.</li>
+  <li><b>Fix words, never punctuation.</b> Ignore <span class="bn">।</span> , ? ! quotes and the <code>&gt;&gt;</code> speaker marks, even when they are wrong. Scoring removes them anyway. If only punctuation is off, the clip is <b>Correct as is</b>.</li>
+  <li><b>Do not change a valid spelling.</b> <span class="bn">ছিল / ছিলো, কি / কী, কোন / কোনো, হল / হলো</span>: if the spoken word is written in any accepted spelling, leave it.</li>
+  <li><b>Dialect word forms are written as spoken.</b> Speaker says <span class="bn">কইরা</span> and the text has <span class="bn">করে</span>: change it to <span class="bn">কইরা</span>. Same for <span class="bn">নিয়া, তুমার, যাইতাছি</span>. If the speaker uses the standard form, keep it.</li>
+  <li><b>An accent on one sound keeps the standard spelling.</b> Speaker says <span class="bn">ঢেকালো</span> for <span class="bn">ঠেকালো</span>, or "bhuk" for <span class="bn">ভুখ</span>: write the standard spelling and add the note <code>accent</code>. The difference between rules 4 and 5: in a dialect form the <i>word</i> changes (<span class="bn">করে → কইরা</span>); in an accent one <i>sound</i> is said differently but it is the same written word.</li>
+  <li><b>Do not guess.</b> If you cannot make out a word after listening several times, keep the original word and add the note <code>unclear</code>. If you cannot make out the main speech at all, choose <b>Can't use</b>.</li>
+  <li><b>Work alone on shared items.</b> Do not ask each other about an item until it is in "Settle disagreements".</li>
+</ol></div>
+
+<h2>5. Task 1: References</h2>
+<p>You see the clip, the <b>Original transcript</b>, and a box <b>What is actually said</b> that starts as a copy of it. Edit the box until it matches the audio, then choose one status:</p>
+<table>
+  <tr><th>Status</th><th>Choose it when</th></tr>
+  <tr><td><b>Correct as is</b></td><td>Every word matches the audio (punctuation does not matter).</td></tr>
+  <tr><td><b>Corrected</b></td><td>You changed at least one word. The site picks this for you as soon as you change a word.</td></tr>
+  <tr><td><b>Can't use</b></td><td>The main speech cannot be made out: music, noise, people talking over each other, or another language.</td></tr>
+</table>
+<p>Tick <b>Words cut off at the start or end</b> when the clip starts or ends in the middle of a word. Keep that word if more than half of it is audible; otherwise remove it.</p>
+<h3>What to do in each situation</h3>
+<table>
+  <tr><th class="c">Situation</th><th>Do this</th><th>Example</th></tr>
+  <tr><td>A word is missing from the transcript</td><td>Add it.</td><td class="bn">আমি খাই → আমি ভাত খাই</td></tr>
+  <tr><td>The transcript has a word that is not spoken</td><td>Remove it.</td><td></td></tr>
+  <tr><td>A wrong word</td><td>Replace it with the spoken word.</td><td class="bn">তোমার কি ভোগ লেগেছে → তোমার কি ভুখ লেগেছে</td></tr>
+  <tr><td>Accepted spelling variant</td><td>Leave it.</td><td class="bn">ছিলো stays ছিলো</td></tr>
+  <tr><td>Dialect form spoken</td><td>Write the dialect form.</td><td class="bn">করে → কইরা</td></tr>
+  <tr><td>Accent on one sound</td><td>Standard spelling + note <code>accent</code>.</td><td class="bn">ঢেকালো → ঠেকালো</td></tr>
+  <tr><td>Clearly says a word, context suggests another</td><td>Write what is said + note <code>means …</code>.</td><td class="bn">ভাবে + note "means ভাবি"</td></tr>
+  <tr><td>A word you cannot make out</td><td>Keep the original + note <code>unclear</code>.</td><td></td></tr>
+  <tr><td>Numbers</td><td>As words, as spoken.</td><td class="bn">২৫ → পঁচিশ</td></tr>
+  <tr><td>English words</td><td>In Bangla script, as the transcript does.</td><td class="bn">ফোন, অফিস</td></tr>
+  <tr><td>Fillers and hesitations</td><td>Leave them out.</td><td class="bn">উম, আ…</td></tr>
+  <tr><td>A word said twice on purpose</td><td>Write it twice.</td><td class="bn">গরম গরম</td></tr>
+  <tr><td>A false start or stutter</td><td>Leave out the broken part.</td><td class="bn">আ- আমি → আমি</td></tr>
+  <tr><td>Background speech, laughter, music</td><td>Only the main speaker; no tags like <span class="bn">[মিউজিক]</span>.</td><td></td></tr>
+  <tr><td>Names</td><td>Keep the transcript's spelling unless it is clearly a different name.</td><td></td></tr>
+</table>
+
+<h2>6. Task 2: Error audit</h2>
+<p>You see the clip, the <b>transcript</b> from the dataset, and a <b>recognizer's output</b>. Every place where they differ is highlighted. Select a difference (or let the site move through them) and press a key:</p>
+<table>
+  <tr><th>Key</th><th>Label</th><th>Choose it when</th><th>Example</th></tr>
+  <tr><td><kbd>1</kbd></td><td><b>Recognizer wrong</b></td><td>The transcript matches the audio, the recognizer does not.</td><td></td></tr>
+  <tr><td><kbd>2</kbd></td><td><b>Transcript wrong</b></td><td>The recognizer matches the audio, the transcript does not.</td><td class="bn">transcript ভোগ, recognizer ভুখ, speaker says ভুখ</td></tr>
+  <tr><td><kbd>3</kbd></td><td><b>Both wrong</b></td><td>Neither matches what is said.</td><td></td></tr>
+  <tr><td><kbd>4</kbd></td><td><b>Same word, spelling differs</b></td><td>Both write the spoken word correctly, in different accepted spellings, or split differently.</td><td class="bn">ছিল / ছিলো, কি / কী, দু পাশে / দুপাশে</td></tr>
+  <tr><td><kbd>5</kbd></td><td><b>Same word, dialect vs standard</b></td><td>One side writes the spoken dialect form, the other the standard form. Also an accent on one sound.</td><td class="bn">করে / কইরা, তোমার / তুমার, ঠেকালো / ঢেকালো</td></tr>
+  <tr><td><kbd>6</kbd></td><td><b>Can't tell</b></td><td>The audio is unclear at this spot.</td><td></td></tr>
+</table>
+<h3>How to decide, in order</h3>
+<ol class="flow">
+  <li>Listen to the spot. Judge against the <b>audio</b>, never against which version looks nicer or makes more sense.</li>
+  <li>Is it the same word on both sides? If yes: two accepted spellings → <kbd>4</kbd>; a dialect form or an accent → <kbd>5</kbd>.</li>
+  <li>If not the same word: whose word matches the audio? Transcript → <kbd>1</kbd>; recognizer → <kbd>2</kbd>; neither → <kbd>3</kbd>.</li>
+  <li>Still unsure after listening again → <kbd>6</kbd>. Do not guess.</li>
+</ol>
+<div class="box soft"><b class="t">Common traps</b>
+<ul>
+  <li>A missing or extra word is not a spelling difference. If the recognizer left out a spoken word, that is <b>1</b>; if the transcript has a word nobody says, that is <b>2</b>.</li>
+  <li><span class="bn">আর / আরো, এখন / এখনো, করে / করা</span> are <b>different words</b> (meaning or grammar changes), so they are 1, 2 or 3, not 4.</li>
+  <li>When the speaker clearly says the recognizer's word but context suggests the transcript's, the transcript is wrong: <b>2</b> (golden rule 1).</li>
+</ul></div>
+
+<h2>7. Task 3: Word pairs</h2>
+<p>You see a word from a transcript (left) and the word a recognizer wrote instead (right), with two example sentences. Decide what kind of difference it is; the key saves and moves on.</p>
+<table>
+  <tr><th>Key</th><th>Label</th><th>Meaning</th><th>Examples</th></tr>
+  <tr><td><kbd>1</kbd></td><td><b>Same word, different spelling</b></td><td>Same word and meaning, written two accepted ways.</td><td class="bn">ছিল / ছিলো, কি / কী, রং / রঙ, কোন / কোনো</td></tr>
+  <tr><td><kbd>2</kbd></td><td><b>Dialect or colloquial form</b></td><td>The same word said the regional or spoken way, including an accent on one sound.</td><td class="bn">নিয়ে / নিয়া, তোমার / তুমার, ঠেকালো / ঢেকালো</td></tr>
+  <tr><td><kbd>3</kbd></td><td><b>Different word</b></td><td>The meaning or grammar changes.</td><td class="bn">আর / আরো, এখন / এখনো, করে / করা</td></tr>
+  <tr><td><kbd>4</kbd></td><td><b>Can't tell</b></td><td>The examples do not make it clear.</td><td></td></tr>
+</table>
+<p>Judge the two <b>words</b>, using the example sentences only for context. There is no audio in this task: you are not judging who was right, only what kind of difference it is.</p>
+
+<h2>8. Hard cases (questions we have already met)</h2>
+<table>
+  <tr><th class="c">Question</th><th>Answer</th></tr>
+  <tr><td>I can't understand one word, even after several listens.</td><td>Keep the transcript's word, note <code>unclear</code>, label the rest normally. Audit: <kbd>6</kbd> for that spot.</td></tr>
+  <tr><td>I can't understand the clip at all.</td><td><b>Can't use</b>. That is a valid answer: it tells us how much of the test data is unusable.</td></tr>
+  <tr><td>The speaker clearly says <span class="bn">ভাবি</span>; the transcript has <span class="bn">ভাবে</span>.</td><td>Change it to <span class="bn">ভাবি</span>. You heard it.</td></tr>
+  <tr><td>The speaker clearly says <span class="bn">ভাবে</span>, but the sentence means <span class="bn">ভাবি</span>.</td><td>Write <span class="bn">ভাবে</span>, note <code>means ভাবি</code>. Sound wins over context.</td></tr>
+  <tr><td>The speaker says <span class="bn">ঢেকালো</span> for <span class="bn">ঠেকালো</span>.</td><td>Accent on one sound: keep <span class="bn">ঠেকালো</span>, note <code>accent</code>.</td></tr>
+  <tr><td>I corrected a wrong word but am not sure how to spell the right one.</td><td>Use the standard dictionary spelling of the spoken word (hunger is <span class="bn">ভুখ</span>, not <span class="bn">ভুক</span>). If you are not sure it is the right word at all, keep the original and note <code>unclear</code>.</td></tr>
+  <tr><td>The transcript writes a dialect word in standard form, and the speaker uses the dialect form.</td><td>Write the dialect form (golden rule 4).</td></tr>
+  <tr><td>Only the punctuation or the <code>&gt;&gt;</code> marks are wrong.</td><td><b>Correct as is</b>.</td></tr>
+  <tr><td>Two people talk at once.</td><td>Transcribe the main speaker. If you cannot tell who the main speaker is, <b>Can't use</b>.</td></tr>
+  <tr><td>A song or heavy music covers the speech.</td><td>Transcribe the speech if it is clear; otherwise <b>Can't use</b>.</td></tr>
+  <tr><td>I made a mistake on an item I already saved.</td><td><b>My finished items</b> → open it → fix → save again.</td></tr>
+  <tr><td>My answer on a shared item differs from a teammate's.</td><td>Do nothing alone. It appears in "Settle disagreements" for all of us.</td></tr>
+</table>
+
+<div style="break-inside: avoid"><h3>The note box: use these words</h3>
+<p>Notes are counted by a program later, so use the same words every time. You can add a few words after them.</p>
+<table>
+  <tr><th>Write</th><th>When</th></tr>
+  <tr><td><code>unclear</code></td><td>A word you could not make out (add which one: <code>unclear: ঠেকালো</code>).</td></tr>
+  <tr><td><code>accent</code></td><td>You wrote the standard spelling of a word said with an accent.</td></tr>
+  <tr><td><code>means …</code></td><td>The speaker said one word but clearly meant another (<code>means ভাবি</code>).</td></tr>
+  <tr><td><code>music</code>, <code>noise</code>, <code>overlap</code>, <code>other language</code></td><td>Why a clip is <b>Can't use</b>.</td></tr>
+</table></div>
+
+<h2>9. Settling disagreements</h2>
+<p>When everyone has finished a shared item and the answers differ, it appears under <b>Settle disagreements</b> on the home screen. Do this <b>together</b> (in person or on a call), after your separate sessions.</p>
+<ol class="flow">
+  <li>Open the task's button (it shows how many are open). Items come one by one.</li>
+  <li><b>References</b> show what each person changed. In the original transcript, words someone changed are <span class="hl">highlighted</span>. In each answer, removed words are <del>struck through</del> and new words are <ins>green</ins>, with a summary line such as <span class="bn">"Changes: ভাবে → ভাবি · ভোগ → ভুখ"</span>. So you only listen to the spots that differ.</li>
+  <li>Listen to those spots together and apply the golden rules. Press <b>Use this text</b> on the closest answer, edit the <b>Agreed text</b> if needed, choose the status and press <b>Save agreed answer</b>.</li>
+  <li><b>Error audit</b> shows every difference with each person's label; only the ones that differ need an agreed choice. <b>Word pairs</b> show everyone's label; pick the agreed one.</li>
+  <li>If, after listening together, you still cannot agree, use the honest answer: the original word with <code>unclear</code> (references) or <b>Can't tell</b> (audit, pairs).</li>
+</ol>
+<p class="muted">Your original answers are never changed: the agreed answer is stored separately. Agreement (κ) is computed from the original, independent answers, so it is important that those were made alone.</p>
+
+<div class="box"><b class="t">Quick card</b>
+Write what you hear · words, not punctuation · valid spellings stay · dialect forms as spoken · accent → standard spelling + <code>accent</code> · sound beats context (<code>means …</code>) · unsure → original + <code>unclear</code> · nothing audible → <b>Can't use</b> · shared items: alone first, together at the end.<br>
+<kbd>Ctrl</kbd>+<kbd>Space</kbd> play · <kbd>Ctrl</kbd>+<kbd>Enter</kbd> save &amp; next · audit <kbd>1</kbd>–<kbd>6</kbd> · pairs <kbd>1</kbd>–<kbd>4</kbd></div>
+
+<p class="muted">Questions about a rule? Ask in the group chat <b>about the rule, never about a specific shared item</b>. If we add or change a rule, this guide gets a new version number and the site's guide is updated the same day.</p>
+
+</body>
+</html>

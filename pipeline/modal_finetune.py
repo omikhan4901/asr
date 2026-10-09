@@ -19,11 +19,16 @@ Steps (Git Bash, repo root; prefix every command with  PYTHONIOENCODING=utf-8):
   1. ./Scripts/python.exe pipeline/export_kaggle.py --sets splits_fa-train,splits_fa-dev
   2. ./Scripts/modal.exe run pipeline/modal_finetune.py::upload
   3. ./Scripts/modal.exe run --detach pipeline/modal_finetune.py::smoke --method full
-  4. ./Scripts/modal.exe run --detach pipeline/modal_finetune.py::train --method full --run m1_full
-  5. ./Scripts/modal.exe volume get bangla-asr-ft checkpoints/m1_full checkpoints/modal/
---detach keeps the job running when this terminal closes or the internet drops. A job
-that stops early (preemption, timeout) is continued by running step 4 again: it
-resumes from the last checkpoint on the volume (saved every 100 steps).
+  4. ./Scripts/modal.exe run --detach pipeline/modal_finetune.py::train --method full --run m1_full --budget 8
+  5. ./Scripts/modal.exe run pipeline/modal_finetune.py::pull --run m1_full     (--logs-only: no weights)
+--detach keeps the job running when this terminal closes or the internet drops.
+
+Money safety: --budget caps the whole run in dollars (all calls and restarts, tracked in
+<run>/modal_spend.json at the price below). Before the cap the trainer gets one Ctrl+C,
+finishes its step and saves; the checkpoint is then exported to <run>/partial/ (a model
+that can be scored). At the cap it is killed; the last periodic checkpoint (every 100
+steps) stays on the volume, and pull + pipeline/checkpoint_to_model.py make it usable
+locally. To continue a stopped run, run step 4 again with a higher --budget.
 """
 
 import subprocess

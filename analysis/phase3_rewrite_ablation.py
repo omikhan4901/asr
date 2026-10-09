@@ -5,9 +5,13 @@ all rules, on every set. Nothing is chosen on a test set: thresholds and kind
 come from the dev grid of pipeline/12_raise_ceiling.py; this only reports the
 variant-only row for the same thresholds.
 
-Usage: PYTHONPATH=src ./Scripts/python.exe analysis/phase3_rewrite_ablation.py
+With --model, the same rules (always learned from tugstugi's train errors) are
+applied to another model's saved greedy transcripts, e.g. the Hishab conformer.
+
+Usage: PYTHONPATH=src ./Scripts/python.exe analysis/phase3_rewrite_ablation.py [--model hishab__titu_stt_bn_conformer_large]
 """
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -25,7 +29,6 @@ from bangla_asr.rescoring.convention import count_pairs, rewrite, select_rules  
 
 TUGP = "bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium"
 SETS = ["splits_fa-dev", "splits_fa-eval", "fleurs-test", "kathbath-valid"]
-OUT = Path("results/phase3/rewrite_ablation.json")
 
 
 def norm(t):
@@ -33,13 +36,22 @@ def norm(t):
 
 
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--model", default=TUGP, help="folder name under results/zeroshot/<set>/ whose transcripts are rewritten")
+    args = ap.parse_args()
+    out = Path("results/phase3/rewrite_ablation.json" if args.model == TUGP else f"results/phase3/rewrite_ablation_{args.model}.json")
     train = f"results/zeroshot/splits_fa-train/{TUGP}/predictions.jsonl"
-    with RunRecord(OUT.with_suffix(".run_info.json"), inputs=[train]) as rec:
+    with RunRecord(out.with_suffix(".run_info.json"), inputs=[train]) as rec:
         stats = count_pairs((norm(r["ref"]), norm(r["hyp"])) for r in read_jsonl(train))
         rules = {k: select_rules(stats, 2, 0.5, k) for k in ("all", "variant")}
-        res = {"thresholds": {"min_count": 2, "min_p": 0.5}, "n_rules": {k: len(v) for k, v in rules.items()}, "sets": {}}
+        res = {"model": args.model, "rules_from": TUGP, "thresholds": {"min_count": 2, "min_p": 0.5},
+               "n_rules": {k: len(v) for k, v in rules.items()}, "sets": {}}
         for s in SETS:
-            preds = read_jsonl(f"results/zeroshot/{s}/{TUGP}/predictions.jsonl")
+            f = Path(f"results/zeroshot/{s}/{args.model}/predictions.jsonl")
+            if not f.exists():
+                print(f"{s:15s} no transcripts for {args.model}; skipped")
+                continue
+            preds = read_jsonl(f)
             refs = [norm(r["ref"]) for r in preds]
             keep = [i for i, r in enumerate(refs) if r]
             groups = [str(preds[i]["group"]) for i in keep]
@@ -55,8 +67,8 @@ def main():
             print(f"{s:15s} greedy {100 * row['greedy_wer']:.2f}  all {100 * row['all_wer']:.2f} ({100 * row['all_diff']:+.2f})"
                   f"  variant-only {100 * row['variant_wer']:.2f} ({100 * row['variant_diff']:+.2f} "
                   f"[{100 * row['variant_ci'][0]:+.2f}, {100 * row['variant_ci'][1]:+.2f}])")
-        atomic_write_text(OUT, json.dumps(res, indent=2))
-        rec.outputs = [OUT]
+        atomic_write_text(out, json.dumps(res, indent=2))
+        rec.outputs = [out]
     print("rules:", res["n_rules"])
 
 

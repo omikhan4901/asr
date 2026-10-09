@@ -122,9 +122,12 @@ def save_checkpoint(out, model, opt, sched, state):
     tmp, cur, old = out / "checkpoint.tmp", out / "checkpoint", out / "checkpoint.old"
     shutil.rmtree(tmp, ignore_errors=True)
     tmp.mkdir()
-    torch.save({"model": trainable_state(model), "optimizer": opt.state_dict(), "scheduler": sched.state_dict(),
-                "rng": {"torch": torch.get_rng_state(), "cuda": torch.cuda.get_rng_state_all(),
-                        "numpy": np.random.get_state(), "python": random.getstate()}}, tmp / "state.pt")
+    with open(tmp / "state.pt", "wb") as f:  # fsync: Windows may hold the bytes in cache after the rename below
+        torch.save({"model": trainable_state(model), "optimizer": opt.state_dict(), "scheduler": sched.state_dict(),
+                    "rng": {"torch": torch.get_rng_state(), "cuda": torch.cuda.get_rng_state_all(),
+                            "numpy": np.random.get_state(), "python": random.getstate()}}, f)
+        f.flush()
+        os.fsync(f.fileno())
     atomic_write_text(tmp / "progress.json", json.dumps(state, indent=2))
     shutil.rmtree(old, ignore_errors=True)
     if cur.exists():

@@ -64,6 +64,7 @@ from bangla_asr.models.autoregressive.whisper_model import bangla_generation_con
 LORA_TARGETS = ["q_proj", "k_proj", "v_proj", "out_proj", "fc1", "fc2"]
 DEFAULT_LR = {"lora": 2e-4, "decoder": 1e-5, "encoder": 1e-5, "full": 1e-5}
 # Arguments that define the run; a resume must use the same values.
+STOPPED = 3  # exit code when stopped before the last step, so runners do not mark the step done
 RECIPE = ["model", "method", "train_manifest", "lr", "batch_size", "grad_accum", "epochs", "max_steps",
           "warmup_steps", "weight_decay", "max_grad_norm", "lora_r", "lora_alpha", "lora_dropout", "seed",
           "train_limit"]
@@ -334,7 +335,7 @@ def main():
 
         ds = ChunkDataset(train_rows, [r["_ids"] for r in train_rows], processor.feature_extractor)
         coll = functools.partial(collate, pad_id=tok.eos_token_id, n_prompt=args._n_prompt)
-        t_start, done = time.time(), False
+        done = state["step"] >= total  # already finished: only re-check dev and re-save final/
         win = {"loss": 0.0, "n": 0, "t": time.time()}
         torch.cuda.reset_peak_memory_stats()
 
@@ -398,7 +399,8 @@ def main():
                 if stop["flag"] or over_time:
                     save("Ctrl+C" if stop["flag"] else f"--max_minutes {args.max_minutes}")
                     print("Stopped. Re-run the same command to continue.")
-                    return
+                    rec.extra = {"progress": state, "recipe": recipe, "stopped_early": True}
+                    return STOPPED
                 if step % args.save_every == 0:
                     save("periodic")
             else:
@@ -425,4 +427,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

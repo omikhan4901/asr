@@ -59,7 +59,7 @@ image = (
     modal.Image.debian_slim(python_version="3.13")
     .pip_install("torch==2.13.0", "transformers==5.15.0", "peft==0.21.2", "accelerate==1.14.0",
                  "safetensors==0.8.0", "numpy==2.5.2", "pandas==3.0.5", "soundfile==0.14.0",
-                 "rapidfuzz==3.14.5")
+                 "rapidfuzz==3.14.5", "jiwer==4.0.0", "librosa==1.0.0")  # jiwer: imported by bangla_asr.common
     .env({"PYTHONPATH": f"{REMOTE_PROJ}/src", "PYTHONUNBUFFERED": "1", "PYTHONIOENCODING": "utf-8",
           "HF_HOME": "/vol/hf"})
     .add_local_dir("src/bangla_asr", f"{REMOTE_PROJ}/src/bangla_asr", ignore=["**/__pycache__"])

@@ -41,6 +41,10 @@
   .w.u.cur { background:var(--mark2); outline:2px solid var(--accent); }
   .w.u.lab { background:transparent; text-decoration:underline; text-decoration-color:var(--ok); text-decoration-thickness:2px; }
   .gap { color:var(--muted); }
+  .dd { color:var(--bad); text-decoration:line-through; }
+  .di { background:color-mix(in srgb, var(--ok) 22%, transparent); color:var(--ink); text-decoration:none; border-radius:3px; padding:0 2px; }
+  .dm { background:var(--mark); border-radius:3px; padding:0 2px; }
+  .chg { font-size:15px; margin-top:6px; }
   .unit { display:flex; gap:10px; align-items:center; padding:8px 0; border-top:1px solid var(--line); flex-wrap:wrap; }
   .unit .pairtxt { min-width:200px; font-size:18px; }
   .unit.cur { background:color-mix(in srgb, var(--mark2) 45%, transparent); }
@@ -122,6 +126,30 @@ const keep = () => { try { localStorage.setItem("asr-label-session", JSON.string
 const $ = (id) => document.getElementById(id);
 const app = $("app");
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+// Word diff for "Settle disagreements": punctuation ignored (as in scoring), nukta letters in one form.
+const toks = (s) => String(s).normalize("NFC").replace(/\u09a1\u09bc/g, "\u09dc").replace(/\u09a2\u09bc/g, "\u09dd")
+  .replace(/\u09af\u09bc/g, "\u09df").replace(/[।॥,\-–—.?!:;"'‘’“”()[\]{}<>\/\@#$%^&*_+=~`|]/g, " ").split(/\s+/).filter(Boolean);
+function diffWords(a, b) {  // a = original words, b = answer words -> [{t: "eq"|"del"|"ins", w, i}]
+  const n = a.length, m = b.length, L = Array.from({ length: n + 1 }, () => new Int16Array(m + 1));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) L[i][j] = a[i] === b[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+  const ops = []; let i = 0, j = 0;
+  while (i < n && j < m) {
+    if (a[i] === b[j]) { ops.push({ t: "eq", w: a[i], i }); i++; j++; }
+    else if (L[i + 1][j] >= L[i][j + 1]) { ops.push({ t: "del", w: a[i], i }); i++; }
+    else { ops.push({ t: "ins", w: b[j] }); j++; }
+  }
+  while (i < n) { ops.push({ t: "del", w: a[i], i }); i++; }
+  while (j < m) ops.push({ t: "ins", w: b[j++] });
+  return ops;
+}
+const diffHtml = (ops) => ops.map((o) => o.t === "eq" ? esc(o.w) : o.t === "del" ? `<del class="dd">${esc(o.w)}</del>` : `<ins class="di">${esc(o.w)}</ins>`).join(" ");
+function diffSummary(ops) {  // "ভাবে → ভাবি · ভোগ → ভুক"
+  const out = []; let del = [], ins = [];
+  const flush = () => { if (del.length || ins.length) out.push(`${del.length ? esc(del.join(" ")) : "(nothing)"} → ${ins.length ? esc(ins.join(" ")) : "(removed)"}`); del = []; ins = []; };
+  for (const o of ops) { if (o.t === "eq") flush(); else (o.t === "del" ? del : ins).push(o.w); }
+  flush();
+  return out.length ? out.join(" &nbsp;·&nbsp; ") : "no word changes";
+}
 
 async function api(action, { query = {}, body } = {}) {
   const qs = new URLSearchParams(query).toString();
@@ -405,9 +433,13 @@ function renderReview() {
       b.parentElement.querySelectorAll("button").forEach((x) => x.classList.toggle("sel", x === b)); }; });
   } else {
     let status = agreed ? agreed.status : "";
-    body = `<div class="muted">${p.duration} s</div>${audio}<label class="f">Original transcript</label><div class="text bn">${esc(p.text)}</div>
+    const orig = toks(p.text), diffs = d.answers.map((a) => diffWords(orig, toks(a.data.text)));
+    const touched = new Set(diffs.flatMap((ops) => ops.filter((o) => o.t === "del").map((o) => o.i)));
+    const origHtml = orig.map((w, k) => touched.has(k) ? `<mark class="dm">${esc(w)}</mark>` : esc(w)).join(" ");
+    body = `<div class="muted">${p.duration} s</div>${audio}<label class="f">Original transcript <span class="muted">(highlighted: words someone changed or removed)</span></label><div class="text bn">${origHtml}</div>
       ${d.answers.map((a, k) => `<label class="f">${esc(a.annotator)}: ${esc(LABEL_OF[a.data.status] || a.data.status)}${a.data.cut_off ? " · words cut off" : ""}${a.data.note ? ` · ${esc(a.data.note)}` : ""}</label>
-        <div class="text bn">${esc(a.data.text)}</div><div class="row" style="margin-top:4px"><button data-use="${k}">Use this text</button></div>`).join("")}
+        <div class="text bn">${diffHtml(diffs[k])}</div><div class="chg bn"><span class="muted">Changes:</span> ${diffSummary(diffs[k])}</div>
+        <div class="row" style="margin-top:4px"><button data-use="${k}">Use this text</button></div>`).join("")}
       <label class="f" for="rv-tx">Agreed text</label><textarea id="rv-tx" class="bn">${esc(agreed ? agreed.text : d.answers[0].data.text)}</textarea>
       <div class="choices" id="ag">${[["correct", "Correct as is"], ["corrected", "Corrected"], ["unusable", "Can't use"]].map(([v, t]) => `<button data-v="${v}" class="${status === v ? "sel" : ""}">${t}</button>`).join("")}</div>`;
     collect = () => status ? { status, text: $("rv-tx").value.trim().replace(/\s+/g, " "), cut_off: d.answers.some((a) => a.data.cut_off) } : null;

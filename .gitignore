@@ -81,3 +81,4 @@ spotcheck/
 # Labeling: local clip cache and old offline kits (dataset excerpts)
 labeling_kit/
 labeling_cache/
+notebooks/*.zip

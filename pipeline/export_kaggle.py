@@ -35,6 +35,8 @@ SETS = {  # set name = results/zeroshot/<set name>, as eval_zero_shot.py derives
     "cv-test": "data/external/cv/test.csv",
     # DL Sprint training clips (cleaned text): only for learning another model's rewrite rules.
     "splits_fa-train": "data/splits_fa/train_clean.csv",
+    # DL Sprint dev clips: only for the dev checks of fine-tuning runs on Modal (pipeline/modal_finetune.py).
+    "splits_fa-dev": "data/splits_fa/dev.csv",
 }
 
 

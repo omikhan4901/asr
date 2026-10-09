@@ -11,7 +11,8 @@
 #
 # Breakable: stop any time (Ctrl+C, shutdown, power cut) and run the same command
 # again. Finished steps are skipped (marker files in logs/phase4/done/); training
-# continues from its last checkpoint (saved every 100 steps and on Ctrl+C).
+# continues from its last checkpoint (saved every 100 steps and on Ctrl+C: press it
+# once and wait for "Stopped", ~15 s; a second press quits without saving).
 # A failed step is logged and skipped; it is retried on the next run.
 
 cd "$(dirname "$0")/.." || exit 1
@@ -30,7 +31,8 @@ step() {  # step <name> <command...>
     return
   fi
   echo "=== $(date '+%a %H:%M') START $name   (full log: $LOG/$name.log)"
-  "$@" 2>&1 | tee -a "$LOG/$name.log"
+  # tee ignores Ctrl+C, so the training script can finish its step and save before the log pipe closes
+  "$@" 2>&1 | (trap '' INT; tee -a "$LOG/$name.log")
   if [ "${PIPESTATUS[0]}" -eq 0 ]; then
     touch "$LOG/done/$name"
     echo "OK      $name" | tee -a "$STATUS"

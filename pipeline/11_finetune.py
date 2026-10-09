@@ -164,6 +164,8 @@ def build_model(args, device):
             p.requires_grad = False
         for p in part.parameters():
             p.requires_grad = True
+        # Whisper's encoder positions are a fixed sinusoid table, frozen by the library; keep them fixed.
+        base.model.encoder.embed_positions.requires_grad_(False)
     return model.to(device), base, processor, prompt_kwargs
 
 
@@ -418,6 +420,7 @@ def main():
                     evaluate(model, base, processor, prompt_kwargs, dev_rows, args, device, state["step"], out)
             save("finished")
             final = out / "final"
+            base.config.use_cache = True  # turned off for training only; inference needs the KV cache
             (model if args.method == "lora" else base).save_pretrained(final)
             processor.save_pretrained(final)
             atomic_write_text(final / "training_state.json", json.dumps(state, indent=2))

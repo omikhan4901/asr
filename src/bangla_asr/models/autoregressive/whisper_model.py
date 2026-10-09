@@ -140,6 +140,17 @@ class WhisperASRModel:
         self.model.eval()
         print("Whisper model successfully loaded and configured.")
 
+    def _text_ids(self, texts: List[str]):
+        """Token ids of each text after the Bangla transcribe prompt, and the prompt length."""
+        tok = self.processor.tokenizer
+        tok.set_prefix_tokens(language=self.cfg.language, task=self.cfg.task, predict_timestamps=False)
+        return [tok(t).input_ids for t in texts], len(tok.prefix_tokens)
+
+    def count_text_tokens(self, texts: List[str]) -> List[int]:
+        """n_tokens that score_texts() reports for each text (text tokens + end-of-text), without the GPU."""
+        ids, prefix = self._text_ids(texts)
+        return [len(x) - prefix for x in ids]
+
     @torch.no_grad()
     def score_texts(self, audio, texts: List[str], sampling_rate: int = 16000) -> List[Dict]:
         """Exact log-probability of each text given one audio (teacher forcing).
@@ -149,12 +160,16 @@ class WhisperASRModel:
         end-of-text token. Returns mean_logprob (per token), sum_logprob and
         n_tokens per text. Used for N-best candidate scores, because current
         transformers no longer returns sequences_scores / beam_indices for
-        Whisper beam search.
+        Whisper beam search. A text longer than the decoder's position limit
+        (448 tokens incl. the prompt; a decoded text can re-tokenize longer than
+        it was generated) is scored on the longest prefix that fits and flagged
+        "truncated" (its end-of-text token is not scored).
         """
         tok = self.processor.tokenizer
-        tok.set_prefix_tokens(language=self.cfg.language, task=self.cfg.task, predict_timestamps=False)
-        ids = [tok(t).input_ids for t in texts]
-        prefix = len(tok.prefix_tokens)
+        ids, prefix = self._text_ids(texts)
+        limit = self.model.config.max_target_positions + 1  # decoder input = every token but the last
+        cut = [len(x) > limit for x in ids]
+        ids = [x[:limit] for x in ids]
         L = max(len(x) for x in ids)
         pad = tok.eos_token_id
         seq = torch.full((len(ids), L), pad, dtype=torch.long)
@@ -170,7 +185,8 @@ class WhisperASRModel:
         out = []
         for k, x in enumerate(ids):
             v = lp[k, prefix - 1 : len(x) - 1]  # text tokens + end-of-text
-            out.append({"mean_logprob": float(v.mean()), "sum_logprob": float(v.sum()), "n_tokens": int(v.numel())})
+            out.append({"mean_logprob": float(v.mean()), "sum_logprob": float(v.sum()), "n_tokens": int(v.numel()),
+                        **({"truncated": True} if cut[k] else {})})
         return out
 
     def transcribe_batch(

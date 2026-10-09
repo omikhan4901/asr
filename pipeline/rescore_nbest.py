@@ -14,6 +14,12 @@ T = 1, same function as new N-best runs: WhisperASRModel.score_texts). The
 old value is kept as "logprob_generate". Writes a NEW file (--output_jsonl);
 resumable like the generator.
 
+With --add_greedy (Phase 3), the input must already hold exact scores (N-best
+files written from 2026-10-08 on). The greedy hypothesis of each utterance is
+appended as one more candidate (source "greedy", rank = number of sampled
+candidates) and only it is scored on the GPU; sum_logprob/n_tokens of the
+existing candidates are filled from their mean score and the tokenizer.
+
 Example (~30 min for the 4,234-chunk eval 12-best on an RTX 3060):
   PYTHONPATH=src ./Scripts/python.exe pipeline/rescore_nbest.py \
       --input_jsonl data/nbest_fa/eval_nbest.jsonl --manifest data/splits_fa/eval.csv \
@@ -40,12 +46,27 @@ from bangla_asr.config import AudioConfig, WhisperConfig
 from bangla_asr.models.autoregressive.whisper_model import WhisperASRModel
 
 
+def add_greedy(model, audio, rec, hyp):
+    """Append the greedy hypothesis as a scored candidate; fill sum_logprob/n_tokens of the others."""
+    cands = rec["candidates"]
+    if any(c.get("source") == "greedy" for c in cands):
+        raise SystemExit(f"{rec['utt_id']}: input already has a greedy candidate")
+    todo = [c for c in cands if "n_tokens" not in c]
+    for c, n in zip(todo, model.count_text_tokens([c["text"] for c in todo]) if todo else []):
+        c["n_tokens"], c["sum_logprob"] = n, c["logprob"] * n
+    s = model.score_texts(audio, [hyp])[0]
+    cands.append({"text": hyp, "logprob": s["mean_logprob"], "sum_logprob": s["sum_logprob"],
+                  "n_tokens": s["n_tokens"], "rank": len(cands), "source": "greedy",
+                  **({"truncated": True} if s.get("truncated") else {})})
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--input_jsonl", required=True)
     p.add_argument("--output_jsonl", required=True)
     p.add_argument("--manifest", required=True, help="the manifest the N-best was generated from (start/end slices)")
     p.add_argument("--model_id", default=None)
+    p.add_argument("--add_greedy", default=None, help="greedy predictions.jsonl (eval_zero_shot.py) to append as a scored candidate")
     args = p.parse_args()
 
     src, dst = Path(args.input_jsonl), Path(args.output_jsonl)
@@ -58,6 +79,11 @@ def main():
     missing = [r["utt_id"] for r in recs if r["utt_id"] not in rows]
     if missing:
         raise SystemExit(f"{len(missing)} utterances not in {args.manifest} (first: {missing[0]})")
+    greedy = {r["utt_id"]: r["hyp"] for r in read_jsonl(args.add_greedy)} if args.add_greedy else None
+    if greedy is not None:
+        missing = [r["utt_id"] for r in recs if r["utt_id"] not in greedy]
+        if missing:
+            raise SystemExit(f"{len(missing)} utterances have no greedy hypothesis in {args.add_greedy} (first: {missing[0]})")
     print(f"{src}: {len(recs)} to score, {len(done)} already done -> {dst}")
 
     cfg = WhisperConfig(**({"model_id": args.model_id} if args.model_id else {}))
@@ -69,6 +95,11 @@ def main():
                 for r in tqdm(recs, desc="rescoring", mininterval=10):
                     audio = pad_silence(load_row_audio(rows[r["utt_id"]]), audio_cfg.silence_pad_seconds, audio_cfg.sample_rate)
                     cands = r["candidates"]
+                    if greedy is not None:
+                        add_greedy(model, audio, r, greedy[r["utt_id"]])
+                        f.write(json.dumps(r, ensure_ascii=False) + "\n")
+                        f.flush()
+                        continue
                     try:
                         scored = model.score_texts(audio, [c["text"] for c in cands])
                     except torch.cuda.OutOfMemoryError:
@@ -81,7 +112,8 @@ def main():
                     f.write(json.dumps(r, ensure_ascii=False) + "\n")
                     f.flush()
         rec.outputs = [dst]
-        rec.extra = {"model_id": cfg.model_id, "score": "mean token log-probability, teacher forcing, T=1"}
+        rec.extra = {"model_id": cfg.model_id, "score": "mean token log-probability, teacher forcing, T=1",
+                     "add_greedy": args.add_greedy}
     print(f"done -> {dst}")
 
 

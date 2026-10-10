@@ -29,6 +29,7 @@ every container start, which the old estimates missed.
 | Omi's Modal | `to_hf` (CPU only, ~15-25 min incl. first image build) | ~$0.10-0.25 |
 | Friend's Modal | `from_hf` + matrix data prep (CPU only) | ~$0.3-0.6 |
 | Friend's Modal | M2 CV, M3 Kathbath, M4 Shrutilipi, M5 merged (A100, full fine-tune, ~34 h of audio each) | ~$2.5-3 each, ~$11-13 total |
+| Friend's Modal | learning-rate check (2 runs) + 4-epoch run (3.7b) | ~$10 total |
 | Kaggle (both) | T4 check, LoRA leftovers, stacking 12-best, matrix scoring | $0 (uses the weekly 30 GPU-hours) |
 
 Omi's leftover credit (~$11) stays as the reserve for Phase 5.
@@ -212,6 +213,30 @@ Start these four; each stops by itself at its budget cap:
 ```
 Check with `./Scripts/python.exe pipeline/modal_launch.py status`. Live logs: modal.com -> Apps -> `bangla-asr-finetune` -> the function's calls.
 `exit code 0` = finished; `3` = stopped at the cap with a saved `partial/` model (keep the last 20 log lines for the next analysis session).
+
+### 3.7b Learning rate and epochs check (same account, start together with 3.7; ~$10 est. in total)
+The current recipe (learning rate 1e-5, 2 epochs) was a first guess. These runs use the same DL Sprint data as M1
+full and change one thing each, so they compare directly with M1 full (training-time dev WER 16.73%).
+
+Step 1, at the same time as the matrix (~1 h each, ~$2.4-2.6 each):
+```bash
+./Scripts/python.exe pipeline/modal_launch.py train --method full --run m1_full_lr5e-6 --extra "--lr 5e-6" --budget 3
+./Scripts/python.exe pipeline/modal_launch.py train --method full --run m1_full_lr2e-5 --extra "--lr 2e-5" --budget 3
+```
+Step 2, when both say `finished, exit code 0` in `status`: start the analysis session ("learning-rate runs finished").
+It reads their dev results and names the winning learning rate (lowest dev WER among 5e-6, 1e-5, 2e-5; never a test set).
+Then (~1.5-2 h, ~$4.5 est.), with `<LR>` replaced by the winner:
+```bash
+./Scripts/python.exe pipeline/modal_launch.py train --method full --run m1_full_4ep --extra "--epochs 4 --lr <LR> --keep_best" --budget 5
+```
+`--keep_best` also keeps the model from the epoch with the lowest dev WER as `best/`. If dev WER is still clearly
+falling at epoch 4, a 6-8 epoch run is the next step (~$1 per extra epoch); if it has flattened, 4 is enough.
+Step 3, send both 4-epoch models to the hub and score them on Kaggle like the matrix models:
+```bash
+PYTHONIOENCODING=utf-8 ./Scripts/modal.exe run pipeline/modal_finetune.py::to_hf --run m1_full_4ep
+PYTHONIOENCODING=utf-8 ./Scripts/modal.exe run pipeline/modal_finetune.py::to_hf --run m1_full_4ep --which best
+```
+Kaggle preset: `GPU0 = "score:m1_full_4ep_best"` (and `score:m1_full_4ep` if the best epoch was not the last).
 
 ### 3.8 Send the trained models to the hub (~5 min each, ~$0.02 each)
 ```bash

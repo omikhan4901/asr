@@ -26,6 +26,7 @@ Outputs in --out_dir:
   dev_predictions/step_<N>.jsonl   same format as results/zeroshot predictions
   checkpoint/        latest resumable state
   final/             LoRA adapter (lora) or full model, after the last step
+  best/              with --keep_best: the same, from the dev check with the lowest dev WER (choose by dev, never by test)
   run_info.json
 
 Example (10-minute smoke test):
@@ -243,6 +244,8 @@ def main():
     p.add_argument("--save_every", type=int, default=100)
     p.add_argument("--log_every", type=int, default=10)
     p.add_argument("--num_workers", type=int, default=2)
+    p.add_argument("--keep_best", action="store_true",
+                   help="Also keep best/: the model at the dev check (epoch ends, --eval_every) with the lowest dev WER")
     p.add_argument("--memory_probe", action="store_true",
                    help="Before training, run forward+backward on the longest-target batch and report peak memory")
     args = p.parse_args()
@@ -350,6 +353,27 @@ def main():
         win = {"loss": 0.0, "n": 0, "t": time.time()}
         torch.cuda.reset_peak_memory_stats()
 
+        def export(folder, info):
+            """Save a scorable model like final/ (atomic: written next to it, then swapped in)."""
+            tmp, old = folder.with_name(folder.name + ".tmp"), folder.with_name(folder.name + ".old")
+            shutil.rmtree(tmp, ignore_errors=True)
+            base.config.use_cache = True  # turned off for training only; inference needs the KV cache
+            (model if args.method == "lora" else base).save_pretrained(tmp)
+            base.config.use_cache = False
+            processor.save_pretrained(tmp)
+            atomic_write_text(tmp / "training_state.json", json.dumps(info, indent=2))
+            if folder.exists():
+                folder.rename(old)
+            tmp.rename(folder)
+            shutil.rmtree(old, ignore_errors=True)
+
+        def keep_best(row):
+            if not args.keep_best or row["step"] == 0 or row["dev_wer"] >= state.get("best_dev_wer", float("inf")):
+                return
+            state["best_dev_wer"], state["best_step"] = row["dev_wer"], row["step"]
+            export(out / "best", {**state, "dev": row})
+            print(f"[best] step {row['step']}: dev WER {row['dev_wer']}% -> {out / 'best'}")
+
         def save(reason):
             state["train_seconds"] = round(state["train_seconds"] + time.time() - t_mark[0], 1)
             t_mark[0] = time.time()
@@ -401,7 +425,7 @@ def main():
                           f"gn {row['grad_norm']} {row['s_per_step']} s/step peak {row['peak_gib']} GiB eta {eta_h:.1f} h")
                     win = {"loss": 0.0, "n": 0, "t": time.time()}
                 if args.eval_every and step % args.eval_every == 0 and step < total:
-                    evaluate(model, base, processor, prompt_kwargs, dev_rows, args, device, step, out)
+                    keep_best(evaluate(model, base, processor, prompt_kwargs, dev_rows, args, device, step, out))
                     win["t"] = time.time()
                 over_time = args.max_minutes and (time.time() - t_run) / 60 >= args.max_minutes
                 if step >= total:
@@ -417,7 +441,7 @@ def main():
             else:
                 state["epoch"] += 1
                 state["micro"] = 0
-                evaluate(model, base, processor, prompt_kwargs, dev_rows, args, device, state["step"], out)
+                keep_best(evaluate(model, base, processor, prompt_kwargs, dev_rows, args, device, state["step"], out))
                 save("epoch end")
                 continue
             break
@@ -426,14 +450,13 @@ def main():
             if (out / "dev_log.csv").exists():
                 last = list(csv.DictReader((out / "dev_log.csv").open(encoding="utf-8")))[-1]
                 if int(last["step"]) != state["step"]:
-                    evaluate(model, base, processor, prompt_kwargs, dev_rows, args, device, state["step"], out)
+                    keep_best(evaluate(model, base, processor, prompt_kwargs, dev_rows, args, device, state["step"], out))
             save("finished")
             final = out / "final"
-            base.config.use_cache = True  # turned off for training only; inference needs the KV cache
-            (model if args.method == "lora" else base).save_pretrained(final)
-            processor.save_pretrained(final)
-            atomic_write_text(final / "training_state.json", json.dumps(state, indent=2))
-            print(f"Finished {state['step']} steps; weights in {final}")
+            export(final, state)
+            print(f"Finished {state['step']} steps; weights in {final}"
+                  + (f"; best dev WER {state['best_dev_wer']}% at step {state['best_step']} in {out / 'best'}"
+                     if "best_step" in state else ""))
             rec.outputs = [out / "train_log.csv", out / "dev_log.csv"]
         rec.extra = {"progress": state, "recipe": recipe}
 

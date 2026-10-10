@@ -451,11 +451,12 @@ def to_hf_remote(pairs: list[list[str]], dry: bool, code: bytes = b"", commit: s
 
 
 @app.local_entrypoint()
-def to_hf(what: str = "data,models,results", run: str = "", dry: bool = False):
+def to_hf(what: str = "data,models,results", run: str = "", which: str = "final", dry: bool = False):
     """Copy volume folders to the private HUB repo, plus the code of the current commit (Kaggle runs it).
     --what: comma list of data, models, results, code (--what code sends only the code);
-    --run m2_cv: only that run's final/ model (-> models/m2_cv). --dry: list what would be sent."""
-    pairs = [[f"checkpoints/{run}/final", f"models/{run}"]] if run else \
+    --run m2_cv: only that run's final/ model (-> models/m2_cv); --which best: its best/ model instead
+    (-> models/m2_cv_best, from --keep_best). --dry: list what would be sent."""
+    pairs = [[f"checkpoints/{run}/{which}", f"models/{run}" + ("" if which == "final" else f"_{which}")]] if run else \
         [list(p) for w in what.split(",") if w != "code" for p in HUB_PRESETS[w]]
     state = _git_state()
     if state["git_dirty_shipped"]:

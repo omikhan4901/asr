@@ -129,6 +129,20 @@ def layout(hub_dir: Path, work: Path, out: Path, sets: set, models: set, limit_r
         assert (hub_dir / "models" / m).exists(), f"models/{m} is not in the hub: run to_hf on Modal first"
 
 
+def drop_old_torchao():
+    """Kaggle's image ships torchao 0.10.0; peft 0.21.2 refuses to load any LoRA adapter while a torchao older
+    than 0.16 is installed (ImportError in is_torchao_available). Nothing here uses torchao (Modal has none)."""
+    from importlib.metadata import PackageNotFoundError, version
+
+    try:
+        v = version("torchao")
+    except PackageNotFoundError:
+        return
+    if tuple(int(x) for x in v.split(".")[:2] if x.isdigit()) < (0, 16):
+        subprocess.run([sys.executable, "-m", "pip", "uninstall", "-y", "-q", "torchao"], check=True)
+        print(f"removed torchao {v} (too old for peft, not used)", flush=True)
+
+
 def run_queue(gpu: int, jobs: list[str], args, logs: Path, status: dict):
     env = {**os.environ, "CUDA_VISIBLE_DEVICES": "-1" if args.cpu else str(gpu), "PYTHONPATH": str(REPO / "src"),
            "PYTHONIOENCODING": "utf-8", "TQDM_MININTERVAL": "60"}
@@ -204,6 +218,7 @@ def main():
         base = any(j.split(":")[0] in ("t4check", "lora") for j in jobs)
         fetch(hub_dir, sets, models, base, os.environ.get("HF_TOKEN"))
     layout(hub_dir, work, out, sets, models, args.limit)
+    drop_old_torchao()
 
     status, threads = {}, []
     for gpu, q in enumerate(queues):

@@ -50,6 +50,25 @@ TUGSTUGI = "bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium"
 # + 24 GiB x $0.008. Used only for the budget cap; the Modal dashboard shows the billed amount.
 RATE_PER_H = 2.10 + 4 * 0.047 + 24 * 0.008
 RESERVE_MIN = 15  # minutes kept back for the last dev check, the checkpoint save and the partial/ export
+# Billed but invisible to the in-container clock: container start/stop, image pull, unpacking before the
+# clock starts. 2026-10-10: the dashboard showed ~$2 more than the spend files after ~20 starts (~$0.10 each);
+# every call books this much extra up front, so the cap errs on the safe side.
+STARTUP_DOLLARS = 0.15
+
+# Private Hugging Face dataset repo: the hand-over point between Modal accounts, Kaggle and this PC
+# (models under models/<run>/, audio zips under zips/, manifests under manifests/, scores under results/).
+HUB = "OmiKhan/bangla-asr-hub"
+HF_SECRET = "huggingface"  # Modal secret holding HF_TOKEN (write access to HUB, read access to Kathbath/Shrutilipi)
+CPU_RATE_PER_H = 2 * 0.047 + 8 * 0.008  # data jobs: 2 cores + 8 GiB, no GPU (~$0.16/h)
+
+# Training sources: manifest (as seen in the container) and the audio zips it needs (DL Sprint dev always added).
+TRAIN_SOURCES = {
+    "dlsprint": ("data/splits_fa/train_clean.csv", ["splits_fa-train"]),
+    "cv": ("data/splits_fa/matrix/cv-train.csv", ["cv-train"]),
+    "kathbath": ("data/splits_fa/matrix/kathbath-train.csv", ["kathbath-train"]),
+    "shrutilipi": ("data/splits_fa/matrix/shrutilipi-train.csv", ["shrutilipi-train"]),
+    "merged": ("data/splits_fa/matrix/m5-merged.csv", ["splits_fa-train", "cv-train", "kathbath-train", "shrutilipi-train"]),
+}
 REMOTE_PROJ, WORK = "/root/proj", "/root/work"
 
 # set -> local zip, local manifest, manifest path under /vol/manifests, audio kind.
@@ -81,6 +100,17 @@ image = (
     .add_local_file("pipeline/checkpoint_to_model.py", f"{REMOTE_PROJ}/pipeline/checkpoint_to_model.py")
     .add_local_file("pipeline/eval_zero_shot.py", f"{REMOTE_PROJ}/pipeline/eval_zero_shot.py")
 )
+# CPU-only image for moving and preparing data (no torch; a separate image so the GPU image stays cached).
+data_image = (
+    modal.Image.debian_slim(python_version="3.13")
+    .pip_install("huggingface_hub==1.27.0", "hf_xet==1.6.0", "numpy==2.5.2", "pandas==3.0.5", "pyarrow==25.0.1",
+                 "soundfile==0.14.0", "librosa==1.0.0", "soxr==1.1.0", "tqdm==4.70.0")
+    .env({"PYTHONPATH": f"{REMOTE_PROJ}/src", "PYTHONUNBUFFERED": "1", "PYTHONIOENCODING": "utf-8",
+          "HF_HOME": "/vol/hf_data", "TQDM_MININTERVAL": "30"})
+    .add_local_dir("src/bangla_asr", f"{REMOTE_PROJ}/src/bangla_asr", ignore=["**/__pycache__"])
+    .add_local_dir("pipeline/data", f"{REMOTE_PROJ}/pipeline/data", ignore=["**/__pycache__"])
+)
+CPU_FN = dict(image=data_image, cpu=2, memory=8192, volumes={"/vol": vol}, secrets=[modal.Secret.from_name(HF_SECRET)])
 
 
 # ---------------------------------------------------------------- local side: data
@@ -210,7 +240,7 @@ def _supervise(cmds: list[list[str]], spend_file: Path, budget: float, launch: d
     import threading
     import time
 
-    before = json.loads(spend_file.read_text())["dollars"] if spend_file.exists() else 0.0
+    before = (json.loads(spend_file.read_text())["dollars"] if spend_file.exists() else 0.0) + STARTUP_DOLLARS
     t0 = time.time()
     spent = lambda: before + (time.time() - t0) / 3600 * RATE_PER_H  # noqa: E731
     soft = budget - RESERVE_MIN / 60 * RATE_PER_H
@@ -268,11 +298,13 @@ def _supervise(cmds: list[list[str]], spend_file: Path, budget: float, launch: d
     return code, state["hard"]
 
 
-def _run_finetune(method: str, run: str, extra: list[str], budget: float, launch: dict | None) -> int:
-    _prepare(TRAIN_SETS)
+def _run_finetune(method: str, run: str, extra: list[str], budget: float, launch: dict | None,
+                  source: str = "dlsprint") -> int:
+    manifest, sets = TRAIN_SOURCES[source]
+    _prepare(sets + ["splits_fa-dev"])
     out_dir = f"checkpoints/{run}"
     cmd = [sys.executable, f"{REMOTE_PROJ}/pipeline/11_finetune.py", "--method", method,
-           "--train_manifest", "data/splits_fa/train_clean.csv", "--dev_manifest", "data/splits_fa/dev.csv",
+           "--train_manifest", manifest, "--dev_manifest", "data/splits_fa/dev.csv",
            "--out_dir", out_dir, "--num_workers", "4", *extra]
     code, hard = _supervise([cmd], Path("/vol") / out_dir / "modal_spend.json", budget, launch, run)
     if code != 0 and not hard and (Path(WORK) / out_dir / "checkpoint" / "state.pt").exists():
@@ -287,8 +319,8 @@ GPU_FN = dict(image=image, gpu=GPU, cpu=4, memory=24576, volumes={"/vol": vol})
 
 
 @app.function(**GPU_FN, timeout=12 * 3600)
-def train_remote(method: str, run: str, extra: list[str], budget: float, launch: dict) -> int:
-    return _run_finetune(method, run, extra, budget, launch)
+def train_remote(method: str, run: str, extra: list[str], budget: float, launch: dict, source: str = "dlsprint") -> int:
+    return _run_finetune(method, run, extra, budget, launch, source)
 
 
 @app.function(**GPU_FN, timeout=40 * 60)
@@ -320,7 +352,8 @@ def _git_state() -> dict:
     def git(*a):
         return subprocess.run(["git", *a], capture_output=True, text=True).stdout.strip()
     shipped = ["src/bangla_asr", "pipeline/11_finetune.py", "pipeline/checkpoint_to_model.py",
-               "pipeline/eval_zero_shot.py", "pipeline/modal_finetune.py"]
+               "pipeline/eval_zero_shot.py", "pipeline/modal_finetune.py", "pipeline/data", "pipeline/kaggle_phase4.py",
+               "pipeline/03_generate_nbest.py", "pipeline/rescore_nbest.py"]
     return {"git_commit": git("rev-parse", "HEAD"), "git_dirty_shipped": bool(git("status", "--porcelain", "--", *shipped))}
 
 
@@ -377,3 +410,129 @@ def pull_results(run: str, out: str = "finetuned"):
                and (f"/{run}/" in "/" + e.path.strip("/") + "/" or e.path.strip("/").endswith(f"_spend/{run}.json"))]
     got = _download(entries, base, Path("results/modal") / out)
     print(f"downloaded {got / 1e6:.1f} MB -> results/modal/{out}/")
+
+
+# ---------------------------------------------------------------- Hugging Face hub (CPU only, no GPU)
+# Run with  PYTHONIOENCODING=utf-8 ./Scripts/modal.exe run pipeline/modal_finetune.py::<name> [...]
+# (each finishes in minutes; keep the window open until it prints "done").
+
+HUB_PRESETS = {  # volume path -> path in HUB
+    "data": [("zips", "zips"), ("manifests", "manifests")],
+    "models": [("checkpoints/m1_full/final", "models/m1_full"), ("checkpoints/m1_lora/final", "models/m1_lora")],
+    "results": [("results/zeroshot", "results/zeroshot"), ("results/finetuned", "results/finetuned")],
+}
+
+
+@app.function(**CPU_FN, timeout=90 * 60)
+def to_hf_remote(pairs: list[list[str]], dry: bool, code: bytes = b"", commit: str = "") -> int:
+    import os
+
+    from huggingface_hub import HfApi
+
+    api = HfApi(token=os.environ["HF_TOKEN"])
+    if not dry:
+        api.create_repo(HUB, repo_type="dataset", private=True, exist_ok=True)
+    if code and not dry:  # the code Kaggle runs (the GitHub repo is private): src/ + pipeline/ at this commit
+        api.upload_file(repo_id=HUB, repo_type="dataset", path_or_fileobj=code, path_in_repo=f"code/{commit}.tar.gz")
+        api.upload_file(repo_id=HUB, repo_type="dataset", path_or_fileobj=commit.encode(), path_in_repo="code/latest.txt")
+        print(f"code/{commit}.tar.gz ({len(code) / 1e6:.1f} MB) = code/latest.txt", flush=True)
+    for src, dst in pairs:
+        root = Path("/vol") / src
+        files = [p for p in root.rglob("*") if p.is_file() and p.name not in ("state.pt",) and "_spend" not in p.parts
+                 and not p.name.endswith((".tmp", ".part"))]
+        size = sum(p.stat().st_size for p in files)
+        print(f"{src} -> {HUB}/{dst}: {len(files)} files, {size / 1e9:.2f} GB", flush=True)
+        if not dry and files:
+            api.upload_folder(repo_id=HUB, repo_type="dataset", folder_path=str(root), path_in_repo=dst,
+                              ignore_patterns=["**/_spend/**", "*.tmp", "*.part"],
+                              commit_message=f"{src} from the Modal volume")
+    print("done", flush=True)
+    return 0
+
+
+@app.local_entrypoint()
+def to_hf(what: str = "data,models,results", run: str = "", dry: bool = False):
+    """Copy volume folders to the private HUB repo, plus the code of the current commit (Kaggle runs it).
+    --what: comma list of data, models, results, code (--what code sends only the code);
+    --run m2_cv: only that run's final/ model (-> models/m2_cv). --dry: list what would be sent."""
+    pairs = [[f"checkpoints/{run}/final", f"models/{run}"]] if run else \
+        [list(p) for w in what.split(",") if w != "code" for p in HUB_PRESETS[w]]
+    state = _git_state()
+    if state["git_dirty_shipped"]:
+        sys.exit("Commit the code first: Kaggle gets the code of the current commit.")
+    code = subprocess.run(["git", "archive", "--format=tar.gz", "HEAD", "src", "pipeline"], capture_output=True,
+                          check=True).stdout
+    sys.exit(to_hf_remote.remote(pairs, dry, code, state["git_commit"][:12]))
+
+
+@app.function(**CPU_FN, timeout=90 * 60)
+def from_hf_remote(patterns: list[str]) -> int:
+    import os
+
+    from huggingface_hub import snapshot_download
+
+    path = snapshot_download(HUB, repo_type="dataset", allow_patterns=patterns, local_dir="/tmp/hub",
+                             token=os.environ["HF_TOKEN"])
+    n = 0
+    for p in Path(path).rglob("*"):
+        rel = p.relative_to(path)
+        if p.is_file() and rel.parts[0] in ("zips", "manifests"):
+            dst = Path("/vol") / rel
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            subprocess.run(["cp", str(p), str(dst)], check=True)
+            n += 1
+            print(f"  {rel} ({p.stat().st_size / 1e6:.1f} MB)", flush=True)
+    vol.commit()
+    print(f"done: {n} files into the volume", flush=True)
+    return 0
+
+
+@app.local_entrypoint()
+def from_hf(patterns: str = "zips/splits_fa-train.zip,zips/splits_fa-dev.zip,zips/cv-train.zip,manifests/*"):
+    """Fill THIS account's volume from HUB (for a second Modal account): audio zips + manifests."""
+    sys.exit(from_hf_remote.remote(patterns.split(",")))
+
+
+@app.function(**CPU_FN, timeout=4 * 3600)
+def prep_matrix_remote(sources: list[str], max_hours: float, push: bool, launch: dict | None = None) -> int:
+    import os
+    import shutil
+
+    from huggingface_hub import HfApi
+
+    out = Path("/tmp/matrix")
+    script = f"{REMOTE_PROJ}/pipeline/data/prepare_matrix.py"
+    for s in sources:
+        cmd = [sys.executable, script, s, "--out", str(out), "--max_hours", str(max_hours)]
+        if s == "kathbath":
+            cmd += ["--exclude_groups", "/vol/manifests/matrix/kathbath_valid_speakers.txt"]
+        print("$", " ".join(cmd), flush=True)
+        subprocess.run(cmd, check=True)
+        name = f"{s}-train"
+        Path("/vol/manifests/matrix").mkdir(parents=True, exist_ok=True)
+        shutil.copy(out / name / "manifest.csv", f"/vol/manifests/matrix/{name}.csv")
+        shutil.copy(out / name / "report.json", f"/vol/manifests/matrix/{name}_report.json")
+        shutil.copy(out / "zips" / f"{name}.zip", f"/vol/zips/{name}.zip")
+        vol.commit()
+    # M5: 10 h from each source that exists on the volume.
+    srcs = ["/vol/manifests/train_clean.csv"] + [f"/vol/manifests/matrix/{n}-train.csv" for n in ("cv", "kathbath", "shrutilipi")]
+    srcs = [s for s in srcs if Path(s).exists()]
+    subprocess.run([sys.executable, script, "merged", "--out", str(out), "--hours_each", "10", "--from", *srcs], check=True)
+    shutil.copy(out / "m5-merged" / "manifest.csv", "/vol/manifests/matrix/m5-merged.csv")
+    shutil.rmtree("/vol/hf_data", ignore_errors=True)  # downloaded parquet shards: not needed any more
+    vol.commit()
+    if push:
+        api = HfApi(token=os.environ["HF_TOKEN"])
+        api.upload_folder(repo_id=HUB, repo_type="dataset", folder_path="/vol/manifests/matrix", path_in_repo="manifests/matrix")
+        for s in sources:
+            api.upload_file(repo_id=HUB, repo_type="dataset", path_or_fileobj=f"/vol/zips/{s}-train.zip",
+                            path_in_repo=f"zips/{s}-train.zip")
+    print("done", flush=True)
+    return 0
+
+
+@app.local_entrypoint()
+def prep_matrix(sources: str = "kathbath,shrutilipi", max_hours: float = 34.0, push: bool = True):
+    """Kathbath / Shrutilipi train from Hugging Face -> 16 kHz FLAC zips + manifests on this volume (+ HUB),
+    then the M5 merged manifest. Needs cv-train and the DL Sprint manifests on the volume first (from_hf)."""
+    sys.exit(prep_matrix_remote.remote(sources.split(","), max_hours, push))

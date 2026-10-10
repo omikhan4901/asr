@@ -36,6 +36,8 @@ def save(fig, name, data=None):
         out.append(ROOT / "paper" / "figures" / f"{name}.pdf")
     for p in out:
         fig.savefig(p, metadata={"CreationDate": None, "ModDate": None})
+    (ROOT / "figures" / "png").mkdir(exist_ok=True)  # PNG copy for the README (GitHub cannot show PDF inline)
+    fig.savefig(ROOT / "figures" / "png" / f"{name}.png", dpi=200, metadata={"Software": None})
     if os.environ.get("FIG_PREVIEW"):  # optional PNG for a quick look
         fig.savefig(Path(os.environ["FIG_PREVIEW"]) / f"{name}.png", dpi=200)
     if data is not None:

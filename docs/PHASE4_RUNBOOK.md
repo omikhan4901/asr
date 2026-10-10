@@ -38,13 +38,25 @@ Omi's leftover credit (~$11) stays as the reserve for Phase 5.
 
 ## Part 0. Tokens and secrets (once, ~15 min, $0)
 
-You need two Hugging Face tokens. A token is a password for programs; never paste one into chat.
+**Why:** the private repo `OmiKhan/bangla-asr-hub` is the shared folder between your Modal, your friend's Modal,
+both Kaggle accounts and your PC. Every program that reads or writes it needs a token (a password for programs;
+never paste one into chat). Three tokens, each with only the rights it needs:
+
+| Token | Token type | Can do | Goes into |
+|---|---|---|---|
+| `modal-hub` | **Write** | read + write all your repos, read gated datasets you accepted | your Modal secret (0.2) + your PC login (0.3) |
+| `kaggle-read` | **Read** | read only | the Kaggle notebooks, yours and your friend's (Part 2) |
+| `friend-modal` | **Fine-grained** | read + write only `bangla-asr-hub`, read gated datasets | your friend's Modal secret (Part 3) |
+
+A token is shown only once. Lost or leaked: tokens page -> **⋮ -> Delete**, make a new one, update where it was used.
 
 ### 0.1 Write token (for your Modal account and your PC)
 1. Open https://huggingface.co/settings/tokens (logged in as **OmiKhan**).
 2. Click **+ Create new token**.
-3. At the top choose **Write**. Name it `modal-hub`. Click **Create token**.
-4. Copy the token (starts with `hf_`). Keep the tab open for the next two steps.
+3. **Token type:** click **Write** in the top row (Fine-grained · Read · Write). This is the token type, not the
+   "Write" button in the *Presets* row below it. With Write selected there are no permission boxes to tick.
+4. **Token name:** `modal-hub`. Click **Create token**.
+5. Copy the token (starts with `hf_`). Keep the tab open for the next two steps.
 
 ### 0.2 Put the write token in your Modal account
 1. Open https://modal.com/secrets (logged in as yourself).
@@ -58,19 +70,23 @@ In Git Bash in the project folder (`D:\Projects\ASR Paper Code`):
 ./Scripts/hf.exe auth login
 ```
 Paste the write token when asked (nothing shows while you paste; that is normal), press Enter.
-If it asks "Add token as git credential?" type `n`.
+If it asks "Add token as git credential?" type `n`. Check:
+```bash
+./Scripts/hf.exe auth whoami
+```
+It must print `user=OmiKhan`.
 
 ### 0.4 Read token (for Kaggle; safe to give your friend)
-1. Same page, **+ Create new token**, choose **Read**, name `kaggle-read`, **Create token**.
+1. Same page, **+ Create new token** -> **Token type: Read** (top row) -> name `kaggle-read` -> **Create token**.
 2. Save it somewhere private (a notes app). It can read your private repos but cannot change anything.
 
-### 0.5 Token for your friend's Modal (they will need to push trained models)
-1. **+ Create new token** -> choose **Fine-grained**. Name `friend-modal`.
-2. Under **Repositories permissions**, search `OmiKhan/bangla-asr-hub` (it exists after Part 1 step 1.2; do this step after that)
+### 0.5 Token for your friend's Modal (do this AFTER Part 1.2: the repo must exist first)
+1. **+ Create new token** -> **Token type: Fine-grained** -> **Presets: Custom**. Name `friend-modal`.
+2. Under **Repositories permissions**, type `bangla-asr-hub` in the search box, pick **OmiKhan/bangla-asr-hub**,
    and tick **Read access to contents** and **Write access to contents**.
 3. Under **User permissions -> Repositories**, tick **Read access to contents of all public gated repos you can access**
    (needed for Kathbath and Shrutilipi).
-4. **Create token**, save it privately. It goes into the friend's Modal in Part 3.
+4. Leave everything else unticked. **Create token**, save it privately. It goes into the friend's Modal in Part 3.3.
 
 ---
 

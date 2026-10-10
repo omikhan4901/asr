@@ -28,9 +28,6 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
-from bangla_asr.common.provenance import RunRecord
-from bangla_asr.common.safe_io import atomic_write_text
-
 
 TAG = re.compile(r"\[[^\]]*\]")
 
@@ -48,6 +45,10 @@ def script_of(c: str) -> str:
 
 
 def main():
+    # Imported here: bangla_asr.common pulls in torch, which the CPU data image on Modal (prepare_matrix.py) lacks.
+    from bangla_asr.common.provenance import RunRecord
+    from bangla_asr.common.safe_io import atomic_write_text
+
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--input", default="data/splits_fa/train.csv")
     p.add_argument("--output", default="data/splits_fa/train_clean.csv")

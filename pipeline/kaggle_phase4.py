@@ -86,8 +86,9 @@ def job_commands(job: str, py: str, limit: list[str]) -> list[list[str]]:
              "--add_greedy", f"ref/finetuned/{s}/m1_full/predictions.jsonl"]]
 
 
-def fetch(hub_dir: Path, sets: set, models: set, token: str | None):
-    """Download only what the jobs need from HUB into hub_dir."""
+def fetch(hub_dir: Path, sets: set, models: set, base: bool, token: str | None):
+    """Download only what the jobs need from HUB into hub_dir; the base model (tugstugi) once into the HF cache,
+    so the two GPU queues do not download the same 3 GB file at the same time."""
     from huggingface_hub import snapshot_download
 
     zips = {"cv-test": "zips/cv-test.zip"}
@@ -95,6 +96,12 @@ def fetch(hub_dir: Path, sets: set, models: set, token: str | None):
     t0 = time.time()
     snapshot_download(HUB, repo_type="dataset", allow_patterns=pats, local_dir=str(hub_dir), token=token)
     print(f"downloaded {pats} in {time.time() - t0:.0f} s", flush=True)
+    if base:
+        t0 = time.time()
+        snapshot_download(TUGSTUGI, allow_patterns=["model.safetensors", "*config.json", "tokenizer.json", "vocab.json",
+                                                    "merges.txt", "added_tokens.json", "special_tokens_map.json",
+                                                    "normalizer.json"])
+        print(f"downloaded {TUGSTUGI} in {time.time() - t0:.0f} s", flush=True)
 
 
 def layout(hub_dir: Path, work: Path, out: Path, sets: set, models: set, limit_rows: int | None):
@@ -123,7 +130,7 @@ def layout(hub_dir: Path, work: Path, out: Path, sets: set, models: set, limit_r
 
 
 def run_queue(gpu: int, jobs: list[str], args, logs: Path, status: dict):
-    env = {**os.environ, "CUDA_VISIBLE_DEVICES": "" if args.cpu else str(gpu), "PYTHONPATH": str(REPO / "src"),
+    env = {**os.environ, "CUDA_VISIBLE_DEVICES": "-1" if args.cpu else str(gpu), "PYTHONPATH": str(REPO / "src"),
            "PYTHONIOENCODING": "utf-8", "TQDM_MININTERVAL": "60"}
     limit = ["--limit", str(args.limit)] if args.limit else []
     for job in jobs:
@@ -137,6 +144,8 @@ def run_queue(gpu: int, jobs: list[str], args, logs: Path, status: dict):
                 code = subprocess.run(cmd, cwd=args.work, env=env, stdout=f, stderr=subprocess.STDOUT).returncode
             if code:
                 status[job] = f"FAILED (exit {code}, see {log.name})"
+                tail = log.read_text(encoding="utf-8", errors="replace").splitlines()[-25:]
+                print(f"[GPU {gpu}] {job}: last lines of {log.name}:\n" + "\n".join(tail), flush=True)
                 break
         else:
             status[job] = f"done in {(time.time() - t0) / 60:.0f} min"
@@ -192,7 +201,8 @@ def main():
         shutil.copytree(args.resume_from, out, dirs_exist_ok=True)
         print(f"continuing from {args.resume_from}", flush=True)
     if not args.no_fetch:
-        fetch(hub_dir, sets, models, os.environ.get("HF_TOKEN"))
+        base = any(j.split(":")[0] in ("t4check", "lora") for j in jobs)
+        fetch(hub_dir, sets, models, base, os.environ.get("HF_TOKEN"))
     layout(hub_dir, work, out, sets, models, args.limit)
 
     status, threads = {}, []

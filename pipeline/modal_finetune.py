@@ -416,6 +416,12 @@ def pull_results(run: str, out: str = "finetuned"):
 # Run with  PYTHONIOENCODING=utf-8 ./Scripts/modal.exe run pipeline/modal_finetune.py::<name> [...]
 # (each finishes in minutes; keep the window open until it prints "done").
 
+def _finish(code: int):
+    """End a local entrypoint: quiet on success (sys.exit(0) makes Modal print a scary 'uncaught exception')."""
+    if code:
+        sys.exit(code)
+
+
 HUB_PRESETS = {  # volume path -> path in HUB
     "data": [("zips", "zips"), ("manifests", "manifests")],
     "models": [("checkpoints/m1_full/final", "models/m1_full"), ("checkpoints/m1_lora/final", "models/m1_lora")],
@@ -463,7 +469,7 @@ def to_hf(what: str = "data,models,results", run: str = "", which: str = "final"
         sys.exit("Commit the code first: Kaggle gets the code of the current commit.")
     code = subprocess.run(["git", "archive", "--format=tar.gz", "HEAD", "src", "pipeline"], capture_output=True,
                           check=True).stdout
-    sys.exit(to_hf_remote.remote(pairs, dry, code, state["git_commit"][:12]))
+    _finish(to_hf_remote.remote(pairs, dry, code, state["git_commit"][:12]))
 
 
 @app.function(**CPU_FN, timeout=90 * 60)
@@ -491,7 +497,7 @@ def from_hf_remote(patterns: list[str]) -> int:
 @app.local_entrypoint()
 def from_hf(patterns: str = "zips/splits_fa-train.zip,zips/splits_fa-dev.zip,zips/cv-train.zip,manifests/*"):
     """Fill THIS account's volume from HUB (for a second Modal account): audio zips + manifests."""
-    sys.exit(from_hf_remote.remote(patterns.split(",")))
+    _finish(from_hf_remote.remote(patterns.split(",")))
 
 
 @app.function(**CPU_FN, timeout=4 * 3600)
@@ -536,4 +542,4 @@ def prep_matrix_remote(sources: list[str], max_hours: float, push: bool, launch:
 def prep_matrix(sources: str = "kathbath,shrutilipi", max_hours: float = 34.0, push: bool = True):
     """Kathbath / Shrutilipi train from Hugging Face -> 16 kHz FLAC zips + manifests on this volume (+ HUB),
     then the M5 merged manifest. Needs cv-train and the DL Sprint manifests on the volume first (from_hf)."""
-    sys.exit(prep_matrix_remote.remote(sources.split(","), max_hours, push))
+    _finish(prep_matrix_remote.remote(sources.split(","), max_hours, push))

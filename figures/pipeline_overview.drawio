@@ -1,0 +1,86 @@
+<mxfile host="drawio">
+  <diagram id="overview" name="Pipeline overview">
+    <mxGraphModel adaptiveColors="auto" dx="1200" dy="600" grid="1" gridSize="10" page="1" pageWidth="1240" pageHeight="560">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="data" value="&lt;b&gt;DL Sprint 4.0 / Bengali-Loop&lt;/b&gt;&lt;br&gt;113 transcribed media recordings&lt;br&gt;(drama, narration, news), ~95 h" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E8E8;strokeColor=#7F7F7F;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="20" y="40" width="200" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="fa" value="&lt;b&gt;Forced alignment&lt;/b&gt;&lt;br&gt;MMS aligner + unique-8-gram anchors&lt;br&gt;24,156 clips (1-25 s), 93.1 h&lt;br&gt;no evaluated model involved" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E8E8;strokeColor=#7F7F7F;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="260" y="40" width="220" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="split" value="&lt;b&gt;Split by recording&lt;/b&gt;&lt;br&gt;train 83 (59.6 h) · dev 6 · eval 22 (16.9 h)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E8E8;strokeColor=#7F7F7F;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="250" y="170" width="250" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="tests" value="&lt;b&gt;Public test sets&lt;/b&gt;&lt;br&gt;FLEURS-bn · Kathbath valid · Common Voice&lt;br&gt;(never trained or tuned on)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E8E8;strokeColor=#7F7F7F;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="20" y="170" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="model" value="&lt;b&gt;tugstugi Whisper-medium&lt;/b&gt;&lt;br&gt;greedy + 12 sampled candidates&lt;br&gt;exact (teacher-forced) scores" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCEBF7;strokeColor=#0072B2;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="520" y="40" width="210" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="anatomy" value="&lt;b&gt;Track A: anatomy&lt;/b&gt;&lt;br&gt;MBR = greedy (+0.14), oracle -4.12&lt;br&gt;57% of errors in no candidate&lt;br&gt;41% spelling / dialect variants" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCEBF7;strokeColor=#0072B2;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="770" y="40" width="220" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="diag" value="&lt;b&gt;Diagnosis&lt;/b&gt;&lt;br&gt;every candidate shares the&lt;br&gt;model's spelling habit" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE9CF;strokeColor=#E69F00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="40" width="190" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="p3" value="&lt;b&gt;Phase 3: fix the list (no training)&lt;/b&gt;&lt;br&gt;spelling rewrites + n-gram LM + LM-MBR&lt;br&gt;eval 22.71 → 17.46 %" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE9CF;strokeColor=#E69F00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="770" y="170" width="245" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4" value="&lt;b&gt;Phase 4: fix the model&lt;/b&gt;&lt;br&gt;LoRA / decoder / encoder / full fine-tune&lt;br&gt;eval 22.70 → 11.34 %, P1-P5 hold" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5EFE6;strokeColor=#009E73;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="770" y="280" width="245" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="next" value="&lt;b&gt;Next&lt;/b&gt;&lt;br&gt;stacking (fine-tuned 12-best + Phase 3)&lt;br&gt;train × test matrix (CV, Kathbath, Shrutilipi, merged)&lt;br&gt;human-verified references" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=#FFFFFF;strokeColor=#7F7F7F;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="200" width="180" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="harness" value="&lt;b&gt;Frozen scoring harness for every number&lt;/b&gt;: one normalizer (NFC, nukta forms, punctuation removed, vowel signs kept) · corpus WER · greedy batch 8 · 95 % cluster-bootstrap CIs over recordings / speakers · paired tests · tuning on DL Sprint dev only" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3F3F3;strokeColor=#7F7F7F;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="20" y="390" width="1200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;" edge="1" parent="1" source="data" target="fa">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;" edge="1" parent="1" source="fa" target="split">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="dev / eval" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=11;" edge="1" parent="1" source="split" target="model">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;" edge="1" parent="1" source="model" target="anatomy">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;" edge="1" parent="1" source="anatomy" target="diag">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="put the right spelling in the list" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=11;" edge="1" parent="1" source="diag" target="p3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1125" y="150"/>
+              <mxPoint x="880" y="150"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e7" value="train set (rules, LM, fine-tuning)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=11;" edge="1" parent="1" source="split" target="p4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="370" y="315"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;dashed=1;" edge="1" parent="1" source="p3" target="next">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;dashed=1;" edge="1" parent="1" source="p4" target="next">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;" edge="1" parent="1" source="tests" target="harness">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="120" y="370"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -103,6 +103,12 @@ to locate which part of the network fixes which error type.
 
 ## 3. Method
 
+<p align="center"><img src="figures/png/pipeline_overview.drawio.png" width="900" alt="Pipeline overview: DL Sprint recordings are cut into clips by forced alignment and split by recording; tugstugi produces greedy output and 12 candidates; the agreement anatomy finds that candidates share spelling variants; Phase 3 fixes the list and Phase 4 fixes the model; one frozen harness scores everything."></p>
+
+**Figure 1.** Overview. Data preparation (grey), the diagnosis of the plateau (blue), the two ways of fixing
+the cause (orange: change the candidate list; green: change the model), and the work still running (dashed).
+Editable source: `figures/pipeline_overview.drawio`.
+
 ### 3.1 Forced-alignment segmentation
 Each DL Sprint recording comes with one untimed transcript for 40–86 minutes of audio. The earlier pipeline
 cut audio at pauses, transcribed each piece with the evaluated model and fuzzy-matched that guess against
@@ -219,6 +225,14 @@ baseline on a Kaggle T4. Budget: $0 out of pocket (free cloud credits).
 
 ## 5. Results
 
+<p align="center"><img src="figures/png/f7_main_results_forest.png" width="900" alt="WER with confidence intervals for every system on DL Sprint eval, FLEURS, Kathbath and Common Voice; fine-tuned models are best on every set; contaminated rows hollow."></p>
+
+**Figure 2.** All systems on all test sets: WER with 95% cluster-bootstrap CIs. Grey = zero-shot, orange = the
+Phase 3 system (no training), blue = fine-tuned on DL Sprint train (M1). Hollow markers: the test set is in that
+model's declared training data (not compared). Whisper large-v3 / turbo (80–93% WER) are off the scale.
+Zero-shot and Phase 3 rows were scored on an RTX 3060, fine-tuned rows on an A100 (the same model gives the same
+WER within 0.02 points on both).
+
 ### 5.1 Zero-shot baselines
 WER (%), greedy decoding, one normalizer. † = the model's declared training data includes this test set.
 
@@ -251,11 +265,18 @@ On media speech MBR does not differ from greedy, while the oracle is 4–5 point
 gains a little; for the weaker model it hurts. The first sampled candidate, the baseline of the 499A study, is
 3.15 points *worse* than greedy on eval, which is where the old "41% recovery" came from.
 
+<p align="center"><img src="figures/png/f9_oracle_vs_n.png" width="440" alt="Oracle WER against the number of candidates for four sets; it falls quickly up to about 6 candidates and slowly after; one random candidate is worse than greedy."></p>
+
+**Figure 3.** Oracle WER of the best of the first N sampled candidates (averaged over 20 random orderings) against
+N, with 95% CIs; dashed lines = greedy decoding. One sampled candidate is 2–4 points worse than greedy; two
+come close to it. The oracle keeps falling, but slowly: on eval 23.2 (N = 2) → 20.1 (6) → 18.6 (12). More
+candidates add headroom that MBR cannot use (Table above), because the new correct words are minority votes.
+
 ### 5.3 Candidate agreement
 
 <p align="center"><img src="figures/png/f2_mbr_fix_by_agreement.png" width="560" alt="Errors of the first sampled candidate on DL Sprint eval by the number of candidates with the reference word right, split into fixed and not fixed by MBR; the share fixed rises from 0% at c=0 to nearly 100% at c=11."></p>
 
-**Figure 1.** DL Sprint eval, tugstugi, sampled 12-best: errors of the first candidate by the number of
+**Figure 4.** DL Sprint eval, tugstugi, sampled 12-best: errors of the first candidate by the number of
 candidates that have the reference word right ($c$), split into those MBR fixes and those it does not; the
 line is the share MBR fixes (95% cluster-bootstrap CIs over 22 recordings).
 
@@ -264,11 +285,18 @@ the errors that only a few candidates get right and almost all of those that mos
 Without any reference, agreement flags erroneous greedy words with AUROC 0.823 [0.812, 0.834]. All 12
 candidates agree on the same wrong form for 25.4% of spelling/dialect errors but only 12.8% of other errors.
 
+<p align="center"><img src="figures/png/f8_ceilings.png" width="900" alt="Ceilings on DL Sprint eval: greedy 22.71, MBR 22.84, oracle 18.35, coverage bound 11.41, after rewrites oracle 13.75 and coverage 8.33, Phase 3 17.46, M1 full 11.34; and the type mix of the errors no candidate can fix."></p>
+
+**Figure 5.** (a) Ceilings on DL Sprint eval: what selection can reach (the best single candidate, and the share
+of reference words that no candidate contains, a bound for any selection or word-level combination), before and
+after adding spelling rewrites to the list, and what each intervention reached. (b) The rule-based types of
+greedy's selection-proof errors: 36% are spelling/dialect variants (convention, vowel shift, segmentation).
+
 ### 5.4 Error types
 
 <p align="center"><img src="figures/png/f3_variant_share_by_model.png" width="440" alt="Variant share of errors against WER for each model and test set; better models have a higher variant share."></p>
 
-**Figure 2.** Share of each model's errors that are spelling/dialect variants (rule-based) against its WER,
+**Figure 6.** Share of each model's errors that are spelling/dialect variants (rule-based) against its WER,
 per test set, with 95% CIs; contaminated rows excluded.
 
 About 40.6% [36.1, 44.8] of tugstugi's errors on DL Sprint eval are spelling or dialect variants; without them
@@ -276,7 +304,41 @@ its WER would be 13.48%. The variant share grows as WER falls. Splitting WER int
 Hishab and tugstugi spend 7.8 and 9.2 points on variants on DL Sprint eval, and 13.4 and 13.5 on everything
 else: **the stronger baseline's whole lead is spelling convention.**
 
+**Table: the 20 most frequent substitutions of zero-shot tugstugi on DL Sprint eval** (counts of the same pair
+in the Phase 3 output and in M1 full; type from the rule-based typer). All twenty are accepted spellings or
+spoken forms of the same word (19 typed as variants by the rules, জন্যে as a near miss); both fixes remove most of them.
+
+| reference → model wrote | type | zero-shot | Phase 3 | M1 full |
+|---|---|---:|---:|---:|
+| কোন → কোনো | convention | 438 | 24 | 2 |
+| কি → কী | convention | 416 | 6 | 0 |
+| গেল → গেলো | convention | 331 | 16 | 0 |
+| যেন → যেনো | convention | 264 | 7 | 0 |
+| বলল → বললো | convention | 226 | 5 | 0 |
+| মত → মতো | convention | 211 | 22 | 28 |
+| ছিল → ছিলো | convention | 180 | 9 | 0 |
+| করল → করলো | convention | 161 | 14 | 11 |
+| দিল → দিলো | convention | 142 | 3 | 0 |
+| তার → তাঁর | convention | 141 | 5 | 0 |
+| আরো → আরও | convention | 100 | 8 | 0 |
+| এত → এতো | convention | 92 | 9 | 0 |
+| নিয়ে → নিয়া | vowel shift | 65 | 1 | 5 |
+| দিয়ে → দিয়া | vowel shift | 64 | 3 | 6 |
+| যাব → যাবো | convention | 64 | 6 | 0 |
+| এখনো → এখনও | convention | 63 | 1 | 0 |
+| রইল → রইলো | convention | 61 | 5 | 0 |
+| জন্য → জন্যে | near miss | 59 | 5 | 2 |
+| করে → কইরে | vowel shift | 58 | 0 | 0 |
+| কোন → কোনও | convention | 48 | 1 | 2 |
+
 ### 5.5 Raising the ceiling without retraining (Phase 3)
+
+<p align="center"><img src="figures/png/f6_phase3_dumbbell.png" width="900" alt="Phase 3: greedy WER versus LM-MBR on the expanded list per test set, and oracle WER before and after expansion."></p>
+
+**Figure 7.** Phase 3 per test set: (a) greedy vs LM-weighted MBR on the expanded candidate list (95% CI of the
+paired difference); (b) oracle WER of the candidate pool before and after adding the learned spelling rewrites.
+All settings were tuned on DL Sprint dev (top row) and applied unchanged.
+
 All settings chosen on DL Sprint dev and applied unchanged; WER points vs greedy [95% CI].
 
 | Set | Greedy | LM rerank | LM-MBR | ROVER | Rewriter | **LM-MBR on expanded list** | Oracle: pool → expanded |
@@ -298,7 +360,7 @@ the convention fix is model-agnostic.
 
 <p align="center"><img src="figures/png/f4_finetune_by_set.png" width="760" alt="WER of zero-shot tugstugi and four fine-tuning variants on four test sets with confidence intervals; full fine-tuning is best everywhere; encoder-only does not improve Kathbath or Common Voice."></p>
 
-**Figure 3.** WER of zero-shot tugstugi and the four M1 variants (trained on DL Sprint train only), all scored
+**Figure 8.** WER of zero-shot tugstugi and the four M1 variants (trained on DL Sprint train only), all scored
 with the same harness on the same GPU, with 95% cluster-bootstrap CIs. LoRA's Kathbath and Common Voice rows
 are pending.
 
@@ -314,7 +376,7 @@ Paired difference vs zero-shot on the same GPU (WER points [95% CI]):
 
 <p align="center"><img src="figures/png/f5_gain_by_error_type.png" width="440" alt="DL Sprint eval WER split into variant and other errors for zero-shot, Phase 3 and four fine-tuning variants."></p>
 
-**Figure 4.** DL Sprint eval WER split into spelling/dialect-variant errors and all other errors (rule-based),
+**Figure 9.** DL Sprint eval WER split into spelling/dialect-variant errors and all other errors (rule-based),
 for zero-shot, the Phase 3 system without training, and the four fine-tuning variants.
 
 **The pre-registered predictions:**
@@ -334,7 +396,61 @@ DL Sprint as decoder-only** (−5.4 vs −5.9 points): the spelling habit is not
 encoder adapts to what the frozen decoder needs. But the encoder-only gains do not transfer (Kathbath and
 Common Voice unchanged), while decoder-only and full fine-tuning help on every set.
 
-### 5.7 Still running (Phase 4 continues)
+<p align="center"><img src="figures/png/f12_training_curves.png" width="900" alt="Training loss and training-time dev WER for the four fine-tuning variants; full fine-tuning reaches the lowest loss and dev WER; encoder-only the highest loss."></p>
+
+**Figure 10.** Training of the four variants (2 epochs, 956 steps): (a) training loss (rolling mean); (b) dev WER
+of the checks during training (646 dev clips, before training and at each epoch end; fp16 decoding inside the
+trainer, so the values differ slightly from the harness numbers). Dev WER still falls between the two epoch ends
+for every variant, so longer training may help; the learning rates are untuned initial choices.
+
+**Real examples** (DL Sprint eval, normalized text; words that differ from the reference in **bold**). Chosen by a
+fixed rule (seed 0) among clips of 6–14 words where zero-shot WER ≥ 25% and M1 full is perfect, so they show what
+changes, not typical output. Phase 3 fixes the spelling (এতো → এত, কোনো → কোন, ছিলো → ছিল) but not word
+splits or misheard words; the fine-tuned model also learns the references' word boundaries (জানিনা, কিনা)
+and the English loanwords written in Bangla script.
+
+| clip | system | transcript |
+|---|---|---|
+| train_039_0047 | reference | জানিনা এখন এসব বলা উচিত কিনা |
+|  | zero-shot | **জানি** **না** এখন এসব বলা উচিত **কি** **না** |
+|  | Phase 3 | **জানি** **না** এখন এসব বলা উচিত **কি** **না** |
+|  | M1 full | জানিনা এখন এসব বলা উচিত কিনা |
+| train_064_0230 | reference | তুই এত দেরি করলি বৌমা কোথায় |
+|  | zero-shot | তুই **এতো** দেরি করলি **বউমা** কোথায় |
+|  | Phase 3 | তুই এত দেরি করলি **বউমা** কোথায় |
+|  | M1 full | তুই এত দেরি করলি বৌমা কোথায় |
+| train_081_0071 | reference | ন্যায় অন্যায় বিচার করার কোন দরকার নেই |
+|  | zero-shot | **নেই** অন্যায় বিচার করার **কোনো** দরকার নেই |
+|  | Phase 3 | **নেই** অন্যায় বিচার করার কোন দরকার নেই |
+|  | M1 full | ন্যায় অন্যায় বিচার করার কোন দরকার নেই |
+| train_090_0113 | reference | আসলে ইটস ওকে ইজ ইট রিয়েলি ওকে |
+|  | zero-shot | **আসলেই** **আইচ্ছা** ওকে **ইজি** **ট্রিলি** ওকে |
+|  | Phase 3 | আসলে **আচ্ছা** ওকে **ইজি** **ট্রিলি** ওকে |
+|  | M1 full | আসলে ইটস ওকে ইজ ইট রিয়েলি ওকে |
+| train_120_0016 | reference | তার জেদ ছিল তিনি চাননি এই মূর্তির দ্বিতীয় কোন প্রতিরূপ কোনদিন তৈরি হোক |
+|  | zero-shot | তার জেদ **ছিলো** তিনি চাননি এই মূর্তির দ্বিতীয় **কোনো** প্রতিরূপ **কোনো** **দিন** তৈরি হোক |
+|  | Phase 3 | তার জেদ ছিল তিনি চাননি এই মূর্তির দ্বিতীয় কোন প্রতিরূপ **কোন** **দিন** তৈরি হোক |
+|  | M1 full | তার জেদ ছিল তিনি চাননি এই মূর্তির দ্বিতীয় কোন প্রতিরূপ কোনদিন তৈরি হোক |
+
+### 5.7 Where the remaining errors are
+
+<p align="center"><img src="figures/png/f10_wer_by_alignment_score.png" width="440" alt="WER by aligner confidence bin for zero-shot and M1 full; WER falls as confidence rises; fine-tuning roughly halves it in every bin."></p>
+
+**Figure 11.** WER by the forced aligner's confidence in the clip (mean word posterior; clips below 0.5 were
+removed by the aligner, never by an evaluated model), with 95% CIs and clip counts.
+
+<p align="center"><img src="figures/png/f11_robustness.png" width="760" alt="WER against clip length and speaking rate for zero-shot and M1 full; both are nearly flat."></p>
+
+**Figure 12.** WER against (a) clip length and (b) speaking rate (reference words per second, quintiles) on DL
+Sprint eval, with 95% CIs.
+
+WER rises steeply as the aligner becomes less sure of a clip: 16.2% for the most confident clips vs 43.9% for the
+least confident (zero-shot), 7.0% vs 25.8% after fine-tuning. Low aligner confidence marks clips with music, crosstalk
+or transcripts that do not match the audio, so part of the error in those bins is likely in the reference, not the
+recognizer; the human-verified references will separate the two. Clip length and speaking rate barely matter
+(zero-shot 21–24% in every length bin; fine-tuned 10.6–11.8%), so clip length up to the 25 s limit is not a source of errors.
+
+### 5.8 Still running (Phase 4 continues)
 - **Stacking:** 12-best of the fine-tuned model + expansion + LM-MBR, and the agreement anatomy after
   fine-tuning (does fine-tuning turn selection-proof errors into fixed ones?).
 - **Train × test matrix:** the same recipe trained on Common Voice, Kathbath and Shrutilipi (34 h each) and on
@@ -407,7 +523,7 @@ Python 3.13; the repository root doubles as a Windows virtual environment (`./Sc
 | Fine-tuning | `pipeline/11_finetune.py` (locally) or `pipeline/modal_launch.py train` (cloud A100) |
 | Phase 4 analysis | `runs/phase4_analysis.sh` |
 | Cloud inference (Kaggle T4) | `notebooks/kaggle_phase4.ipynb` → `pipeline/kaggle_phase4.py` |
-| Figures | `figures/scripts/*.py` (data in `figures/data/`, PDF + PNG in `figures/`) |
+| Figures and tables | `figures/scripts/*.py` (data in `figures/data/`, PDF in `figures/`, PNG in `figures/png/`, tables in `figures/tables/`); overview diagram `figures/pipeline_overview.drawio` (draw.io) |
 
 Tests: `PYTHONPATH=src ./Scripts/python.exe tests/test_smoke.py` and `tests/test_mbr.py`.
 Step-by-step guide for the cloud runs: [`docs/PHASE4_RUNBOOK.md`](docs/PHASE4_RUNBOOK.md).

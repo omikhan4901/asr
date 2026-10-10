@@ -1,0 +1,22 @@
+| reference → model wrote | type | zero-shot | Phase 3 | M1 full |
+|---|---|---:|---:|---:|
+| কোন → কোনো | convention | 438 | 24 | 2 |
+| কি → কী | convention | 416 | 6 | 0 |
+| গেল → গেলো | convention | 331 | 16 | 0 |
+| যেন → যেনো | convention | 264 | 7 | 0 |
+| বলল → বললো | convention | 226 | 5 | 0 |
+| মত → মতো | convention | 211 | 22 | 28 |
+| ছিল → ছিলো | convention | 180 | 9 | 0 |
+| করল → করলো | convention | 161 | 14 | 11 |
+| দিল → দিলো | convention | 142 | 3 | 0 |
+| তার → তাঁর | convention | 141 | 5 | 0 |
+| আরো → আরও | convention | 100 | 8 | 0 |
+| এত → এতো | convention | 92 | 9 | 0 |
+| নিয়ে → নিয়া | vowel shift | 65 | 1 | 5 |
+| দিয়ে → দিয়া | vowel shift | 64 | 3 | 6 |
+| যাব → যাবো | convention | 64 | 6 | 0 |
+| এখনো → এখনও | convention | 63 | 1 | 0 |
+| রইল → রইলো | convention | 61 | 5 | 0 |
+| জন্য → জন্যে | near miss | 59 | 5 | 2 |
+| করে → কইরে | vowel shift | 58 | 0 | 0 |
+| কোন → কোনও | convention | 48 | 1 | 2 |

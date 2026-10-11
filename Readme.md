@@ -409,6 +409,14 @@ of the checks during training (646 dev clips, before training and at each epoch 
 trainer, so the values differ slightly from the harness numbers). Dev WER still falls between the two epoch ends
 for every variant, so longer training may help; the learning rates are untuned initial choices.
 
+**Learning rate and epochs (chosen on dev only).** Two more full runs changed only the learning rate: dev WER
+after 2 epochs was 17.53% (5e-6), 16.73% (1e-5, M1 full) and 16.63% (2e-5), so 2e-5 won by the rule fixed
+beforehand. Four epochs at 2e-5 lowered dev WER further (16.26%), but on the test sets **longer training
+over-fits to DL Sprint**: DL Sprint eval improves only within noise (11.02%, −0.32 [−0.68, +0.05] vs M1 full),
+while FLEURS (+1.38 [+0.71, +2.20]), Kathbath (+1.50 [+1.12, +1.86]) and Common Voice (+2.34 [+2.15, +2.52], now
+worse than zero-shot) all get worse. Selecting on an in-domain dev set alone hides this, so the released model
+will be chosen on a dev set that mixes all sources.
+
 **Real examples** (DL Sprint eval, normalized text; words that differ from the reference in **bold**). Chosen by a
 fixed rule (seed 0) among clips of 6–14 words where zero-shot WER ≥ 25% and M1 full is perfect, so they show what
 changes, not typical output. Phase 3 fixes the spelling (এতো → এত, কোনো → কোন, ছিলো → ছিল) but not word
@@ -468,7 +476,7 @@ set. No test sentence occurs in any training list (2 of 9,408 Common Voice sente
 
 **Figure 13.** Train × test matrix: WER (large), paired difference vs zero-shot in points with 95% cluster CI
 (small), shade = relative WER reduction vs zero-shot in that column; outlined = best model per column. The
-average is the mean of the four test-set WERs. M1 scored on the A100, M2–M5 on Kaggle T4s. Every difference
+average is the mean of the four test-set WERs. M1 scored on the A100, M2–M6 on Kaggle T4s. Every difference
 from zero-shot is significant.
 
 - **Each corpus trains its own test set best.** Common Voice → Common Voice 10.46%, Kathbath → Kathbath 10.44%,
@@ -482,8 +490,11 @@ from zero-shot is significant.
 - **Read speech transfers to read speech.** Kathbath training helps FLEURS most (16.44%; not significantly
   different from M5's 16.85%, −0.41 [−1.00, +0.18]). Shrutilipi is the weakest source on every set.
 
-A sixth model (M6: M5's clips with the targets rewritten to DL Sprint's spelling by 33 rules learned from
-training text) is trained and waits for scoring.
+- **Harmonizing the spelling does not help (M6).** M6 uses M5's clips with the targets rewritten to DL
+  Sprint's spelling by 33 rules learned from training text (about 1% of the other corpora's words change). Against
+  M5 it ties on DL Sprint eval (−0.03 [−0.14, +0.09]), and it is slightly worse where the references use the other
+  forms: Common Voice +0.25 [+0.15, +0.36], FLEURS +0.19 and Kathbath +0.18 (both n.s.). The model already learns
+  each corpus's convention from its own clips; forcing one convention costs a little on the others.
 
 ### 5.9 Rescoring after fine-tuning
 
@@ -505,8 +516,10 @@ calibrated. What is left is mostly selection-proof: no candidate contains the ri
 the remaining errors falls on DL Sprint eval (40.6% → 28.5%) but not on Kathbath (49.7% → 50.0%): the model
 learned DL Sprint's convention, not Kathbath's.
 
-### 5.10 Still running
-- **Scoring:** the 4-epoch model (lr 2e-5, dev WER 16.26% vs 16.73%) and M6 on every test set.
+### 5.10 Next (Phase 5)
+- **Released model:** full fine-tuning on all four corpora together (unharmonized, 2 epochs at 1e-5), chosen on a
+  dev set mixing every source, then ROVER on its 12-best; compared with IndicConformer and the DL Sprint finalist models.
+- **Whole-recording evaluation:** transcribing each raw evaluation recording end to end (no reference-guided cuts).
 - **Human verification:** inter-annotator agreement, the share of DL Sprint references annotators corrected,
   every model's WER against the verified references, and the human precision of each error type.
 
@@ -559,7 +572,8 @@ to the candidate lists takes DL Sprint eval from 22.71% to 17.46% without traini
 11.34%, with all five pre-registered predictions holding. Stacking the two adds little (10.89%): after
 fine-tuning, spelling expansion no longer raises the oracle, and what remains is mostly selection-proof. Across
 four Bangla corpora each training set wins its own test set, and a merged 40 h set gives the best average
-(13.18%), so a released model should be trained on mixed sources and judged on the average. Next: the
+(13.18%), so a released model should be trained on mixed sources, without forcing one spelling convention, and
+selected on the average rather than on in-domain dev data, which rewards over-fitting. Next: the
 human-verified references, which will separate recognizer errors from reference noise.
 
 ---

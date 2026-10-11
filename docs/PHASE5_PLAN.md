@@ -8,20 +8,22 @@ Freeze: **Nov 12**; report: **Dec 1**. Times and costs marked *est.* are estimat
 | Question | Answer (Phase 4) | Consequence for Phase 5 |
 |---|---|---|
 | Which training method? | full fine-tuning is best (11.34% eval; LoRA 11.76, decoder 12.99) | full fine-tuning |
-| Which data? | each corpus wins its own test set; 10 h x 4 has the best average (13.18%) | train on **all four corpora together** (~156 h) |
+| Which data? | each corpus wins its own test set; 10 h x 4 has the best average (13.18%) | train on **all four corpora together** (156 h, every hour they have) **plus new corpora up to ~250-300 h** |
 | Harmonize the spelling? | no gain on DL Sprint, small loss on Common Voice (Gate 4) | **no** harmonization |
 | Longer training / higher lr? | 4 epochs at 2e-5 over-fits (out-of-domain +1.4 to +2.3) | keep **1e-5, 2 epochs**; choose with a **mixed dev set** |
-| Rescoring on top? | ROVER gives −0.45 after fine-tuning | ROVER on the final model's 12-best |
+| Rescoring on top? | ROVER gives −0.45 after fine-tuning; word 4-gram LM reranking ties it (eval −0.29, FLEURS −0.47) | ROVER on the final model's 12-best (no extra LM work) |
 
 ## Steps
 
 | # | Step | Who | Where | When | Time | Cost |
 |---|---|---|---|---|---|---|
-| 1 | Merged training list (DL Sprint 59.6 h + CV 34.4 h + Kathbath 33.9 h + Shrutilipi 28.1 h), mixed dev set (DL Sprint dev + CV dev + FLEURS dev + held-out Kathbath train speakers), `--source all` | Omi | PC (CPU) | Oct | - | $0 |
+| 0 | Check the new corpora: real size, license, speakers vs our test sets (OpenSLR 53, IndicVoices Bengali; FLEURS train skipped, it would spoil FLEURS test) | Omi | web + PC | Oct | - | $0 |
+| 0b | Prepare the new corpora (download, 16 kHz FLAC, same text rules, speaker filter) on a Modal CPU | Omi, **1 command** (+ accept the IndicVoices terms on HF if used) | Modal CPU | Oct | ~1-2 h est. | ~$0.5-1 est. |
+| 1 | Merged training list (DL Sprint 59.6 h + CV 34.4 h + Kathbath 33.9 h + Shrutilipi 28.1 h + new corpora, **~250-300 h, each new source capped so DL Sprint stays >= ~20%**), mixed dev set (DL Sprint dev + CV dev + FLEURS dev + held-out Kathbath train speakers), `--source all` | Omi | PC (CPU) | Oct | - | $0 |
 | 2 | Whole-recording evaluation code (VAD cuts the raw recording, the model transcribes, the text is joined, WER per recording on the 22 eval recordings) | Omi | PC | Oct | - | $0 |
 | 3 | Kaggle job for baselines: IndicConformer + the released DL Sprint finalist models on the 4 test sets; whole-recording eval of zero-shot and M1 full | Omi, **1 Kaggle session** | Kaggle | Oct | ~6-9 h est. | $0 |
 | 4 | Upload the merged list to the hub | **you run 1 command** | PC | Oct 31 | ~10 min | $0 |
-| 5 | Train the released model (M7) | **you run 1 command** | Modal (November credit) | Nov 1 | ~3 h est. | ~$6-8 est. |
+| 5 | Train the released model (M7, ~250-300 h, 2 epochs at 1e-5) | **you run 1 command** | Modal (November credit) | Nov 1 | ~5-6 h est. | ~$11-14 est. |
 | 6 | Send M7 to the hub (`to_hf --run m7_all`) | **you run 1 command** | Modal | Nov 1 | ~10 min | ~$0.05 |
 | 7 | Score M7 + its 12-best for ROVER + whole-recording eval | **you start** (1-2 Kaggle sessions) | Kaggle | Nov 2-3 | ~10 h est. | $0 |
 | 8 | Analysis, tables, figures, README, paper text | Omi | PC | Nov 3-11 | - | $0 |
@@ -29,7 +31,7 @@ Freeze: **Nov 12**; report: **Dec 1**. Times and costs marked *est.* are estimat
 | 10 | Human verification of 300 references (optional, Gate 3: how much of the error is reference noise) | team | spreadsheet | Oct-Nov | ~3-4 h per person est. | $0 |
 | 11 | Whisper-small variant (optional, size/speed trade-off) | you run 1 command | Modal | Nov | ~1 h est. | ~$2 est. |
 
-**Your part: about 5 actions** (steps 3, 4, 5, 6, 7), each a single command or one Kaggle "Save & Run All".
+**Your part: about 6 actions** (steps 0b, 3, 4, 5, 6, 7), each a single command or one Kaggle "Save & Run All".
 The exact commands go into a Phase 5 runbook (like `docs/PHASE4_RUNBOOK.md`) when the code is ready.
 
 ## Money
@@ -37,13 +39,15 @@ The exact commands go into a Phase 5 runbook (like `docs/PHASE4_RUNBOOK.md`) whe
 | Account | Now | Phase 5 use |
 |---|---|---|
 | Omi's Modal | ~$11 left (reserve) | backup if the November run fails |
-| Friend's Modal | ~$3.5 left, resets in November | steps 5-6 (and 11) |
+| Friend's Modal | ~$3.5 left, resets in November ($30) | steps 5-6 (~$11-14 est.), 11 |
 | Kaggle (both) | free weekly GPU hours | steps 3, 7 |
 
-Option (your decision): step 5 can start before November on Omi's ~$11 reserve (est. $6-8), which leaves
-more time before the freeze but no backup until November.
+Step 0b fits Omi's reserve (~$0.5-1). Step 5 at ~300 h (~$11-14 est.) does not fit the reserve alone, so it waits for
+November's credit (or runs at 156 h on the reserve, ~$6-8 est., if the new corpora fail the checks in step 0).
 
 ## Decision gates
+- **After step 0:** a corpus is used only if its license allows training and release, and it shares no speakers
+  or sentences with our test sets; if none passes, M7 trains on the 156 h we have.
 - **After step 3:** if IndicConformer or a finalist model beats M1 full on the average, the "best open model"
   claim needs M7 to beat it; if not, report it as a baseline.
 - **After step 7:** M7 must beat M5 (13.18) on the average and stay close to M1 full on DL Sprint eval (11.34);

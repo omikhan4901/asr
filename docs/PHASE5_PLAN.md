@@ -48,6 +48,10 @@ November's credit (or runs at 156 h on the reserve, ~$6-8 est., if the new corpo
 ## Decision gates
 - **After step 0:** a corpus is used only if its license allows training and release, and it shares no speakers
   or sentences with our test sets; if none passes, M7 trains on the 156 h we have.
+- **Licenses so far:** OpenSLR 53 = **CC BY-SA 4.0** (confirmed by Omi from the LICENSE file, 2026-10-12): training
+  allowed; cite Kjartansson et al. 2018; anything that contains its audio or text (training lists, rewritten
+  transcripts) is shared under CC BY-SA 4.0. **Decision at step 9 (Omi):** model weights under CC BY-SA 4.0
+  (safe, recommended) or Apache-2.0 with attribution. Size and speaker/sentence overlap still to check.
 - **After step 3:** if IndicConformer or a finalist model beats M1 full on the average, the "best open model"
   claim needs M7 to beat it; if not, report it as a baseline.
 - **After step 7:** M7 must beat M5 (13.18) on the average and stay close to M1 full on DL Sprint eval (11.34);

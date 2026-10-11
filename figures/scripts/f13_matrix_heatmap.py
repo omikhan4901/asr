@@ -25,7 +25,11 @@ SETS = {"splits_fa-eval": "DL Sprint eval", "fleurs-test": "FLEURS", "cv-test": 
         "kathbath-valid": "Kathbath valid"}
 RUNS = {"zero-shot": "zero-shot (no training)", "m1_full": "M1 DL Sprint (59.6 h)",
         "m2_cv_t4": "M2 Common Voice (34.4 h)", "m3_kathbath_t4": "M3 Kathbath (33.9 h)",
-        "m4_shrutilipi_t4": "M4 Shrutilipi (28.1 h)", "m5_merged_t4": "M5 merged (10 h x 4)"}
+        "m4_shrutilipi_t4": "M4 Shrutilipi (28.1 h)", "m5_merged_t4": "M5 merged (10 h x 4)",
+        "m6_harmonized_t4": "M6 merged, harmonized"}
+# a model without all four comparisons yet (e.g. M6 before its Kaggle scoring) is left out
+RUNS = {r: n for r, n in RUNS.items() if r == "zero-shot" or all(
+    (ROOT / "results/compare/phase4" / f"{s}__{r}_vs_tugstugi_a100.json").exists() for s in SETS)}
 
 rows = []
 for s, sname in SETS.items():
@@ -49,7 +53,7 @@ W = d.pivot(index="train", columns="test", values="wer").loc[rlabels, cols]
 R = d.pivot(index="train", columns="test", values="rel_reduction").loc[rlabels, cols]
 key = d.set_index(["train", "test"])
 
-fig, ax = plt.subplots(figsize=(PAGE_W, 2.75))
+fig, ax = plt.subplots(figsize=(PAGE_W, 0.46 * len(RUNS)))
 im = ax.imshow(R.values, cmap="Blues", vmin=0, vmax=55, aspect="auto")
 for i, r in enumerate(rlabels):
     for j, c in enumerate(cols):

@@ -68,6 +68,8 @@ TRAIN_SOURCES = {
     "kathbath": ("data/splits_fa/matrix/kathbath-train.csv", ["kathbath-train"]),
     "shrutilipi": ("data/splits_fa/matrix/shrutilipi-train.csv", ["shrutilipi-train"]),
     "merged": ("data/splits_fa/matrix/m5-merged.csv", ["splits_fa-train", "cv-train", "kathbath-train", "shrutilipi-train"]),
+    # M6 = M5's clips with harmonized spelling (pipeline/data/harmonize_m6.py; manifest via the hub + from_hf)
+    "harmonized": ("data/splits_fa/matrix/m6-harmonized.csv", ["splits_fa-train", "cv-train", "kathbath-train", "shrutilipi-train"]),
 }
 REMOTE_PROJ, WORK = "/root/proj", "/root/work"
 

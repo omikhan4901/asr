@@ -16,12 +16,14 @@ mkdir -p results/compare/phase4 results/error_types/phase4
 
 n_lines() { [ -f "$1" ] && wc -l < "$1" || echo 0; }
 
+# Kaggle T4 rows (results/kaggle, names end in _t4) count too: T4 = A100 within 0.01 WER points
+# on dev / FLEURS / Kathbath (results/compare/gpu_t4/).
 preds=()
-for set_dir in $R/finetuned/*/; do
+for set_dir in $R/finetuned/*/ results/kaggle/finetuned/*/; do
   set=$(basename "$set_dir")
   base=$R/zeroshot/$set/$BASE/predictions.jsonl
   [ -f "$base" ] || continue
-  preds+=("$base")
+  [[ " ${preds[*]} " == *" $base "* ]] || preds+=("$base")
   for run_dir in "$set_dir"*/; do
     run=$(basename "$run_dir")
     p=$run_dir/predictions.jsonl

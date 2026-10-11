@@ -1,8 +1,10 @@
 """
 F4: WER of zero-shot tugstugi and the four M1 fine-tuning variants on every test set, all scored
-with the same harness on the same GPU (Modal A100), with 95% cluster-bootstrap CIs.
+with the same harness on a Modal A100, with 95% cluster-bootstrap CIs; where the A100 row is missing
+(LoRA on Kathbath and Common Voice) the Kaggle T4 row of the same model is used (T4 = A100 within
+0.01 WER points, results/compare/gpu_t4/).
 
-Input: results/modal/{zeroshot,finetuned}/<set>/<run>/metrics.json
+Input: results/modal/{zeroshot,finetuned}/<set>/<run>/metrics.json, else results/kaggle/.../<run>_t4/
 Run:   ./Scripts/python.exe figures/scripts/f4_finetune_by_set.py
 """
 
@@ -27,6 +29,8 @@ rows = []
 for (kind, run), (label, _) in RUNS.items():
     for s, name in SETS.items():
         f = ROOT / "results/modal" / kind / s / run / "metrics.json"
+        if not f.exists():
+            f = ROOT / "results/kaggle" / kind / s / f"{run}_t4" / "metrics.json"
         if f.exists():
             m = json.loads(f.read_text(encoding="utf-8"))
             lo, hi = m["wer_ci95"]

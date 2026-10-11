@@ -20,7 +20,11 @@ another spelling or dialect form, shared by every candidate; the pattern holds o
 second model, and accounts for the whole lead of a stronger open baseline. Adding learned spelling
 variants to the candidate lists moves the oracle from 18.35% to 13.75% and the WER from 22.71% to 17.46%
 without any training; fine-tuning the model on 60 h of in-domain data reaches **11.34%** (−11.36 points
-[−12.32, −10.46]), and five predictions written before the fine-tuning runs all hold. We release the
+[−12.32, −10.46]), and five predictions written before the fine-tuning runs all hold. A train × test matrix
+over four public corpora shows that each corpus trains its own test set best, and that 10 h from each of
+four corpora gives the best average over the four test sets (13.18% vs 13.99% for the in-domain model). After
+fine-tuning, rescoring gains almost vanish (−0.45 points): training removes exactly the errors that
+selection could reach. We release the
 forced-aligned segmentation of 93.1 hours of Bengali-Loop recordings and the scoring code.
 
 **Keywords:** speech recognition, Bangla, N-best rescoring, minimum Bayes risk, error analysis, spelling variation, Whisper
@@ -218,7 +222,9 @@ transcribes 50.9% and 61.5% of those utterances exactly; BanglaASR, fine-tuned o
 59.1%. These rows are marked † and never compared.
 
 **Hardware.** Zero-shot and Phase 1–3 inference on one RTX 3060 (12 GB); Phase 4 training and scoring on a
-Modal A100-40GB, every Phase 4 row (including the zero-shot baseline) scored on that same GPU; the Hishab
+Modal A100-40GB, the M1 rows and the zero-shot baseline scored on that same GPU; the matrix models (§5.8),
+LoRA's Kathbath and Common Voice rows and the stacking candidates on Kaggle T4s, which give the same WER as
+the A100 within 0.01 points (zero-shot tugstugi on dev, FLEURS and Kathbath; 96–99% identical outputs); the Hishab
 baseline on a Kaggle T4. Budget: $0 out of pocket (free cloud credits).
 
 ---
@@ -361,8 +367,8 @@ the convention fix is model-agnostic.
 <p align="center"><img src="figures/png/f4_finetune_by_set.png" width="760" alt="WER of zero-shot tugstugi and four fine-tuning variants on four test sets with confidence intervals; full fine-tuning is best everywhere; encoder-only does not improve Kathbath or Common Voice."></p>
 
 **Figure 8.** WER of zero-shot tugstugi and the four M1 variants (trained on DL Sprint train only), all scored
-with the same harness on the same GPU, with 95% cluster-bootstrap CIs. LoRA's Kathbath and Common Voice rows
-are pending.
+with the same harness, with 95% cluster-bootstrap CIs. Every row is from the A100 except LoRA on Kathbath and
+Common Voice, which were scored on a Kaggle T4 (the same model gives the same WER within 0.01 points on both).
 
 Paired difference vs zero-shot on the same GPU (WER points [95% CI]):
 
@@ -370,7 +376,7 @@ Paired difference vs zero-shot on the same GPU (WER points [95% CI]):
 |---|---:|---:|---:|---:|
 | zero-shot tugstugi (WER) | 22.70 | 21.54 | 14.81 | 14.80 |
 | **full** | **11.34** (−11.36 [−12.32, −10.46]) | **18.34** (−3.20 [−4.07, −2.27]) | **13.48** (−1.33 [−2.00, −0.69]) | **12.80** (−2.00 [−2.23, −1.77]) |
-| LoRA | 11.76 (−10.94 [−11.86, −10.05]) | 18.40 (−3.14) | pending | pending |
+| LoRA | 11.76 (−10.94 [−11.86, −10.05]) | 18.40 (−3.14) | 13.61 (−1.20) | 12.84 (−1.96) |
 | decoder-only | 12.99 (−9.71 [−10.32, −9.07]) | 18.61 (−2.93) | 13.62 (−1.19) | 13.13 (−1.68) |
 | encoder-only | 13.83 (−8.87 [−9.78, −7.87]) | 19.90 (−1.64) | 14.59 (−0.22, n.s.) | 14.69 (−0.11, n.s.) |
 
@@ -450,11 +456,57 @@ or transcripts that do not match the audio, so part of the error in those bins i
 recognizer; the human-verified references will separate the two. Clip length and speaking rate barely matter
 (zero-shot 21–24% in every length bin; fine-tuned 10.6–11.8%), so clip length up to the 25 s limit is not a source of errors.
 
-### 5.8 Still running (Phase 4 continues)
-- **Stacking:** 12-best of the fine-tuned model + expansion + LM-MBR, and the agreement anatomy after
-  fine-tuning (does fine-tuning turn selection-proof errors into fixed ones?).
-- **Train × test matrix:** the same recipe trained on Common Voice, Kathbath and Shrutilipi (34 h each) and on
-  a merged set, each scored on every test set.
+### 5.8 Train × test matrix
+
+The M1 full recipe (all weights, lr 1e-5, 2 epochs) was trained on each public corpus alone, at a similar size,
+and on a merged set: **M2** Common Voice train (34.4 h), **M3** Kathbath train (33.9 h, 11 speakers; the 17
+speakers of our Kathbath test set removed), **M4** Shrutilipi (news, 28.1 h, all of the public release) and
+**M5** 10 h from each of DL Sprint, Common Voice, Kathbath and Shrutilipi. Every model was scored on every test
+set. No test sentence occurs in any training list (2 of 9,408 Common Voice sentences, none for the other sets).
+
+<p align="center"><img src="figures/png/f13_matrix_heatmap.png" width="900" alt="Heatmap of WER for six models (zero-shot and five training sources) on four test sets plus the average; each single-source model is best on its own test set; the in-domain model is best on DL Sprint eval; the merged model has the best average."></p>
+
+**Figure 13.** Train × test matrix: WER (large), paired difference vs zero-shot in points with 95% cluster CI
+(small), shade = relative WER reduction vs zero-shot in that column; outlined = best model per column. The
+average is the mean of the four test-set WERs. M1 scored on the A100, M2–M5 on Kaggle T4s. Every difference
+from zero-shot is significant.
+
+- **Each corpus trains its own test set best.** Common Voice → Common Voice 10.46%, Kathbath → Kathbath 10.44%,
+  DL Sprint → DL Sprint eval 11.34%. The test sets measure different recording conditions and spelling
+  conventions, so no single set stands in for "Bangla ASR", and the average over the four is the fair headline.
+- **In-domain data drives DL Sprint eval.** Models trained only on other corpora reach 20.4–20.6% there (from
+  22.70%); 10 h of DL Sprint inside M5 brings it to 13.84%.
+- **Diversity wins the average.** M5 has the best average (13.18% vs 13.99% for M1) with a third less audio.
+  Against M1 it loses on DL Sprint eval (+2.50 [+2.11, +2.96]) and wins on FLEURS (−1.49 [−2.28, −0.74]), Common
+  Voice (−1.83 [−2.03, −1.62]) and Kathbath (−2.41 [−2.87, −2.05]).
+- **Read speech transfers to read speech.** Kathbath training helps FLEURS most (16.44%; not significantly
+  different from M5's 16.85%, −0.41 [−1.00, +0.18]). Shrutilipi is the weakest source on every set.
+
+A sixth model (M6: M5's clips with the targets rewritten to DL Sprint's spelling by 33 rules learned from
+training text) is trained and waits for scoring.
+
+### 5.9 Rescoring after fine-tuning
+
+The Phase 3 methods were run unchanged on M1 full's own sampled 12-best (exact scores, the greedy output added;
+the rewrite rules learned from zero-shot tugstugi on train; every weight chosen on dev). Paired difference vs M1
+full greedy:
+
+| Set | M1 full greedy | best stacking (ROVER, chosen on dev) | rewrite only | oracle: pool → expanded | selection-proof share of 1-best errors |
+|---|---:|---:|---:|---:|---:|
+| DL Sprint eval | 11.34 | **10.89** (−0.45 [−0.74, −0.23]) | −0.02 n.s. | 8.21 → 8.17 | 52.4% (zero-shot 49.5%) |
+| FLEURS | 18.34 | 17.90 (−0.44 [−0.82, −0.15]) | +0.09 | 14.43 → 14.42 | 73.2% |
+| Kathbath | 13.48 | 13.29 (−0.18 [−0.34, −0.03]) | +0.07 | 9.64 → 9.62 | 65.7% |
+
+On zero-shot tugstugi the same methods gained 5.25 points on DL Sprint eval; on the fine-tuned model they gain
+0.45. **Spelling expansion no longer lowers the oracle** (8.21 → 8.17, vs 18.35 → 13.75 zero-shot) and the
+rewriter changes nothing: the fine-tuned model already writes the references' convention. Plain acoustic MBR,
+which tied with greedy zero-shot, now helps a little (eval 10.99, −0.35 [−0.62, −0.15]); the candidates are better
+calibrated. What is left is mostly selection-proof: no candidate contains the right word. The variant share of
+the remaining errors falls on DL Sprint eval (40.6% → 28.5%) but not on Kathbath (49.7% → 50.0%): the model
+learned DL Sprint's convention, not Kathbath's.
+
+### 5.10 Still running
+- **Scoring:** the 4-epoch model (lr 2e-5, dev WER 16.26% vs 16.73%) and M6 on every test set.
 - **Human verification:** inter-annotator agreement, the share of DL Sprint references annotators corrected,
   every model's WER against the verified references, and the human precision of each error type.
 
@@ -489,7 +541,8 @@ evaluation, which can favor fine-tuned systems and rules learned from training t
 Common Voice share nothing with our training data and are the strict test (and there the fine-tuning gains are
 smaller: −1.3 to −3.2 points). The DL Sprint references may be partly machine-generated [4]; the verified
 references will bound this effect. Greedy output depends slightly on batch size and GPU, so every row of a
-comparison uses one setting and one GPU type. Kathbath results use its validation split, and the DL Sprint
+comparison uses one batch size, and rows from two GPU types (A100, T4) are mixed only after checking that the
+same model gives the same WER on both (within 0.01 points). Kathbath results use its validation split, and the DL Sprint
 test is our held-out recordings rather than the hidden competition test.
 
 ---
@@ -503,8 +556,11 @@ points. Counting how many candidates contain each word shows why: 57% of errors 
 only fixes what most candidates already agree on, and about 41% of errors are spelling and dialect variants
 that the whole list shares. Fixing the cause works in both ways we predicted: adding learned spelling variants
 to the candidate lists takes DL Sprint eval from 22.71% to 17.46% without training, and fine-tuning takes it to
-11.34%, with all five pre-registered predictions holding. Next: stacking the two, the train × test matrix
-across Bangla corpora, and the human-verified references.
+11.34%, with all five pre-registered predictions holding. Stacking the two adds little (10.89%): after
+fine-tuning, spelling expansion no longer raises the oracle, and what remains is mostly selection-proof. Across
+four Bangla corpora each training set wins its own test set, and a merged 40 h set gives the best average
+(13.18%), so a released model should be trained on mixed sources and judged on the average. Next: the
+human-verified references, which will separate recognizer errors from reference noise.
 
 ---
 

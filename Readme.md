@@ -19,7 +19,7 @@ and MBR fixes an error only when most candidates already agree. About 41% of err
 another spelling or dialect form, shared by every candidate; the pattern holds on FLEURS, Kathbath and a
 second model, and accounts for the whole lead of a stronger open baseline. Adding learned spelling
 variants to the candidate lists moves the oracle from 18.35% to 13.75% and the WER from 22.71% to 17.46%
-without any training; fine-tuning the model on 60 h of in-domain data reaches **11.34%** (−11.36 points
+without retraining the speech model (only a word n-gram LM and spelling rules built from the training text); fine-tuning the model on 60 h of in-domain data reaches **11.34%** (−11.36 points
 [−12.32, −10.46]), and five predictions written before the fine-tuning runs all hold. A train × test matrix
 over four public corpora shows that each corpus trains its own test set best, and that 10 h from each of
 four corpora gives the best average over the four test sets (13.18% vs 13.99% for the in-domain model). After
@@ -234,7 +234,7 @@ baseline on a Kaggle T4. Budget: $0 out of pocket (free cloud credits).
 <p align="center"><img src="figures/png/f7_main_results_forest.png" width="900" alt="WER with confidence intervals for every system on DL Sprint eval, FLEURS, Kathbath and Common Voice; fine-tuned models are best on every set; contaminated rows hollow."></p>
 
 **Figure 2.** All systems on all test sets: WER with 95% cluster-bootstrap CIs. Grey = zero-shot, orange = the
-Phase 3 system (no training), blue = fine-tuned on DL Sprint train (M1). Hollow markers: the test set is in that
+Phase 3 system (speech model not retrained), blue = fine-tuned on DL Sprint train (M1). Hollow markers: the test set is in that
 model's declared training data (not compared). Whisper large-v3 / turbo (80–93% WER) are off the scale.
 Zero-shot and Phase 3 rows were scored on an RTX 3060, fine-tuned rows on an A100 (the same model gives the same
 WER within 0.02 points on both).
@@ -383,7 +383,7 @@ Paired difference vs zero-shot on the same GPU (WER points [95% CI]):
 <p align="center"><img src="figures/png/f5_gain_by_error_type.png" width="440" alt="DL Sprint eval WER split into variant and other errors for zero-shot, Phase 3 and four fine-tuning variants."></p>
 
 **Figure 9.** DL Sprint eval WER split into spelling/dialect-variant errors and all other errors (rule-based),
-for zero-shot, the Phase 3 system without training, and the four fine-tuning variants.
+for zero-shot, the Phase 3 system (speech model not retrained), and the four fine-tuning variants.
 
 **The pre-registered predictions:**
 
@@ -568,7 +568,7 @@ baseline, MBR no longer beats greedy decoding on media speech, although a perfec
 points. Counting how many candidates contain each word shows why: 57% of errors appear in no candidate, MBR
 only fixes what most candidates already agree on, and about 41% of errors are spelling and dialect variants
 that the whole list shares. Fixing the cause works in both ways we predicted: adding learned spelling variants
-to the candidate lists takes DL Sprint eval from 22.71% to 17.46% without training, and fine-tuning takes it to
+to the candidate lists takes DL Sprint eval from 22.71% to 17.46% without retraining the speech model, and fine-tuning takes it to
 11.34%, with all five pre-registered predictions holding. Stacking the two adds little (10.89%): after
 fine-tuning, spelling expansion no longer raises the oracle, and what remains is mostly selection-proof. Across
 four Bangla corpora each training set wins its own test set, and a merged 40 h set gives the best average
@@ -589,7 +589,7 @@ Python 3.13; the repository root doubles as a Windows virtual environment (`./Sc
 | 12-best + exact scores | `pipeline/03_generate_nbest.py`, `pipeline/rescore_nbest.py` |
 | Anatomy, error types, agreement signal | `analysis/agreement.py`, `analysis/error_types.py`, `analysis/agreement_signal.py` |
 | Paired comparisons | `analysis/paired_compare.py` |
-| Phase 3 (no training) | `pipeline/12_raise_ceiling.py` (`runs/phase3_ceiling.sh`) |
+| Phase 3 (speech model not retrained) | `pipeline/12_raise_ceiling.py` (`runs/phase3_ceiling.sh`) |
 | Fine-tuning | `pipeline/11_finetune.py` (locally) or `pipeline/modal_launch.py train` (cloud A100) |
 | Phase 4 analysis | `runs/phase4_analysis.sh` |
 | Cloud inference (Kaggle T4) | `notebooks/kaggle_phase4.ipynb` → `pipeline/kaggle_phase4.py` |

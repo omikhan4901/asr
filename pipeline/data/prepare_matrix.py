@@ -9,7 +9,9 @@ audio_path = data/clips/<set>/...).
   kathbath    ai4bharat/Kathbath bengali train (HF, gated), 16 kHz FLAC. Speakers of Kathbath
               valid (our test set) removed. Random --max_hours subset (seed 0) over all shards.
   shrutilipi  ai4bharat/Shrutilipi bengali train (HF, gated), 16 kHz FLAC, random --max_hours subset.
-  merged      M5: --hours_each hours drawn at random from each source manifest given with --from.
+  merged      M5: --hours_each hours drawn at random from each source manifest given with --from
+              (a source given as path:H uses H hours instead; --hours_each 0 = all of every source).
+              --name sets the list name (m5-merged; Phase 5: m5-full = all 156 h, m5-300 = + OpenSLR 53).
 
 Text: the same deterministic rules as pipeline/data/clean_train_text.py (bracket tags removed,
 rows with letters outside the Bengali block dropped). Every row keeps its source text otherwise:
@@ -189,18 +191,21 @@ def hf_source(args):
 
 def merged(args):
     frames = []
-    for src in args.sources:
+    for spec in args.sources:
+        src, _, h = spec.rpartition(":") if spec.rpartition(":")[2].replace(".", "").isdigit() else (spec, "", "")
+        hours = float(h) if h else args.hours_each
         df = pd.read_csv(src, encoding="utf-8-sig")
         df = df.sample(frac=1.0, random_state=SEED)
-        df = df[df["duration"].cumsum() <= args.hours_each * 3600]
+        if hours > 0:
+            df = df[df["duration"].cumsum() <= hours * 3600]
         if "group" not in df.columns:
             df["group"] = df.get("recording", df["utt_id"])
         frames.append(df[["utt_id", "audio_path", "text", "group", "duration"]].assign(source=Path(src).stem))
         print(f"{src}: {len(df)} rows, {df['duration'].sum() / 3600:.2f} h")
     out = pd.concat(frames, ignore_index=True)
-    (args.out / "m5-merged").mkdir(parents=True, exist_ok=True)
-    out.to_csv(args.out / "m5-merged" / "manifest.csv", index=False, encoding="utf-8-sig")
-    print(f"m5-merged: {len(out)} rows, {out['duration'].sum() / 3600:.2f} h")
+    (args.out / args.name).mkdir(parents=True, exist_ok=True)
+    out.to_csv(args.out / args.name / "manifest.csv", index=False, encoding="utf-8-sig")
+    print(f"{args.name}: {len(out)} rows, {out['duration'].sum() / 3600:.2f} h")
 
 
 def main():
@@ -214,6 +219,7 @@ def main():
     p.add_argument("--limit", type=int, default=None, help="testing: stop pass 1 after N usable rows")
     p.add_argument("--hours_each", type=float, default=10.0)
     p.add_argument("--from", dest="sources", nargs="*", default=[])
+    p.add_argument("--name", default="m5-merged", help="merged: list name (folder under --out)")
     args = p.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     {"cv": cv, "kathbath": hf_source, "shrutilipi": hf_source, "merged": merged}[args.cmd](args)

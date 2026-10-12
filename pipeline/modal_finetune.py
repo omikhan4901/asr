@@ -70,6 +70,9 @@ TRAIN_SOURCES = {
     "merged": ("data/splits_fa/matrix/m5-merged.csv", ["splits_fa-train", "cv-train", "kathbath-train", "shrutilipi-train"]),
     # M6 = M5's clips with harmonized spelling (pipeline/data/harmonize_m6.py; manifest via the hub + from_hf)
     "harmonized": ("data/splits_fa/matrix/m6-harmonized.csv", ["splits_fa-train", "cv-train", "kathbath-train", "shrutilipi-train"]),
+    # Phase 5: M5's recipe on every hour of the four corpora (156 h), then + OpenSLR 53 (~144 h, joined clips)
+    "m5full": ("data/splits_fa/matrix/m5-full.csv", ["splits_fa-train", "cv-train", "kathbath-train", "shrutilipi-train"]),
+    "m5_300": ("data/splits_fa/matrix/m5-300.csv", ["splits_fa-train", "cv-train", "kathbath-train", "shrutilipi-train", "openslr53-train"]),
 }
 REMOTE_PROJ, WORK = "/root/proj", "/root/work"
 
@@ -515,6 +518,11 @@ def prep_matrix_remote(sources: list[str], max_hours: float, push: bool, launch:
         cmd = [sys.executable, script, s, "--out", str(out), "--max_hours", str(max_hours)]
         if s == "kathbath":
             cmd += ["--exclude_groups", "/vol/manifests/matrix/kathbath_valid_speakers.txt"]
+        if s == "openslr53":  # Phase 5: 144 h of joined clips (156 + 144 = 300 h); test sentences dropped
+            cmd = [sys.executable, f"{REMOTE_PROJ}/pipeline/data/prepare_openslr53.py", "--download",
+                   "--raw", "/tmp/openslr53_raw", "--out", str(out), "--hours", "144", "--delete_raw",
+                   "--exclude_text", *[f"/vol/manifests/{m}" for m in ("eval.csv", "dev.csv", "external/fleurs/test.csv",
+                                                                     "external/kathbath/valid.csv", "external/cv/test.csv")]]
         print("$", " ".join(cmd), flush=True)
         subprocess.run(cmd, check=True)
         name = f"{s}-train"
@@ -528,12 +536,23 @@ def prep_matrix_remote(sources: list[str], max_hours: float, push: bool, launch:
     srcs = [s for s in srcs if Path(s).exists()]
     subprocess.run([sys.executable, script, "merged", "--out", str(out), "--hours_each", "10", "--from", *srcs], check=True)
     shutil.copy(out / "m5-merged" / "manifest.csv", "/vol/manifests/matrix/m5-merged.csv")
+    # Phase 5 lists: every hour of the four corpora (m5-full), and the same + OpenSLR 53 (m5-300)
+    subprocess.run([sys.executable, script, "merged", "--out", str(out), "--hours_each", "0", "--name", "m5-full",
+                    "--from", *srcs], check=True)
+    shutil.copy(out / "m5-full" / "manifest.csv", "/vol/manifests/matrix/m5-full.csv")
+    slr = "/vol/manifests/matrix/openslr53-train.csv"
+    if Path(slr).exists():
+        subprocess.run([sys.executable, script, "merged", "--out", str(out), "--hours_each", "0", "--name", "m5-300",
+                        "--from", *srcs, slr], check=True)
+        shutil.copy(out / "m5-300" / "manifest.csv", "/vol/manifests/matrix/m5-300.csv")
     shutil.rmtree("/vol/hf_data", ignore_errors=True)  # downloaded parquet shards: not needed any more
     vol.commit()
     if push:
         api = HfApi(token=os.environ["HF_TOKEN"])
         api.upload_folder(repo_id=HUB, repo_type="dataset", folder_path="/vol/manifests/matrix", path_in_repo="manifests/matrix")
         for s in sources:
+            if s == "openslr53":  # ~15 GB, public at openslr.org anyway: only its manifest goes to the hub
+                continue
             api.upload_file(repo_id=HUB, repo_type="dataset", path_or_fileobj=f"/vol/zips/{s}-train.zip",
                             path_in_repo=f"zips/{s}-train.zip")
     print("done", flush=True)

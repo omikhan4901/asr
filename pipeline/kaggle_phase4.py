@@ -10,12 +10,14 @@ Jobs
                  if these match.
   lora           M1 LoRA (models/m1_lora on tugstugi), greedy batch 8, on Kathbath (all) and Common Voice
                  (-> m1_lora_t4); the Kathbath clips the A100 already did are the per-utterance check.
-  stack:<set>    stacking input for the best M1 (models/m1_full) on dev | eval | fleurs | kathbath:
+  stack:<set>[@<run>]  stacking input (default M1 full; @<run> = any full model on the hub) on dev | eval | fleurs | kathbath:
                  sampled 12-best (T 0.7, as in Phases 1-3) -> exact scores (teacher forcing) -> pool + greedy
                  (the A100 greedy of m1_full), i.e. the same pool format as data/phase3/*_pool.jsonl.
   score:<run>    any model in models/<run> (full model or LoRA adapter) on the 5 test sets (matrix runs).
   soup:<a>+<b>   weight average of full models (pipeline/make_soup.py; 'base' = tugstugi, repeat a name to
                  weight it), then scored on the 5 test sets as soup_<a>+<b>_t4. Same size/speed as one model.
+  longform:<run> whole-recording evaluation (pipeline/eval_longform.py) of models/<run> ('base' = zero-shot
+                 tugstugi) on the 22 raw DL Sprint eval recordings (zips/longform-eval.zip) -> results/longform/<run>_t4.
   beam:<run>     models/<run> with beam search (5 beams) on the 5 test sets as <run>_beam5_t4 (speed in metrics).
 
 Every step is resumable (the scripts skip finished utterances), and outputs are written straight to
@@ -57,14 +59,17 @@ def job_needs(job: str) -> tuple[list[str], list[str]]:
         return ["splits_fa-dev", "fleurs-test", "kathbath-valid"], []
     if kind == "lora":
         return ["kathbath-valid", "cv-test"], ["m1_lora"]
-    if kind == "stack":
-        return [SHORT[arg]], ["m1_full"]
+    if kind == "stack":  # stack:<set> (M1 full) or stack:<set>@<run> (any full model on the hub)
+        st, _, run = arg.partition("@")
+        return [SHORT[st]], [run or "m1_full"]
     if kind == "score":
         return TEST_SETS, [arg]
     if kind == "soup":
         return TEST_SETS, sorted({m for m in arg.split("+") if m != "base"})
     if kind == "beam":
         return TEST_SETS, [arg]
+    if kind == "longform":
+        return ["longform-eval"], [] if arg == "base" else [arg]
     raise SystemExit(f"unknown job {job!r}")
 
 
@@ -85,19 +90,27 @@ def job_commands(job: str, py: str, limit: list[str]) -> list[list[str]]:
         soup = f"soups/{arg}"
         return [[py, str(REPO / "pipeline/make_soup.py"), "--members", arg, "--models_dir", "models", "--out", soup]] +             [ev + ["--manifest", SETS[s], "--model", soup, "--name", f"soup_{arg}_t4", "--out_dir", "results/finetuned"]
              for s in TEST_SETS]
+    if kind == "longform":
+        model = TUGSTUGI if arg == "base" else f"models/{arg}"
+        return [[py, str(REPO / "pipeline/eval_longform.py"), "--recordings_dir", "data/clips/longform-eval", "--model", model,
+                 "--name", f"{arg}_t4", "--out_dir", "results/longform", *(["--limit", "1", "--max_seconds", "30"] if limit else [])]]
     if kind == "beam":
         return [ev + ["--manifest", SETS[s], "--model", f"models/{arg}", "--num_beams", "5", "--name", f"{arg}_beam5_t4",
                       "--out_dir", "results/finetuned"] for s in TEST_SETS]
-    s = SHORT[arg]  # stack
-    nb, man = f"nbest/{s}__m1_full", SETS[s]
-    return [[py, str(REPO / "pipeline/03_generate_nbest.py"), "--split_csv", man, "--model_id", "models/m1_full",
+    st, _, run = arg.partition("@")  # stack
+    run = run or "m1_full"
+    s = SHORT[st]
+    nb, man, mid = f"nbest/{s}__{run}", SETS[s], f"models/{run}"
+    # greedy backbone: M1 full's A100 rows from the hub; any other model is decoded greedily here first
+    greedy = f"ref/finetuned/{s}/m1_full/predictions.jsonl" if run == "m1_full" else f"results/finetuned/{s}/{run}_t4/predictions.jsonl"
+    first = [] if run == "m1_full" else [ev + ["--manifest", man, "--model", mid, "--name", f"{run}_t4", "--out_dir", "results/finetuned"]]
+    return first + [[py, str(REPO / "pipeline/03_generate_nbest.py"), "--split_csv", man, "--model_id", mid,
              "--output_jsonl", f"{nb}.jsonl", "--decoding", "sampled", "--num_beams", "12", "--temperature", "0.7",
              "--batch_size", "2", *limit],
             [py, str(REPO / "pipeline/rescore_nbest.py"), "--input_jsonl", f"{nb}.jsonl", "--manifest", man,
-             "--model_id", "models/m1_full", "--output_jsonl", f"{nb}_scored.jsonl"],
+             "--model_id", mid, "--output_jsonl", f"{nb}_scored.jsonl"],
             [py, str(REPO / "pipeline/rescore_nbest.py"), "--input_jsonl", f"{nb}_scored.jsonl", "--manifest", man,
-             "--model_id", "models/m1_full", "--output_jsonl", f"{nb}_pool.jsonl",
-             "--add_greedy", f"ref/finetuned/{s}/m1_full/predictions.jsonl"]]
+             "--model_id", mid, "--output_jsonl", f"{nb}_pool.jsonl", "--add_greedy", greedy]]
 
 
 def fetch(hub_dir: Path, sets: set, models: set, base: bool, token: str | None):
@@ -229,11 +242,13 @@ def main():
         shutil.copytree(args.resume_from, out, dirs_exist_ok=True)
         print(f"continuing from {args.resume_from}", flush=True)
     if not args.no_fetch:
-        base = any(j.split(":")[0] in ("t4check", "lora") or (j.startswith("soup:") and "base" in j[5:].split("+"))
+        base = any(j.split(":")[0] in ("t4check", "lora") or j == "longform:base" or (j.startswith("soup:") and "base" in j[5:].split("+"))
                    for j in jobs)
         fetch(hub_dir, sets, models, base, os.environ.get("HF_TOKEN"))
     layout(hub_dir, work, out, sets, models, args.limit)
     drop_old_torchao()
+    if any(j.startswith("longform:") for j in jobs):  # Silero VAD (not in Kaggle's image); same version as the PC
+        subprocess.run([sys.executable, "-m", "pip", "install", "-q", "silero-vad==6.2.1"], check=True)
 
     status, threads = {}, []
     for gpu, q in enumerate(queues):

@@ -7,6 +7,10 @@
 > other set within 0.5 of its specialist, average <= 12.5 (M5 13.18). **Kill rule:** average not significantly
 > below M5 -> release M5. Speed = M5's (one Whisper-medium; T4 RTF 0.035-0.038 batched). Everything below this note
 > (new corpora, T1-T8, session D) is parked, not planned.
+> **Second run, same recipe, only the data changes (Omi, 2026-10-12): M5-300** = M5-full's 156 h + OpenSLR 53
+> (+ IndicVoices if it passes step 0), ~300 h, ~$11-14 est. Question: do new read-speech hours help beyond 156 h?
+> **Kill rule:** M5-300's average not significantly below M5-full's -> release M5-full. Both runs ~$18-22 in
+> November (friend's $30); Omi's ~$11 is the backup. Speed identical.
 > **Two modes reported:** fast = M5-full greedy (default; live use); best = M5-full + ROVER on its own 12-best
 > (offline batch jobs; expected −0.2 to −0.45 by analogy with M1; measured cost ~14x greedy on a T4: 552 vs 39 min
 > for DL Sprint eval).

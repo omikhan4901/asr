@@ -81,3 +81,16 @@ allowed only offline, as teachers for training labels (idea 4), never in the rel
 `GPU0 = "soup:m1_full+m5_merged,soup:m1_full+m1_full+m1_full+base"`,
 `GPU1 = "beam:m1_full,soup:m1_full+m2_cv+m3_kathbath+m4_shrutilipi+m5_merged"` (~5-7 h est.; ~25 GB disk est.).
 Winners are chosen on DL Sprint dev plus the average, then the same recipe is applied to M7 in November.
+
+**Evidence for the FLEURS gap (2026-10-12, PROGRESS §62):** Hishab leads by 2.2 points; ~70% of it is on words that
+occur in our training text (acoustics of read, formal speech), ~30% on words that never occur in it. Words never seen
+in training text (10% of FLEURS) cost every model ~5 WER points, Hishab included: the pool where a lead "by a mile"
+is possible.
+
+| # | Idea | Targets | Deployable? | Cost |
+|---|---|---|---|---|
+| T6 | **More read, formal speech** (OpenSLR 53, IndicVoices; Kathbath already gave the best FLEURS row) | the seen-word part (+1.6) | yes | inside step 5 |
+| T7 | **Synthetic speech for missing words**: an open Bangla TTS reads ~50-100 h of formal sentences rich in words absent from our training text; added to M7's training data | the unseen-word pool (~5 points, everyone) | yes (it is training data) | TTS on Kaggle $0; ~+$3-5 training est. |
+| T8 | **Big-vocabulary LM in beam search** (shallow fusion; n-gram from a large Bangla text corpus) | unseen words at decoding time | yes, if beam search's speed cost is OK (T3 measures it) | $0 |
+| - | Clean-test rule for T7/T8: drop every text sentence that overlaps FLEURS / Kathbath / CV / DL Sprint test sentences (n-gram check) | | | |
+

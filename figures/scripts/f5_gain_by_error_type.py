@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from style import COL_W, OKABE, ROOT, plt, save  # noqa: E402
 
 SYSTEMS = [("zero-shot", "results/error_types/phase4/splits_fa-eval/tugstugi_a100"),
-           ("Phase 3 (no training)", "results/error_types/phase3/splits_fa-eval/mbr_lm_x"),
+           ("List correction (no retraining)", "results/error_types/phase3/splits_fa-eval/mbr_lm_x"),
            ("encoder-only", "results/error_types/phase4/splits_fa-eval/m1_encoder"),
            ("decoder-only", "results/error_types/phase4/splits_fa-eval/m1_decoder"),
            ("LoRA", "results/error_types/phase4/splits_fa-eval/m1_lora"),

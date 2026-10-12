@@ -30,8 +30,8 @@ bars = [("greedy decoding", 100 * p3.greedy_wer, "system"),
         ("words in no candidate (coverage bound)", 100 * p3.coverage_miss_pool, "bound"),
         ("oracle after adding spelling rewrites", 100 * p3.oracle_x_wer, "bound expanded"),
         ("coverage bound after rewrites", 100 * p3.coverage_miss_x, "bound expanded"),
-        ("Phase 3: LM-MBR on expanded list", 100 * p3.mbr_lm_x_wer, "achieved"),
-        ("Phase 4: M1 full fine-tune", 100 * ft["wer"], "achieved")]
+        ("List correction: LM-MBR on expanded list", 100 * p3.mbr_lm_x_wer, "achieved"),
+        ("Fine-tuned: M1 full", 100 * ft["wer"], "achieved")]
 COL = {"system": OKABE["grey"], "bound": OKABE["sky"], "bound expanded": OKABE["green"], "achieved": OKABE["blue"]}
 types = et["selection_proof"]["type_share_of_selection_proof"]
 NAMES = {"convention": "convention", "vowel_shift": "vowel shift", "segmentation": "segmentation",

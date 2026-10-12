@@ -25,13 +25,13 @@
         <mxCell id="diag" value="&lt;b&gt;Diagnosis&lt;/b&gt;&lt;br&gt;every candidate shares the&lt;br&gt;model's spelling habit" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE9CF;strokeColor=#E69F00;fontSize=12;" vertex="1" parent="1">
           <mxGeometry x="1030" y="40" width="190" height="80" as="geometry"/>
         </mxCell>
-        <mxCell id="p3" value="&lt;b&gt;Phase 3: fix the list (no training)&lt;/b&gt;&lt;br&gt;spelling rewrites + n-gram LM + LM-MBR&lt;br&gt;eval 22.71 → 17.46 %" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE9CF;strokeColor=#E69F00;fontSize=12;" vertex="1" parent="1">
+        <mxCell id="p3" value="&lt;b&gt;Fix the list (no retraining)&lt;/b&gt;&lt;br&gt;spelling rewrites + n-gram LM + LM-MBR&lt;br&gt;eval 22.71 → 17.46 %" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE9CF;strokeColor=#E69F00;fontSize=12;" vertex="1" parent="1">
           <mxGeometry x="770" y="170" width="245" height="70" as="geometry"/>
         </mxCell>
-        <mxCell id="p4" value="&lt;b&gt;Phase 4: fix the model&lt;/b&gt;&lt;br&gt;LoRA / decoder / encoder / full fine-tune&lt;br&gt;eval 22.70 → 11.34 %, P1-P5 hold" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5EFE6;strokeColor=#009E73;fontSize=12;" vertex="1" parent="1">
+        <mxCell id="p4" value="&lt;b&gt;Fix the model (fine-tuning)&lt;/b&gt;&lt;br&gt;LoRA / decoder / encoder / full fine-tune&lt;br&gt;eval 22.70 → 11.34 %, P1-P5 hold" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5EFE6;strokeColor=#009E73;fontSize=12;" vertex="1" parent="1">
           <mxGeometry x="770" y="280" width="245" height="70" as="geometry"/>
         </mxCell>
-        <mxCell id="next" value="&lt;b&gt;Next&lt;/b&gt;&lt;br&gt;stacking (fine-tuned 12-best + Phase 3)&lt;br&gt;train × test matrix (CV, Kathbath, Shrutilipi, merged)&lt;br&gt;human-verified references" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=#FFFFFF;strokeColor=#7F7F7F;fontSize=12;" vertex="1" parent="1">
+        <mxCell id="next" value="&lt;b&gt;Next&lt;/b&gt;&lt;br&gt;one model on all corpora (156 h, then ~300 h)&lt;br&gt;whole-recording evaluation&lt;br&gt;human-verified references" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=#FFFFFF;strokeColor=#7F7F7F;fontSize=12;" vertex="1" parent="1">
           <mxGeometry x="1040" y="200" width="180" height="120" as="geometry"/>
         </mxCell>
         <mxCell id="harness" value="&lt;b&gt;Frozen scoring harness for every number&lt;/b&gt;: one normalizer (NFC, nukta forms, punctuation removed, vowel signs kept) · corpus WER · greedy batch 8 · 95 % cluster-bootstrap CIs over recordings / speakers · paired tests · tuning on DL Sprint dev only" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3F3F3;strokeColor=#7F7F7F;fontSize=12;" vertex="1" parent="1">

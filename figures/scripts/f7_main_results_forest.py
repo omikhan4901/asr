@@ -50,11 +50,11 @@ p3 = pd.read_csv(ROOT / "results/phase3/summary.csv").set_index("set")
 for s, sname in SETS.items():
     if s in p3.index:
         r = p3.loc[s]
-        rows.append({"set": sname, "system": "Phase 3 (no training)", "kind": "phase3", "wer": 100 * r.mbr_lm_x_wer,
+        rows.append({"set": sname, "system": "List correction (no retraining)", "kind": "phase3", "wer": 100 * r.mbr_lm_x_wer,
                      "lo": 100 * (r.greedy_wer + r.mbr_lm_x_ci_lo), "hi": 100 * (r.greedy_wer + r.mbr_lm_x_ci_hi),
                      "contaminated": False})
 d = pd.DataFrame(rows)
-order = list(ZS) + ["Phase 3 (no training)"] + list(FT)
+order = list(ZS) + ["List correction (no retraining)"] + list(FT)
 
 fig, axes = plt.subplots(1, len(SETS), figsize=(PAGE_W, 2.9), sharey=True)
 for ax, sname in zip(axes, SETS.values()):

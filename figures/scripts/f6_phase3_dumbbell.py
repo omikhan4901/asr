@@ -28,7 +28,7 @@ out = pd.DataFrame({"set": list(SETS.values()), "greedy": 100 * d.greedy_wer.val
 
 fig, axes = plt.subplots(1, 2, figsize=(PAGE_W, 2.0), sharey=True)
 y = list(range(len(out)))[::-1]
-panels = [("greedy", "phase3", "(a) WER: greedy → LM-MBR on expanded list", "greedy", "Phase 3"),
+panels = [("greedy", "phase3", "(a) WER: greedy → LM-MBR on expanded list", "greedy", "list correction"),
           ("oracle_pool", "oracle_expanded", "(b) oracle WER: pool → expanded pool", "pool", "expanded")]
 for ax, (a, b, title, la, lb) in zip(axes, panels):
     for yi, (_, r) in zip(y, out.iterrows()):

@@ -1,4 +1,4 @@
-| reference → model wrote | type | zero-shot | Phase 3 | M1 full |
+| reference → model wrote | type | zero-shot | List correction | M1 full |
 |---|---|---:|---:|---:|
 | কোন → কোনো | convention | 438 | 24 | 2 |
 | কি → কী | convention | 416 | 6 | 0 |

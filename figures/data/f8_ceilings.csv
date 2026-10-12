@@ -5,8 +5,8 @@ best single candidate (oracle),18.348,bound
 words in no candidate (coverage bound),11.405999999999999,bound
 oracle after adding spelling rewrites,13.748,bound expanded
 coverage bound after rewrites,8.332,bound expanded
-Phase 3: LM-MBR on expanded list,17.461,achieved
-Phase 4: M1 full fine-tune,11.343092086079198,achieved
+List correction: LM-MBR on expanded list,17.461,achieved
+Fine-tuned: M1 full,11.343092086079198,achieved
 selection-proof number,1.4915551656064927,type
 selection-proof script,0.0,type
 selection-proof segmentation,8.839657819697303,type

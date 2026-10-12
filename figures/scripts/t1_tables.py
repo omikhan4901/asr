@@ -28,7 +28,7 @@ from bangla_asr.common.text import normalize_bangla_text  # noqa: E402
 
 TUG = "bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium"
 ERR = {"zero-shot": ROOT / "results/error_types/splits_fa-eval" / TUG / "errors.csv",
-       "Phase 3": ROOT / "results/error_types/phase3/splits_fa-eval/mbr_lm_x/errors.csv",
+       "List correction": ROOT / "results/error_types/phase3/splits_fa-eval/mbr_lm_x/errors.csv",
        "M1 full": ROOT / "results/error_types/phase4/splits_fa-eval/m1_full/errors.csv"}
 TYPE = {"convention": "convention", "vowel_shift": "vowel shift", "segmentation": "segmentation",
         "near_miss": "near miss", "substitution": "substitution", "number": "number"}
@@ -44,12 +44,12 @@ for name, f in ERR.items():
         types = e.groupby(["ref_word", "hyp_word"])["type"].agg(lambda s: s.mode().iat[0])
 top = counts["zero-shot"].sort_values(ascending=False).head(20)
 rows = [{"reference": r, "model wrote": h, "type": TYPE.get(types[(r, h)], types[(r, h)]),
-         "zero-shot": int(n), "Phase 3": int(counts["Phase 3"].get((r, h), 0)),
+         "zero-shot": int(n), "List correction": int(counts["List correction"].get((r, h), 0)),
          "M1 full": int(counts["M1 full"].get((r, h), 0))} for (r, h), n in top.items()]
 conf = pd.DataFrame(rows)
 conf.to_csv(ROOT / "figures/data/t_confusions.csv", index=False, encoding="utf-8")
-md = ["| reference → model wrote | type | zero-shot | Phase 3 | M1 full |", "|---|---|---:|---:|---:|"]
-md += [f"| {r['reference']} → {r['model wrote']} | {r['type']} | {r['zero-shot']} | {r['Phase 3']} | {r['M1 full']} |"
+md = ["| reference → model wrote | type | zero-shot | List correction | M1 full |", "|---|---|---:|---:|---:|"]
+md += [f"| {r['reference']} → {r['model wrote']} | {r['type']} | {r['zero-shot']} | {r['List correction']} | {r['M1 full']} |"
        for r in rows]
 (ROOT / "figures/tables/t_confusions.md").write_text("\n".join(md) + "\n", encoding="utf-8")
 
@@ -90,11 +90,11 @@ ex = []
 for u in sorted(cands[:5]):
     ref = zs[u]["ref"]
     ex.append({"utt_id": u, "reference": normalize_bangla_text(ref), "zero-shot": bold_diff(zs[u]["hyp"], ref),
-               "Phase 3": bold_diff(p3[u]["hyp"], ref), "M1 full": bold_diff(ft[u]["hyp"], ref)})
+               "List correction": bold_diff(p3[u]["hyp"], ref), "M1 full": bold_diff(ft[u]["hyp"], ref)})
 pd.DataFrame(ex).to_csv(ROOT / "figures/data/t_examples.csv", index=False, encoding="utf-8")
 md = ["| clip | system | transcript |", "|---|---|---|"]
 for e in ex:
-    for k in ("reference", "zero-shot", "Phase 3", "M1 full"):
+    for k in ("reference", "zero-shot", "List correction", "M1 full"):
         md.append(f"| {e['utt_id'] if k == 'reference' else ''} | {k} | {e[k]} |")
 (ROOT / "figures/tables/t_examples.md").write_text("\n".join(md) + "\n", encoding="utf-8")
 print(f"{len(conf)} confusion pairs, {len(ex)} examples (from {len(cands)} candidate clips)")

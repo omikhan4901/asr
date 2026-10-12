@@ -107,7 +107,7 @@ to locate which part of the network fixes which error type.
 
 ## 3. Method
 
-<p align="center"><img src="figures/png/pipeline_overview.drawio.png" width="900" alt="Pipeline overview: DL Sprint recordings are cut into clips by forced alignment and split by recording; tugstugi produces greedy output and 12 candidates; the agreement anatomy finds that candidates share spelling variants; Phase 3 fixes the list and Phase 4 fixes the model; one frozen harness scores everything."></p>
+<p align="center"><img src="figures/png/pipeline_overview.drawio.png" width="900" alt="Pipeline overview: DL Sprint recordings are cut into clips by forced alignment and split by recording; tugstugi produces greedy output and 12 candidates; the agreement anatomy finds that candidates share spelling variants; list correction fixes the candidate lists and fine-tuning fixes the model; one frozen harness scores everything."></p>
 
 **Figure 1.** Overview. Data preparation (grey), the diagnosis of the plateau (blue), the two ways of fixing
 the cause (orange: change the candidate list; green: change the model), and the work still running (dashed).
@@ -161,7 +161,7 @@ Each error gets one type by rules on a folding key that maps common spelling var
 first three form the **variant share**. The rules are proxies; human labels measure their precision
 (labeling in progress).
 
-### 3.6 Raising the ceiling without retraining (Phase 3)
+### 3.6 List correction: raising the ceiling without retraining
 Each clip's pool is the 12 sampled candidates plus the greedy output, scored by
 
 $$s(h) = \log P_{\mathrm{AM}}(h \mid x) + \lambda \log P_{\mathrm{LM}}(h) + \beta |h|,$$
@@ -173,7 +173,7 @@ where each candidate's rewrite joins the pool with its parent's acoustic score a
 spelling. Every weight, threshold and the LM order is chosen on the development split only and applied
 unchanged to every test set; human labels are never used.
 
-### 3.7 Fine-tuning (Phase 4)
+### 3.7 Fine-tuning
 The model is fine-tuned on the cleaned DL Sprint training clips (15,325 clips, 59.6 h; bracketed tags
 stripped, 67 clips with non-Bangla script dropped) in four ways: LoRA (rank 32 on every attention and MLP
 projection of encoder and decoder, lr 2e-4), decoder only, encoder only, and all weights (lr 1e-5); AdamW,
@@ -221,7 +221,7 @@ training or tuning.
 transcribes 50.9% and 61.5% of those utterances exactly; BanglaASR, fine-tuned on Common Voice, does so for
 59.1%. These rows are marked † and never compared.
 
-**Hardware.** Zero-shot and Phase 1–3 inference on one RTX 3060 (12 GB); Phase 4 training and scoring on a
+**Hardware.** Zero-shot, rescoring and list-correction inference on one RTX 3060 (12 GB); fine-tuning training and scoring on a
 Modal A100-40GB, the M1 rows and the zero-shot baseline scored on that same GPU; the matrix models (§5.8),
 LoRA's Kathbath and Common Voice rows and the stacking candidates on Kaggle T4s, which give the same WER as
 the A100 within 0.01 points (zero-shot tugstugi on dev, FLEURS and Kathbath; 96–99% identical outputs); the Hishab
@@ -234,9 +234,9 @@ baseline on a Kaggle T4. Budget: $0 out of pocket (free cloud credits).
 <p align="center"><img src="figures/png/f7_main_results_forest.png" width="900" alt="WER with confidence intervals for every system on DL Sprint eval, FLEURS, Kathbath and Common Voice; fine-tuned models are best on every set; contaminated rows hollow."></p>
 
 **Figure 2.** All systems on all test sets: WER with 95% cluster-bootstrap CIs. Grey = zero-shot, orange = the
-Phase 3 system (speech model not retrained), blue = fine-tuned on DL Sprint train (M1). Hollow markers: the test set is in that
+list-correction system (speech model not retrained), blue = fine-tuned on DL Sprint train (M1). Hollow markers: the test set is in that
 model's declared training data (not compared). Whisper large-v3 / turbo (80–93% WER) are off the scale.
-Zero-shot and Phase 3 rows were scored on an RTX 3060, fine-tuned rows on an A100 (the same model gives the same
+Zero-shot and list-correction rows were scored on an RTX 3060, fine-tuned rows on an A100 (the same model gives the same
 WER within 0.02 points on both).
 
 ### 5.1 Zero-shot baselines
@@ -291,7 +291,7 @@ the errors that only a few candidates get right and almost all of those that mos
 Without any reference, agreement flags erroneous greedy words with AUROC 0.823 [0.812, 0.834]. All 12
 candidates agree on the same wrong form for 25.4% of spelling/dialect errors but only 12.8% of other errors.
 
-<p align="center"><img src="figures/png/f8_ceilings.png" width="900" alt="Ceilings on DL Sprint eval: greedy 22.71, MBR 22.84, oracle 18.35, coverage bound 11.41, after rewrites oracle 13.75 and coverage 8.33, Phase 3 17.46, M1 full 11.34; and the type mix of the errors no candidate can fix."></p>
+<p align="center"><img src="figures/png/f8_ceilings.png" width="900" alt="Ceilings on DL Sprint eval: greedy 22.71, MBR 22.84, oracle 18.35, coverage bound 11.41, after rewrites oracle 13.75 and coverage 8.33, list correction 17.46, M1 full 11.34; and the type mix of the errors no candidate can fix."></p>
 
 **Figure 5.** (a) Ceilings on DL Sprint eval: what selection can reach (the best single candidate, and the share
 of reference words that no candidate contains, a bound for any selection or word-level combination), before and
@@ -311,10 +311,10 @@ Hishab and tugstugi spend 7.8 and 9.2 points on variants on DL Sprint eval, and 
 else: **the stronger baseline's whole lead is spelling convention.**
 
 **Table: the 20 most frequent substitutions of zero-shot tugstugi on DL Sprint eval** (counts of the same pair
-in the Phase 3 output and in M1 full; type from the rule-based typer). All twenty are accepted spellings or
+in the list-correction output and in M1 full; type from the rule-based typer). All twenty are accepted spellings or
 spoken forms of the same word (19 typed as variants by the rules, জন্যে as a near miss); both fixes remove most of them.
 
-| reference → model wrote | type | zero-shot | Phase 3 | M1 full |
+| reference → model wrote | type | zero-shot | List correction | M1 full |
 |---|---|---:|---:|---:|
 | কোন → কোনো | convention | 438 | 24 | 2 |
 | কি → কী | convention | 416 | 6 | 0 |
@@ -337,11 +337,11 @@ spoken forms of the same word (19 typed as variants by the rules, জন্য�
 | করে → কইরে | vowel shift | 58 | 0 | 0 |
 | কোন → কোনও | convention | 48 | 1 | 2 |
 
-### 5.5 Raising the ceiling without retraining (Phase 3)
+### 5.5 List correction: raising the ceiling without retraining
 
-<p align="center"><img src="figures/png/f6_phase3_dumbbell.png" width="900" alt="Phase 3: greedy WER versus LM-MBR on the expanded list per test set, and oracle WER before and after expansion."></p>
+<p align="center"><img src="figures/png/f6_phase3_dumbbell.png" width="900" alt="List correction: greedy WER versus LM-MBR on the expanded list per test set, and oracle WER before and after expansion."></p>
 
-**Figure 7.** Phase 3 per test set: (a) greedy vs LM-weighted MBR on the expanded candidate list (95% CI of the
+**Figure 7.** List correction per test set: (a) greedy vs LM-weighted MBR on the expanded candidate list (95% CI of the
 paired difference); (b) oracle WER of the candidate pool before and after adding the learned spelling rewrites.
 All settings were tuned on DL Sprint dev (top row) and applied unchanged.
 
@@ -362,7 +362,7 @@ other spelling of the most frequent variant pairs. The same rewriter applied to 
 Hishab's own training-set errors, gives 17.76% on eval: a statistical tie with ours (−0.30 [−1.05, +0.37]), so
 the convention fix is model-agnostic.
 
-### 5.6 Fine-tuning (Phase 4)
+### 5.6 Fine-tuning
 
 <p align="center"><img src="figures/png/f4_finetune_by_set.png" width="760" alt="WER of zero-shot tugstugi and four fine-tuning variants on four test sets with confidence intervals; full fine-tuning is best everywhere; encoder-only does not improve Kathbath or Common Voice."></p>
 
@@ -380,10 +380,15 @@ Paired difference vs zero-shot on the same GPU (WER points [95% CI]):
 | decoder-only | 12.99 (−9.71 [−10.32, −9.07]) | 18.61 (−2.93) | 13.62 (−1.19) | 13.13 (−1.68) |
 | encoder-only | 13.83 (−8.87 [−9.78, −7.87]) | 19.90 (−1.64) | 14.59 (−0.22, n.s.) | 14.69 (−0.11, n.s.) |
 
-<p align="center"><img src="figures/png/f5_gain_by_error_type.png" width="440" alt="DL Sprint eval WER split into variant and other errors for zero-shot, Phase 3 and four fine-tuning variants."></p>
+Full fine-tuning and LoRA are close but not equal: paired, LoRA is worse on DL Sprint eval by +0.42
+[+0.14, +0.81] and statistically equal on FLEURS (+0.06), Kathbath (+0.13) and Common Voice (+0.04). The saved
+full model differs from the base model in every weight, including the convolutional front end and the token
+embeddings, which LoRA does not touch; rank-32 LoRA on every projection is enough for a weight change of about 1%.
+
+<p align="center"><img src="figures/png/f5_gain_by_error_type.png" width="440" alt="DL Sprint eval WER split into variant and other errors for zero-shot, list correction and four fine-tuning variants."></p>
 
 **Figure 9.** DL Sprint eval WER split into spelling/dialect-variant errors and all other errors (rule-based),
-for zero-shot, the Phase 3 system (speech model not retrained), and the four fine-tuning variants.
+for zero-shot, the list-correction system (speech model not retrained), and the four fine-tuning variants.
 
 **The pre-registered predictions:**
 
@@ -395,7 +400,7 @@ for zero-shot, the Phase 3 system (speech model not retrained), and the four fin
 | P4 | decoder-only ≥ 80% of the best gain | 85% (−9.71 / −11.36) | **holds** |
 | P5 | variant share of remaining errors < 40.6% | 28.5% [24.9, 32.0] | **holds** |
 
-Two results go beyond the predictions. First, **training buys more than the convention**: Phase 3 removes
+Two results go beyond the predictions. First, **training buys more than the convention**: list correction removes
 variant errors (9.2 → 5.2 points) but barely touches the rest, while full fine-tuning removes 6.0 variant
 points *and* 5.4 other points. Second, **encoder-only fine-tuning removes almost as many variant errors on
 DL Sprint as decoder-only** (−5.4 vs −5.9 points): the spelling habit is not stored only in the decoder; the
@@ -419,7 +424,7 @@ will be chosen on a dev set that mixes all sources.
 
 **Real examples** (DL Sprint eval, normalized text; words that differ from the reference in **bold**). Chosen by a
 fixed rule (seed 0) among clips of 6–14 words where zero-shot WER ≥ 25% and M1 full is perfect, so they show what
-changes, not typical output. Phase 3 fixes the spelling (এতো → এত, কোনো → কোন, ছিলো → ছিল) but not word
+changes, not typical output. List correction fixes the spelling (এতো → এত, কোনো → কোন, ছিলো → ছিল) but not word
 splits or misheard words; the fine-tuned model also learns the references' word boundaries (জানিনা, কিনা)
 and the English loanwords written in Bangla script.
 
@@ -427,23 +432,23 @@ and the English loanwords written in Bangla script.
 |---|---|---|
 | train_039_0047 | reference | জানিনা এখন এসব বলা উচিত কিনা |
 |  | zero-shot | **জানি** **না** এখন এসব বলা উচিত **কি** **না** |
-|  | Phase 3 | **জানি** **না** এখন এসব বলা উচিত **কি** **না** |
+|  | List correction | **জানি** **না** এখন এসব বলা উচিত **কি** **না** |
 |  | M1 full | জানিনা এখন এসব বলা উচিত কিনা |
 | train_064_0230 | reference | তুই এত দেরি করলি বৌমা কোথায় |
 |  | zero-shot | তুই **এতো** দেরি করলি **বউমা** কোথায় |
-|  | Phase 3 | তুই এত দেরি করলি **বউমা** কোথায় |
+|  | List correction | তুই এত দেরি করলি **বউমা** কোথায় |
 |  | M1 full | তুই এত দেরি করলি বৌমা কোথায় |
 | train_081_0071 | reference | ন্যায় অন্যায় বিচার করার কোন দরকার নেই |
 |  | zero-shot | **নেই** অন্যায় বিচার করার **কোনো** দরকার নেই |
-|  | Phase 3 | **নেই** অন্যায় বিচার করার কোন দরকার নেই |
+|  | List correction | **নেই** অন্যায় বিচার করার কোন দরকার নেই |
 |  | M1 full | ন্যায় অন্যায় বিচার করার কোন দরকার নেই |
 | train_090_0113 | reference | আসলে ইটস ওকে ইজ ইট রিয়েলি ওকে |
 |  | zero-shot | **আসলেই** **আইচ্ছা** ওকে **ইজি** **ট্রিলি** ওকে |
-|  | Phase 3 | আসলে **আচ্ছা** ওকে **ইজি** **ট্রিলি** ওকে |
+|  | List correction | আসলে **আচ্ছা** ওকে **ইজি** **ট্রিলি** ওকে |
 |  | M1 full | আসলে ইটস ওকে ইজ ইট রিয়েলি ওকে |
 | train_120_0016 | reference | তার জেদ ছিল তিনি চাননি এই মূর্তির দ্বিতীয় কোন প্রতিরূপ কোনদিন তৈরি হোক |
 |  | zero-shot | তার জেদ **ছিলো** তিনি চাননি এই মূর্তির দ্বিতীয় **কোনো** প্রতিরূপ **কোনো** **দিন** তৈরি হোক |
-|  | Phase 3 | তার জেদ ছিল তিনি চাননি এই মূর্তির দ্বিতীয় কোন প্রতিরূপ **কোন** **দিন** তৈরি হোক |
+|  | List correction | তার জেদ ছিল তিনি চাননি এই মূর্তির দ্বিতীয় কোন প্রতিরূপ **কোন** **দিন** তৈরি হোক |
 |  | M1 full | তার জেদ ছিল তিনি চাননি এই মূর্তির দ্বিতীয় কোন প্রতিরূপ কোনদিন তৈরি হোক |
 
 ### 5.7 Where the remaining errors are
@@ -498,7 +503,7 @@ from zero-shot is significant.
 
 ### 5.9 Rescoring after fine-tuning
 
-The Phase 3 methods were run unchanged on M1 full's own sampled 12-best (exact scores, the greedy output added;
+The list-correction methods were run unchanged on M1 full's own sampled 12-best (exact scores, the greedy output added;
 the rewrite rules learned from zero-shot tugstugi on train; every weight chosen on dev). Paired difference vs M1
 full greedy:
 
@@ -516,7 +521,29 @@ calibrated. What is left is mostly selection-proof: no candidate contains the ri
 the remaining errors falls on DL Sprint eval (40.6% → 28.5%) but not on Kathbath (49.7% → 50.0%): the model
 learned DL Sprint's convention, not Kathbath's.
 
-### 5.10 Next (Phase 5)
+### 5.10 Combining models, and the remaining gap to the strongest baseline
+
+**Combining models.** Voting (ROVER) over the greedy outputs of eleven models trained on different data reaches an
+average of 12.58% over the four test sets (FLEURS 16.43, Common Voice 10.90, Kathbath 11.52, each about 1.9 points
+below M1 full, all significant; DL Sprint eval 11.47, n.s.). Models trained on different data make different errors,
+which is the condition under which voting helps, unlike the candidates of a single model (§5.2). The ensemble costs
+eleven decodings and is reported as a reference, not as a system. Choosing its members on DL Sprint dev alone selects
+only the over-fitted 4-epoch model: a development set from a single corpus is not a safe selector.
+
+**The gap on FLEURS.** Hishab remains 2.2 points ahead on FLEURS (14.24 vs 16.44 for the best single model):
+
+| FLEURS, WER points | Hishab | M3 Kathbath | Gap |
+|---|---:|---:|---:|
+| Errors on words that occur in our 156 h of training text | 7.44 | 9.02 | +1.58 |
+| Errors on words that never occur in it (10.0% of the words) | 4.85 | 5.53 | +0.68 |
+| Total | 14.24 | 16.44 | +2.20 |
+
+About 70% of the lead lies in words our training text contains, mostly formal and technical vocabulary misheard in read
+speech; 85% of the edit difference comes from 10% of the utterances. Word-boundary errors and number errors are not the
+cause (equal or in our favour). Words absent from the training text cost every model about five points, Hishab
+included.
+
+### 5.11 Planned work
 - **Released model:** full fine-tuning on all four corpora together (unharmonized, 2 epochs at 1e-5), chosen on a
   dev set mixing every source, then ROVER on its 12-best; compared with IndicConformer and the DL Sprint finalist models.
 - **Whole-recording evaluation:** transcribing each raw evaluation recording end to end (no reference-guided cuts).
@@ -533,7 +560,7 @@ The second is *consensus*: MBR is a weighted majority vote, so it can only fix a
 already write correctly, and on those words greedy decoding is usually right already. Spelling and dialect
 variants are exactly the errors the candidates share: all 12 candidates agree on the wrong form far more often
 for variants than for other errors. A better voter cannot fix a convention the whole list shares; the
-reference spelling has to enter the list, or the model has to learn it. Phase 3 and Phase 4 test both routes,
+reference spelling has to enter the list, or the model has to learn it. List correction and fine-tuning test both routes,
 and both work as predicted.
 
 **How general the diagnosis is.** MBR gives at most a small fraction of the oracle headroom for tugstugi on
@@ -589,9 +616,13 @@ Python 3.13; the repository root doubles as a Windows virtual environment (`./Sc
 | 12-best + exact scores | `pipeline/03_generate_nbest.py`, `pipeline/rescore_nbest.py` |
 | Anatomy, error types, agreement signal | `analysis/agreement.py`, `analysis/error_types.py`, `analysis/agreement_signal.py` |
 | Paired comparisons | `analysis/paired_compare.py` |
-| Phase 3 (speech model not retrained) | `pipeline/12_raise_ceiling.py` (`runs/phase3_ceiling.sh`) |
+| List correction (speech model not retrained) | `pipeline/12_raise_ceiling.py` (`runs/phase3_ceiling.sh`) |
 | Fine-tuning | `pipeline/11_finetune.py` (locally) or `pipeline/modal_launch.py train` (cloud A100) |
-| Phase 4 analysis | `runs/phase4_analysis.sh` |
+| Fine-tuning analysis | `runs/phase4_analysis.sh` |
+| Model averaging, beam search (Kaggle jobs `soup:`, `beam:`) | `pipeline/make_soup.py`, `pipeline/eval_zero_shot.py --num_beams` |
+| Combining models; gap to Hishab | `analysis/cross_model_rover.py`, `analysis/hishab_gap.py` |
+| Whole-recording evaluation | `pipeline/eval_longform.py` (Kaggle job `longform:`; data `runs/phase5_upload_longform.sh`) |
+| OpenSLR 53 with joined clips; merged training lists | `pipeline/data/prepare_openslr53.py`, `pipeline/data/prepare_matrix.py merged` |
 | Cloud inference (Kaggle T4) | `notebooks/kaggle_phase4.ipynb` → `pipeline/kaggle_phase4.py` |
 | Figures and tables | `figures/scripts/*.py` (data in `figures/data/`, PDF in `figures/`, PNG in `figures/png/`, tables in `figures/tables/`); overview diagram `figures/pipeline_overview.drawio` (draw.io) |
 

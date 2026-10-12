@@ -10,7 +10,7 @@
 > (new corpora, T1-T8, session D) is parked, not planned.
 > **Second run, same recipe, only the data changes (Omi, 2026-10-12): M5-300** = M5-full's 156 h + OpenSLR 53
 > (+ IndicVoices if it passes step 0), ~300 h, ~$11-14 est. Question: do new read-speech hours help beyond 156 h?
-> **Kill rule:** M5-300's average not significantly below M5-full's -> keep M5-full, more hours of this kind do not help. Both runs ~$18-22 in
+> **Kill rule:** M5-300's average not significantly below M5-full's -> keep M5-full, more hours of this kind do not help. Both runs ~$25-28 in
 > November (friend's $30); Omi's ~$11 is the backup. Speed identical.
 > **Two modes reported:** fast = M5-full greedy (default; live use); best = M5-full + ROVER on its own 12-best
 > (offline batch jobs; expected −0.2 to −0.45 by analogy with M1; measured cost ~14x greedy on a T4: 552 vs 39 min

@@ -62,24 +62,26 @@ class CTCModel:
 
 
 class WhisperModel:
-    def __init__(self, model_id, device, adapter=None):
+    def __init__(self, model_id, device, adapter=None, num_beams=1):
         from bangla_asr.config import WhisperConfig
+
+        self.num_beams = num_beams
         from bangla_asr.models.autoregressive.whisper_model import WhisperASRModel
 
         self.m = WhisperASRModel(WhisperConfig(model_id=model_id, num_beams=1, diverse_beam_search=False,
                                                adapter_path=adapter), device=str(device))
 
     def transcribe(self, audios):
-        return self.m.transcribe_batch(audios, sampling_rate=16000)
+        return self.m.transcribe_batch(audios, sampling_rate=16000, num_beams=self.num_beams)
 
 
-def build(model_id, family, device, adapter=None):
+def build(model_id, family, device, adapter=None, num_beams=1):
     if family == "auto":
         from transformers import AutoConfig
         arch = (AutoConfig.from_pretrained(model_id).architectures or [""])[0].lower()
         family = "whisper" if "whisper" in arch else "ctc"
     if family == "whisper":
-        return WhisperModel(model_id, device, adapter), family
+        return WhisperModel(model_id, device, adapter, num_beams), family
     return CTCModel(model_id, device), family
 
 
@@ -88,6 +90,7 @@ def main():
     p.add_argument("--manifest", required=True)
     p.add_argument("--model", required=True)
     p.add_argument("--family", choices=["auto", "whisper", "ctc"], default="auto")
+    p.add_argument("--num_beams", type=int, default=1, help="Whisper only: 1 = greedy (every reported row), >1 = beam search")
     p.add_argument("--adapter", default=None, help="LoRA adapter folder (pipeline/11_finetune.py final/) on top of --model")
     p.add_argument("--name", default=None, help="Output folder name; default: the model id, or <run folder> for an adapter")
     p.add_argument("--set_name", default=None, help="Defaults to the manifest's parent/stem, e.g. splits_fa-eval")
@@ -120,7 +123,7 @@ def main():
 
         if len(todo):
             device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-            model, family = build(args.model, args.family, device, args.adapter)
+            model, family = build(args.model, args.family, device, args.adapter, args.num_beams)
             t0, audio_s = time.time(), 0.0
             with pred_path.open("a", encoding="utf-8") as f:
                 rows = todo.to_dict("records")
@@ -146,7 +149,7 @@ def main():
         preds = [r for r in preds if r["utt_id"] in ids]
         scored = [dict(edit_counts(r["hyp"], r["ref"]), group=r["group"]) for r in preds]
         metrics = corpus_rates(scored, group_key="group")
-        metrics.update({"set": set_name, "model": args.model, "adapter": args.adapter, "family": family, "manifest": str(man),
+        metrics.update({"set": set_name, "model": args.model, "adapter": args.adapter, "num_beams": args.num_beams, "family": family, "manifest": str(man),
                         "normalizer": "bangla_asr.common.text.normalize_bangla_text", "decoding": "greedy"})
         if elapsed:
             metrics.update({"last_run_seconds": round(elapsed, 1), "last_run_audio_hours": round(audio_s / 3600, 3),

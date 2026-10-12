@@ -14,6 +14,9 @@ Jobs
                  sampled 12-best (T 0.7, as in Phases 1-3) -> exact scores (teacher forcing) -> pool + greedy
                  (the A100 greedy of m1_full), i.e. the same pool format as data/phase3/*_pool.jsonl.
   score:<run>    any model in models/<run> (full model or LoRA adapter) on the 5 test sets (matrix runs).
+  soup:<a>+<b>   weight average of full models (pipeline/make_soup.py; 'base' = tugstugi, repeat a name to
+                 weight it), then scored on the 5 test sets as soup_<a>+<b>_t4. Same size/speed as one model.
+  beam:<run>     models/<run> with beam search (5 beams) on the 5 test sets as <run>_beam5_t4 (speed in metrics).
 
 Every step is resumable (the scripts skip finished utterances), and outputs are written straight to
 /kaggle/working, so a second session continues where the first stopped (add the first session's
@@ -58,6 +61,10 @@ def job_needs(job: str) -> tuple[list[str], list[str]]:
         return [SHORT[arg]], ["m1_full"]
     if kind == "score":
         return TEST_SETS, [arg]
+    if kind == "soup":
+        return TEST_SETS, sorted({m for m in arg.split("+") if m != "base"})
+    if kind == "beam":
+        return TEST_SETS, [arg]
     raise SystemExit(f"unknown job {job!r}")
 
 
@@ -74,6 +81,13 @@ def job_commands(job: str, py: str, limit: list[str]) -> list[list[str]]:
         model = ["--model", TUGSTUGI, "--adapter", f"models/{arg}"] if Path(f"models/{arg}/adapter_config.json").exists() \
             else ["--model", f"models/{arg}"]
         return [ev + ["--manifest", SETS[s], *model, "--name", f"{arg}_t4", "--out_dir", "results/finetuned"] for s in TEST_SETS]
+    if kind == "soup":
+        soup = f"soups/{arg}"
+        return [[py, str(REPO / "pipeline/make_soup.py"), "--members", arg, "--models_dir", "models", "--out", soup]] +             [ev + ["--manifest", SETS[s], "--model", soup, "--name", f"soup_{arg}_t4", "--out_dir", "results/finetuned"]
+             for s in TEST_SETS]
+    if kind == "beam":
+        return [ev + ["--manifest", SETS[s], "--model", f"models/{arg}", "--num_beams", "5", "--name", f"{arg}_beam5_t4",
+                      "--out_dir", "results/finetuned"] for s in TEST_SETS]
     s = SHORT[arg]  # stack
     nb, man = f"nbest/{s}__m1_full", SETS[s]
     return [[py, str(REPO / "pipeline/03_generate_nbest.py"), "--split_csv", man, "--model_id", "models/m1_full",
@@ -215,7 +229,8 @@ def main():
         shutil.copytree(args.resume_from, out, dirs_exist_ok=True)
         print(f"continuing from {args.resume_from}", flush=True)
     if not args.no_fetch:
-        base = any(j.split(":")[0] in ("t4check", "lora") for j in jobs)
+        base = any(j.split(":")[0] in ("t4check", "lora") or (j.startswith("soup:") and "base" in j[5:].split("+"))
+                   for j in jobs)
         fetch(hub_dir, sets, models, base, os.environ.get("HF_TOKEN"))
     layout(hub_dir, work, out, sets, models, args.limit)
     drop_old_torchao()

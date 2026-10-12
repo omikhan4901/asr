@@ -58,3 +58,26 @@ November's credit (or runs at 156 h on the reserve, ~$6-8 est., if the new corpo
   if it loses on DL Sprint by > 1 point, add a short DL Sprint-only second epoch (est. $2).
 - **Step 10 (if done):** if more than ~20% of eval references are corrected, every model's WER is also reported
   against the verified references.
+
+## Aiming for the top (added 2026-10-12)
+
+Where we stand: first on DL Sprint media speech by ~7-10 points among open models; ~2 points behind Hishab on
+FLEURS (16.44 vs 14.24); IndicConformer and the finalist models not measured yet (step 3). Same Whisper-medium
+throughout; nothing here needs thousands of hours of training.
+
+**Usability rule:** the released model is ONE Whisper-medium with greedy or light beam decoding, and every
+candidate gets a speed number (real-time factor from `metrics.json`, T4). Ensembles and 12-best voting are
+allowed only offline, as teachers for training labels (idea 4), never in the released system.
+
+| # | Idea | Deployable? | Cost | How (you run) | Expected (est., unmeasured) |
+|---|---|---|---|---|---|
+| T1 | **Model soup**: average the weights of fine-tuned models (M1 + M5; all sources; WiSE-FT with zero-shot) | yes (one model, same speed) | $0 | Kaggle session D (below) | −0.5 to −1 on the average |
+| T2 | **Cross-model ROVER** over the greedy outputs of ~10 fine-tuned models (members chosen on dev) | no (N x slower): teacher only | $0 | `PYTHONPATH=src ./Scripts/python.exe analysis/cross_model_rover.py` (CPU, minutes) | −0.5 to −1.5 |
+| T3 | **Beam search** (5 beams) instead of greedy, with its speed cost measured | yes, if the slowdown is acceptable | $0 | Kaggle session D | small; speed ~2-4x slower |
+| T4 | **Pseudo-labels**: transcribe unlabeled Bangla audio with the best teacher (T2 ensemble or M7), keep clips the models agree on (our agreement signal, AUROC 0.76-0.84), train M7 on labeled + pseudo-labeled data | yes (it is training data) | labeling $0 on Kaggle (~50 T4-h per 1,000 h audio); training ~$20-25 per +500 h | step 0 must find unlabeled audio with a usable license first | the lever that can close the FLEURS gap |
+| T5 | **Corpus tag in the prompt** while training M7 (one model that writes each corpus's spelling convention) | yes | ~$0 extra | part of step 5 | −0.5 to −1 on the average |
+
+**Kaggle session D (T1 + T3), after `bash runs/upload_code_to_hub.sh`:**
+`GPU0 = "soup:m1_full+m5_merged,soup:m1_full+m1_full+m1_full+base"`,
+`GPU1 = "beam:m1_full,soup:m1_full+m2_cv+m3_kathbath+m4_shrutilipi+m5_merged"` (~5-7 h est.; ~25 GB disk est.).
+Winners are chosen on DL Sprint dev plus the average, then the same recipe is applied to M7 in November.

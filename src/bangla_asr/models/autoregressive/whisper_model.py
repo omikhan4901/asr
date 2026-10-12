@@ -195,9 +195,11 @@ class WhisperASRModel:
         sampling_rate: int = 16000,
         max_new_tokens: int = None,
         pad_seconds: float = 0.2,
+        num_beams: int = 1,
     ):
-        """Greedy 1-best transcription. Default cap 440 new tokens (Whisper allows 448
-        including prompt tokens); dense 25 s chunks reach ~250 tokens."""
+        """1-best transcription: greedy (num_beams=1, the default everywhere) or beam search.
+        Default cap 440 new tokens (Whisper allows 448 including prompt tokens); dense 25 s chunks
+        reach ~250 tokens."""
         from bangla_asr.common.audio import pad_silence
 
         if not audio_arrays:
@@ -221,7 +223,7 @@ class WhisperASRModel:
         gen_kwargs = {
             "input_features": input_features,
             "max_new_tokens": max_new_tokens or 440,
-            "num_beams": 1,
+            "num_beams": num_beams,
             "num_return_sequences": 1,
             "do_sample": False,
         }

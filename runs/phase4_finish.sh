@@ -36,6 +36,15 @@ for s in splits_fa-eval fleurs-test cv-test kathbath-valid splits_fa-dev; do
   pair $K/$s/m5_merged_t4/predictions.jsonl $K/$s/m6_harmonized_t4/predictions.jsonl ${s}__m6_vs_m5
   pair results/modal/finetuned/$s/m1_full/predictions.jsonl $K/$s/m1_full_4ep_t4/predictions.jsonl ${s}__m1_full_4ep_vs_m1_full
 done
+# session D: every soup / beam row vs M1 full and vs M5 merged
+for s in splits_fa-dev splits_fa-eval fleurs-test cv-test kathbath-valid; do
+  for d in $K/$s/soup_*/ $K/$s/*_beam5_t4/; do
+    [ -f "$d/predictions.jsonl" ] || continue
+    r=$(basename "$d")
+    pair results/modal/finetuned/$s/m1_full/predictions.jsonl "$d/predictions.jsonl" ${s}__${r}_vs_m1_full
+    pair $K/$s/m5_merged_t4/predictions.jsonl "$d/predictions.jsonl" ${s}__${r}_vs_m5
+  done
+done
 for s in splits_fa-eval fleurs-test kathbath-valid; do
   pair results/phase3/$s/mbr_lm_x/predictions.jsonl results/modal/finetuned/$s/m1_full/predictions.jsonl ${s}__m1_full_vs_phase3
   pair results/phase3/$s/mbr_lm_x/predictions.jsonl results/phase4_stack/$s/rover/predictions.jsonl ${s}__m1_full_rover_vs_phase3
@@ -60,8 +69,15 @@ for f in sorted(Path("results/compare/phase4_final").glob("*.json")):
 print()
 print("New rows vs zero-shot (results/compare/phase4):")
 for f in sorted(Path("results/compare/phase4").glob("*_vs_tugstugi_a100.json")):
-    if "m6_" in f.name or "4ep" in f.name:
+    if any(k in f.name for k in ("m6_", "4ep", "soup_", "beam5")):
         d = json.loads(f.read_text(encoding="utf-8"))
         print(f"{f.stem:55s} WER {100 * d['wer_b']:6.2f}  diff {100 * d['diff_b_minus_a']:+6.2f}")
+print()
+print("Speed (real-time factor on the T4, lower = faster; greedy M5 ~0.035-0.038):")
+for m in sorted(Path("results/kaggle/finetuned").glob("*/*/metrics.json")):
+    if any(k in m.parent.name for k in ("soup_", "beam5", "m5_merged")):
+        x = json.loads(m.read_text(encoding="utf-8"))
+        if x.get("last_run_rtf") is not None:
+            print(f"{m.parent.parent.name + '/' + m.parent.name:70s} RTF {x['last_run_rtf']:.4f}")
 EOF
 echo "done: send results/phase4_final_summary.txt (or just say 'finish ran')"

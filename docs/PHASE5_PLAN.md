@@ -1,12 +1,15 @@
 # Phase 5 plan: the released model, whole-recording evaluation, release
 
-> **Decision 2026-10-12 (Omi): one plan, no extras.** M7 = M5's recipe exactly (full FT, lr 1e-5, 2 epochs, no
+> **Decision 2026-10-12 (Omi): one plan, no extras.** The final model is **M5-full** (called M7 below) = M5's recipe exactly (full FT, lr 1e-5, 2 epochs, no
 > selection knobs) on ALL the data we have (156 h: DL Sprint 59.6 + CV 34.4 + Kathbath 33.9 + Shrutilipi 28.1).
 > Evidence: M5 (10 h per source) is already within 0.4-0.6 of each specialist on CV / Kathbath / FLEURS; its only
 > large gap is DL Sprint (13.84 vs 11.34), i.e. hours, not mixing. **Pre-registered:** DL Sprint eval <= 12.0, every
 > other set within 0.5 of its specialist, average <= 12.5 (M5 13.18). **Kill rule:** average not significantly
 > below M5 -> release M5. Speed = M5's (one Whisper-medium; T4 RTF 0.035-0.038 batched). Everything below this note
 > (new corpora, T1-T8, session D) is parked, not planned.
+> **Two modes reported:** fast = M5-full greedy (default; live use); best = M5-full + ROVER on its own 12-best
+> (offline batch jobs; expected −0.2 to −0.45 by analogy with M1; measured cost ~14x greedy on a T4: 552 vs 39 min
+> for DL Sprint eval).
 
 Phase 4 answered the method questions. Phase 5 builds the one model we release and finishes the paper.
 Freeze: **Nov 12**; report: **Dec 1**. Times and costs marked *est.* are estimates.

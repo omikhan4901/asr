@@ -16,11 +16,12 @@ against a sampled candidate: against greedy decoding, MBR changes word error rat
 (95% CI −0.11 to +0.35), although a perfect selector would gain 4.12 points. Counting, for every reference
 word, how many of 12 candidates contain it explains the gap: 57% of greedy errors appear in no candidate,
 and MBR fixes an error only when most candidates already agree. About 41% of errors are the same word in
-another spelling or dialect form, shared by every candidate; the pattern holds on FLEURS, Kathbath and a
+another spelling or dialect form, and the candidates share these errors far more often than other errors;
+the pattern holds on FLEURS, Kathbath and a
 second model, and accounts for the whole lead of a stronger open baseline. Adding learned spelling
 variants to the candidate lists moves the oracle from 18.35% to 13.75% and the WER from 22.71% to 17.46%
 without retraining the speech model (only a word n-gram LM and spelling rules built from the training text); fine-tuning the model on 60 h of in-domain data reaches **11.34%** (−11.36 points
-[−12.32, −10.46]), and five predictions written before the fine-tuning runs all hold. A train × test matrix
+[−12.32, −10.46]), and five predictions derived from the diagnosis all hold. A train × test matrix
 over four public corpora shows that each corpus trains its own test set best, and that 10 h from each of
 four corpora gives the best average over the four test sets (13.18% vs 13.99% for the in-domain model). After
 fine-tuning, rescoring gains almost vanish (−0.45 points): training removes exactly the errors that
@@ -62,9 +63,9 @@ reference word, how many of the candidates contain it.
   spelling or dialect variants, across two models and three test sets.
 - **A reference-free signal:** candidate agreement alone flags erroneous words (AUROC 0.823), and spelling
   errors are the ones on which all candidates agree.
-- **Tests of the diagnosis written before running them:** hypothesis expansion with a learned convention
-  rewriter and an n-gram LM, and an error-locus comparison of LoRA, decoder-only, encoder-only and full
-  fine-tuning against pre-registered predictions.
+- **Tests of the diagnosis:** hypothesis expansion with a learned convention rewriter and an n-gram LM, and
+  an error-locus comparison of LoRA, decoder-only, encoder-only and full fine-tuning against five
+  predictions derived from the diagnosis.
 - **Released resources:** the forced-aligned segmentation of the DL Sprint / Bengali-Loop recordings and the
   normalizer and scoring code (human-verified references follow when the labeling is complete).
 
@@ -124,7 +125,10 @@ transcription, kept as a monotonic chain) split each recording into pieces that 
 with a wildcard token at both ends to absorb untranscribed audio (ads, music). Words are grouped into clips of
 at most 25 s, cut at the longest inter-word pause; each clip's reference is exactly the transcript words
 inside it. Clips are filtered only by the aligner's confidence, never by a recognizer we evaluate.
-Segmentation yields **24,156 clips (93.1 h) from 112 recordings**.
+Segmentation yields **24,156 clips (93.1 h) from 112 recordings**. The confidence filter (mean word posterior
+≥ 0.5, at most half of the words below 0.4, 1–25.5 s) keeps 20,272 clips (79.2 h, §4): it drops 16% of the clips
+and 15% of the audio, against the 27% of the audio the earlier pipeline lost, and the choice is made by the
+aligner, not by a model we evaluate.
 
 ### 3.2 Normalization and scoring harness
 Hypotheses and references are normalized identically: Unicode NFC; one form for the nukta letters
@@ -177,8 +181,10 @@ unchanged to every test set; human labels are never used.
 The model is fine-tuned on the cleaned DL Sprint training clips (15,325 clips, 59.6 h; bracketed tags
 stripped, 67 clips with non-Bangla script dropped) in four ways: LoRA (rank 32 on every attention and MLP
 projection of encoder and decoder, lr 2e-4), decoder only, encoder only, and all weights (lr 1e-5); AdamW,
-batch 8×4, 2 epochs, bf16 autocast, gradient checkpointing, SpecAugment as in the checkpoint. **Before any
-full run we recorded five predictions:**
+batch 8×4, 2 epochs, bf16 autocast, gradient checkpointing. We add no SpecAugment of our own: the trainer keeps
+the checkpoint's `apply_spec_augment` setting, and Hugging Face Whisper masks input features during training only
+when that flag is true (`mask_time_prob` 0.05 is the library default and has no effect otherwise). **From the
+diagnosis we derived five predictions:**
 - **P1** the best variant beats the strongest open zero-shot model (Hishab, 21.18%) on DL Sprint eval;
 - **P2** at least half of the WER reduction comes from variant types;
 - **P3** FLEURS improves less than DL Sprint eval;
@@ -211,6 +217,10 @@ Several conclusions changed while the evaluation was being rebuilt; each failure
 | Train | 83 | 15,392 | 59.92 |
 | Development | 6 | 646 | 2.39 |
 | Evaluation | 22 | 4,234 | 16.85 |
+
+Clips and hours are after the aligner-confidence filter (§3.1): 20,272 of the 24,156 segmented clips. A recording
+is counted when at least one of its clips is kept, so the table lists 111 of the 112 segmented recordings: every
+clip of the remaining one fell below the filter.
 
 The split is disjoint by recording but not by speaker or series: some narrators and serialized stories appear
 on both sides. **Public test sets:** FLEURS-bn test (920 utterances, read Wikipedia), Kathbath validation
@@ -286,7 +296,10 @@ candidates add headroom that MBR cannot use (Table above), because the new corre
 candidates that have the reference word right ($c$), split into those MBR fixes and those it does not; the
 line is the share MBR fixes (95% cluster-bootstrap CIs over 22 recordings).
 
-The largest group by far has $c = 0$: 49.5% of these errors appear in no candidate. MBR fixes almost none of
+The largest group by far has $c = 0$: 49.5% of these errors appear in no candidate. (The table in §5.2
+reports 57.0% for greedy's errors. Both shares are correct and differ in their denominator: the first sampled
+candidate makes 3.15 points more errors than greedy, and its extra errors are mostly words that other
+candidates get right, so a smaller share of its errors is selection-proof.) MBR fixes almost none of
 the errors that only a few candidates get right and almost all of those that most candidates get right.
 Without any reference, agreement flags erroneous greedy words with AUROC 0.823 [0.812, 0.834]. All 12
 candidates agree on the same wrong form for 25.4% of spelling/dialect errors but only 12.8% of other errors.
@@ -390,7 +403,7 @@ embeddings, which LoRA does not touch; rank-32 LoRA on every projection is enoug
 **Figure 9.** DL Sprint eval WER split into spelling/dialect-variant errors and all other errors (rule-based),
 for zero-shot, the list-correction system (speech model not retrained), and the four fine-tuning variants.
 
-**The pre-registered predictions:**
+**The five predictions:**
 
 | | Prediction | Outcome | Verdict |
 |---|---|---|---|
@@ -596,7 +609,7 @@ points. Counting how many candidates contain each word shows why: 57% of errors 
 only fixes what most candidates already agree on, and about 41% of errors are spelling and dialect variants
 that the whole list shares. Fixing the cause works in both ways we predicted: adding learned spelling variants
 to the candidate lists takes DL Sprint eval from 22.71% to 17.46% without retraining the speech model, and fine-tuning takes it to
-11.34%, with all five pre-registered predictions holding. Stacking the two adds little (10.89%): after
+11.34%, with all five predictions derived from the diagnosis holding. Stacking the two adds little (10.89%): after
 fine-tuning, spelling expansion no longer raises the oracle, and what remains is mostly selection-proof. Across
 four Bangla corpora each training set wins its own test set, and a merged 40 h set gives the best average
 (13.18%), so a released model should be trained on mixed sources, without forcing one spelling convention, and
@@ -625,6 +638,10 @@ Python 3.13; the repository root doubles as a Windows virtual environment (`./Sc
 | OpenSLR 53 with joined clips; merged training lists | `pipeline/data/prepare_openslr53.py`, `pipeline/data/prepare_matrix.py merged` |
 | Cloud inference (Kaggle T4) | `notebooks/kaggle_phase4.ipynb` → `pipeline/kaggle_phase4.py` |
 | Figures and tables | `figures/scripts/*.py` (data in `figures/data/`, PDF in `figures/`, PNG in `figures/png/`, tables in `figures/tables/`); overview diagram `figures/pipeline_overview.drawio` (draw.io) |
+
+**Reading `metrics.json`.** The `decoding` field reads `greedy` for every row, beam search included; a beam-search
+row is identified by its `num_beams` field (> 1) and its output folder name (`*_beam5*`). This affects only that
+label: the WER, CER and confidence intervals in the file are computed from the predictions as decoded.
 
 Tests: `PYTHONPATH=src ./Scripts/python.exe tests/test_smoke.py` and `tests/test_mbr.py`.
 Step-by-step guide for the cloud runs: [`docs/PHASE4_RUNBOOK.md`](docs/PHASE4_RUNBOOK.md).

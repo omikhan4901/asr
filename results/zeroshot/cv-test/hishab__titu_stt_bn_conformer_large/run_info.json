@@ -1,0 +1,27 @@
+{
+  "runs": [
+    {
+      "command": "python.exe pipeline/eval_zero_shot.py --manifest data/external/cv/test.csv --model hishab/titu_stt_bn_conformer_large",
+      "git_commit": "9d29297e9e4565e40d4baffcf8b33883884ab1e0",
+      "git_dirty": false,
+      "start": "2026-10-09T02:06:57",
+      "end": "2026-10-09T02:06:57",
+      "runtime_s": 0.6,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "data\\external\\cv\\test.csv": "aaaba46c8afefba104f9a879de5887a27396402ad5d06730b30577144db1f501"
+      },
+      "outputs": {
+        "results\\zeroshot\\cv-test\\hishab__titu_stt_bn_conformer_large\\predictions.jsonl": "1919ce9dbcdb8fd38c78d24188df99d16b7ae65a36596799de8cb6ae5a49500e",
+        "results\\zeroshot\\cv-test\\hishab__titu_stt_bn_conformer_large\\metrics.json": "4ec5b11bbe27328965665fa2198ec41b378f193ddcbd3e9a1b956c2772fc04c7"
+      }
+    }
+  ]
+}

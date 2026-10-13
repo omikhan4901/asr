@@ -1,0 +1,27 @@
+{
+  "runs": [
+    {
+      "command": "python.exe pipeline/eval_zero_shot.py --manifest data/external/kathbath/valid.csv --model hishab/titu_stt_bn_fastconformer",
+      "git_commit": "9d29297e9e4565e40d4baffcf8b33883884ab1e0",
+      "git_dirty": false,
+      "start": "2026-10-09T02:07:08",
+      "end": "2026-10-09T02:07:08",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "data\\external\\kathbath\\valid.csv": "fa082a5008a8af5c4ee36f63fb1384e2a19e7f15c95980ce385bcc754a83fef3"
+      },
+      "outputs": {
+        "results\\zeroshot\\kathbath-valid\\hishab__titu_stt_bn_fastconformer\\predictions.jsonl": "d156be31468456edfe0c45c6f0e543c4ebdf513b40d647f0fcc59bb27f6bd27f",
+        "results\\zeroshot\\kathbath-valid\\hishab__titu_stt_bn_fastconformer\\metrics.json": "37d10dbbf5034547c388115c0be4ba48af7a126e6ff34b5607d1350b1d9a4112"
+      }
+    }
+  ]
+}

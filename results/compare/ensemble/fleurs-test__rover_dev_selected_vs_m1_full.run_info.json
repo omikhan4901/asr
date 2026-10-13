@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe D:\\Projects\\ASR Paper Code\\analysis\\paired_compare.py --a D:\\Projects\\ASR Paper Code\\results\\modal\\finetuned\\fleurs-test\\m1_full\\predictions.jsonl --b D:\\Projects\\ASR Paper Code\\results\\ensemble\\fleurs-test\\rover_dev_selected\\predictions.jsonl --name fleurs-test__rover_dev_selected_vs_m1_full --out_dir D:\\Projects\\ASR Paper Code\\results\\compare\\ensemble",
+      "git_commit": "85a7d48016ffe8d5f3814f36e282fa2a25f5c8c3",
+      "git_dirty": true,
+      "start": "2026-10-12T22:24:18",
+      "end": "2026-10-12T22:24:18",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "D:\\Projects\\ASR Paper Code\\results\\modal\\finetuned\\fleurs-test\\m1_full\\predictions.jsonl": "6a415e10fb47f59e1b28720ded8fa4e22074cf21bb4d346b6448ce90a347664b",
+        "D:\\Projects\\ASR Paper Code\\results\\ensemble\\fleurs-test\\rover_dev_selected\\predictions.jsonl": "53be0ba1d40a34a88d331e2e6e8e354bf3e37659ba63a82a1bc4ec62f169a835"
+      },
+      "outputs": {
+        "D:\\Projects\\ASR Paper Code\\results\\compare\\ensemble\\fleurs-test__rover_dev_selected_vs_m1_full.json": "699f8e087d2614ecbeed28e0c5a8ae2928f01a639463ba5a3cdbd44adc5af117"
+      }
+    }
+  ]
+}

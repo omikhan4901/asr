@@ -1,0 +1,51 @@
+{
+  "runs": [
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/external/fleurs/test.csv --model checkpoints/m1_encoder/final --name m1_encoder --out_dir results/finetuned --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T22:25:02",
+      "end": "2026-10-09T22:31:43",
+      "runtime_s": 400.6,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/external/fleurs/test.csv": "73efc47ff0f7219f2cb56abfeb3ee94f070b4ea5be7d3b96e8dd12c389f2bf4f"
+      },
+      "outputs": {
+        "results/finetuned/fleurs-test/m1_encoder/predictions.jsonl": "4076bc3c631bc7a4de31da038c390cf38092453a6f45b017a0002d298f67df94",
+        "results/finetuned/fleurs-test/m1_encoder/metrics.json": "ece398bae2ad438ac7e15b923135a02e7024b500ec61e5542cc877a22f81517b"
+      }
+    },
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/external/fleurs/test.csv --model checkpoints/m1_encoder/final --name m1_encoder --out_dir results/finetuned --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T22:44:08",
+      "end": "2026-10-09T22:44:08",
+      "runtime_s": 0.4,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/external/fleurs/test.csv": "73efc47ff0f7219f2cb56abfeb3ee94f070b4ea5be7d3b96e8dd12c389f2bf4f"
+      },
+      "outputs": {
+        "results/finetuned/fleurs-test/m1_encoder/predictions.jsonl": "4076bc3c631bc7a4de31da038c390cf38092453a6f45b017a0002d298f67df94",
+        "results/finetuned/fleurs-test/m1_encoder/metrics.json": "582754f5220e5d28d3a56d66b95e32dcb3359ce65bcbc855bf9b26bbeff19939"
+      }
+    }
+  ]
+}

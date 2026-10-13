@@ -1,0 +1,30 @@
+{
+  "runs": [
+    {
+      "command": "python3 /tmp/code/pipeline/eval_zero_shot.py --batch_size 8 --manifest data/external/kathbath/valid.csv --model bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium --adapter models/m1_lora --name m1_lora_t4 --out_dir results/finetuned",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-10T18:56:00",
+      "end": "2026-10-10T19:23:20",
+      "runtime_s": 1639.9,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.15",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.15.0",
+        "numpy": "2.1.3",
+        "pandas": "2.3.3",
+        "gpu": "Tesla T4"
+      },
+      "inputs": {
+        "data/external/kathbath/valid.csv": "48520d1d09f4a741f0669d5d99f8e63953424febed731a0cd19673e7dd1abfbc",
+        "models/m1_lora/adapter_config.json": "da771fd8c93adec731d828512ce064d40dc7d48bf0b35ff6143c1a882bc4962d",
+        "models/m1_lora/adapter_model.safetensors": "33434987d5ca90dd3f74c042ba5989c075cd798382319fc3b4f32fb93ca3b4f2"
+      },
+      "outputs": {
+        "results/finetuned/kathbath-valid/m1_lora_t4/predictions.jsonl": "f149807f54788eb4abb0f9fb6fd9e14766cf36c7c8ddd4d682f7ed779478052c",
+        "results/finetuned/kathbath-valid/m1_lora_t4/metrics.json": "4f551e47c7c49497a2f39f6eb190963559e4fc07cfbfcb3e349b5162d3cdd057"
+      }
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/zeroshot/fleurs-test/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl --b data/nbest_ext/fleurs_tugstugi.jsonl:oracle --name fleurs_tugstugi_oracle_vs_greedy",
+      "git_commit": "2cda47b567498b7b205252bdb232ed919ec107e6",
+      "git_dirty": false,
+      "start": "2026-10-09T02:34:29",
+      "end": "2026-10-09T02:34:30",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/zeroshot/fleurs-test/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl": "4795d8f23d0f8606757d7dbbf665513e785cafb5c30b18043568c312eeccad08",
+        "data/nbest_ext/fleurs_tugstugi.jsonl": "1b330827da0fdadb548f3bcf6c1fd25c896bef4e8348672dbeddf6a4d1aebc12"
+      },
+      "outputs": {
+        "results\\compare\\fleurs_tugstugi_oracle_vs_greedy.json": "3648d2545cc2059fe31bd5a67e65ca8b3112a233cb393a389e5dcec807e5ce3b"
+      }
+    }
+  ]
+}

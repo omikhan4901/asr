@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python3 /tmp/code/pipeline/eval_zero_shot.py --batch_size 8 --manifest data/splits_fa/dev.csv --model soups/m1_full+m1_full+m1_full+base --name soup_m1_full+m1_full+m1_full+base_t4 --out_dir results/finetuned",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-12T16:38:49",
+      "end": "2026-10-12T16:45:05",
+      "runtime_s": 375.9,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.15",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.15.0",
+        "numpy": "2.1.3",
+        "pandas": "2.3.3",
+        "gpu": "Tesla T4"
+      },
+      "inputs": {
+        "data/splits_fa/dev.csv": "99325905fab2fdcb48f01ddf066ee4d5cd47da60eb4310336c10da148573d7db"
+      },
+      "outputs": {
+        "results/finetuned/splits_fa-dev/soup_m1_full+m1_full+m1_full+base_t4/predictions.jsonl": "c99145c8ebbdc8db5aa23cd1b7f9034ceb10e7c6433f17f5baeff28283aa850f",
+        "results/finetuned/splits_fa-dev/soup_m1_full+m1_full+m1_full+base_t4/metrics.json": "95bb80f1981cf5aacba47d27a0f71e2e6980306987400488d9013ff84d1c32b7"
+      }
+    }
+  ]
+}

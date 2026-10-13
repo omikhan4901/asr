@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/finetuned/splits_fa-eval/m1_full/predictions.jsonl --b results/modal/finetuned/splits_fa-eval/m1_lora/predictions.jsonl --name splits_fa-eval__m1_lora_vs_m1_full --out_dir results/compare/phase4_final",
+      "git_commit": "93d0200cf58e6c042a61cec0a3e42df10bc9378a",
+      "git_dirty": false,
+      "start": "2026-10-12T03:51:37",
+      "end": "2026-10-12T03:51:38",
+      "runtime_s": 0.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/finetuned/splits_fa-eval/m1_full/predictions.jsonl": "16543c45bba215f8020d8cd18158ab217e7eb666a96735d58ce5ba4c81681350",
+        "results/modal/finetuned/splits_fa-eval/m1_lora/predictions.jsonl": "aa8bfa2a7e54e03cd766ab7a7d09f34222439342f105efcceefad33e30c7a381"
+      },
+      "outputs": {
+        "results\\compare\\phase4_final\\splits_fa-eval__m1_lora_vs_m1_full.json": "bfefc7c0bda16841a84fea4c6eb10b98411ec95d90bca423233097c3d2145599"
+      }
+    }
+  ]
+}

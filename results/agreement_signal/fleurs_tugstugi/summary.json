@@ -1,0 +1,30 @@
+{
+  "pred": "results/zeroshot/fleurs-test/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl",
+  "nbest": "data/nbest_ext/fleurs_tugstugi.jsonl",
+  "n_candidates": 12,
+  "hyp_words": 18244,
+  "hyp_errors": 3638,
+  "ref_deletions_not_scored": 189,
+  "n_groups": 349,
+  "auroc": 0.7706917062934442,
+  "auroc_ci95": [
+    0.758121580790665,
+    0.7843291512323033
+  ],
+  "mean_a_correct": 11.425236204299603,
+  "mean_a_by_error_type": {
+    "convention": 10.115,
+    "insertion": 8.541,
+    "near_miss": 8.514,
+    "number": 10.562,
+    "script": 8.725,
+    "segmentation": 9.147,
+    "substitution": 7.01,
+    "vowel_shift": 8.21
+  },
+  "share_errors_full_agreement": 0.29384277075316106,
+  "share_variant_errors_full_agreement": 0.30868385345997285,
+  "share_other_errors_full_agreement": 0.28373382624768945,
+  "n_boot": 1000,
+  "seed": 0
+}

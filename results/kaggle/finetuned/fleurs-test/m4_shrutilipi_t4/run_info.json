@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python3 /tmp/code/pipeline/eval_zero_shot.py --batch_size 8 --manifest data/external/fleurs/test.csv --model models/m4_shrutilipi --name m4_shrutilipi_t4 --out_dir results/finetuned",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-11T06:05:32",
+      "end": "2026-10-11T06:12:35",
+      "runtime_s": 422.9,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.15",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.15.0",
+        "numpy": "2.1.3",
+        "pandas": "2.3.3",
+        "gpu": "Tesla T4"
+      },
+      "inputs": {
+        "data/external/fleurs/test.csv": "73efc47ff0f7219f2cb56abfeb3ee94f070b4ea5be7d3b96e8dd12c389f2bf4f"
+      },
+      "outputs": {
+        "results/finetuned/fleurs-test/m4_shrutilipi_t4/predictions.jsonl": "85bba57d7a8b00dfe76082c68a4aa3b5d186fd3fdf13d63c45a48ea98b94ae9e",
+        "results/finetuned/fleurs-test/m4_shrutilipi_t4/metrics.json": "f8e8311e5eac39183e830ba1e192dd16017f875b2b18d5d53d946fae19761820"
+      }
+    }
+  ]
+}

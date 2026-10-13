@@ -1,0 +1,19 @@
+{
+  "a": "results/zeroshot/splits_fa-eval/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl",
+  "b": "data/nbest_fa/eval_nbest.jsonl:mbr",
+  "n_utterances": 4234,
+  "n_groups": 22,
+  "ref_words": 120029,
+  "wer_a": 0.22707012471985938,
+  "wer_b": 0.22970282181806065,
+  "diff_b_minus_a": 0.002632697098201268,
+  "diff_ci95": [
+    8.548882069267877e-06,
+    0.004922273402285402
+  ],
+  "p_b_better": 0.0245,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

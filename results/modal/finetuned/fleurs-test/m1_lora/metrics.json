@@ -1,0 +1,25 @@
+{
+  "wer": 0.18400315208825846,
+  "cer": 0.056045966395509926,
+  "n_utterances": 920,
+  "ref_words": 17766,
+  "n_groups": 349,
+  "wer_ci95": [
+    0.1706685177620435,
+    0.19789453766935566
+  ],
+  "cer_ci95": [
+    0.04637793430740785,
+    0.06824633501186395
+  ],
+  "set": "fleurs-test",
+  "model": "bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium",
+  "adapter": "checkpoints/m1_lora/final",
+  "family": "whisper",
+  "manifest": "data/external/fleurs/test.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy",
+  "last_run_seconds": 738.8,
+  "last_run_audio_hours": 3.433,
+  "last_run_rtf": 0.0598
+}

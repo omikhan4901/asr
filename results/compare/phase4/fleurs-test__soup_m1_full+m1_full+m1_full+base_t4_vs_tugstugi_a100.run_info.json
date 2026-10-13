@@ -1,0 +1,76 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/fleurs-test/soup_m1_full+m1_full+m1_full+base_t4//predictions.jsonl --name fleurs-test__soup_m1_full+m1_full+m1_full+base_t4_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T19:51:11",
+      "end": "2026-10-13T19:51:11",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl": "5d810667c6c80a847d7365e10832f2163cb68c6457411436129c45830ab933e4",
+        "results/kaggle/finetuned/fleurs-test/soup_m1_full+m1_full+m1_full+base_t4//predictions.jsonl": "68d732b09945769ff7921516d185184030eebde3b5013002c1e6c28d3a6ee00d"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\fleurs-test__soup_m1_full+m1_full+m1_full+base_t4_vs_tugstugi_a100.json": "538c793cdf0c37657aaf75692ae7c99266d49058713fafc96ed1e3738ab8de73"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/fleurs-test/soup_m1_full+m1_full+m1_full+base_t4//predictions.jsonl --name fleurs-test__soup_m1_full+m1_full+m1_full+base_t4_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T20:29:42",
+      "end": "2026-10-13T20:29:42",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl": "5d810667c6c80a847d7365e10832f2163cb68c6457411436129c45830ab933e4",
+        "results/kaggle/finetuned/fleurs-test/soup_m1_full+m1_full+m1_full+base_t4//predictions.jsonl": "68d732b09945769ff7921516d185184030eebde3b5013002c1e6c28d3a6ee00d"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\fleurs-test__soup_m1_full+m1_full+m1_full+base_t4_vs_tugstugi_a100.json": "538c793cdf0c37657aaf75692ae7c99266d49058713fafc96ed1e3738ab8de73"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/fleurs-test/soup_m1_full+m1_full+m1_full+base_t4//predictions.jsonl --name fleurs-test__soup_m1_full+m1_full+m1_full+base_t4_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "1740748792e396489f80906c1c35e92e7f45ce30",
+      "git_dirty": false,
+      "start": "2026-10-13T21:04:28",
+      "end": "2026-10-13T21:04:28",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl": "5d810667c6c80a847d7365e10832f2163cb68c6457411436129c45830ab933e4",
+        "results/kaggle/finetuned/fleurs-test/soup_m1_full+m1_full+m1_full+base_t4//predictions.jsonl": "68d732b09945769ff7921516d185184030eebde3b5013002c1e6c28d3a6ee00d"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\fleurs-test__soup_m1_full+m1_full+m1_full+base_t4_vs_tugstugi_a100.json": "538c793cdf0c37657aaf75692ae7c99266d49058713fafc96ed1e3738ab8de73"
+      }
+    }
+  ]
+}

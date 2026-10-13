@@ -1,0 +1,19 @@
+{
+  "a": "results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl",
+  "b": "results/kaggle/finetuned/fleurs-test/m1_full_beam5_t4//predictions.jsonl",
+  "n_utterances": 920,
+  "n_groups": 349,
+  "ref_words": 17766,
+  "wer_a": 0.21541146009231116,
+  "wer_b": 0.18011932905549927,
+  "diff_b_minus_a": -0.03529213103681189,
+  "diff_ci95": [
+    -0.043545825718945996,
+    -0.026770593468829495
+  ],
+  "p_b_better": 1.0,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

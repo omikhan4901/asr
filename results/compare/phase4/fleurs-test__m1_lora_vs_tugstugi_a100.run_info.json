@@ -1,0 +1,172 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl --b results/modal/finetuned/fleurs-test/m1_lora//predictions.jsonl --name fleurs-test__m1_lora_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "709fc33cefb1f525c8f5a621348d6b0d9252c557",
+      "git_dirty": false,
+      "start": "2026-10-10T07:38:14",
+      "end": "2026-10-10T07:38:14",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl": "5d810667c6c80a847d7365e10832f2163cb68c6457411436129c45830ab933e4",
+        "results/modal/finetuned/fleurs-test/m1_lora//predictions.jsonl": "1e56ebff94b51dee73fa5c4cca45ccff16ec4154ebc1b308b113dc7175a2ea27"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\fleurs-test__m1_lora_vs_tugstugi_a100.json": "3dbb4b0a1544e2adde0d6b7c56c66c1587135a3f4e30ca7bebb53bde6c603976"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl --b results/modal/finetuned/fleurs-test/m1_lora//predictions.jsonl --name fleurs-test__m1_lora_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "44ec64bd353284824218d2f596cbf882b9ca3c88",
+      "git_dirty": true,
+      "start": "2026-10-11T22:30:44",
+      "end": "2026-10-11T22:30:44",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl": "5d810667c6c80a847d7365e10832f2163cb68c6457411436129c45830ab933e4",
+        "results/modal/finetuned/fleurs-test/m1_lora//predictions.jsonl": "1e56ebff94b51dee73fa5c4cca45ccff16ec4154ebc1b308b113dc7175a2ea27"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\fleurs-test__m1_lora_vs_tugstugi_a100.json": "3dbb4b0a1544e2adde0d6b7c56c66c1587135a3f4e30ca7bebb53bde6c603976"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl --b results/modal/finetuned/fleurs-test/m1_lora//predictions.jsonl --name fleurs-test__m1_lora_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "4998286157c92d995cbf8b628c7b0c2fd767801a",
+      "git_dirty": true,
+      "start": "2026-10-11T23:26:59",
+      "end": "2026-10-11T23:26:59",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl": "5d810667c6c80a847d7365e10832f2163cb68c6457411436129c45830ab933e4",
+        "results/modal/finetuned/fleurs-test/m1_lora//predictions.jsonl": "1e56ebff94b51dee73fa5c4cca45ccff16ec4154ebc1b308b113dc7175a2ea27"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\fleurs-test__m1_lora_vs_tugstugi_a100.json": "3dbb4b0a1544e2adde0d6b7c56c66c1587135a3f4e30ca7bebb53bde6c603976"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl --b results/modal/finetuned/fleurs-test/m1_lora//predictions.jsonl --name fleurs-test__m1_lora_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "c07a59449b8ea159b99ab43bda2325db9a74f78f",
+      "git_dirty": false,
+      "start": "2026-10-12T01:13:23",
+      "end": "2026-10-12T01:13:23",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl": "5d810667c6c80a847d7365e10832f2163cb68c6457411436129c45830ab933e4",
+        "results/modal/finetuned/fleurs-test/m1_lora//predictions.jsonl": "1e56ebff94b51dee73fa5c4cca45ccff16ec4154ebc1b308b113dc7175a2ea27"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\fleurs-test__m1_lora_vs_tugstugi_a100.json": "3dbb4b0a1544e2adde0d6b7c56c66c1587135a3f4e30ca7bebb53bde6c603976"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl --b results/modal/finetuned/fleurs-test/m1_lora//predictions.jsonl --name fleurs-test__m1_lora_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T19:47:55",
+      "end": "2026-10-13T19:47:55",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl": "5d810667c6c80a847d7365e10832f2163cb68c6457411436129c45830ab933e4",
+        "results/modal/finetuned/fleurs-test/m1_lora//predictions.jsonl": "1e56ebff94b51dee73fa5c4cca45ccff16ec4154ebc1b308b113dc7175a2ea27"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\fleurs-test__m1_lora_vs_tugstugi_a100.json": "3dbb4b0a1544e2adde0d6b7c56c66c1587135a3f4e30ca7bebb53bde6c603976"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl --b results/modal/finetuned/fleurs-test/m1_lora//predictions.jsonl --name fleurs-test__m1_lora_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T20:26:02",
+      "end": "2026-10-13T20:26:02",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl": "5d810667c6c80a847d7365e10832f2163cb68c6457411436129c45830ab933e4",
+        "results/modal/finetuned/fleurs-test/m1_lora//predictions.jsonl": "1e56ebff94b51dee73fa5c4cca45ccff16ec4154ebc1b308b113dc7175a2ea27"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\fleurs-test__m1_lora_vs_tugstugi_a100.json": "3dbb4b0a1544e2adde0d6b7c56c66c1587135a3f4e30ca7bebb53bde6c603976"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl --b results/modal/finetuned/fleurs-test/m1_lora//predictions.jsonl --name fleurs-test__m1_lora_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T21:00:31",
+      "end": "2026-10-13T21:00:32",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl": "5d810667c6c80a847d7365e10832f2163cb68c6457411436129c45830ab933e4",
+        "results/modal/finetuned/fleurs-test/m1_lora//predictions.jsonl": "1e56ebff94b51dee73fa5c4cca45ccff16ec4154ebc1b308b113dc7175a2ea27"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\fleurs-test__m1_lora_vs_tugstugi_a100.json": "3dbb4b0a1544e2adde0d6b7c56c66c1587135a3f4e30ca7bebb53bde6c603976"
+      }
+    }
+  ]
+}

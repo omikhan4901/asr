@@ -1,0 +1,21 @@
+{
+  "wer": 0.1424068445345041,
+  "cer": 0.044101452879116196,
+  "n_utterances": 920,
+  "ref_words": 17766,
+  "n_groups": 349,
+  "wer_ci95": [
+    0.12792573502067262,
+    0.1550818001809509
+  ],
+  "cer_ci95": [
+    0.03778318425619115,
+    0.05055041203009463
+  ],
+  "set": "fleurs-test",
+  "model": "hishab/titu_stt_bn_conformer_large",
+  "family": "auto",
+  "manifest": "data\\external\\fleurs\\test.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy"
+}

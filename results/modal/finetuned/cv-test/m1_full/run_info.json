@@ -1,0 +1,49 @@
+{
+  "runs": [
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/external/cv/test.csv --model checkpoints/m1_full/final --name m1_full --out_dir results/finetuned --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T22:36:12",
+      "end": "2026-10-09T22:36:20",
+      "runtime_s": 8.2,
+      "status": "failed: KeyboardInterrupt",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/external/cv/test.csv": "1661c0d045f1d3e4a410a0cd2b7f98c9fe250cdcb696c2264e495720e25a1ea8"
+      },
+      "outputs": {}
+    },
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/external/cv/test.csv --model checkpoints/m1_full/final --name m1_full --out_dir results/finetuned --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T22:44:03",
+      "end": "2026-10-09T23:09:28",
+      "runtime_s": 1524.6,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/external/cv/test.csv": "1661c0d045f1d3e4a410a0cd2b7f98c9fe250cdcb696c2264e495720e25a1ea8"
+      },
+      "outputs": {
+        "results/finetuned/cv-test/m1_full/predictions.jsonl": "0cddb88b48239bccab7d69ea088ccc87d0bf1abdd9af958a90073fe32fe4641d",
+        "results/finetuned/cv-test/m1_full/metrics.json": "122b14f238a63a024d19e5a0bdc634a245a27d345257fff5a004a3a2fb51a8fe"
+      }
+    }
+  ]
+}

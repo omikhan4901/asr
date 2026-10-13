@@ -1,0 +1,19 @@
+{
+  "a": "results/modal/zeroshot/kathbath-valid/tugstugi_a100/predictions.jsonl",
+  "b": "results/kaggle/finetuned/kathbath-valid/soup_m1_full+m1_full+m1_full+base_t4//predictions.jsonl",
+  "n_utterances": 2236,
+  "n_groups": 17,
+  "ref_words": 23995,
+  "wer_a": 0.14811419045634508,
+  "wer_b": 0.12865180245884558,
+  "diff_b_minus_a": -0.01946238799749948,
+  "diff_ci95": [
+    -0.025581930614192717,
+    -0.013926950375932364
+  ],
+  "p_b_better": 1.0,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

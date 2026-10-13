@@ -1,0 +1,30 @@
+{
+  "pred": "results/zeroshot/fleurs-test/bangla-speech-processing__BanglaASR/predictions.jsonl",
+  "nbest": "data/nbest_ext/fleurs_banglaasr.jsonl",
+  "n_candidates": 12,
+  "hyp_words": 17324,
+  "hyp_errors": 4954,
+  "ref_deletions_not_scored": 898,
+  "n_groups": 349,
+  "auroc": 0.7603624729891721,
+  "auroc_ci95": [
+    0.7494575684863951,
+    0.77186165361606
+  ],
+  "mean_a_correct": 11.198868229587712,
+  "mean_a_by_error_type": {
+    "convention": 9.384,
+    "insertion": 7.646,
+    "near_miss": 8.587,
+    "number": 8.684,
+    "script": 9.471,
+    "segmentation": 10.336,
+    "substitution": 6.511,
+    "vowel_shift": 9.054
+  },
+  "share_errors_full_agreement": 0.31974162293096486,
+  "share_variant_errors_full_agreement": 0.4120135363790186,
+  "share_other_errors_full_agreement": 0.2908271474019088,
+  "n_boot": 1000,
+  "seed": 0
+}

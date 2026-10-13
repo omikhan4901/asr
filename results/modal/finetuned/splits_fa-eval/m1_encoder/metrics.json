@@ -1,0 +1,22 @@
+{
+  "wer": 0.13834989877446283,
+  "cer": 0.050468045443462645,
+  "n_utterances": 4234,
+  "ref_words": 120029,
+  "n_groups": 22,
+  "wer_ci95": [
+    0.12028264064084665,
+    0.16231594814273057
+  ],
+  "cer_ci95": [
+    0.04046720122501717,
+    0.06450455412486415
+  ],
+  "set": "splits_fa-eval",
+  "model": "checkpoints/m1_encoder/final",
+  "adapter": null,
+  "family": "auto",
+  "manifest": "data/splits_fa/eval.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy"
+}

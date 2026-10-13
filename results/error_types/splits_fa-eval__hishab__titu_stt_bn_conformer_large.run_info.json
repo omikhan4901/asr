@@ -1,0 +1,30 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/error_types.py --pred results/zeroshot/splits_fa-eval/hishab__titu_stt_bn_conformer_large/predictions.jsonl results/zeroshot/fleurs-test/hishab__titu_stt_bn_conformer_large/predictions.jsonl",
+      "git_commit": "2cda47b567498b7b205252bdb232ed919ec107e6",
+      "git_dirty": false,
+      "start": "2026-10-09T02:21:18",
+      "end": "2026-10-09T02:21:45",
+      "runtime_s": 27.0,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results\\zeroshot\\splits_fa-eval\\hishab__titu_stt_bn_conformer_large\\predictions.jsonl": "a0dcd5cd1883870cff104285048f8a34a869b49dffa4e06f7124ebdf73d5afdb",
+        "results\\zeroshot\\fleurs-test\\hishab__titu_stt_bn_conformer_large\\predictions.jsonl": "58a26ba5b450da77a5eb3e9065824a749e6a26cace942340e4aeefeaae4f28a4"
+      },
+      "outputs": {
+        "results\\error_types\\splits_fa-eval\\hishab__titu_stt_bn_conformer_large\\summary.json": "ac10e56b0b2f910b952ad28d83749519e79dd75f4dc508291536a5029fda720a",
+        "results\\error_types\\splits_fa-eval\\hishab__titu_stt_bn_conformer_large\\errors.csv": "fdb736f97e7c16cffcc6d8fca147e75ce77b574c9d3ddf102f7d859449c1f279",
+        "results\\error_types\\fleurs-test\\hishab__titu_stt_bn_conformer_large\\summary.json": "72d0c750fe5f5521f88808fa8abb2206afd328ed41d17b8e481aa13b9f22300f",
+        "results\\error_types\\fleurs-test\\hishab__titu_stt_bn_conformer_large\\errors.csv": "72d520d7a41a4fb5365f88a014551c90fd8d4f74d1301b77aa1f258de9b4bfa7"
+      }
+    }
+  ]
+}

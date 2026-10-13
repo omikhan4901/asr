@@ -1,0 +1,51 @@
+{
+  "runs": [
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/splits_fa/eval.csv --model checkpoints/m1_full/final --name m1_full --out_dir results/finetuned --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T21:50:02",
+      "end": "2026-10-09T22:19:48",
+      "runtime_s": 1786.4,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/splits_fa/eval.csv": "6ce00c484d1581ac60849749e8a20211518b1046a61dfce02015725fedd80238"
+      },
+      "outputs": {
+        "results/finetuned/splits_fa-eval/m1_full/predictions.jsonl": "16543c45bba215f8020d8cd18158ab217e7eb666a96735d58ce5ba4c81681350",
+        "results/finetuned/splits_fa-eval/m1_full/metrics.json": "02e3977951bb016301a5f79ec1b1f2ad7876a9a18e6e4977357e11c7a0bcd0b7"
+      }
+    },
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/splits_fa/eval.csv --model checkpoints/m1_full/final --name m1_full --out_dir results/finetuned --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T22:43:47",
+      "end": "2026-10-09T22:43:48",
+      "runtime_s": 0.9,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/splits_fa/eval.csv": "6ce00c484d1581ac60849749e8a20211518b1046a61dfce02015725fedd80238"
+      },
+      "outputs": {
+        "results/finetuned/splits_fa-eval/m1_full/predictions.jsonl": "16543c45bba215f8020d8cd18158ab217e7eb666a96735d58ce5ba4c81681350",
+        "results/finetuned/splits_fa-eval/m1_full/metrics.json": "abbefb8d33daa3be3b053e91b392b82adf0d97e862edcad4a61dda7582181359"
+      }
+    }
+  ]
+}

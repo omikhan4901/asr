@@ -1,0 +1,49 @@
+{
+  "runs": [
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/external/kathbath/valid.csv --model checkpoints/m1_encoder/final --name m1_encoder --out_dir results/finetuned --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T22:31:49",
+      "end": "2026-10-09T22:37:48",
+      "runtime_s": 359.3,
+      "status": "failed: KeyboardInterrupt",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/external/kathbath/valid.csv": "48520d1d09f4a741f0669d5d99f8e63953424febed731a0cd19673e7dd1abfbc"
+      },
+      "outputs": {}
+    },
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/external/kathbath/valid.csv --model checkpoints/m1_encoder/final --name m1_encoder --out_dir results/finetuned --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T22:44:15",
+      "end": "2026-10-09T22:47:58",
+      "runtime_s": 223.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/external/kathbath/valid.csv": "48520d1d09f4a741f0669d5d99f8e63953424febed731a0cd19673e7dd1abfbc"
+      },
+      "outputs": {
+        "results/finetuned/kathbath-valid/m1_encoder/predictions.jsonl": "b9467be6e535304a94a87f6d98c986a1f94390dd04c3b946447c30b3babeb4bb",
+        "results/finetuned/kathbath-valid/m1_encoder/metrics.json": "93fba219f395980051962197a17b9a8e2ad266381ef13a7d7a2676d3ff4623db"
+      }
+    }
+  ]
+}

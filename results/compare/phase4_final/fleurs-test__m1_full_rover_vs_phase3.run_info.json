@@ -1,0 +1,124 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/phase3/fleurs-test/mbr_lm_x/predictions.jsonl --b results/phase4_stack/fleurs-test/rover/predictions.jsonl --name fleurs-test__m1_full_rover_vs_phase3 --out_dir results/compare/phase4_final",
+      "git_commit": "4998286157c92d995cbf8b628c7b0c2fd767801a",
+      "git_dirty": true,
+      "start": "2026-10-11T23:36:27",
+      "end": "2026-10-11T23:36:28",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/phase3/fleurs-test/mbr_lm_x/predictions.jsonl": "8cbfa75a926b0778a6cf31eeff9cfdddd6446ce6bff5f64278bdc6e68fcab93e",
+        "results/phase4_stack/fleurs-test/rover/predictions.jsonl": "227aa471330c3e9c88617cc5e70e9cf1e1af971ad43ae8648eb7ba8b58b19fea"
+      },
+      "outputs": {
+        "results\\compare\\phase4_final\\fleurs-test__m1_full_rover_vs_phase3.json": "a327b4e00c9034af5d967f2f38461dd0d138723d31743644f51d26af7f68f7c0"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/phase3/fleurs-test/mbr_lm_x/predictions.jsonl --b results/phase4_stack/fleurs-test/rover/predictions.jsonl --name fleurs-test__m1_full_rover_vs_phase3 --out_dir results/compare/phase4_final",
+      "git_commit": "c07a59449b8ea159b99ab43bda2325db9a74f78f",
+      "git_dirty": false,
+      "start": "2026-10-12T01:25:41",
+      "end": "2026-10-12T01:25:41",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/phase3/fleurs-test/mbr_lm_x/predictions.jsonl": "8cbfa75a926b0778a6cf31eeff9cfdddd6446ce6bff5f64278bdc6e68fcab93e",
+        "results/phase4_stack/fleurs-test/rover/predictions.jsonl": "227aa471330c3e9c88617cc5e70e9cf1e1af971ad43ae8648eb7ba8b58b19fea"
+      },
+      "outputs": {
+        "results\\compare\\phase4_final\\fleurs-test__m1_full_rover_vs_phase3.json": "a327b4e00c9034af5d967f2f38461dd0d138723d31743644f51d26af7f68f7c0"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/phase3/fleurs-test/mbr_lm_x/predictions.jsonl --b results/phase4_stack/fleurs-test/rover/predictions.jsonl --name fleurs-test__m1_full_rover_vs_phase3 --out_dir results/compare/phase4_final",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T20:05:09",
+      "end": "2026-10-13T20:05:09",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/phase3/fleurs-test/mbr_lm_x/predictions.jsonl": "8cbfa75a926b0778a6cf31eeff9cfdddd6446ce6bff5f64278bdc6e68fcab93e",
+        "results/phase4_stack/fleurs-test/rover/predictions.jsonl": "227aa471330c3e9c88617cc5e70e9cf1e1af971ad43ae8648eb7ba8b58b19fea"
+      },
+      "outputs": {
+        "results\\compare\\phase4_final\\fleurs-test__m1_full_rover_vs_phase3.json": "a327b4e00c9034af5d967f2f38461dd0d138723d31743644f51d26af7f68f7c0"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/phase3/fleurs-test/mbr_lm_x/predictions.jsonl --b results/phase4_stack/fleurs-test/rover/predictions.jsonl --name fleurs-test__m1_full_rover_vs_phase3 --out_dir results/compare/phase4_final",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T20:44:24",
+      "end": "2026-10-13T20:44:24",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/phase3/fleurs-test/mbr_lm_x/predictions.jsonl": "8cbfa75a926b0778a6cf31eeff9cfdddd6446ce6bff5f64278bdc6e68fcab93e",
+        "results/phase4_stack/fleurs-test/rover/predictions.jsonl": "227aa471330c3e9c88617cc5e70e9cf1e1af971ad43ae8648eb7ba8b58b19fea"
+      },
+      "outputs": {
+        "results\\compare\\phase4_final\\fleurs-test__m1_full_rover_vs_phase3.json": "a327b4e00c9034af5d967f2f38461dd0d138723d31743644f51d26af7f68f7c0"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/phase3/fleurs-test/mbr_lm_x/predictions.jsonl --b results/phase4_stack/fleurs-test/rover/predictions.jsonl --name fleurs-test__m1_full_rover_vs_phase3 --out_dir results/compare/phase4_final",
+      "git_commit": "1740748792e396489f80906c1c35e92e7f45ce30",
+      "git_dirty": true,
+      "start": "2026-10-13T21:22:38",
+      "end": "2026-10-13T21:22:38",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/phase3/fleurs-test/mbr_lm_x/predictions.jsonl": "8cbfa75a926b0778a6cf31eeff9cfdddd6446ce6bff5f64278bdc6e68fcab93e",
+        "results/phase4_stack/fleurs-test/rover/predictions.jsonl": "227aa471330c3e9c88617cc5e70e9cf1e1af971ad43ae8648eb7ba8b58b19fea"
+      },
+      "outputs": {
+        "results\\compare\\phase4_final\\fleurs-test__m1_full_rover_vs_phase3.json": "a327b4e00c9034af5d967f2f38461dd0d138723d31743644f51d26af7f68f7c0"
+      }
+    }
+  ]
+}

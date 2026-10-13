@@ -1,0 +1,25 @@
+{
+  "wer": 0.11523633057508834,
+  "cer": 0.027571058822249105,
+  "n_utterances": 9408,
+  "ref_words": 86891,
+  "n_groups": 7377,
+  "wer_ci95": [
+    0.11222711027616561,
+    0.11834123240316236
+  ],
+  "cer_ci95": [
+    0.026412636624827783,
+    0.02879826262313454
+  ],
+  "set": "cv-test",
+  "model": "models/m3_kathbath",
+  "adapter": null,
+  "family": "whisper",
+  "manifest": "data/external/cv/test.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy",
+  "last_run_seconds": 2786.2,
+  "last_run_audio_hours": 16.751,
+  "last_run_rtf": 0.0462
+}

@@ -1,0 +1,14 @@
+{
+  "nbest": "data/kaggle_out/session_B/phase4/nbest/kathbath-valid__m1_full_scored.jsonl",
+  "n_utterances": 2236,
+  "n_candidates_max": 12,
+  "ref_words": 23995,
+  "wer_1best": 0.1426130443842467,
+  "wer_mbr": 0.13231923317357783,
+  "wer_utt_oracle": 0.09643675765784539,
+  "coverage_miss_rate": 0.08255886643050636,
+  "mbr_gap_recovery": 0.22292418772563177,
+  "onebest_ref_errors": 3017,
+  "onebest_ref_errors_selection_proof_frac": 0.6566125290023201,
+  "mbr_temperature": 0.5
+}

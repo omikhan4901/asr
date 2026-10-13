@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/zeroshot/splits_fa-eval/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl --b data/nbest_fa/eval_sampled.jsonl:mbr --name eval_sampled_tugstugi_mbr_vs_greedy",
+      "git_commit": "4ca76bd6782e769c197053412f3bc15fd9e4f7c1",
+      "git_dirty": false,
+      "start": "2026-10-09T00:31:59",
+      "end": "2026-10-09T00:32:00",
+      "runtime_s": 0.7,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/zeroshot/splits_fa-eval/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl": "1bcaf5ccb7c1ea6117167c58dead56a143c89378409f1c105f217f1014b5da98",
+        "data/nbest_fa/eval_sampled.jsonl": "2c8f65b86a2c5a57696bc3e87af3ccabddd9449961361250900ae36b00d5bbb4"
+      },
+      "outputs": {
+        "results\\compare\\eval_sampled_tugstugi_mbr_vs_greedy.json": "997c2d020a210d22c59e229f4c7949e1c1fba3c83adf35234308e93880cd5f6f"
+      }
+    }
+  ]
+}

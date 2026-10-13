@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/kaggle/finetuned/splits_fa-eval/m5_merged_t4/predictions.jsonl --b results/kaggle/finetuned/splits_fa-eval/m1_full_beam5_t4//predictions.jsonl --name splits_fa-eval__m1_full_beam5_t4_vs_m5 --out_dir results/compare/phase4_final",
+      "git_commit": "1740748792e396489f80906c1c35e92e7f45ce30",
+      "git_dirty": true,
+      "start": "2026-10-13T21:19:07",
+      "end": "2026-10-13T21:19:07",
+      "runtime_s": 0.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/kaggle/finetuned/splits_fa-eval/m5_merged_t4/predictions.jsonl": "f486dc369044618bc208863ebb121d83e7e067fc6bdaaa129161a607f8db237a",
+        "results/kaggle/finetuned/splits_fa-eval/m1_full_beam5_t4//predictions.jsonl": "9919d9186b939d221429b3535ac753f4b74f9a5cb333c7018f2da5d05ba08d31"
+      },
+      "outputs": {
+        "results\\compare\\phase4_final\\splits_fa-eval__m1_full_beam5_t4_vs_m5.json": "c664fdb134551182c2bbcb619d0eb44382864c6d55c2a13529ec10c8e6020f26"
+      }
+    }
+  ]
+}

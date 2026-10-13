@@ -1,0 +1,19 @@
+{
+  "a": "results/kaggle/finetuned/fleurs-test/m5_merged_t4/predictions.jsonl",
+  "b": "results/kaggle/finetuned/fleurs-test/m1_full_beam5_t4//predictions.jsonl",
+  "n_utterances": 920,
+  "n_groups": 349,
+  "ref_words": 17766,
+  "wer_a": 0.16846785995722166,
+  "wer_b": 0.18011932905549927,
+  "diff_b_minus_a": 0.01165146909827761,
+  "diff_ci95": [
+    0.0047144169260345545,
+    0.018674532054863437
+  ],
+  "p_b_better": 0.0,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

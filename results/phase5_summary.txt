@@ -1,0 +1,10 @@
+Phase 5 summary (WER %, B - A in points [95% cluster CI])
+
+Whole-recording WER (results/longform):
+
+Speed (T4 real-time factor, greedy):
+  cv-test/m5_merged_t4                          RTF 0.0469
+  fleurs-test/m5_merged_t4                      RTF 0.0346
+  kathbath-valid/m5_merged_t4                   RTF 0.0469
+  splits_fa-dev/m5_merged_t4                    RTF 0.0404
+  splits_fa-eval/m5_merged_t4                   RTF 0.0384

@@ -1,0 +1,11 @@
+{
+  "nemo": "3.0.0",
+  "torch": "2.11.0+cu128",
+  "gpu": "Tesla T4",
+  "models": [
+    "hishab/titu_stt_bn_conformer_large",
+    "hishab/titu_stt_bn_fastconformer"
+  ],
+  "decoding": "NeMo transcribe() defaults (greedy), no LM",
+  "date": "2026-10-08 20:02"
+}

@@ -1,0 +1,19 @@
+{
+  "a": "results/zeroshot/splits_fa-eval/bangla-speech-processing__BanglaASR/predictions.jsonl",
+  "b": "data/nbest_ext/eval_banglaasr.jsonl:mbr",
+  "n_utterances": 4234,
+  "n_groups": 22,
+  "ref_words": 120029,
+  "wer_a": 0.5820426730206867,
+  "wer_b": 0.6102108657074541,
+  "diff_b_minus_a": 0.028168192686767363,
+  "diff_ci95": [
+    0.024154897626259796,
+    0.031692357427248526
+  ],
+  "p_b_better": 0.0,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

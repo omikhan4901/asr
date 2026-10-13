@@ -1,0 +1,29 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/agreement_signal.py --pred results/zeroshot/fleurs-test/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl --nbest data/nbest_ext/fleurs_tugstugi.jsonl --name fleurs_tugstugi",
+      "git_commit": "2cda47b567498b7b205252bdb232ed919ec107e6",
+      "git_dirty": false,
+      "start": "2026-10-09T02:34:13",
+      "end": "2026-10-09T02:34:16",
+      "runtime_s": 3.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/zeroshot/fleurs-test/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl": "4795d8f23d0f8606757d7dbbf665513e785cafb5c30b18043568c312eeccad08",
+        "data/nbest_ext/fleurs_tugstugi.jsonl": "1b330827da0fdadb548f3bcf6c1fd25c896bef4e8348672dbeddf6a4d1aebc12"
+      },
+      "outputs": {
+        "results\\agreement_signal\\fleurs_tugstugi\\summary.json": "ea8d99bba523eb938617d72443337ce56c0affb32bd48ecfa79aeb49da06ce2c",
+        "results\\agreement_signal\\fleurs_tugstugi\\by_level.csv": "c6215a3f81dc51ea59a9945f36238c28042d897f53b70d488613ce902c733711",
+        "results\\agreement_signal\\fleurs_tugstugi\\flagging.csv": "e2bed9ff3986eba797af2f37ee73f11582b3101b2c356df3fbb020f781f01ffb"
+      }
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "runs": [
+    {
+      "command": "python.exe pipeline/eval_zero_shot.py --manifest data/splits_fa/train_clean.csv --model hishab/titu_stt_bn_conformer_large --set_name splits_fa-train",
+      "git_commit": "06fa745f8ba5a7eb732fb4dff1d0e95aa4872c97",
+      "git_dirty": false,
+      "start": "2026-10-09T22:50:18",
+      "end": "2026-10-09T22:50:19",
+      "runtime_s": 1.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "data\\splits_fa\\train_clean.csv": "ece0bbd5c998b58ec5c841b92b139ebdd029f81ac15c0388ead5f601e63ca883"
+      },
+      "outputs": {
+        "results\\zeroshot\\splits_fa-train\\hishab__titu_stt_bn_conformer_large\\predictions.jsonl": "d7d3cd231bd9e9a3182774cd735ff1b8bc0ad43b01606a5b0a136400c8816d30",
+        "results\\zeroshot\\splits_fa-train\\hishab__titu_stt_bn_conformer_large\\metrics.json": "1d65854cabe6cb6c0409db75cb4219da7ae602ad4dc3e3bf4aa327534f891dc0"
+      }
+    }
+  ]
+}

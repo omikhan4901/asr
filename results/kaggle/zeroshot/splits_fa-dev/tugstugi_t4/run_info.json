@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python3 /tmp/code/pipeline/eval_zero_shot.py --batch_size 8 --manifest data/splits_fa/dev.csv --model bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium --name tugstugi_t4 --out_dir results/zeroshot",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-10T18:56:00",
+      "end": "2026-10-10T19:03:07",
+      "runtime_s": 426.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.15",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.15.0",
+        "numpy": "2.1.3",
+        "pandas": "2.3.3",
+        "gpu": "Tesla T4"
+      },
+      "inputs": {
+        "data/splits_fa/dev.csv": "99325905fab2fdcb48f01ddf066ee4d5cd47da60eb4310336c10da148573d7db"
+      },
+      "outputs": {
+        "results/zeroshot/splits_fa-dev/tugstugi_t4/predictions.jsonl": "674ddfd5c420b253e6e9dbf0991c67ace32406967e077e56007f096fae10b163",
+        "results/zeroshot/splits_fa-dev/tugstugi_t4/metrics.json": "26c5841ee72269b46ad03902a9edd620e8b0c52d97893ef673010088f0f53dfa"
+      }
+    }
+  ]
+}

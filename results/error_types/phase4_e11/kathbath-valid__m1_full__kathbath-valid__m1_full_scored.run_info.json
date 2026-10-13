@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/error_types.py --pred results/modal/finetuned/kathbath-valid/m1_full/predictions.jsonl --nbest data/kaggle_out/session_B/phase4/nbest/kathbath-valid__m1_full_scored.jsonl --out_dir results/error_types/phase4_e11",
+      "git_commit": "af3ba1c23620c3a8e9bb21de311d6aceadf6794c",
+      "git_dirty": false,
+      "start": "2026-10-11T09:39:18",
+      "end": "2026-10-11T09:39:21",
+      "runtime_s": 2.8,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results\\modal\\finetuned\\kathbath-valid\\m1_full\\predictions.jsonl": "c770a8980a3d03709a432abf947d605a4a9c7d4dfb7519a2d607cab07e369416",
+        "data/kaggle_out/session_B/phase4/nbest/kathbath-valid__m1_full_scored.jsonl": "6cd4371a5d324f3b4cc82dad3bc0637091d3bf34e7695d0e3c190369e6c795db"
+      },
+      "outputs": {
+        "results\\error_types\\phase4_e11\\with_nbest\\kathbath-valid__m1_full_scored\\summary.json": "9738c26c4eaac682810b76faed7bfe1eabf4807499d00e122e5c7da8628b865f",
+        "results\\error_types\\phase4_e11\\with_nbest\\kathbath-valid__m1_full_scored\\errors.csv": "fa43c9c3ebf1ba138b82243eafebadca7faf3b37af2efce649f41f26420a5bad"
+      }
+    }
+  ]
+}

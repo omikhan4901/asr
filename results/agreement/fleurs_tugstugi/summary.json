@@ -1,0 +1,14 @@
+{
+  "nbest": "data/nbest_ext/fleurs_tugstugi.jsonl",
+  "n_utterances": 920,
+  "n_candidates_max": 12,
+  "ref_words": 17766,
+  "wer_1best": 0.23910840932117527,
+  "wer_mbr": 0.2102893166722954,
+  "wer_utt_oracle": 0.16390858944050432,
+  "coverage_miss_rate": 0.1164021164021164,
+  "mbr_gap_recovery": 0.38323353293413176,
+  "onebest_ref_errors": 3548,
+  "onebest_ref_errors_selection_proof_frac": 0.5828635851183765,
+  "mbr_temperature": 0.5
+}

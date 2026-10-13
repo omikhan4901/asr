@@ -1,0 +1,30 @@
+{
+  "runs": [
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/splits_fa/dev.csv --model bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium --name m1_lora --out_dir results/finetuned --batch_size 8 --adapter checkpoints/m1_lora/final",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T22:44:01",
+      "end": "2026-10-09T22:55:33",
+      "runtime_s": 692.6,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/splits_fa/dev.csv": "99325905fab2fdcb48f01ddf066ee4d5cd47da60eb4310336c10da148573d7db",
+        "checkpoints/m1_lora/final/adapter_config.json": "da771fd8c93adec731d828512ce064d40dc7d48bf0b35ff6143c1a882bc4962d",
+        "checkpoints/m1_lora/final/adapter_model.safetensors": "33434987d5ca90dd3f74c042ba5989c075cd798382319fc3b4f32fb93ca3b4f2"
+      },
+      "outputs": {
+        "results/finetuned/splits_fa-dev/m1_lora/predictions.jsonl": "33f4edbef134f6a29daea0796f0a565ec9c07281dc4146335f0591aaa98fe40e",
+        "results/finetuned/splits_fa-dev/m1_lora/metrics.json": "3d16d17603d9add16993aa3c078e23f3baf1cb5e7f92c4f8eb0975b02679d3ea"
+      }
+    }
+  ]
+}

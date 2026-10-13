@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe pipeline/eval_zero_shot.py --manifest data/splits_fa/dev.csv --model bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium",
+      "git_commit": "4ca76bd6782e769c197053412f3bc15fd9e4f7c1",
+      "git_dirty": false,
+      "start": "2026-10-09T00:32:20",
+      "end": "2026-10-09T00:39:21",
+      "runtime_s": 420.3,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "data\\splits_fa\\dev.csv": "515baaf1344d4f17c68e5d119d1a33689d461f72fa1ad98008a445a5b5ab6430"
+      },
+      "outputs": {
+        "results\\zeroshot\\splits_fa-dev\\bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium\\predictions.jsonl": "9ddc92eca8f0c7bee94363eca47e8a88ae7e1b92f6c0265e414a29e8d26f9760",
+        "results\\zeroshot\\splits_fa-dev\\bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium\\metrics.json": "92d5b8f5e5a1fadbd37bad86e96ab961632f748ad0e66065d1edc133d260a3f9"
+      }
+    }
+  ]
+}

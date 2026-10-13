@@ -1,0 +1,19 @@
+{
+  "a": "results/modal/zeroshot/splits_fa-dev/tugstugi_a100/predictions.jsonl",
+  "b": "results/kaggle/finetuned/splits_fa-dev/m4_shrutilipi_t4//predictions.jsonl",
+  "n_utterances": 646,
+  "n_groups": 6,
+  "ref_words": 18329,
+  "wer_a": 0.29308745703529926,
+  "wer_b": 0.27802935239238363,
+  "diff_b_minus_a": -0.015058104642915598,
+  "diff_ci95": [
+    -0.03377620312961323,
+    0.0006651884700665188
+  ],
+  "p_b_better": 0.9665,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

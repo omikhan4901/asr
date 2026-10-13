@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl --b data/phase4/t4check_lora/phase4/results/zeroshot/fleurs-test/tugstugi_t4/predictions.jsonl --name fleurs-test__tugstugi_t4_vs_tugstugi_a100 --out_dir results/compare/gpu_t4",
+      "git_commit": "44ec64bd353284824218d2f596cbf882b9ca3c88",
+      "git_dirty": false,
+      "start": "2026-10-11T22:29:08",
+      "end": "2026-10-11T22:29:08",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl": "5d810667c6c80a847d7365e10832f2163cb68c6457411436129c45830ab933e4",
+        "data/phase4/t4check_lora/phase4/results/zeroshot/fleurs-test/tugstugi_t4/predictions.jsonl": "bc6f2c39d71455788bfb1b82e20341a7be963ebe22fde7a0aaceac9227a7bda2"
+      },
+      "outputs": {
+        "results\\compare\\gpu_t4\\fleurs-test__tugstugi_t4_vs_tugstugi_a100.json": "32271ab49f1f8322c7053795a513cff296eb052b8f78a680899bb7b87dfe59ff"
+      }
+    }
+  ]
+}

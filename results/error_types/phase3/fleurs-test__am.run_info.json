@@ -1,0 +1,51 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/error_types.py --out_dir results/error_types/phase3 --pred results/phase3/fleurs-test/am/predictions.jsonl results/phase3/fleurs-test/greedy/predictions.jsonl results/phase3/fleurs-test/lm/predictions.jsonl results/phase3/fleurs-test/lm_x/predictions.jsonl results/phase3/fleurs-test/mbr_lm/predictions.jsonl results/phase3/fleurs-test/mbr_lm_x/predictions.jsonl results/phase3/fleurs-test/rewrite/predictions.jsonl results/phase3/fleurs-test/rewrite_sel/predictions.jsonl results/phase3/fleurs-test/rover/predictions.jsonl",
+      "git_commit": "0233644c1e56ea704ccf194dc0eb85326f368595",
+      "git_dirty": false,
+      "start": "2026-10-09T21:53:05",
+      "end": "2026-10-09T21:53:21",
+      "runtime_s": 16.4,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results\\phase3\\fleurs-test\\am\\predictions.jsonl": "2daf7c8e8cf37cd91ccb352725339e54605921ad26673b8eb80d72133c1fb23c",
+        "results\\phase3\\fleurs-test\\greedy\\predictions.jsonl": "33e02f22ace8c4c706b617fe1802582becc3ad90726b7af1b72954d2801c9636",
+        "results\\phase3\\fleurs-test\\lm\\predictions.jsonl": "477531e7dafd2c628dab327634f54065e2c8006b33b91dd17a4459a3988d429c",
+        "results\\phase3\\fleurs-test\\lm_x\\predictions.jsonl": "70a0b127f2529301c409e2e2502c0702b2ab388a7bfb77caf26ae89a48b436ed",
+        "results\\phase3\\fleurs-test\\mbr_lm\\predictions.jsonl": "12d427d89d0686e83dd4104b42bbf5e814a2bf5c1ba079a31ef779c691b85a6d",
+        "results\\phase3\\fleurs-test\\mbr_lm_x\\predictions.jsonl": "8cbfa75a926b0778a6cf31eeff9cfdddd6446ce6bff5f64278bdc6e68fcab93e",
+        "results\\phase3\\fleurs-test\\rewrite\\predictions.jsonl": "cc199f69ed25eaa9f6621b5693fb28c960f258a77e5411bbbe3a35fda771b26a",
+        "results\\phase3\\fleurs-test\\rewrite_sel\\predictions.jsonl": "cc199f69ed25eaa9f6621b5693fb28c960f258a77e5411bbbe3a35fda771b26a",
+        "results\\phase3\\fleurs-test\\rover\\predictions.jsonl": "656bb89e416863772e96ad497cb5c930be02b55ac0cbe48f28be1ccd9f291837"
+      },
+      "outputs": {
+        "results\\error_types\\phase3\\fleurs-test\\am\\summary.json": "9de1be1d3e46107feab97034340102e1bad2756dbffb22f101d175e0e1182048",
+        "results\\error_types\\phase3\\fleurs-test\\am\\errors.csv": "97faa11acffeb05cb3c4fb0416bb66aacb38d7d680f74fe0a3d0ac742cce00fc",
+        "results\\error_types\\phase3\\fleurs-test\\greedy\\summary.json": "66ac42266a8b20b333da8d2ea5eb6057fcd11507a5135dd96dbcc8bc9c6f0131",
+        "results\\error_types\\phase3\\fleurs-test\\greedy\\errors.csv": "735d8b13c5901e268b2eeb4ef62cf1d8a19a5926506712579d29db46479aeca3",
+        "results\\error_types\\phase3\\fleurs-test\\lm\\summary.json": "9b1bae22eee9bde782915c581150f18f8be08a021dae5bdf305ecb751f0403d8",
+        "results\\error_types\\phase3\\fleurs-test\\lm\\errors.csv": "649431a843dee2dfe68c52bfc7407906ff486fc991a16a86318c074150908020",
+        "results\\error_types\\phase3\\fleurs-test\\lm_x\\summary.json": "b4cd4e2b6b40a6aaa78519cc4d1a0ec161918120ad2988eae9be5d967f283e3d",
+        "results\\error_types\\phase3\\fleurs-test\\lm_x\\errors.csv": "c6d6040413e12d9ece978bc465e8533f2cc90834f7a2d8fc416b8e7844d4bb58",
+        "results\\error_types\\phase3\\fleurs-test\\mbr_lm\\summary.json": "9d3ae3d90046d038dd92459560c148e8ad0666922ab08064c805731bc08de755",
+        "results\\error_types\\phase3\\fleurs-test\\mbr_lm\\errors.csv": "574bb7d0e7632394d0a0759b05106aedefb4c90dafd3c0a722bd92fd31da6132",
+        "results\\error_types\\phase3\\fleurs-test\\mbr_lm_x\\summary.json": "1a94fd31576746454b9ebb0f5ac9cc17cf5d6f07c3cdf8f0fa06d6b5acd7bfd7",
+        "results\\error_types\\phase3\\fleurs-test\\mbr_lm_x\\errors.csv": "ce2e2731d5384e91cfc9059e0f97b4b912a1784833c90dedd578012ef1f81531",
+        "results\\error_types\\phase3\\fleurs-test\\rewrite\\summary.json": "1cb145b7d806f0742fafa38e4785e4237c0bba5fa461626911b06712ab6c3636",
+        "results\\error_types\\phase3\\fleurs-test\\rewrite\\errors.csv": "26bf895a5b1f4a90a5ad958e28ad74989edf696413a5e41aa6b65ac6e63fce4c",
+        "results\\error_types\\phase3\\fleurs-test\\rewrite_sel\\summary.json": "3ef1a0bb93f8ba316223824197ce772cea2038c8e257e0b2c058a655418af59d",
+        "results\\error_types\\phase3\\fleurs-test\\rewrite_sel\\errors.csv": "26bf895a5b1f4a90a5ad958e28ad74989edf696413a5e41aa6b65ac6e63fce4c",
+        "results\\error_types\\phase3\\fleurs-test\\rover\\summary.json": "794827b14db8b29e86463eeccb98ddaf1dcd56c4a66c92068f82372c6fd0e00a",
+        "results\\error_types\\phase3\\fleurs-test\\rover\\errors.csv": "f64512b164a6f7820a61b7d16b438c25b7eeba3b207657574aca329e7feb5812"
+      }
+    }
+  ]
+}

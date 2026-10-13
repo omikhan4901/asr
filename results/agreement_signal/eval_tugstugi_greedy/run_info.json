@@ -1,0 +1,75 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/agreement_signal.py --pred results/zeroshot/splits_fa-eval/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl --nbest data/nbest_fa/eval_nbest.jsonl --name eval_tugstugi_greedy",
+      "git_commit": "35fc07b402b991b3abef744b9a7dd973effbfa86",
+      "git_dirty": true,
+      "start": "2026-10-08T20:48:36",
+      "end": "2026-10-08T20:49:14",
+      "runtime_s": 38.4,
+      "status": "failed: OSError",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/zeroshot/splits_fa-eval/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl": "1bcaf5ccb7c1ea6117167c58dead56a143c89378409f1c105f217f1014b5da98",
+        "data/nbest_fa/eval_nbest.jsonl": "3a4114e10d56fac596643bb089c9c66337f3f52d3c422fe77c5246cb17625028"
+      },
+      "outputs": {}
+    },
+    {
+      "command": "python.exe analysis/agreement_signal.py --pred results/zeroshot/splits_fa-eval/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl --nbest data/nbest_fa/eval_nbest.jsonl --name eval_tugstugi_greedy",
+      "git_commit": "35fc07b402b991b3abef744b9a7dd973effbfa86",
+      "git_dirty": true,
+      "start": "2026-10-08T20:49:22",
+      "end": "2026-10-08T20:50:01",
+      "runtime_s": 38.7,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/zeroshot/splits_fa-eval/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl": "1bcaf5ccb7c1ea6117167c58dead56a143c89378409f1c105f217f1014b5da98",
+        "data/nbest_fa/eval_nbest.jsonl": "3a4114e10d56fac596643bb089c9c66337f3f52d3c422fe77c5246cb17625028"
+      },
+      "outputs": {
+        "results\\agreement_signal\\eval_tugstugi_greedy\\summary.json": "83e99048425f98ff739517e60f272e5d0aef9a2c3d10a2f289ab32aa40b2f34e",
+        "results\\agreement_signal\\eval_tugstugi_greedy\\by_level.csv": "c4e61bc600f8a8902493c357c6e92793c8b745659f1bf77fa89fe6844ea83063",
+        "results\\agreement_signal\\eval_tugstugi_greedy\\flagging.csv": "06b7d1e4ab05788c56de65490868b4964533f977499ac2265deef1cd2a6c8b59"
+      }
+    },
+    {
+      "command": "python.exe analysis/agreement_signal.py --pred results/zeroshot/splits_fa-eval/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl --nbest data/nbest_fa/eval_nbest.jsonl --name eval_tugstugi_greedy",
+      "git_commit": "35fc07b402b991b3abef744b9a7dd973effbfa86",
+      "git_dirty": true,
+      "start": "2026-10-08T20:57:23",
+      "end": "2026-10-08T20:58:00",
+      "runtime_s": 37.7,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/zeroshot/splits_fa-eval/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl": "1bcaf5ccb7c1ea6117167c58dead56a143c89378409f1c105f217f1014b5da98",
+        "data/nbest_fa/eval_nbest.jsonl": "3a4114e10d56fac596643bb089c9c66337f3f52d3c422fe77c5246cb17625028"
+      },
+      "outputs": {
+        "results\\agreement_signal\\eval_tugstugi_greedy\\summary.json": "1aff554b329598aa5fc8038d72edb8a6e9fc901ce67379e2d67819c1696b91aa",
+        "results\\agreement_signal\\eval_tugstugi_greedy\\by_level.csv": "2a04ed3095efe6e1f19ec6b043700a56b0bf6c59adaab2b2c6c8b8a5dc982dd0",
+        "results\\agreement_signal\\eval_tugstugi_greedy\\flagging.csv": "e123b37b181fa42b46149822ac09a4e30be5d7e34ba1d4ae9f36a968fbd416a3"
+      }
+    }
+  ]
+}

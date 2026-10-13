@@ -1,0 +1,50 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/phase3_rewrite_ablation.py --model hishab__titu_stt_bn_conformer_large",
+      "git_commit": "18d579eb0c351f38ab2831bab2290f699b1124fe",
+      "git_dirty": true,
+      "start": "2026-10-09T22:01:40",
+      "end": "2026-10-09T22:02:45",
+      "runtime_s": 64.9,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/zeroshot/splits_fa-train/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl": "abaf943f5fe25e1c0864b3505d4644b3eeff606427bb4748692041b379535758"
+      },
+      "outputs": {
+        "results\\phase3\\rewrite_ablation_hishab__titu_stt_bn_conformer_large.json": "2c6beb7089f9e1b1b52b10e102250172365429b8cd8ac5685057423e215c603c"
+      }
+    },
+    {
+      "command": "python.exe analysis/phase3_rewrite_ablation.py --model hishab__titu_stt_bn_conformer_large",
+      "git_commit": "5235f18ebdd76ef8290f663dc02534915d7d1214",
+      "git_dirty": true,
+      "start": "2026-10-09T22:06:28",
+      "end": "2026-10-09T22:07:31",
+      "runtime_s": 63.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/zeroshot/splits_fa-train/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl": "abaf943f5fe25e1c0864b3505d4644b3eeff606427bb4748692041b379535758"
+      },
+      "outputs": {
+        "results\\phase3\\rewrite_ablation_hishab__titu_stt_bn_conformer_large.json": "2c6beb7089f9e1b1b52b10e102250172365429b8cd8ac5685057423e215c603c"
+      }
+    }
+  ]
+}

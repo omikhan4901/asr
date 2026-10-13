@@ -1,0 +1,56 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/labeling/import_labels.py",
+      "git_commit": "d0b88503f444d631dc07b36a43e8710aeadacbb2",
+      "git_dirty": true,
+      "start": "2026-10-10T00:33:05",
+      "end": "2026-10-10T00:33:06",
+      "runtime_s": 0.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results\\labels\\snapshot_20261010_0033.json": "e5135cb7436f751b0cbabef23e59e15b85e5a293636a3bd972bc2f7c3c57d402",
+        "data/nbest_fa/eval_nbest.jsonl": "3a4114e10d56fac596643bb089c9c66337f3f52d3c422fe77c5246cb17625028"
+      },
+      "outputs": {
+        "results\\labels\\summary.json": "1f50bc434632b4c1a081496f3e7c5b11e9c12b6c3fa9a5308f94ab52e6415ee7",
+        "results\\labels\\verified_refs.csv": "4aabafddf5b8506de2b5cc6ff4549c90c37a3ca90fa92b9066d132a7d146f4a6",
+        "results\\labels\\audit_units.csv": "f01a374e9c81e3db89b3a42940c4d6a5447684986a1296e42bf13f196eed6295",
+        "results\\labels\\pair_labels.csv": "f01a374e9c81e3db89b3a42940c4d6a5447684986a1296e42bf13f196eed6295"
+      }
+    },
+    {
+      "command": "python.exe analysis/labeling/import_labels.py",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T05:14:19",
+      "end": "2026-10-13T05:14:23",
+      "runtime_s": 4.3,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results\\labels\\snapshot_20261013_0514.json": "23e1091a4557c04f6173fb6bdd3477e07db2d78219667c6ca23a1fb34275a85a",
+        "data/nbest_fa/eval_nbest.jsonl": "3a4114e10d56fac596643bb089c9c66337f3f52d3c422fe77c5246cb17625028"
+      },
+      "outputs": {
+        "results\\labels\\summary.json": "2eeb70c2c74ceee19805ea1a434b40a3b04ffb9b973e06eea6a9f08f803e518c",
+        "results\\labels\\verified_refs.csv": "390122067897d5fa734bb4ace586e0e3c0f07a40c5da2e10633904c9a2864512",
+        "results\\labels\\audit_units.csv": "d0af277a3a05fc3d7dac4f9bcd63c5375770107b5a992c67794eb843ebe6f0af",
+        "results\\labels\\pair_labels.csv": "6a29e627b061aab114d9ac729a3f42d49094239e47833f10925b7a93943726f1"
+      }
+    }
+  ]
+}

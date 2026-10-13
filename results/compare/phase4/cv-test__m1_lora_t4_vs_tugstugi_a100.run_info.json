@@ -1,0 +1,148 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/cv-test/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/cv-test/m1_lora_t4//predictions.jsonl --name cv-test__m1_lora_t4_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "44ec64bd353284824218d2f596cbf882b9ca3c88",
+      "git_dirty": true,
+      "start": "2026-10-11T22:32:17",
+      "end": "2026-10-11T22:32:18",
+      "runtime_s": 0.6,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/cv-test/tugstugi_a100/predictions.jsonl": "8055f44246657b89de8e1f37bd72e5b9a56c965648c049b0aa7b9b7b9ed7f053",
+        "results/kaggle/finetuned/cv-test/m1_lora_t4//predictions.jsonl": "78cab8c0ebf705fd22b667b6dd13625849fa86fd4c8817f8a4aa8cbda5dde611"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\cv-test__m1_lora_t4_vs_tugstugi_a100.json": "c156c0f2b6270e2b12ab32b0edc8769f1cf51f4dfccb57d69b99795a6a0c492e"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/cv-test/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/cv-test/m1_lora_t4//predictions.jsonl --name cv-test__m1_lora_t4_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "4998286157c92d995cbf8b628c7b0c2fd767801a",
+      "git_dirty": true,
+      "start": "2026-10-11T23:28:37",
+      "end": "2026-10-11T23:28:38",
+      "runtime_s": 0.6,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/cv-test/tugstugi_a100/predictions.jsonl": "8055f44246657b89de8e1f37bd72e5b9a56c965648c049b0aa7b9b7b9ed7f053",
+        "results/kaggle/finetuned/cv-test/m1_lora_t4//predictions.jsonl": "78cab8c0ebf705fd22b667b6dd13625849fa86fd4c8817f8a4aa8cbda5dde611"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\cv-test__m1_lora_t4_vs_tugstugi_a100.json": "c156c0f2b6270e2b12ab32b0edc8769f1cf51f4dfccb57d69b99795a6a0c492e"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/cv-test/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/cv-test/m1_lora_t4//predictions.jsonl --name cv-test__m1_lora_t4_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "c07a59449b8ea159b99ab43bda2325db9a74f78f",
+      "git_dirty": false,
+      "start": "2026-10-12T01:14:56",
+      "end": "2026-10-12T01:14:57",
+      "runtime_s": 0.6,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/cv-test/tugstugi_a100/predictions.jsonl": "8055f44246657b89de8e1f37bd72e5b9a56c965648c049b0aa7b9b7b9ed7f053",
+        "results/kaggle/finetuned/cv-test/m1_lora_t4//predictions.jsonl": "78cab8c0ebf705fd22b667b6dd13625849fa86fd4c8817f8a4aa8cbda5dde611"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\cv-test__m1_lora_t4_vs_tugstugi_a100.json": "c156c0f2b6270e2b12ab32b0edc8769f1cf51f4dfccb57d69b99795a6a0c492e"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/cv-test/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/cv-test/m1_lora_t4//predictions.jsonl --name cv-test__m1_lora_t4_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T19:49:29",
+      "end": "2026-10-13T19:49:30",
+      "runtime_s": 0.6,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/cv-test/tugstugi_a100/predictions.jsonl": "8055f44246657b89de8e1f37bd72e5b9a56c965648c049b0aa7b9b7b9ed7f053",
+        "results/kaggle/finetuned/cv-test/m1_lora_t4//predictions.jsonl": "78cab8c0ebf705fd22b667b6dd13625849fa86fd4c8817f8a4aa8cbda5dde611"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\cv-test__m1_lora_t4_vs_tugstugi_a100.json": "c156c0f2b6270e2b12ab32b0edc8769f1cf51f4dfccb57d69b99795a6a0c492e"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/cv-test/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/cv-test/m1_lora_t4//predictions.jsonl --name cv-test__m1_lora_t4_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T20:27:53",
+      "end": "2026-10-13T20:27:54",
+      "runtime_s": 0.7,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/cv-test/tugstugi_a100/predictions.jsonl": "8055f44246657b89de8e1f37bd72e5b9a56c965648c049b0aa7b9b7b9ed7f053",
+        "results/kaggle/finetuned/cv-test/m1_lora_t4//predictions.jsonl": "78cab8c0ebf705fd22b667b6dd13625849fa86fd4c8817f8a4aa8cbda5dde611"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\cv-test__m1_lora_t4_vs_tugstugi_a100.json": "c156c0f2b6270e2b12ab32b0edc8769f1cf51f4dfccb57d69b99795a6a0c492e"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/cv-test/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/cv-test/m1_lora_t4//predictions.jsonl --name cv-test__m1_lora_t4_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T21:02:20",
+      "end": "2026-10-13T21:02:20",
+      "runtime_s": 0.6,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/cv-test/tugstugi_a100/predictions.jsonl": "8055f44246657b89de8e1f37bd72e5b9a56c965648c049b0aa7b9b7b9ed7f053",
+        "results/kaggle/finetuned/cv-test/m1_lora_t4//predictions.jsonl": "78cab8c0ebf705fd22b667b6dd13625849fa86fd4c8817f8a4aa8cbda5dde611"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\cv-test__m1_lora_t4_vs_tugstugi_a100.json": "c156c0f2b6270e2b12ab32b0edc8769f1cf51f4dfccb57d69b99795a6a0c492e"
+      }
+    }
+  ]
+}

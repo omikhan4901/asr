@@ -1,0 +1,68 @@
+{
+  "dev_singles": {
+    "m1_full": 16.74,
+    "m1_lora": 18.38,
+    "m1_decoder": 19.38,
+    "m1_encoder": 19.72,
+    "m1_full_4ep": 16.21,
+    "m2_cv": 27.99,
+    "m3_kathbath": 27.46,
+    "m4_shrutilipi": 27.8,
+    "m5_merged": 19.11,
+    "m6_harmonized": 18.96,
+    "tugstugi_a100": 29.31
+  },
+  "selection": [
+    {
+      "members": [
+        "m1_full_4ep"
+      ],
+      "dev_wer": 16.21
+    }
+  ],
+  "systems": {
+    "rover_dev_selected": [
+      "m1_full_4ep"
+    ],
+    "rover_all": [
+      "m1_full_4ep",
+      "m1_full",
+      "m1_lora",
+      "m1_decoder",
+      "m1_encoder",
+      "m2_cv",
+      "m3_kathbath",
+      "m4_shrutilipi",
+      "m5_merged",
+      "m6_harmonized",
+      "tugstugi_a100"
+    ]
+  },
+  "results": {
+    "splits_fa-dev": {
+      "rover_dev_selected": 16.21,
+      "rover_all": 16.26,
+      "m1_full (greedy)": 16.74
+    },
+    "splits_fa-eval": {
+      "rover_dev_selected": 11.02,
+      "rover_all": 11.47,
+      "m1_full (greedy)": 11.34
+    },
+    "fleurs-test": {
+      "rover_dev_selected": 19.72,
+      "rover_all": 16.43,
+      "m1_full (greedy)": 18.34
+    },
+    "cv-test": {
+      "rover_dev_selected": 15.14,
+      "rover_all": 10.9,
+      "m1_full (greedy)": 12.8
+    },
+    "kathbath-valid": {
+      "rover_dev_selected": 14.98,
+      "rover_all": 11.52,
+      "m1_full (greedy)": 13.48
+    }
+  }
+}

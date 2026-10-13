@@ -1,0 +1,24 @@
+{
+  "wer": 0.22146280475098978,
+  "cer": 0.04321540095934069,
+  "n_utterances": 2236,
+  "ref_words": 23995,
+  "n_groups": 17,
+  "wer_ci95": [
+    0.20761806460959004,
+    0.2353565762030157
+  ],
+  "cer_ci95": [
+    0.03924899158736126,
+    0.04726384435428975
+  ],
+  "set": "kathbath-valid",
+  "model": "ai4bharat/indicwav2vec_v1_bengali",
+  "family": "ctc",
+  "manifest": "data\\external\\kathbath\\valid.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy",
+  "last_run_seconds": 38.6,
+  "last_run_audio_hours": 4.052,
+  "last_run_rtf": 0.0026
+}

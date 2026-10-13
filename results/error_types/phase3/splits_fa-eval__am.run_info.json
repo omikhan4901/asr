@@ -1,0 +1,51 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/error_types.py --out_dir results/error_types/phase3 --pred results/phase3/splits_fa-eval/am/predictions.jsonl results/phase3/splits_fa-eval/greedy/predictions.jsonl results/phase3/splits_fa-eval/lm/predictions.jsonl results/phase3/splits_fa-eval/lm_x/predictions.jsonl results/phase3/splits_fa-eval/mbr_lm/predictions.jsonl results/phase3/splits_fa-eval/mbr_lm_x/predictions.jsonl results/phase3/splits_fa-eval/rewrite/predictions.jsonl results/phase3/splits_fa-eval/rewrite_sel/predictions.jsonl results/phase3/splits_fa-eval/rover/predictions.jsonl",
+      "git_commit": "0233644c1e56ea704ccf194dc0eb85326f368595",
+      "git_dirty": false,
+      "start": "2026-10-09T21:50:26",
+      "end": "2026-10-09T21:53:03",
+      "runtime_s": 156.8,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results\\phase3\\splits_fa-eval\\am\\predictions.jsonl": "a2c92486ae101c3290d248a1c6679516fc750cd61e80d3d95ed3bc87063ea75e",
+        "results\\phase3\\splits_fa-eval\\greedy\\predictions.jsonl": "a3b38a216be6c252128dcff75c47dbece145ee214bb2b89bd0b18a3cb88130be",
+        "results\\phase3\\splits_fa-eval\\lm\\predictions.jsonl": "19fb79d2d6a9d8f8b566cbd99a04ffc0d361d308f4cfd733c5af15a75ec7effb",
+        "results\\phase3\\splits_fa-eval\\lm_x\\predictions.jsonl": "ed5c7b1a5b70ef065e1ade3f694226c853c40fb96cd6ac5b13251271db419f70",
+        "results\\phase3\\splits_fa-eval\\mbr_lm\\predictions.jsonl": "beac1bb46c8c83af697cae678bec409f46337317c50abc1aafd6fd99b19154b9",
+        "results\\phase3\\splits_fa-eval\\mbr_lm_x\\predictions.jsonl": "c227fd67fc6b8fa4bbe76ab87dc639df98222b97c3c59359744820e8a3f10fe7",
+        "results\\phase3\\splits_fa-eval\\rewrite\\predictions.jsonl": "4095c31c932a73ea36bdb6bc915fe8446e26f0615017db893d6f4bfae8022bbf",
+        "results\\phase3\\splits_fa-eval\\rewrite_sel\\predictions.jsonl": "4095c31c932a73ea36bdb6bc915fe8446e26f0615017db893d6f4bfae8022bbf",
+        "results\\phase3\\splits_fa-eval\\rover\\predictions.jsonl": "49a731d2862a95f39facb5bd7df6b1bb93b75afe5f613418688bd5769544d5d6"
+      },
+      "outputs": {
+        "results\\error_types\\phase3\\splits_fa-eval\\am\\summary.json": "bc10949806072bc8a6cbda0a3352abbe5adaf48c0601ba6f0d69666a482944f9",
+        "results\\error_types\\phase3\\splits_fa-eval\\am\\errors.csv": "4e38c48acaf02063242eba4fd3965e3a472dc1e53a658f191ebc7c23bef89165",
+        "results\\error_types\\phase3\\splits_fa-eval\\greedy\\summary.json": "3824ca5ce055b0abb7a0c9b3cbd91542e66665ac0a0d0b08003d120e3434bf99",
+        "results\\error_types\\phase3\\splits_fa-eval\\greedy\\errors.csv": "9570652c381560e89a6fb7693da7ff4767780c18ffe3f22dad447334101927dc",
+        "results\\error_types\\phase3\\splits_fa-eval\\lm\\summary.json": "18c197d3b1db3350d4f000d8729171074c3f144e59b69273c87e34d3ead1578c",
+        "results\\error_types\\phase3\\splits_fa-eval\\lm\\errors.csv": "6b8c2ed8019adef176327dcad346792c5ff055f28bd34486c4a7dc8a3dbfe70d",
+        "results\\error_types\\phase3\\splits_fa-eval\\lm_x\\summary.json": "1ffc74fdbe0a521fee8c1909eb512fb24743ca70d10754b7092d5d1994bd79f6",
+        "results\\error_types\\phase3\\splits_fa-eval\\lm_x\\errors.csv": "edde2e4af20b68f3a78840c8345e2cd8889d0d370706e670520d7dbacc0ebc68",
+        "results\\error_types\\phase3\\splits_fa-eval\\mbr_lm\\summary.json": "379d941e690278429dc40d2449452c3334168888ad9ab5a34c6181e8f1281dc2",
+        "results\\error_types\\phase3\\splits_fa-eval\\mbr_lm\\errors.csv": "8b622bfc778fb1fed18a41d4cfd79e86010dcedc66cdab69ad4ad7824dd6ccfb",
+        "results\\error_types\\phase3\\splits_fa-eval\\mbr_lm_x\\summary.json": "07ab2d82754212ac2352b29598034bd04c2b8dc2264f9461b599b5da8738fe25",
+        "results\\error_types\\phase3\\splits_fa-eval\\mbr_lm_x\\errors.csv": "08bafdb2eb6a1296b236d75ada1393d58799fda95e52f4d9b274bff0c012959d",
+        "results\\error_types\\phase3\\splits_fa-eval\\rewrite\\summary.json": "ff4ff9f9c29044017e4d15a2b3f0efb4ae22bd15631931ae526bf8ce2305cb60",
+        "results\\error_types\\phase3\\splits_fa-eval\\rewrite\\errors.csv": "4a6a4586328ade49952e0c22f1773b856763a1dedeb2151277d29b1c0d26165f",
+        "results\\error_types\\phase3\\splits_fa-eval\\rewrite_sel\\summary.json": "f02f3139ee4d7714b8c6ba2599e1dc65d66841f0c9b40e3d22ad1a28dd8ccc15",
+        "results\\error_types\\phase3\\splits_fa-eval\\rewrite_sel\\errors.csv": "4a6a4586328ade49952e0c22f1773b856763a1dedeb2151277d29b1c0d26165f",
+        "results\\error_types\\phase3\\splits_fa-eval\\rover\\summary.json": "dd72eaac689fccbb81d80791dfa255a83432d454da24a5022f42406d313e4075",
+        "results\\error_types\\phase3\\splits_fa-eval\\rover\\errors.csv": "c1d0854f5418622c82692c5b432bfc0d1a658ea9fb98d7e9db972052fe2f489f"
+      }
+    }
+  ]
+}

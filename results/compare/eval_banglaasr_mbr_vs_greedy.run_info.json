@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/zeroshot/splits_fa-eval/bangla-speech-processing__BanglaASR/predictions.jsonl --b data/nbest_ext/eval_banglaasr.jsonl:mbr --name eval_banglaasr_mbr_vs_greedy",
+      "git_commit": "2cda47b567498b7b205252bdb232ed919ec107e6",
+      "git_dirty": false,
+      "start": "2026-10-09T08:02:05",
+      "end": "2026-10-09T08:02:06",
+      "runtime_s": 0.4,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/zeroshot/splits_fa-eval/bangla-speech-processing__BanglaASR/predictions.jsonl": "b550315265108120751391c8996aaa04c9a5f25d930d42e6720ebdb883ee2ac8",
+        "data/nbest_ext/eval_banglaasr.jsonl": "0d41a2af441b32d282dcfb04c79dcc05482349616703e92ae2b53bd227c72c87"
+      },
+      "outputs": {
+        "results\\compare\\eval_banglaasr_mbr_vs_greedy.json": "670c714624de5550f414f1cd3ef57f7aebf11abc93106c665eb7bb6041988ca3"
+      }
+    }
+  ]
+}

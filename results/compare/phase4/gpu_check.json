@@ -1,0 +1,27 @@
+{
+  "cv-test": {
+    "utterances": 9408,
+    "identical_hypotheses": 9311,
+    "identical_share": 0.9897
+  },
+  "fleurs-test": {
+    "utterances": 920,
+    "identical_hypotheses": 904,
+    "identical_share": 0.9826
+  },
+  "kathbath-valid": {
+    "utterances": 2236,
+    "identical_hypotheses": 2214,
+    "identical_share": 0.9902
+  },
+  "splits_fa-dev": {
+    "utterances": 646,
+    "identical_hypotheses": 623,
+    "identical_share": 0.9644
+  },
+  "splits_fa-eval": {
+    "utterances": 4234,
+    "identical_hypotheses": 4081,
+    "identical_share": 0.9639
+  }
+}

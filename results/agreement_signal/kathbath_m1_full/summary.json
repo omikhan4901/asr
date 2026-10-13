@@ -1,0 +1,29 @@
+{
+  "pred": "results/modal/finetuned/kathbath-valid/m1_full/predictions.jsonl",
+  "nbest": "data/kaggle_out/session_B/phase4/nbest/kathbath-valid__m1_full_scored.jsonl",
+  "n_candidates": 12,
+  "hyp_words": 24110,
+  "hyp_errors": 2969,
+  "ref_deletions_not_scored": 265,
+  "n_groups": 17,
+  "auroc": 0.736703476564329,
+  "auroc_ci95": [
+    0.7236578795453322,
+    0.7478499414256871
+  ],
+  "mean_a_correct": 11.78326474622771,
+  "mean_a_by_error_type": {
+    "convention": 11.082,
+    "insertion": 7.976,
+    "near_miss": 9.52,
+    "number": 5.091,
+    "segmentation": 10.289,
+    "substitution": 8.421,
+    "vowel_shift": 9.599
+  },
+  "share_errors_full_agreement": 0.45638262041091276,
+  "share_variant_errors_full_agreement": 0.5444521019986216,
+  "share_other_errors_full_agreement": 0.37220026350461133,
+  "n_boot": 1000,
+  "seed": 0
+}

@@ -1,0 +1,24 @@
+{
+  "wer": 0.14794748906022087,
+  "cer": 0.029797508289604997,
+  "n_utterances": 2236,
+  "ref_words": 23995,
+  "n_groups": 17,
+  "wer_ci95": [
+    0.13669266804358374,
+    0.1614883532370203
+  ],
+  "cer_ci95": [
+    0.026290399908898716,
+    0.0338005122713208
+  ],
+  "set": "kathbath-valid",
+  "model": "bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium",
+  "family": "whisper",
+  "manifest": "data\\external\\kathbath\\valid.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy",
+  "last_run_seconds": 645.5,
+  "last_run_audio_hours": 4.052,
+  "last_run_rtf": 0.0443
+}

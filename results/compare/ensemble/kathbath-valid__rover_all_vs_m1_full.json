@@ -1,0 +1,19 @@
+{
+  "a": "D:\\Projects\\ASR Paper Code\\results\\modal\\finetuned\\kathbath-valid\\m1_full\\predictions.jsonl",
+  "b": "D:\\Projects\\ASR Paper Code\\results\\ensemble\\kathbath-valid\\rover_all\\predictions.jsonl",
+  "n_utterances": 2236,
+  "n_groups": 17,
+  "ref_words": 23995,
+  "wer_a": 0.13477807876640968,
+  "wer_b": 0.1152323400708481,
+  "diff_b_minus_a": -0.019545738695561574,
+  "diff_ci95": [
+    -0.022575502544371594,
+    -0.016511857458386382
+  ],
+  "p_b_better": 1.0,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

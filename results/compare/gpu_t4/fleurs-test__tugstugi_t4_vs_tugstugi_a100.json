@@ -1,0 +1,19 @@
+{
+  "a": "results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl",
+  "b": "data/phase4/t4check_lora/phase4/results/zeroshot/fleurs-test/tugstugi_t4/predictions.jsonl",
+  "n_utterances": 920,
+  "n_groups": 349,
+  "ref_words": 17766,
+  "wer_a": 0.21541146009231116,
+  "wer_b": 0.21529888551165147,
+  "diff_b_minus_a": -0.00011257458065968704,
+  "diff_ci95": [
+    -0.00033814580693677124,
+    0.00011158908449127536
+  ],
+  "p_b_better": 0.773,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

@@ -1,0 +1,22 @@
+{
+  "wer": 0.21541146009231116,
+  "cer": 0.06493552626904905,
+  "n_utterances": 920,
+  "ref_words": 17766,
+  "n_groups": 349,
+  "wer_ci95": [
+    0.20052399610865446,
+    0.22894839896291463
+  ],
+  "cer_ci95": [
+    0.05728969064658993,
+    0.07296722440635768
+  ],
+  "set": "fleurs-test",
+  "model": "bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium",
+  "adapter": null,
+  "family": "auto",
+  "manifest": "data/external/fleurs/test.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy"
+}

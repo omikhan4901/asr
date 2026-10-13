@@ -1,0 +1,24 @@
+{
+  "wer": 0.25802442140152604,
+  "cer": 0.064317960456271,
+  "n_utterances": 9408,
+  "ref_words": 86891,
+  "n_groups": 7377,
+  "wer_ci95": [
+    0.25420377413863643,
+    0.2623507892706854
+  ],
+  "cer_ci95": [
+    0.06265960872678489,
+    0.06604435837565224
+  ],
+  "set": "cv-test",
+  "model": "ai4bharat/indicwav2vec_v1_bengali",
+  "family": "ctc",
+  "manifest": "data\\external\\cv\\test.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy",
+  "last_run_seconds": 182.7,
+  "last_run_audio_hours": 16.751,
+  "last_run_rtf": 0.003
+}

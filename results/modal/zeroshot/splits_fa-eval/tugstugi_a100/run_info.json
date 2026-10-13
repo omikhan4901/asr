@@ -1,0 +1,51 @@
+{
+  "runs": [
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/splits_fa/eval.csv --model bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium --name tugstugi_a100 --out_dir results/zeroshot --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T21:49:51",
+      "end": "2026-10-09T21:53:59",
+      "runtime_s": 248.4,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/splits_fa/eval.csv": "6ce00c484d1581ac60849749e8a20211518b1046a61dfce02015725fedd80238"
+      },
+      "outputs": {
+        "results/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl": "eb2392fcc6065f891c8511c242a2f702fbe7bccbf5a13972d3fead54a3b2ef85",
+        "results/zeroshot/splits_fa-eval/tugstugi_a100/metrics.json": "1ba4a68e96b231120447911cf6272811a4bec8340d64b4c3238f32c5d96eedae"
+      }
+    },
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/splits_fa/eval.csv --model bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium --name tugstugi_a100 --out_dir results/zeroshot --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T22:43:31",
+      "end": "2026-10-09T22:43:32",
+      "runtime_s": 1.0,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/splits_fa/eval.csv": "6ce00c484d1581ac60849749e8a20211518b1046a61dfce02015725fedd80238"
+      },
+      "outputs": {
+        "results/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl": "eb2392fcc6065f891c8511c242a2f702fbe7bccbf5a13972d3fead54a3b2ef85",
+        "results/zeroshot/splits_fa-eval/tugstugi_a100/metrics.json": "29f80bfa405d18902db52d943d5d11ed3c62a3dd8680db58c14ae302628ed3c2"
+      }
+    }
+  ]
+}

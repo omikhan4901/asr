@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/external/cv/test.csv --model checkpoints/m1_encoder/final --name m1_encoder --out_dir results/finetuned --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T22:48:08",
+      "end": "2026-10-09T23:26:44",
+      "runtime_s": 2315.8,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/external/cv/test.csv": "1661c0d045f1d3e4a410a0cd2b7f98c9fe250cdcb696c2264e495720e25a1ea8"
+      },
+      "outputs": {
+        "results/finetuned/cv-test/m1_encoder/predictions.jsonl": "5e5728f41be50e900f7d6ad7ba2fabdb4ce9f1eb36ede0b64bbf8e1addb9be1d",
+        "results/finetuned/cv-test/m1_encoder/metrics.json": "f627ff75c42dac457130be8953abebe7befa9b1d4750447db3e29be7b38089fd"
+      }
+    }
+  ]
+}

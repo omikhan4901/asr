@@ -1,0 +1,76 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/splits_fa-dev/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/splits_fa-dev/soup_m1_full+m1_full+m1_full+base_t4//predictions.jsonl --name splits_fa-dev__soup_m1_full+m1_full+m1_full+base_t4_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T19:53:14",
+      "end": "2026-10-13T19:53:14",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/splits_fa-dev/tugstugi_a100/predictions.jsonl": "594d6bc2c5e9cacc20b66de6c77699082448112bf49aac04e95d365f7cbe57eb",
+        "results/kaggle/finetuned/splits_fa-dev/soup_m1_full+m1_full+m1_full+base_t4//predictions.jsonl": "c99145c8ebbdc8db5aa23cd1b7f9034ceb10e7c6433f17f5baeff28283aa850f"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\splits_fa-dev__soup_m1_full+m1_full+m1_full+base_t4_vs_tugstugi_a100.json": "91813fcc0ae7d2b879707e7eae954561977128c2b1c45a1bd43757c7e014a1d1"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/splits_fa-dev/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/splits_fa-dev/soup_m1_full+m1_full+m1_full+base_t4//predictions.jsonl --name splits_fa-dev__soup_m1_full+m1_full+m1_full+base_t4_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T20:31:51",
+      "end": "2026-10-13T20:31:52",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/splits_fa-dev/tugstugi_a100/predictions.jsonl": "594d6bc2c5e9cacc20b66de6c77699082448112bf49aac04e95d365f7cbe57eb",
+        "results/kaggle/finetuned/splits_fa-dev/soup_m1_full+m1_full+m1_full+base_t4//predictions.jsonl": "c99145c8ebbdc8db5aa23cd1b7f9034ceb10e7c6433f17f5baeff28283aa850f"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\splits_fa-dev__soup_m1_full+m1_full+m1_full+base_t4_vs_tugstugi_a100.json": "91813fcc0ae7d2b879707e7eae954561977128c2b1c45a1bd43757c7e014a1d1"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/splits_fa-dev/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/splits_fa-dev/soup_m1_full+m1_full+m1_full+base_t4//predictions.jsonl --name splits_fa-dev__soup_m1_full+m1_full+m1_full+base_t4_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "1740748792e396489f80906c1c35e92e7f45ce30",
+      "git_dirty": true,
+      "start": "2026-10-13T21:07:07",
+      "end": "2026-10-13T21:07:07",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/splits_fa-dev/tugstugi_a100/predictions.jsonl": "594d6bc2c5e9cacc20b66de6c77699082448112bf49aac04e95d365f7cbe57eb",
+        "results/kaggle/finetuned/splits_fa-dev/soup_m1_full+m1_full+m1_full+base_t4//predictions.jsonl": "c99145c8ebbdc8db5aa23cd1b7f9034ceb10e7c6433f17f5baeff28283aa850f"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\splits_fa-dev__soup_m1_full+m1_full+m1_full+base_t4_vs_tugstugi_a100.json": "91813fcc0ae7d2b879707e7eae954561977128c2b1c45a1bd43757c7e014a1d1"
+      }
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/error_types.py --pred results/zeroshot/splits_fa-eval/bangla-speech-processing__BanglaASR/predictions.jsonl --nbest data/nbest_ext/eval_banglaasr.jsonl",
+      "git_commit": "2cda47b567498b7b205252bdb232ed919ec107e6",
+      "git_dirty": false,
+      "start": "2026-10-09T08:01:05",
+      "end": "2026-10-09T08:01:31",
+      "runtime_s": 26.0,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results\\zeroshot\\splits_fa-eval\\bangla-speech-processing__BanglaASR\\predictions.jsonl": "b550315265108120751391c8996aaa04c9a5f25d930d42e6720ebdb883ee2ac8",
+        "data/nbest_ext/eval_banglaasr.jsonl": "0d41a2af441b32d282dcfb04c79dcc05482349616703e92ae2b53bd227c72c87"
+      },
+      "outputs": {
+        "results\\error_types\\with_nbest\\eval_banglaasr\\summary.json": "d05f6f4cba2c9d73df2dc766c1710a475b3f9c5b17c67d83048c55907937d370",
+        "results\\error_types\\with_nbest\\eval_banglaasr\\errors.csv": "7e6f3948b7b989c0fa6d7259f95a0b2004ac6a4e871ef74e6a0111849280cf0c"
+      }
+    }
+  ]
+}

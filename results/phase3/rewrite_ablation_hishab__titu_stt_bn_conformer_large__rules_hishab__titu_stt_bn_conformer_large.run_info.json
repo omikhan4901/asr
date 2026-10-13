@@ -1,0 +1,27 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/phase3_rewrite_ablation.py --model hishab__titu_stt_bn_conformer_large --rules_from hishab__titu_stt_bn_conformer_large",
+      "git_commit": "06fa745f8ba5a7eb732fb4dff1d0e95aa4872c97",
+      "git_dirty": false,
+      "start": "2026-10-09T22:50:36",
+      "end": "2026-10-09T22:51:39",
+      "runtime_s": 62.8,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/zeroshot/splits_fa-train/hishab__titu_stt_bn_conformer_large/predictions.jsonl": "d7d3cd231bd9e9a3182774cd735ff1b8bc0ad43b01606a5b0a136400c8816d30"
+      },
+      "outputs": {
+        "results\\phase3\\rewrite_ablation_hishab__titu_stt_bn_conformer_large__rules_hishab__titu_stt_bn_conformer_large.json": "5f1936d7a976df342a88d5dd279338b22c5d2a32d33b69880026daedf294d8a5"
+      }
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/finetuned/kathbath-valid/m1_full/predictions.jsonl --b results/kaggle/finetuned/kathbath-valid/m5_merged_t4/predictions.jsonl --name kathbath-valid__m5_merged_t4_vs_m1_full --out_dir results/compare/phase4_matrix",
+      "git_commit": "4c8c24e48722e1232a67f619789bd4ac8a39a545",
+      "git_dirty": true,
+      "start": "2026-10-11T22:46:02",
+      "end": "2026-10-11T22:46:02",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/finetuned/kathbath-valid/m1_full/predictions.jsonl": "c770a8980a3d03709a432abf947d605a4a9c7d4dfb7519a2d607cab07e369416",
+        "results/kaggle/finetuned/kathbath-valid/m5_merged_t4/predictions.jsonl": "fca003de215eb85e053d564153c63ea35a95e7fb55b69e22a918ed1bcf12aacf"
+      },
+      "outputs": {
+        "results\\compare\\phase4_matrix\\kathbath-valid__m5_merged_t4_vs_m1_full.json": "05f31a38d955c8b62769c6bf3b66e1dabe6763fd86ad32000ed1edda4f8304a4"
+      }
+    }
+  ]
+}

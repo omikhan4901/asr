@@ -1,0 +1,14 @@
+{
+  "nbest": "data/kaggle_out/session_B/phase4/nbest/splits_fa-eval__m1_full_scored.jsonl",
+  "n_utterances": 4234,
+  "n_candidates_max": 12,
+  "ref_words": 120029,
+  "wer_1best": 0.12280365578318574,
+  "wer_mbr": 0.10992343516983395,
+  "wer_utt_oracle": 0.082463404677203,
+  "coverage_miss_rate": 0.055869831457397795,
+  "mbr_gap_recovery": 0.31928954977282115,
+  "onebest_ref_errors": 12804,
+  "onebest_ref_errors_selection_proof_frac": 0.5237425804436113,
+  "mbr_temperature": 0.5
+}

@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/external/fleurs/test.csv --model checkpoints/m1_decoder/final --name m1_decoder --out_dir results/finetuned --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T23:13:20",
+      "end": "2026-10-09T23:17:53",
+      "runtime_s": 273.7,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-80GB"
+      },
+      "inputs": {
+        "data/external/fleurs/test.csv": "73efc47ff0f7219f2cb56abfeb3ee94f070b4ea5be7d3b96e8dd12c389f2bf4f"
+      },
+      "outputs": {
+        "results/finetuned/fleurs-test/m1_decoder/predictions.jsonl": "b17a9d16cec36edbdabb55e35f7112eb2f6b1b6df2484c4a2feee15c4e2b5e76",
+        "results/finetuned/fleurs-test/m1_decoder/metrics.json": "be3a8568ece8a3ea57e7fb72d74da3e20dc3f19a704c25ec76e32ae95be1a454"
+      }
+    }
+  ]
+}

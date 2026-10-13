@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/kaggle/finetuned/fleurs-test/m5_merged_t4/predictions.jsonl --b results/kaggle/finetuned/fleurs-test/m3_kathbath_t4/predictions.jsonl --name fleurs-test__m3_kathbath_t4_vs_m5_merged_t4 --out_dir results/compare/phase4_matrix",
+      "git_commit": "4c8c24e48722e1232a67f619789bd4ac8a39a545",
+      "git_dirty": true,
+      "start": "2026-10-11T22:46:09",
+      "end": "2026-10-11T22:46:10",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/kaggle/finetuned/fleurs-test/m5_merged_t4/predictions.jsonl": "9bc0d4408af5f2e5e22cdc793a97757fde4bfb3ce26ce54a69228112317e6d2c",
+        "results/kaggle/finetuned/fleurs-test/m3_kathbath_t4/predictions.jsonl": "f9066e8d9f6066028379957b2ff3e704e544517e761596ccacb453e65e9cbf69"
+      },
+      "outputs": {
+        "results\\compare\\phase4_matrix\\fleurs-test__m3_kathbath_t4_vs_m5_merged_t4.json": "4028fa00ec55c23bc812a81b0670714d4b9e8e272af8f9b877d7b092372d3048"
+      }
+    }
+  ]
+}

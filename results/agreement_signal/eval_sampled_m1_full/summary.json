@@ -1,0 +1,29 @@
+{
+  "pred": "results/modal/finetuned/splits_fa-eval/m1_full/predictions.jsonl",
+  "nbest": "data/kaggle_out/session_B/phase4/nbest/splits_fa-eval__m1_full_scored.jsonl",
+  "n_candidates": 12,
+  "hyp_words": 120509,
+  "hyp_errors": 12055,
+  "ref_deletions_not_scored": 1560,
+  "n_groups": 22,
+  "auroc": 0.8484524293039559,
+  "auroc_ci95": [
+    0.8405347951085028,
+    0.8563206239629261
+  ],
+  "mean_a_correct": 11.741761484131521,
+  "mean_a_by_error_type": {
+    "convention": 9.359,
+    "insertion": 7.238,
+    "near_miss": 8.428,
+    "number": 5.172,
+    "segmentation": 9.464,
+    "substitution": 6.563,
+    "vowel_shift": 8.748
+  },
+  "share_errors_full_agreement": 0.24056408129406884,
+  "share_variant_errors_full_agreement": 0.29617021276595745,
+  "share_other_errors_full_agreement": 0.2175849941383353,
+  "n_boot": 1000,
+  "seed": 0
+}

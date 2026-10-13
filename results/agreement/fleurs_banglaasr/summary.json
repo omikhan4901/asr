@@ -1,0 +1,14 @@
+{
+  "nbest": "data/nbest_ext/fleurs_banglaasr.jsonl",
+  "n_utterances": 920,
+  "n_candidates_max": 12,
+  "ref_words": 17766,
+  "wer_1best": 0.35596082404593044,
+  "wer_mbr": 0.3447033659799617,
+  "wer_utt_oracle": 0.29916694810311834,
+  "coverage_miss_rate": 0.25560058538781943,
+  "mbr_gap_recovery": 0.19821605550049554,
+  "onebest_ref_errors": 5939,
+  "onebest_ref_errors_selection_proof_frac": 0.764606836167705,
+  "mbr_temperature": 0.5
+}

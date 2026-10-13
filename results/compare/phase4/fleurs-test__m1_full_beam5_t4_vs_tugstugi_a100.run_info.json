@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/fleurs-test/m1_full_beam5_t4//predictions.jsonl --name fleurs-test__m1_full_beam5_t4_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T21:03:43",
+      "end": "2026-10-13T21:03:43",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl": "5d810667c6c80a847d7365e10832f2163cb68c6457411436129c45830ab933e4",
+        "results/kaggle/finetuned/fleurs-test/m1_full_beam5_t4//predictions.jsonl": "6845ae5ed2adfec5cadfec5fb65eb5d3b625984c2b0fbec077e54417a92524b4"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\fleurs-test__m1_full_beam5_t4_vs_tugstugi_a100.json": "eb9098b3fe54f0aaefdc01e4626506fb68f931d74264e939c74b7e584f985d7c"
+      }
+    }
+  ]
+}

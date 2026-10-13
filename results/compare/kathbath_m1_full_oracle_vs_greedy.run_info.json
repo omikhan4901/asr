@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/finetuned/kathbath-valid/m1_full/predictions.jsonl --b data/kaggle_out/session_B/phase4/nbest/kathbath-valid__m1_full_scored.jsonl:oracle --name kathbath_m1_full_oracle_vs_greedy",
+      "git_commit": "af3ba1c23620c3a8e9bb21de311d6aceadf6794c",
+      "git_dirty": false,
+      "start": "2026-10-11T09:39:42",
+      "end": "2026-10-11T09:39:42",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/finetuned/kathbath-valid/m1_full/predictions.jsonl": "c770a8980a3d03709a432abf947d605a4a9c7d4dfb7519a2d607cab07e369416",
+        "data/kaggle_out/session_B/phase4/nbest/kathbath-valid__m1_full_scored.jsonl": "6cd4371a5d324f3b4cc82dad3bc0637091d3bf34e7695d0e3c190369e6c795db"
+      },
+      "outputs": {
+        "results\\compare\\kathbath_m1_full_oracle_vs_greedy.json": "4fc29f61e9cd1b246df3d1426d0fbff5c6320a268394880414e58d56374759c9"
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "wer": 0.22704513076006633,
+  "cer": 0.0770400022221742,
+  "n_utterances": 4234,
+  "ref_words": 120029,
+  "n_groups": 22,
+  "wer_ci95": [
+    0.2068555255578561,
+    0.2532060907351634
+  ],
+  "cer_ci95": [
+    0.06323992958596786,
+    0.09430172732879924
+  ],
+  "set": "splits_fa-eval",
+  "model": "bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium",
+  "adapter": null,
+  "family": "auto",
+  "manifest": "data/splits_fa/eval.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy"
+}

@@ -1,0 +1,19 @@
+{
+  "a": "results/modal/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl",
+  "b": "results/modal/finetuned/splits_fa-eval/m1_full//predictions.jsonl",
+  "n_utterances": 4234,
+  "n_groups": 22,
+  "ref_words": 120029,
+  "wer_a": 0.22704513076006633,
+  "wer_b": 0.11343092086079197,
+  "diff_b_minus_a": -0.11361420989927434,
+  "diff_ci95": [
+    -0.1232278151519506,
+    -0.10459566103755213
+  ],
+  "p_b_better": 1.0,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

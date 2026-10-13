@@ -1,0 +1,30 @@
+{
+  "pred": "results/zeroshot/splits_fa-eval/bangla-speech-processing__BanglaASR/predictions.jsonl",
+  "nbest": "data/nbest_ext/eval_banglaasr.jsonl",
+  "n_candidates": 12,
+  "hyp_words": 94801,
+  "hyp_errors": 41774,
+  "ref_deletions_not_scored": 27949,
+  "n_groups": 22,
+  "auroc": 0.7840508344686297,
+  "auroc_ci95": [
+    0.7757986162570123,
+    0.7939950728110164
+  ],
+  "mean_a_correct": 10.222679012578498,
+  "mean_a_by_error_type": {
+    "convention": 8.209,
+    "insertion": 5.429,
+    "near_miss": 6.744,
+    "number": 7.691,
+    "script": 1.0,
+    "segmentation": 8.772,
+    "substitution": 4.394,
+    "vowel_shift": 7.223
+  },
+  "share_errors_full_agreement": 0.16146406855939102,
+  "share_variant_errors_full_agreement": 0.26172188467270435,
+  "share_other_errors_full_agreement": 0.1350034794711204,
+  "n_boot": 1000,
+  "seed": 0
+}

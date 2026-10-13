@@ -1,0 +1,24 @@
+{
+  "wer": 0.28177417539119665,
+  "cer": 0.07802564740151327,
+  "n_utterances": 920,
+  "ref_words": 17766,
+  "n_groups": 349,
+  "wer_ci95": [
+    0.26571768589381517,
+    0.29771196480087964
+  ],
+  "cer_ci95": [
+    0.07144341866330903,
+    0.08475489556798387
+  ],
+  "set": "fleurs-test",
+  "model": "ai4bharat/indicwav2vec_v1_bengali",
+  "family": "ctc",
+  "manifest": "data\\external\\fleurs\\test.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy",
+  "last_run_seconds": 36.1,
+  "last_run_audio_hours": 3.433,
+  "last_run_rtf": 0.0029
+}

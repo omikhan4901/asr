@@ -1,0 +1,124 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/phase3/kathbath-valid/mbr_lm_x/predictions.jsonl --b results/phase4_stack/kathbath-valid/rover/predictions.jsonl --name kathbath-valid__m1_full_rover_vs_phase3 --out_dir results/compare/phase4_final",
+      "git_commit": "4998286157c92d995cbf8b628c7b0c2fd767801a",
+      "git_dirty": true,
+      "start": "2026-10-11T23:36:42",
+      "end": "2026-10-11T23:36:42",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/phase3/kathbath-valid/mbr_lm_x/predictions.jsonl": "17d24b92b47524ae6a572d015601561416dc16a2444321291ad38690b482328c",
+        "results/phase4_stack/kathbath-valid/rover/predictions.jsonl": "ee6e82f92f33ad6002e5721a1b64e132d0fd2f71bc4759bb25054bd7960cb8f7"
+      },
+      "outputs": {
+        "results\\compare\\phase4_final\\kathbath-valid__m1_full_rover_vs_phase3.json": "836685173ef40e078af8fb60002f5bc2d7b31ff80ff0340b5e2f8265ce6f3ac2"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/phase3/kathbath-valid/mbr_lm_x/predictions.jsonl --b results/phase4_stack/kathbath-valid/rover/predictions.jsonl --name kathbath-valid__m1_full_rover_vs_phase3 --out_dir results/compare/phase4_final",
+      "git_commit": "c07a59449b8ea159b99ab43bda2325db9a74f78f",
+      "git_dirty": false,
+      "start": "2026-10-12T01:25:57",
+      "end": "2026-10-12T01:25:57",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/phase3/kathbath-valid/mbr_lm_x/predictions.jsonl": "17d24b92b47524ae6a572d015601561416dc16a2444321291ad38690b482328c",
+        "results/phase4_stack/kathbath-valid/rover/predictions.jsonl": "ee6e82f92f33ad6002e5721a1b64e132d0fd2f71bc4759bb25054bd7960cb8f7"
+      },
+      "outputs": {
+        "results\\compare\\phase4_final\\kathbath-valid__m1_full_rover_vs_phase3.json": "836685173ef40e078af8fb60002f5bc2d7b31ff80ff0340b5e2f8265ce6f3ac2"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/phase3/kathbath-valid/mbr_lm_x/predictions.jsonl --b results/phase4_stack/kathbath-valid/rover/predictions.jsonl --name kathbath-valid__m1_full_rover_vs_phase3 --out_dir results/compare/phase4_final",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T20:05:23",
+      "end": "2026-10-13T20:05:23",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/phase3/kathbath-valid/mbr_lm_x/predictions.jsonl": "17d24b92b47524ae6a572d015601561416dc16a2444321291ad38690b482328c",
+        "results/phase4_stack/kathbath-valid/rover/predictions.jsonl": "ee6e82f92f33ad6002e5721a1b64e132d0fd2f71bc4759bb25054bd7960cb8f7"
+      },
+      "outputs": {
+        "results\\compare\\phase4_final\\kathbath-valid__m1_full_rover_vs_phase3.json": "836685173ef40e078af8fb60002f5bc2d7b31ff80ff0340b5e2f8265ce6f3ac2"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/phase3/kathbath-valid/mbr_lm_x/predictions.jsonl --b results/phase4_stack/kathbath-valid/rover/predictions.jsonl --name kathbath-valid__m1_full_rover_vs_phase3 --out_dir results/compare/phase4_final",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T20:44:39",
+      "end": "2026-10-13T20:44:39",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/phase3/kathbath-valid/mbr_lm_x/predictions.jsonl": "17d24b92b47524ae6a572d015601561416dc16a2444321291ad38690b482328c",
+        "results/phase4_stack/kathbath-valid/rover/predictions.jsonl": "ee6e82f92f33ad6002e5721a1b64e132d0fd2f71bc4759bb25054bd7960cb8f7"
+      },
+      "outputs": {
+        "results\\compare\\phase4_final\\kathbath-valid__m1_full_rover_vs_phase3.json": "836685173ef40e078af8fb60002f5bc2d7b31ff80ff0340b5e2f8265ce6f3ac2"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/phase3/kathbath-valid/mbr_lm_x/predictions.jsonl --b results/phase4_stack/kathbath-valid/rover/predictions.jsonl --name kathbath-valid__m1_full_rover_vs_phase3 --out_dir results/compare/phase4_final",
+      "git_commit": "1740748792e396489f80906c1c35e92e7f45ce30",
+      "git_dirty": true,
+      "start": "2026-10-13T21:22:52",
+      "end": "2026-10-13T21:22:53",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/phase3/kathbath-valid/mbr_lm_x/predictions.jsonl": "17d24b92b47524ae6a572d015601561416dc16a2444321291ad38690b482328c",
+        "results/phase4_stack/kathbath-valid/rover/predictions.jsonl": "ee6e82f92f33ad6002e5721a1b64e132d0fd2f71bc4759bb25054bd7960cb8f7"
+      },
+      "outputs": {
+        "results\\compare\\phase4_final\\kathbath-valid__m1_full_rover_vs_phase3.json": "836685173ef40e078af8fb60002f5bc2d7b31ff80ff0340b5e2f8265ce6f3ac2"
+      }
+    }
+  ]
+}

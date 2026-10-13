@@ -1,0 +1,22 @@
+{
+  "wer": 0.1833839918946302,
+  "cer": 0.05036233171112927,
+  "n_utterances": 920,
+  "ref_words": 17766,
+  "n_groups": 349,
+  "wer_ci95": [
+    0.17071238940548905,
+    0.1960787588795331
+  ],
+  "cer_ci95": [
+    0.04462518976208597,
+    0.056131280675110556
+  ],
+  "set": "fleurs-test",
+  "model": "checkpoints/m1_full/final",
+  "adapter": null,
+  "family": "auto",
+  "manifest": "data/external/fleurs/test.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy"
+}

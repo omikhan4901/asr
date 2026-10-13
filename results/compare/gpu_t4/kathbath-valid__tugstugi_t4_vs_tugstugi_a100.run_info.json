@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/kathbath-valid/tugstugi_a100/predictions.jsonl --b data/phase4/t4check_lora/phase4/results/zeroshot/kathbath-valid/tugstugi_t4/predictions.jsonl --name kathbath-valid__tugstugi_t4_vs_tugstugi_a100 --out_dir results/compare/gpu_t4",
+      "git_commit": "44ec64bd353284824218d2f596cbf882b9ca3c88",
+      "git_dirty": false,
+      "start": "2026-10-11T22:29:16",
+      "end": "2026-10-11T22:29:16",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/kathbath-valid/tugstugi_a100/predictions.jsonl": "603714b998c93bf29548d41d629ab4a55018bf5592d66805fc83aaec0e464804",
+        "data/phase4/t4check_lora/phase4/results/zeroshot/kathbath-valid/tugstugi_t4/predictions.jsonl": "ba41c4431449b9ac031489daede3bb07fbd0ff36f3ba819e2973163722a1a856"
+      },
+      "outputs": {
+        "results\\compare\\gpu_t4\\kathbath-valid__tugstugi_t4_vs_tugstugi_a100.json": "c1e4456e340225403da34bba12e92ef45c4cff9ce1b0b959947a1352e5426081"
+      }
+    }
+  ]
+}

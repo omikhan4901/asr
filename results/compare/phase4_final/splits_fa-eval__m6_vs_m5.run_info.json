@@ -1,0 +1,100 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/kaggle/finetuned/splits_fa-eval/m5_merged_t4/predictions.jsonl --b results/kaggle/finetuned/splits_fa-eval/m6_harmonized_t4/predictions.jsonl --name splits_fa-eval__m6_vs_m5 --out_dir results/compare/phase4_final",
+      "git_commit": "c07a59449b8ea159b99ab43bda2325db9a74f78f",
+      "git_dirty": false,
+      "start": "2026-10-12T01:24:07",
+      "end": "2026-10-12T01:24:08",
+      "runtime_s": 0.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/kaggle/finetuned/splits_fa-eval/m5_merged_t4/predictions.jsonl": "f486dc369044618bc208863ebb121d83e7e067fc6bdaaa129161a607f8db237a",
+        "results/kaggle/finetuned/splits_fa-eval/m6_harmonized_t4/predictions.jsonl": "e136caebf69ed8ab35086dff8b868c7d9794ba654cdcbefa6126c019deb0c0f8"
+      },
+      "outputs": {
+        "results\\compare\\phase4_final\\splits_fa-eval__m6_vs_m5.json": "eab784124dd7ed8330ba2c49d8e4eb9f9182db303097d8d8169a5ec9767d4c35"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/kaggle/finetuned/splits_fa-eval/m5_merged_t4/predictions.jsonl --b results/kaggle/finetuned/splits_fa-eval/m6_harmonized_t4/predictions.jsonl --name splits_fa-eval__m6_vs_m5 --out_dir results/compare/phase4_final",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T20:01:02",
+      "end": "2026-10-13T20:01:02",
+      "runtime_s": 0.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/kaggle/finetuned/splits_fa-eval/m5_merged_t4/predictions.jsonl": "f486dc369044618bc208863ebb121d83e7e067fc6bdaaa129161a607f8db237a",
+        "results/kaggle/finetuned/splits_fa-eval/m6_harmonized_t4/predictions.jsonl": "e136caebf69ed8ab35086dff8b868c7d9794ba654cdcbefa6126c019deb0c0f8"
+      },
+      "outputs": {
+        "results\\compare\\phase4_final\\splits_fa-eval__m6_vs_m5.json": "eab784124dd7ed8330ba2c49d8e4eb9f9182db303097d8d8169a5ec9767d4c35"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/kaggle/finetuned/splits_fa-eval/m5_merged_t4/predictions.jsonl --b results/kaggle/finetuned/splits_fa-eval/m6_harmonized_t4/predictions.jsonl --name splits_fa-eval__m6_vs_m5 --out_dir results/compare/phase4_final",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T20:40:05",
+      "end": "2026-10-13T20:40:05",
+      "runtime_s": 0.6,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/kaggle/finetuned/splits_fa-eval/m5_merged_t4/predictions.jsonl": "f486dc369044618bc208863ebb121d83e7e067fc6bdaaa129161a607f8db237a",
+        "results/kaggle/finetuned/splits_fa-eval/m6_harmonized_t4/predictions.jsonl": "e136caebf69ed8ab35086dff8b868c7d9794ba654cdcbefa6126c019deb0c0f8"
+      },
+      "outputs": {
+        "results\\compare\\phase4_final\\splits_fa-eval__m6_vs_m5.json": "eab784124dd7ed8330ba2c49d8e4eb9f9182db303097d8d8169a5ec9767d4c35"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/kaggle/finetuned/splits_fa-eval/m5_merged_t4/predictions.jsonl --b results/kaggle/finetuned/splits_fa-eval/m6_harmonized_t4/predictions.jsonl --name splits_fa-eval__m6_vs_m5 --out_dir results/compare/phase4_final",
+      "git_commit": "1740748792e396489f80906c1c35e92e7f45ce30",
+      "git_dirty": true,
+      "start": "2026-10-13T21:15:59",
+      "end": "2026-10-13T21:16:00",
+      "runtime_s": 0.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/kaggle/finetuned/splits_fa-eval/m5_merged_t4/predictions.jsonl": "f486dc369044618bc208863ebb121d83e7e067fc6bdaaa129161a607f8db237a",
+        "results/kaggle/finetuned/splits_fa-eval/m6_harmonized_t4/predictions.jsonl": "e136caebf69ed8ab35086dff8b868c7d9794ba654cdcbefa6126c019deb0c0f8"
+      },
+      "outputs": {
+        "results\\compare\\phase4_final\\splits_fa-eval__m6_vs_m5.json": "eab784124dd7ed8330ba2c49d8e4eb9f9182db303097d8d8169a5ec9767d4c35"
+      }
+    }
+  ]
+}

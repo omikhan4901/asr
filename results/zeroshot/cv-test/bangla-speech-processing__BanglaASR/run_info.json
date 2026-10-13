@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe pipeline/eval_zero_shot.py --manifest data/external/cv/test.csv --model bangla-speech-processing/BanglaASR",
+      "git_commit": "2cda47b567498b7b205252bdb232ed919ec107e6",
+      "git_dirty": false,
+      "start": "2026-10-09T09:35:31",
+      "end": "2026-10-09T10:30:57",
+      "runtime_s": 3325.6,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "data\\external\\cv\\test.csv": "aaaba46c8afefba104f9a879de5887a27396402ad5d06730b30577144db1f501"
+      },
+      "outputs": {
+        "results\\zeroshot\\cv-test\\bangla-speech-processing__BanglaASR\\predictions.jsonl": "4a2895322cd588e987021bed4b71bae84f41d0d6484afaa18c00cdfb10b4a4ce",
+        "results\\zeroshot\\cv-test\\bangla-speech-processing__BanglaASR\\metrics.json": "c1de234973d2610bbeb10c1f24a4cd07eaf2d919f27bc9fbdb6169cd7bee65eb"
+      }
+    }
+  ]
+}

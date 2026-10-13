@@ -1,0 +1,76 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/finetuned/fleurs-test/m1_full/predictions.jsonl --b results/kaggle/finetuned/fleurs-test/soup_m1_full+m5_merged_t4//predictions.jsonl --name fleurs-test__soup_m1_full+m5_merged_t4_vs_m1_full --out_dir results/compare/phase4_final",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T20:03:31",
+      "end": "2026-10-13T20:03:31",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/finetuned/fleurs-test/m1_full/predictions.jsonl": "6a415e10fb47f59e1b28720ded8fa4e22074cf21bb4d346b6448ce90a347664b",
+        "results/kaggle/finetuned/fleurs-test/soup_m1_full+m5_merged_t4//predictions.jsonl": "956eb285cca4eef37c057ab6902a174261da7cc293637aa47399f246a3a0a243"
+      },
+      "outputs": {
+        "results\\compare\\phase4_final\\fleurs-test__soup_m1_full+m5_merged_t4_vs_m1_full.json": "42a8c870e08442831ad9ac693072513fbc0e87cb113754c32382022705d2453d"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/finetuned/fleurs-test/m1_full/predictions.jsonl --b results/kaggle/finetuned/fleurs-test/soup_m1_full+m5_merged_t4//predictions.jsonl --name fleurs-test__soup_m1_full+m5_merged_t4_vs_m1_full --out_dir results/compare/phase4_final",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T20:42:41",
+      "end": "2026-10-13T20:42:41",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/finetuned/fleurs-test/m1_full/predictions.jsonl": "6a415e10fb47f59e1b28720ded8fa4e22074cf21bb4d346b6448ce90a347664b",
+        "results/kaggle/finetuned/fleurs-test/soup_m1_full+m5_merged_t4//predictions.jsonl": "956eb285cca4eef37c057ab6902a174261da7cc293637aa47399f246a3a0a243"
+      },
+      "outputs": {
+        "results\\compare\\phase4_final\\fleurs-test__soup_m1_full+m5_merged_t4_vs_m1_full.json": "42a8c870e08442831ad9ac693072513fbc0e87cb113754c32382022705d2453d"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/finetuned/fleurs-test/m1_full/predictions.jsonl --b results/kaggle/finetuned/fleurs-test/soup_m1_full+m5_merged_t4//predictions.jsonl --name fleurs-test__soup_m1_full+m5_merged_t4_vs_m1_full --out_dir results/compare/phase4_final",
+      "git_commit": "1740748792e396489f80906c1c35e92e7f45ce30",
+      "git_dirty": true,
+      "start": "2026-10-13T21:19:44",
+      "end": "2026-10-13T21:19:44",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/finetuned/fleurs-test/m1_full/predictions.jsonl": "6a415e10fb47f59e1b28720ded8fa4e22074cf21bb4d346b6448ce90a347664b",
+        "results/kaggle/finetuned/fleurs-test/soup_m1_full+m5_merged_t4//predictions.jsonl": "956eb285cca4eef37c057ab6902a174261da7cc293637aa47399f246a3a0a243"
+      },
+      "outputs": {
+        "results\\compare\\phase4_final\\fleurs-test__soup_m1_full+m5_merged_t4_vs_m1_full.json": "42a8c870e08442831ad9ac693072513fbc0e87cb113754c32382022705d2453d"
+      }
+    }
+  ]
+}

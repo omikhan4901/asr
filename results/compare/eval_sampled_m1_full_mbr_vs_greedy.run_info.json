@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/finetuned/splits_fa-eval/m1_full/predictions.jsonl --b data/kaggle_out/session_B/phase4/nbest/splits_fa-eval__m1_full_scored.jsonl:mbr --name eval_sampled_m1_full_mbr_vs_greedy",
+      "git_commit": "af3ba1c23620c3a8e9bb21de311d6aceadf6794c",
+      "git_dirty": false,
+      "start": "2026-10-11T09:38:04",
+      "end": "2026-10-11T09:38:04",
+      "runtime_s": 0.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/finetuned/splits_fa-eval/m1_full/predictions.jsonl": "16543c45bba215f8020d8cd18158ab217e7eb666a96735d58ce5ba4c81681350",
+        "data/kaggle_out/session_B/phase4/nbest/splits_fa-eval__m1_full_scored.jsonl": "465d4d96cb441b3d470db0375b6a550bfef0dae53e4b0623f9c9dff39446f354"
+      },
+      "outputs": {
+        "results\\compare\\eval_sampled_m1_full_mbr_vs_greedy.json": "57d419337d8323be5f72777b82156fd6cd213d232f4f88a28bee76dc2810cf86"
+      }
+    }
+  ]
+}

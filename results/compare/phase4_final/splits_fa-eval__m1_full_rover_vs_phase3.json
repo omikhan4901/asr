@@ -1,0 +1,19 @@
+{
+  "a": "results/phase3/splits_fa-eval/mbr_lm_x/predictions.jsonl",
+  "b": "results/phase4_stack/splits_fa-eval/rover/predictions.jsonl",
+  "n_utterances": 4234,
+  "n_groups": 22,
+  "ref_words": 120029,
+  "wer_a": 0.1746078031142474,
+  "wer_b": 0.10889035149838788,
+  "diff_b_minus_a": -0.0657174516158595,
+  "diff_ci95": [
+    -0.07550384397737801,
+    -0.057169150809359706
+  ],
+  "p_b_better": 1.0,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

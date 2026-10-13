@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/external/kathbath/valid.csv --model checkpoints/m1_decoder/final --name m1_decoder --out_dir results/finetuned --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T23:17:59",
+      "end": "2026-10-09T23:24:23",
+      "runtime_s": 384.4,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-80GB"
+      },
+      "inputs": {
+        "data/external/kathbath/valid.csv": "48520d1d09f4a741f0669d5d99f8e63953424febed731a0cd19673e7dd1abfbc"
+      },
+      "outputs": {
+        "results/finetuned/kathbath-valid/m1_decoder/predictions.jsonl": "6340b08de9941db471554d9adcde27257a6907014210d91f204ec9865c278071",
+        "results/finetuned/kathbath-valid/m1_decoder/metrics.json": "ef3e48ee65787caa8dd6c4c8144d3e52554a77fbf596a2a93aefd8c55766b448"
+      }
+    }
+  ]
+}

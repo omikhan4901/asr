@@ -1,0 +1,100 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/kathbath-valid/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/kathbath-valid/m1_full_4ep_t4//predictions.jsonl --name kathbath-valid__m1_full_4ep_t4_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "c07a59449b8ea159b99ab43bda2325db9a74f78f",
+      "git_dirty": false,
+      "start": "2026-10-12T01:16:24",
+      "end": "2026-10-12T01:16:24",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/kathbath-valid/tugstugi_a100/predictions.jsonl": "603714b998c93bf29548d41d629ab4a55018bf5592d66805fc83aaec0e464804",
+        "results/kaggle/finetuned/kathbath-valid/m1_full_4ep_t4//predictions.jsonl": "a0f716f759a98dc47e940bcfc2a2a8e7b5a5085014d5e736ec8e344231829389"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\kathbath-valid__m1_full_4ep_t4_vs_tugstugi_a100.json": "e494c3b74249f42ba7f3d410dfc28c093e92a578df507c591d8c28da322febc6"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/kathbath-valid/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/kathbath-valid/m1_full_4ep_t4//predictions.jsonl --name kathbath-valid__m1_full_4ep_t4_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T19:51:24",
+      "end": "2026-10-13T19:51:24",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/kathbath-valid/tugstugi_a100/predictions.jsonl": "603714b998c93bf29548d41d629ab4a55018bf5592d66805fc83aaec0e464804",
+        "results/kaggle/finetuned/kathbath-valid/m1_full_4ep_t4//predictions.jsonl": "a0f716f759a98dc47e940bcfc2a2a8e7b5a5085014d5e736ec8e344231829389"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\kathbath-valid__m1_full_4ep_t4_vs_tugstugi_a100.json": "e494c3b74249f42ba7f3d410dfc28c093e92a578df507c591d8c28da322febc6"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/kathbath-valid/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/kathbath-valid/m1_full_4ep_t4//predictions.jsonl --name kathbath-valid__m1_full_4ep_t4_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T20:29:57",
+      "end": "2026-10-13T20:29:57",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/kathbath-valid/tugstugi_a100/predictions.jsonl": "603714b998c93bf29548d41d629ab4a55018bf5592d66805fc83aaec0e464804",
+        "results/kaggle/finetuned/kathbath-valid/m1_full_4ep_t4//predictions.jsonl": "a0f716f759a98dc47e940bcfc2a2a8e7b5a5085014d5e736ec8e344231829389"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\kathbath-valid__m1_full_4ep_t4_vs_tugstugi_a100.json": "e494c3b74249f42ba7f3d410dfc28c093e92a578df507c591d8c28da322febc6"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/kathbath-valid/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/kathbath-valid/m1_full_4ep_t4//predictions.jsonl --name kathbath-valid__m1_full_4ep_t4_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "1740748792e396489f80906c1c35e92e7f45ce30",
+      "git_dirty": false,
+      "start": "2026-10-13T21:04:51",
+      "end": "2026-10-13T21:04:51",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/kathbath-valid/tugstugi_a100/predictions.jsonl": "603714b998c93bf29548d41d629ab4a55018bf5592d66805fc83aaec0e464804",
+        "results/kaggle/finetuned/kathbath-valid/m1_full_4ep_t4//predictions.jsonl": "a0f716f759a98dc47e940bcfc2a2a8e7b5a5085014d5e736ec8e344231829389"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\kathbath-valid__m1_full_4ep_t4_vs_tugstugi_a100.json": "e494c3b74249f42ba7f3d410dfc28c093e92a578df507c591d8c28da322febc6"
+      }
+    }
+  ]
+}

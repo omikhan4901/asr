@@ -1,0 +1,49 @@
+{
+  "runs": [
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/external/cv/test.csv --model bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium --name tugstugi_a100 --out_dir results/zeroshot --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T22:06:17",
+      "end": "2026-10-09T22:32:33",
+      "runtime_s": 1576.0,
+      "status": "failed: KeyboardInterrupt",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/external/cv/test.csv": "1661c0d045f1d3e4a410a0cd2b7f98c9fe250cdcb696c2264e495720e25a1ea8"
+      },
+      "outputs": {}
+    },
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/external/cv/test.csv --model bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium --name tugstugi_a100 --out_dir results/zeroshot --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T22:43:48",
+      "end": "2026-10-09T22:45:08",
+      "runtime_s": 79.9,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/external/cv/test.csv": "1661c0d045f1d3e4a410a0cd2b7f98c9fe250cdcb696c2264e495720e25a1ea8"
+      },
+      "outputs": {
+        "results/zeroshot/cv-test/tugstugi_a100/predictions.jsonl": "8055f44246657b89de8e1f37bd72e5b9a56c965648c049b0aa7b9b7b9ed7f053",
+        "results/zeroshot/cv-test/tugstugi_a100/metrics.json": "bbe8cd5905a1259d22448b7419753fe594d811695583400470b7bae20096d1a5"
+      }
+    }
+  ]
+}

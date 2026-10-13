@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python3 /tmp/code/pipeline/eval_zero_shot.py --batch_size 8 --manifest data/splits_fa/dev.csv --model models/m3_kathbath --name m3_kathbath_t4 --out_dir results/finetuned",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-11T03:29:39",
+      "end": "2026-10-11T03:36:02",
+      "runtime_s": 383.8,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.15",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.15.0",
+        "numpy": "2.1.3",
+        "pandas": "2.3.3",
+        "gpu": "Tesla T4"
+      },
+      "inputs": {
+        "data/splits_fa/dev.csv": "99325905fab2fdcb48f01ddf066ee4d5cd47da60eb4310336c10da148573d7db"
+      },
+      "outputs": {
+        "results/finetuned/splits_fa-dev/m3_kathbath_t4/predictions.jsonl": "2a635bf7e66a1f9e080c578871f6d3db7731435d11afe5fb4fcc409450e7bfac",
+        "results/finetuned/splits_fa-dev/m3_kathbath_t4/metrics.json": "5499903206378ea4fc80722b3fdd1c3fcf93e457ef0bc80b7495cb7659acdf8c"
+      }
+    }
+  ]
+}

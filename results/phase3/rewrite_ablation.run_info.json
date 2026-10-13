@@ -1,0 +1,27 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/phase3_rewrite_ablation.py",
+      "git_commit": "0233644c1e56ea704ccf194dc0eb85326f368595",
+      "git_dirty": false,
+      "start": "2026-10-09T21:55:09",
+      "end": "2026-10-09T21:56:10",
+      "runtime_s": 61.4,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/zeroshot/splits_fa-train/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl": "abaf943f5fe25e1c0864b3505d4644b3eeff606427bb4748692041b379535758"
+      },
+      "outputs": {
+        "results\\phase3\\rewrite_ablation.json": "e5038252bc964e024f6e52b34dbb6cd7786c4b4c1846197abe26ecd26e69ab20"
+      }
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/zeroshot/fleurs-test/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl --b results/zeroshot/fleurs-test/hishab__titu_stt_bn_conformer_large/predictions.jsonl --name fleurs-test_hishab_large_vs_tugstugi",
+      "git_commit": "9d29297e9e4565e40d4baffcf8b33883884ab1e0",
+      "git_dirty": false,
+      "start": "2026-10-09T02:08:22",
+      "end": "2026-10-09T02:08:22",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/zeroshot/fleurs-test/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl": "4795d8f23d0f8606757d7dbbf665513e785cafb5c30b18043568c312eeccad08",
+        "results/zeroshot/fleurs-test/hishab__titu_stt_bn_conformer_large/predictions.jsonl": "58a26ba5b450da77a5eb3e9065824a749e6a26cace942340e4aeefeaae4f28a4"
+      },
+      "outputs": {
+        "results\\compare\\fleurs-test_hishab_large_vs_tugstugi.json": "51e01b7a443e696d2095dc37b4a2976a24b6e1354bf0f3dee2d6cc8eac7e74e1"
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "nbest": "data/nbest_ext/eval_banglaasr.jsonl",
+  "n_utterances": 4234,
+  "n_candidates_max": 12,
+  "ref_words": 120029,
+  "wer_1best": 0.6096443359521448,
+  "wer_mbr": 0.6102108657074541,
+  "wer_utt_oracle": 0.5333960959434804,
+  "coverage_miss_rate": 0.4526239492122737,
+  "mbr_gap_recovery": -0.00743006993006993,
+  "onebest_ref_errors": 71227,
+  "onebest_ref_errors_selection_proof_frac": 0.762744464879891,
+  "mbr_temperature": 0.5
+}

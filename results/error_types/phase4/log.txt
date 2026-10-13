@@ -1,0 +1,225 @@
+tugstugi_a100:   0%|          | 0/9408 [00:00<?, ?it/s]                                                       D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+cv-test          tugstugi_a100                                 WER 14.80  variant share 41.5% [40.5, 42.7]
+m1_decoder:   0%|          | 0/9408 [00:00<?, ?it/s]                                                    D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+cv-test          m1_decoder                                    WER 13.13  variant share 38.6% [37.4, 39.8]
+m1_encoder:   0%|          | 0/9408 [00:00<?, ?it/s]                                                    D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+cv-test          m1_encoder                                    WER 14.69  variant share 40.7% [39.6, 41.9]
+m1_full:   0%|          | 0/9408 [00:00<?, ?it/s]                                                 D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+cv-test          m1_full                                       WER 12.80  variant share 39.8% [38.6, 41.2]
+tugstugi_a100:   0%|          | 0/920 [00:00<?, ?it/s]                                                      D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+fleurs-test      tugstugi_a100                                 WER 21.54  variant share 40.8% [37.6, 44.0]
+m1_decoder:   0%|          | 0/920 [00:00<?, ?it/s]                                                   D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+fleurs-test      m1_decoder                                    WER 18.61  variant share 38.1% [34.9, 41.2]
+m1_encoder:   0%|          | 0/920 [00:00<?, ?it/s]                                                   D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+fleurs-test      m1_encoder                                    WER 19.90  variant share 36.5% [33.6, 39.3]
+m1_full:   0%|          | 0/920 [00:00<?, ?it/s]                                                D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+fleurs-test      m1_full                                       WER 18.34  variant share 37.6% [34.4, 41.0]
+m1_lora:   0%|          | 0/920 [00:00<?, ?it/s]                                                D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+fleurs-test      m1_lora                                       WER 18.40  variant share 37.4% [34.2, 40.6]
+tugstugi_a100:   0%|          | 0/2236 [00:00<?, ?it/s]                                                       D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+kathbath-valid   tugstugi_a100                                 WER 14.81  variant share 49.7% [46.6, 53.3]
+m1_decoder:   0%|          | 0/2236 [00:00<?, ?it/s]                                                    D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+kathbath-valid   m1_decoder                                    WER 13.62  variant share 48.4% [44.6, 51.9]
+m1_encoder:   0%|          | 0/2236 [00:00<?, ?it/s]                                                    D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+kathbath-valid   m1_encoder                                    WER 14.59  variant share 47.0% [44.1, 50.3]
+m1_full:   0%|          | 0/2236 [00:00<?, ?it/s]                                                 D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+kathbath-valid   m1_full                                       WER 13.48  variant share 50.0% [46.8, 53.0]
+tugstugi_a100:   0%|          | 0/646 [00:00<?, ?it/s]                                                      D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-dev    tugstugi_a100                                 WER 29.31  variant share 28.0% [23.3, 32.5]
+m1_decoder:   0%|          | 0/646 [00:00<?, ?it/s]                                                   D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-dev    m1_decoder                                    WER 19.38  variant share 18.8% [15.0, 21.5]
+m1_encoder:   0%|          | 0/646 [00:00<?, ?it/s]                                                   D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-dev    m1_encoder                                    WER 19.72  variant share 21.9% [18.3, 24.5]
+m1_full:   0%|          | 0/646 [00:00<?, ?it/s]                                                D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-dev    m1_full                                       WER 16.74  variant share 18.7% [14.8, 22.1]
+m1_lora:   0%|          | 0/646 [00:00<?, ?it/s]                                                D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-dev    m1_lora                                       WER 18.38  variant share 18.6% [14.5, 22.5]
+tugstugi_a100:   0%|          | 0/4234 [00:00<?, ?it/s]tugstugi_a100:  29%|██▊       | 1209/4234 [00:10<00:25, 120.85it/s]                                                                   D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-eval   tugstugi_a100                                 WER 22.70  variant share 40.6% [36.2, 44.8]
+m1_decoder:   0%|          | 0/4234 [00:00<?, ?it/s]m1_decoder:  31%|███       | 1321/4234 [00:10<00:22, 132.00it/s]                                                                D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-eval   m1_decoder                                    WER 12.99  variant share 25.9% [22.1, 29.8]
+m1_encoder:   0%|          | 0/4234 [00:00<?, ?it/s]m1_encoder:  31%|███       | 1315/4234 [00:10<00:22, 131.46it/s]                                                                D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-eval   m1_encoder                                    WER 13.83  variant share 27.7% [24.2, 31.3]
+m1_full:   0%|          | 0/4234 [00:00<?, ?it/s]m1_full:  31%|███       | 1309/4234 [00:10<00:22, 130.79it/s]                                                             D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-eval   m1_full                                       WER 11.34  variant share 28.5% [24.9, 32.0]
+m1_lora:   0%|          | 0/4234 [00:00<?, ?it/s]m1_lora:  31%|███       | 1310/4234 [00:10<00:22, 130.98it/s]                                                             D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-eval   m1_lora                                       WER 11.76  variant share 28.3% [24.6, 32.0]
+m1_full_4ep_t4:   0%|          | 0/9408 [00:00<?, ?it/s]                                                        D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+cv-test          m1_full_4ep_t4                                WER 15.14  variant share 37.6% [36.6, 38.7]
+m1_full_beam5_t4:   0%|          | 0/9408 [00:00<?, ?it/s]                                                          D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+cv-test          m1_full_beam5_t4                              WER 12.57  variant share 40.6% [39.5, 41.8]
+m1_lora_t4:   0%|          | 0/9408 [00:00<?, ?it/s]                                                    D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+cv-test          m1_lora_t4                                    WER 12.84  variant share 39.7% [38.6, 40.9]
+m2_cv_t4:   0%|          | 0/9408 [00:00<?, ?it/s]                                                  D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+cv-test          m2_cv_t4                                      WER 10.46  variant share 42.5% [41.2, 43.8]
+m3_kathbath_t4:   0%|          | 0/9408 [00:00<?, ?it/s]                                                        D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+cv-test          m3_kathbath_t4                                WER 11.52  variant share 41.0% [39.8, 42.2]
+m4_shrutilipi_t4:   0%|          | 0/9408 [00:00<?, ?it/s]                                                          D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+cv-test          m4_shrutilipi_t4                              WER 12.66  variant share 42.0% [40.8, 43.2]
+m5_merged_t4:   0%|          | 0/9408 [00:00<?, ?it/s]                                                      D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+cv-test          m5_merged_t4                                  WER 10.97  variant share 42.3% [41.0, 43.6]
+m6_harmonized_t4:   0%|          | 0/9408 [00:00<?, ?it/s]                                                          D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+cv-test          m6_harmonized_t4                              WER 11.23  variant share 42.6% [41.4, 43.9]
+soup_m1_full+m1_full+m1_full+base_t4:   0%|          | 0/9408 [00:00<?, ?it/s]                                                                              D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+cv-test          soup_m1_full+m1_full+m1_full+base_t4          WER 12.27  variant share 40.7% [39.5, 42.0]
+soup_m1_full+m2_cv+m3_kathbath+m4_shruti:   0%|          | 0/9408 [00:00<?, ?it/s]                                                                                  D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+cv-test          soup_m1_full+m2_cv+m3_kathbath+m4_shrutilipi+ WER 10.38  variant share 44.2% [43.0, 45.6]
+soup_m1_full+m5_merged_t4:   0%|          | 0/9408 [00:00<?, ?it/s]                                                                   D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+cv-test          soup_m1_full+m5_merged_t4                     WER 11.14  variant share 42.5% [41.3, 43.8]
+m1_full_4ep_t4:   0%|          | 0/920 [00:00<?, ?it/s]                                                       D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+fleurs-test      m1_full_4ep_t4                                WER 19.72  variant share 37.5% [34.5, 40.6]
+m1_full_beam5_t4:   0%|          | 0/920 [00:00<?, ?it/s]                                                         D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+fleurs-test      m1_full_beam5_t4                              WER 18.01  variant share 38.4% [35.1, 41.8]
+m2_cv_t4:   0%|          | 0/920 [00:00<?, ?it/s]                                                 D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+fleurs-test      m2_cv_t4                                      WER 18.06  variant share 36.6% [33.2, 40.2]
+m3_kathbath_t4:   0%|          | 0/920 [00:00<?, ?it/s]                                                       D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+fleurs-test      m3_kathbath_t4                                WER 16.44  variant share 34.0% [30.9, 37.3]
+m4_shrutilipi_t4:   0%|          | 0/920 [00:00<?, ?it/s]                                                         D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+fleurs-test      m4_shrutilipi_t4                              WER 19.38  variant share 36.9% [33.8, 40.1]
+m5_merged_t4:   0%|          | 0/920 [00:00<?, ?it/s]                                                     D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+fleurs-test      m5_merged_t4                                  WER 16.85  variant share 36.8% [33.6, 40.2]
+m6_harmonized_t4:   0%|          | 0/920 [00:00<?, ?it/s]                                                         D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+fleurs-test      m6_harmonized_t4                              WER 17.03  variant share 37.5% [34.2, 41.0]
+soup_m1_full+m1_full+m1_full+base_t4:   0%|          | 0/920 [00:00<?, ?it/s]                                                                             D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+fleurs-test      soup_m1_full+m1_full+m1_full+base_t4          WER 18.00  variant share 37.6% [34.0, 41.1]
+soup_m1_full+m2_cv+m3_kathbath+m4_shruti:   0%|          | 0/920 [00:00<?, ?it/s]                                                                                 D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+fleurs-test      soup_m1_full+m2_cv+m3_kathbath+m4_shrutilipi+ WER 16.57  variant share 36.6% [33.2, 40.0]
+soup_m1_full+m5_merged_t4:   0%|          | 0/920 [00:00<?, ?it/s]                                                                  D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+fleurs-test      soup_m1_full+m5_merged_t4                     WER 16.97  variant share 38.1% [34.9, 41.6]
+m1_full_4ep_t4:   0%|          | 0/2236 [00:00<?, ?it/s]                                                        D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+kathbath-valid   m1_full_4ep_t4                                WER 14.98  variant share 47.0% [43.8, 50.4]
+m1_full_beam5_t4:   0%|          | 0/2236 [00:00<?, ?it/s]                                                          D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+kathbath-valid   m1_full_beam5_t4                              WER 13.39  variant share 49.5% [46.2, 52.6]
+m1_lora_t4:   0%|          | 0/2236 [00:00<?, ?it/s]                                                    D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+kathbath-valid   m1_lora_t4                                    WER 13.61  variant share 49.0% [45.4, 52.2]
+m2_cv_t4:   0%|          | 0/2236 [00:00<?, ?it/s]                                                  D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+kathbath-valid   m2_cv_t4                                      WER 12.07  variant share 49.2% [45.1, 52.7]
+m3_kathbath_t4:   0%|          | 0/2236 [00:00<?, ?it/s]                                                        D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+kathbath-valid   m3_kathbath_t4                                WER 10.44  variant share 50.0% [46.4, 53.4]
+m4_shrutilipi_t4:   0%|          | 0/2236 [00:00<?, ?it/s]                                                          D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+kathbath-valid   m4_shrutilipi_t4                              WER 13.62  variant share 52.6% [49.1, 55.7]
+m5_merged_t4:   0%|          | 0/2236 [00:00<?, ?it/s]                                                      D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+kathbath-valid   m5_merged_t4                                  WER 11.06  variant share 49.3% [45.7, 52.9]
+m6_harmonized_t4:   0%|          | 0/2236 [00:00<?, ?it/s]                                                          D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+kathbath-valid   m6_harmonized_t4                              WER 11.24  variant share 52.0% [48.1, 55.4]
+soup_m1_full+m1_full+m1_full+base_t4:   0%|          | 0/2236 [00:00<?, ?it/s]                                                                              D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+kathbath-valid   soup_m1_full+m1_full+m1_full+base_t4          WER 12.87  variant share 50.4% [46.9, 53.7]
+soup_m1_full+m2_cv+m3_kathbath+m4_shruti:   0%|          | 0/2236 [00:00<?, ?it/s]                                                                                  D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+kathbath-valid   soup_m1_full+m2_cv+m3_kathbath+m4_shrutilipi+ WER 10.60  variant share 51.7% [47.9, 55.3]
+soup_m1_full+m5_merged_t4:   0%|          | 0/2236 [00:00<?, ?it/s]                                                                   D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+kathbath-valid   soup_m1_full+m5_merged_t4                     WER 11.47  variant share 52.2% [49.2, 54.9]
+m1_full_4ep_t4:   0%|          | 0/646 [00:00<?, ?it/s]                                                       D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-dev    m1_full_4ep_t4                                WER 16.21  variant share 18.7% [13.7, 23.0]
+m1_full_beam5_t4:   0%|          | 0/646 [00:00<?, ?it/s]                                                         D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-dev    m1_full_beam5_t4                              WER 16.19  variant share 19.8% [16.1, 22.8]
+m2_cv_t4:   0%|          | 0/646 [00:00<?, ?it/s]                                                 D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-dev    m2_cv_t4                                      WER 27.99  variant share 27.6% [23.2, 31.8]
+m3_kathbath_t4:   0%|          | 0/646 [00:00<?, ?it/s]                                                       D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-dev    m3_kathbath_t4                                WER 27.46  variant share 27.2% [23.5, 30.4]
+m4_shrutilipi_t4:   0%|          | 0/646 [00:00<?, ?it/s]                                                         D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-dev    m4_shrutilipi_t4                              WER 27.80  variant share 27.6% [23.3, 31.2]
+m5_merged_t4:   0%|          | 0/646 [00:00<?, ?it/s]                                                     D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-dev    m5_merged_t4                                  WER 19.11  variant share 20.1% [16.6, 22.4]
+m6_harmonized_t4:   0%|          | 0/646 [00:00<?, ?it/s]                                                         D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-dev    m6_harmonized_t4                              WER 18.96  variant share 20.0% [16.4, 22.3]
+soup_m1_full+m1_full+m1_full+base_t4:   0%|          | 0/646 [00:00<?, ?it/s]                                                                             D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-dev    soup_m1_full+m1_full+m1_full+base_t4          WER 17.67  variant share 21.0% [16.9, 24.1]
+soup_m1_full+m2_cv+m3_kathbath+m4_shruti:   0%|          | 0/646 [00:00<?, ?it/s]                                                                                 D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-dev    soup_m1_full+m2_cv+m3_kathbath+m4_shrutilipi+ WER 20.72  variant share 25.0% [21.5, 27.6]
+soup_m1_full+m5_merged_t4:   0%|          | 0/646 [00:00<?, ?it/s]                                                                  D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-dev    soup_m1_full+m5_merged_t4                     WER 17.14  variant share 20.2% [15.9, 22.9]
+m1_full_4ep_t4:   0%|          | 0/4234 [00:00<?, ?it/s]m1_full_4ep_t4:  31%|███       | 1310/4234 [00:10<00:22, 130.94it/s]                                                                    D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-eval   m1_full_4ep_t4                                WER 11.02  variant share 27.6% [24.1, 31.2]
+m1_full_beam5_t4:   0%|          | 0/4234 [00:00<?, ?it/s]m1_full_beam5_t4:  31%|███       | 1322/4234 [00:10<00:22, 132.14it/s]                                                                      D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-eval   m1_full_beam5_t4                              WER 10.84  variant share 29.5% [25.7, 33.1]
+m2_cv_t4:   0%|          | 0/4234 [00:00<?, ?it/s]m2_cv_t4:  29%|██▉       | 1227/4234 [00:10<00:26, 114.10it/s]                                                              D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-eval   m2_cv_t4                                      WER 20.50  variant share 37.5% [33.3, 41.5]
+m3_kathbath_t4:   0%|          | 0/4234 [00:00<?, ?it/s]m3_kathbath_t4:  31%|███▏      | 1325/4234 [00:10<00:21, 132.42it/s]                                                                    D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-eval   m3_kathbath_t4                                WER 20.40  variant share 38.0% [33.6, 42.4]
+m4_shrutilipi_t4:   0%|          | 0/4234 [00:00<?, ?it/s]m4_shrutilipi_t4:  31%|███       | 1309/4234 [00:10<00:22, 130.86it/s]                                                                      D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-eval   m4_shrutilipi_t4                              WER 20.64  variant share 37.0% [32.7, 41.2]
+m5_merged_t4:   0%|          | 0/4234 [00:00<?, ?it/s]m5_merged_t4:  31%|███▏      | 1331/4234 [00:10<00:21, 133.03it/s]                                                                  D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-eval   m5_merged_t4                                  WER 13.84  variant share 29.8% [25.9, 33.4]
+m6_harmonized_t4:   0%|          | 0/4234 [00:00<?, ?it/s]m6_harmonized_t4:  31%|███       | 1316/4234 [00:10<00:22, 131.55it/s]                                                                      D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-eval   m6_harmonized_t4                              WER 13.81  variant share 29.3% [25.4, 32.9]
+soup_m1_full+m1_full+m1_full+base_t4:   0%|          | 0/4234 [00:00<?, ?it/s]soup_m1_full+m1_full+m1_full+base_t4:  31%|███       | 1301/4234 [00:10<00:22, 130.05it/s]                                                                                          D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-eval   soup_m1_full+m1_full+m1_full+base_t4          WER 11.87  variant share 29.6% [26.1, 33.2]
+soup_m1_full+m2_cv+m3_kathbath+m4_shruti:   0%|          | 0/4234 [00:00<?, ?it/s]soup_m1_full+m2_cv+m3_kathbath+m4_shruti:  31%|███       | 1323/4234 [00:10<00:22, 132.26it/s]                                                                                              D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-eval   soup_m1_full+m2_cv+m3_kathbath+m4_shrutilipi+ WER 15.26  variant share 34.6% [30.2, 38.8]
+soup_m1_full+m5_merged_t4:   0%|          | 0/4234 [00:00<?, ?it/s]soup_m1_full+m5_merged_t4:  31%|███       | 1322/4234 [00:10<00:22, 132.16it/s]                                                                               D:\Projects\ASR Paper Code\analysis\error_types.py:92: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  variant = u[list(VARIANT_TYPES)].sum(1).values
+splits_fa-eval   soup_m1_full+m5_merged_t4                     WER 11.96  variant share 29.8% [26.0, 33.4]

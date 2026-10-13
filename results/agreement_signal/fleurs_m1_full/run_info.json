@@ -1,0 +1,29 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/agreement_signal.py --pred results/modal/finetuned/fleurs-test/m1_full/predictions.jsonl --nbest data/kaggle_out/session_B/phase4/nbest/fleurs-test__m1_full_scored.jsonl --name fleurs_m1_full",
+      "git_commit": "af3ba1c23620c3a8e9bb21de311d6aceadf6794c",
+      "git_dirty": false,
+      "start": "2026-10-11T09:38:40",
+      "end": "2026-10-11T09:38:43",
+      "runtime_s": 3.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/finetuned/fleurs-test/m1_full/predictions.jsonl": "6a415e10fb47f59e1b28720ded8fa4e22074cf21bb4d346b6448ce90a347664b",
+        "data/kaggle_out/session_B/phase4/nbest/fleurs-test__m1_full_scored.jsonl": "7cf7100b1f7c0ad6eb63a58a3c0b4c66b7d89ddcddb8dd641936a7e8a3bd7a35"
+      },
+      "outputs": {
+        "results\\agreement_signal\\fleurs_m1_full\\summary.json": "09ce77c18613fe3aa562c5723f627e8c518770c5bba2dd4f8c7f0714007ff015",
+        "results\\agreement_signal\\fleurs_m1_full\\by_level.csv": "c8ef9f59df2b9d1bf4b2a7cdb663f5510c46091f643522bc4acb29cdbcaeae80",
+        "results\\agreement_signal\\fleurs_m1_full\\flagging.csv": "c32e3215c73b287e4eab342f5b2e72806bf83209486a67f8844b4dd4dd90cc93"
+      }
+    }
+  ]
+}

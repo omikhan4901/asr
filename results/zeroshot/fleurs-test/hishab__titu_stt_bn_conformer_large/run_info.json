@@ -1,0 +1,27 @@
+{
+  "runs": [
+    {
+      "command": "python.exe pipeline/eval_zero_shot.py --manifest data/external/fleurs/test.csv --model hishab/titu_stt_bn_conformer_large",
+      "git_commit": "9d29297e9e4565e40d4baffcf8b33883884ab1e0",
+      "git_dirty": false,
+      "start": "2026-10-09T02:06:49",
+      "end": "2026-10-09T02:06:50",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "data\\external\\fleurs\\test.csv": "09e6c8e62b06869b1cb89a651002e8f1d2d101e4a18580bd31a2710f7a634c74"
+      },
+      "outputs": {
+        "results\\zeroshot\\fleurs-test\\hishab__titu_stt_bn_conformer_large\\predictions.jsonl": "58a26ba5b450da77a5eb3e9065824a749e6a26cace942340e4aeefeaae4f28a4",
+        "results\\zeroshot\\fleurs-test\\hishab__titu_stt_bn_conformer_large\\metrics.json": "10da4bbd8232ac4abe4a805d24645abaa138ff789c44148fbf5c2d29409ef5c7"
+      }
+    }
+  ]
+}

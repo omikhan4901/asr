@@ -1,0 +1,49 @@
+{
+  "runs": [
+    {
+      "command": "python.exe pipeline/eval_zero_shot.py --manifest data/splits_fa/train_clean.csv --model bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium --set_name splits_fa-train",
+      "git_commit": "5142a5721a4651ad1d8a7097eba6e721e51fdb0c",
+      "git_dirty": true,
+      "start": "2026-10-09T19:01:42",
+      "end": "2026-10-09T20:16:05",
+      "runtime_s": 4462.5,
+      "status": "failed: KeyboardInterrupt",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "data\\splits_fa\\train_clean.csv": "ece0bbd5c998b58ec5c841b92b139ebdd029f81ac15c0388ead5f601e63ca883"
+      },
+      "outputs": {}
+    },
+    {
+      "command": "python.exe pipeline/eval_zero_shot.py --manifest data/splits_fa/train_clean.csv --model bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium --set_name splits_fa-train",
+      "git_commit": "0233644c1e56ea704ccf194dc0eb85326f368595",
+      "git_dirty": false,
+      "start": "2026-10-09T20:30:20",
+      "end": "2026-10-09T21:45:22",
+      "runtime_s": 4501.7,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "data\\splits_fa\\train_clean.csv": "ece0bbd5c998b58ec5c841b92b139ebdd029f81ac15c0388ead5f601e63ca883"
+      },
+      "outputs": {
+        "results\\zeroshot\\splits_fa-train\\bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium\\predictions.jsonl": "abaf943f5fe25e1c0864b3505d4644b3eeff606427bb4748692041b379535758",
+        "results\\zeroshot\\splits_fa-train\\bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium\\metrics.json": "093510cfd4de16c88388b11f44551407753f3589f5cc1a799ab3cead56b23361"
+      }
+    }
+  ]
+}

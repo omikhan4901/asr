@@ -1,0 +1,51 @@
+{
+  "runs": [
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/splits_fa/eval.csv --model checkpoints/m1_encoder/final --name m1_encoder --out_dir results/finetuned --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T21:50:10",
+      "end": "2026-10-09T22:24:55",
+      "runtime_s": 2085.4,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/splits_fa/eval.csv": "6ce00c484d1581ac60849749e8a20211518b1046a61dfce02015725fedd80238"
+      },
+      "outputs": {
+        "results/finetuned/splits_fa-eval/m1_encoder/predictions.jsonl": "b581c38bf147b72dd3015b3cf44a681533e20532fd86e4d728a0cde56335bf44",
+        "results/finetuned/splits_fa-eval/m1_encoder/metrics.json": "e98d61633f08de02011d34538676261626dd09d9672a796b90f41de7f903d517"
+      }
+    },
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/splits_fa/eval.csv --model checkpoints/m1_encoder/final --name m1_encoder --out_dir results/finetuned --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T22:43:59",
+      "end": "2026-10-09T22:44:00",
+      "runtime_s": 1.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/splits_fa/eval.csv": "6ce00c484d1581ac60849749e8a20211518b1046a61dfce02015725fedd80238"
+      },
+      "outputs": {
+        "results/finetuned/splits_fa-eval/m1_encoder/predictions.jsonl": "b581c38bf147b72dd3015b3cf44a681533e20532fd86e4d728a0cde56335bf44",
+        "results/finetuned/splits_fa-eval/m1_encoder/metrics.json": "0ae82b0619fb3e978b4eb4711bdc1d10f45bc94bbf69649361ab080609718a85"
+      }
+    }
+  ]
+}

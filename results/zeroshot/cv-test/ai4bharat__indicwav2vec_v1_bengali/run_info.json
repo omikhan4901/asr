@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe pipeline/eval_zero_shot.py --manifest data/external/cv/test.csv --model ai4bharat/indicwav2vec_v1_bengali",
+      "git_commit": "2cda47b567498b7b205252bdb232ed919ec107e6",
+      "git_dirty": false,
+      "start": "2026-10-09T09:32:15",
+      "end": "2026-10-09T09:35:28",
+      "runtime_s": 193.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "data\\external\\cv\\test.csv": "aaaba46c8afefba104f9a879de5887a27396402ad5d06730b30577144db1f501"
+      },
+      "outputs": {
+        "results\\zeroshot\\cv-test\\ai4bharat__indicwav2vec_v1_bengali\\predictions.jsonl": "1ec7ed86fe446e3dccf2a7151150b6304b4c727b476f10c37a1ff7602eb8c3e6",
+        "results\\zeroshot\\cv-test\\ai4bharat__indicwav2vec_v1_bengali\\metrics.json": "54d2100fbef9a214a04c1c6ea57dea2fbe4ca484efacbd5658d2ad2b416f69b0"
+      }
+    }
+  ]
+}

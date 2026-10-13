@@ -1,0 +1,21 @@
+{
+  "wer": 0.2824817335810512,
+  "cer": 0.12211618884777181,
+  "n_utterances": 4234,
+  "ref_words": 120029,
+  "n_groups": 22,
+  "wer_ci95": [
+    0.24265327951828414,
+    0.32952913137951206
+  ],
+  "cer_ci95": [
+    0.0957221486499868,
+    0.1570384947627541
+  ],
+  "set": "splits_fa-eval",
+  "model": "hishab/titu_stt_bn_fastconformer",
+  "family": "auto",
+  "manifest": "data\\splits_fa\\eval.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy"
+}

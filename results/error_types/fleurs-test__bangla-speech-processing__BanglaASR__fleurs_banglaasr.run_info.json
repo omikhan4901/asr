@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/error_types.py --pred results/zeroshot/fleurs-test/bangla-speech-processing__BanglaASR/predictions.jsonl --nbest data/nbest_ext/fleurs_banglaasr.jsonl",
+      "git_commit": "2cda47b567498b7b205252bdb232ed919ec107e6",
+      "git_dirty": false,
+      "start": "2026-10-09T08:47:54",
+      "end": "2026-10-09T08:47:57",
+      "runtime_s": 3.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results\\zeroshot\\fleurs-test\\bangla-speech-processing__BanglaASR\\predictions.jsonl": "4a6a6cffe466d4feaa90ccdc55cd8a9a2fcd979db3134837a13a1bbba8b63c8f",
+        "data/nbest_ext/fleurs_banglaasr.jsonl": "5a8581dd64949719ce6e532afd4d4594f166d81ae54fa0695ef72ae912b83e13"
+      },
+      "outputs": {
+        "results\\error_types\\with_nbest\\fleurs_banglaasr\\summary.json": "704eb2032745abc21a0c3c0fa7d82252a32ac8c0dbfee05ce8a40e209cbb3c57",
+        "results\\error_types\\with_nbest\\fleurs_banglaasr\\errors.csv": "5a1f13b95027af93a9c7fd062c1534425ba4e92145a376c776faa374916f81d9"
+      }
+    }
+  ]
+}

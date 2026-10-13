@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/splits_fa-eval/m1_full_beam5_t4//predictions.jsonl --name splits_fa-eval__m1_full_beam5_t4_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "1740748792e396489f80906c1c35e92e7f45ce30",
+      "git_dirty": true,
+      "start": "2026-10-13T21:07:37",
+      "end": "2026-10-13T21:07:38",
+      "runtime_s": 0.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl": "eb2392fcc6065f891c8511c242a2f702fbe7bccbf5a13972d3fead54a3b2ef85",
+        "results/kaggle/finetuned/splits_fa-eval/m1_full_beam5_t4//predictions.jsonl": "9919d9186b939d221429b3535ac753f4b74f9a5cb333c7018f2da5d05ba08d31"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\splits_fa-eval__m1_full_beam5_t4_vs_tugstugi_a100.json": "4902703d853eaac18e1e1886337d8f918bd9a4ce73f997c83be52c92b301aa41"
+      }
+    }
+  ]
+}

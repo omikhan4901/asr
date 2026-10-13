@@ -1,0 +1,19 @@
+{
+  "a": "results/modal/zeroshot/kathbath-valid/tugstugi_a100/predictions.jsonl",
+  "b": "data/phase4/t4check_lora/phase4/results/zeroshot/kathbath-valid/tugstugi_t4/predictions.jsonl",
+  "n_utterances": 2236,
+  "n_groups": 17,
+  "ref_words": 23995,
+  "wer_a": 0.14811419045634508,
+  "wer_b": 0.14798916440925192,
+  "diff_b_minus_a": -0.0001250260470931444,
+  "diff_ci95": [
+    -0.00037599010830652665,
+    8.542418019889597e-05
+  ],
+  "p_b_better": 0.8075,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

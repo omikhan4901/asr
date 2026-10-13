@@ -1,0 +1,19 @@
+{
+  "a": "results/phase3/fleurs-test/mbr_lm_x/predictions.jsonl",
+  "b": "results/modal/finetuned/fleurs-test/m1_full/predictions.jsonl",
+  "n_utterances": 920,
+  "n_groups": 349,
+  "ref_words": 17766,
+  "wer_a": 0.19481031183158842,
+  "wer_b": 0.1833839918946302,
+  "diff_b_minus_a": -0.011426319936958234,
+  "diff_ci95": [
+    -0.019385401852211565,
+    -0.003063839522472098
+  ],
+  "p_b_better": 0.9945,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

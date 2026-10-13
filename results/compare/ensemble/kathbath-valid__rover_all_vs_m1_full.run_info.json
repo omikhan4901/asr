@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe D:\\Projects\\ASR Paper Code\\analysis\\paired_compare.py --a D:\\Projects\\ASR Paper Code\\results\\modal\\finetuned\\kathbath-valid\\m1_full\\predictions.jsonl --b D:\\Projects\\ASR Paper Code\\results\\ensemble\\kathbath-valid\\rover_all\\predictions.jsonl --name kathbath-valid__rover_all_vs_m1_full --out_dir D:\\Projects\\ASR Paper Code\\results\\compare\\ensemble",
+      "git_commit": "85a7d48016ffe8d5f3814f36e282fa2a25f5c8c3",
+      "git_dirty": true,
+      "start": "2026-10-12T22:25:02",
+      "end": "2026-10-12T22:25:02",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "D:\\Projects\\ASR Paper Code\\results\\modal\\finetuned\\kathbath-valid\\m1_full\\predictions.jsonl": "c770a8980a3d03709a432abf947d605a4a9c7d4dfb7519a2d607cab07e369416",
+        "D:\\Projects\\ASR Paper Code\\results\\ensemble\\kathbath-valid\\rover_all\\predictions.jsonl": "a3f97e1c8c7c587b056bc69e4443c987478120edb523f0449b981cd55437ef81"
+      },
+      "outputs": {
+        "D:\\Projects\\ASR Paper Code\\results\\compare\\ensemble\\kathbath-valid__rover_all_vs_m1_full.json": "9254fc0b545e022a4b454d5f9c587ce86e9b014ceb0e95ea517381597994ac5d"
+      }
+    }
+  ]
+}

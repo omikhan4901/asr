@@ -1,0 +1,25 @@
+{
+  "wer": 0.10974669413402999,
+  "cer": 0.02642838616531753,
+  "n_utterances": 9408,
+  "ref_words": 86891,
+  "n_groups": 7377,
+  "wer_ci95": [
+    0.10679604048591877,
+    0.11277413160832556
+  ],
+  "cer_ci95": [
+    0.02487102875305934,
+    0.028528307181041875
+  ],
+  "set": "cv-test",
+  "model": "models/m5_merged",
+  "adapter": null,
+  "family": "whisper",
+  "manifest": "data/external/cv/test.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy",
+  "last_run_seconds": 2828.2,
+  "last_run_audio_hours": 16.751,
+  "last_run_rtf": 0.0469
+}

@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe D:\\Projects\\ASR Paper Code\\analysis\\paired_compare.py --a D:\\Projects\\ASR Paper Code\\results\\modal\\finetuned\\cv-test\\m1_full\\predictions.jsonl --b D:\\Projects\\ASR Paper Code\\results\\ensemble\\cv-test\\rover_dev_selected\\predictions.jsonl --name cv-test__rover_dev_selected_vs_m1_full --out_dir D:\\Projects\\ASR Paper Code\\results\\compare\\ensemble",
+      "git_commit": "85a7d48016ffe8d5f3814f36e282fa2a25f5c8c3",
+      "git_dirty": true,
+      "start": "2026-10-12T22:24:34",
+      "end": "2026-10-12T22:24:34",
+      "runtime_s": 0.6,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "D:\\Projects\\ASR Paper Code\\results\\modal\\finetuned\\cv-test\\m1_full\\predictions.jsonl": "0cddb88b48239bccab7d69ea088ccc87d0bf1abdd9af958a90073fe32fe4641d",
+        "D:\\Projects\\ASR Paper Code\\results\\ensemble\\cv-test\\rover_dev_selected\\predictions.jsonl": "d78e4784067a978d5ac1e40a4703cc5bc64d0ac5ebeb200439a4208ab4756d66"
+      },
+      "outputs": {
+        "D:\\Projects\\ASR Paper Code\\results\\compare\\ensemble\\cv-test__rover_dev_selected_vs_m1_full.json": "1ba24457fcf99b85b241a49b891796ec0a5745a885ba6c1ffcda784e6d5e3103"
+      }
+    }
+  ]
+}

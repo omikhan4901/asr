@@ -1,0 +1,14 @@
+{
+  "nbest": "data/nbest_fa/eval_sampled.jsonl",
+  "n_utterances": 4234,
+  "n_candidates_max": 12,
+  "ref_words": 120029,
+  "wer_1best": 0.2585208574594473,
+  "wer_mbr": 0.22844479250847713,
+  "wer_utt_oracle": 0.18591340426063702,
+  "coverage_miss_rate": 0.11438069133292787,
+  "mbr_gap_recovery": 0.4142283419391853,
+  "onebest_ref_errors": 27735,
+  "onebest_ref_errors_selection_proof_frac": 0.49500630971696413,
+  "mbr_temperature": 0.5
+}

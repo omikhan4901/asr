@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python3 /tmp/code/pipeline/eval_zero_shot.py --batch_size 8 --manifest data/external/kathbath/valid.csv --model soups/m1_full+m2_cv+m3_kathbath+m4_shrutilipi+m5_merged --name soup_m1_full+m2_cv+m3_kathbath+m4_shrutilipi+m5_merged_t4 --out_dir results/finetuned",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-12T19:12:38",
+      "end": "2026-10-12T19:24:39",
+      "runtime_s": 720.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.15",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.15.0",
+        "numpy": "2.1.3",
+        "pandas": "2.3.3",
+        "gpu": "Tesla T4"
+      },
+      "inputs": {
+        "data/external/kathbath/valid.csv": "48520d1d09f4a741f0669d5d99f8e63953424febed731a0cd19673e7dd1abfbc"
+      },
+      "outputs": {
+        "results/finetuned/kathbath-valid/soup_m1_full+m2_cv+m3_kathbath+m4_shrutilipi+m5_merged_t4/predictions.jsonl": "3a40bd643096d8acfc405f0a7e4a163e4ddce91253f4132e4eaf6ca90d4a9833",
+        "results/finetuned/kathbath-valid/soup_m1_full+m2_cv+m3_kathbath+m4_shrutilipi+m5_merged_t4/metrics.json": "ef8679b2df5ef4fd5b329f58b5a2c3ea5d5070ec083d717074661c7ece6596fb"
+      }
+    }
+  ]
+}

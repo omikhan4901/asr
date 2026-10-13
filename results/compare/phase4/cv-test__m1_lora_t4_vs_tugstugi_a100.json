@@ -1,0 +1,19 @@
+{
+  "a": "results/modal/zeroshot/cv-test/tugstugi_a100/predictions.jsonl",
+  "b": "results/kaggle/finetuned/cv-test/m1_lora_t4//predictions.jsonl",
+  "n_utterances": 9408,
+  "n_groups": 7377,
+  "ref_words": 86891,
+  "wer_a": 0.1480130278164597,
+  "wer_b": 0.12844828578333775,
+  "diff_b_minus_a": -0.019564742033121956,
+  "diff_ci95": [
+    -0.021771663898815113,
+    -0.017269521790405883
+  ],
+  "p_b_better": 1.0,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

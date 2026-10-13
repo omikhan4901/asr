@@ -1,0 +1,172 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl --b results/modal/finetuned/splits_fa-eval/m1_decoder//predictions.jsonl --name splits_fa-eval__m1_decoder_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "709fc33cefb1f525c8f5a621348d6b0d9252c557",
+      "git_dirty": false,
+      "start": "2026-10-10T07:39:16",
+      "end": "2026-10-10T07:39:17",
+      "runtime_s": 0.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl": "eb2392fcc6065f891c8511c242a2f702fbe7bccbf5a13972d3fead54a3b2ef85",
+        "results/modal/finetuned/splits_fa-eval/m1_decoder//predictions.jsonl": "b67d5e443abf4aacaa3effd8c62a1c85f83e3df545db6e884c13eff5dd7a2410"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\splits_fa-eval__m1_decoder_vs_tugstugi_a100.json": "d10e0d267635ec4e9484ab89cf0d3f57d83e589015b5c7e825addde600950b14"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl --b results/modal/finetuned/splits_fa-eval/m1_decoder//predictions.jsonl --name splits_fa-eval__m1_decoder_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "44ec64bd353284824218d2f596cbf882b9ca3c88",
+      "git_dirty": true,
+      "start": "2026-10-11T22:31:45",
+      "end": "2026-10-11T22:31:46",
+      "runtime_s": 0.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl": "eb2392fcc6065f891c8511c242a2f702fbe7bccbf5a13972d3fead54a3b2ef85",
+        "results/modal/finetuned/splits_fa-eval/m1_decoder//predictions.jsonl": "b67d5e443abf4aacaa3effd8c62a1c85f83e3df545db6e884c13eff5dd7a2410"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\splits_fa-eval__m1_decoder_vs_tugstugi_a100.json": "d10e0d267635ec4e9484ab89cf0d3f57d83e589015b5c7e825addde600950b14"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl --b results/modal/finetuned/splits_fa-eval/m1_decoder//predictions.jsonl --name splits_fa-eval__m1_decoder_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "4998286157c92d995cbf8b628c7b0c2fd767801a",
+      "git_dirty": true,
+      "start": "2026-10-11T23:28:02",
+      "end": "2026-10-11T23:28:03",
+      "runtime_s": 0.6,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl": "eb2392fcc6065f891c8511c242a2f702fbe7bccbf5a13972d3fead54a3b2ef85",
+        "results/modal/finetuned/splits_fa-eval/m1_decoder//predictions.jsonl": "b67d5e443abf4aacaa3effd8c62a1c85f83e3df545db6e884c13eff5dd7a2410"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\splits_fa-eval__m1_decoder_vs_tugstugi_a100.json": "d10e0d267635ec4e9484ab89cf0d3f57d83e589015b5c7e825addde600950b14"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl --b results/modal/finetuned/splits_fa-eval/m1_decoder//predictions.jsonl --name splits_fa-eval__m1_decoder_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "c07a59449b8ea159b99ab43bda2325db9a74f78f",
+      "git_dirty": false,
+      "start": "2026-10-12T01:14:19",
+      "end": "2026-10-12T01:14:19",
+      "runtime_s": 0.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl": "eb2392fcc6065f891c8511c242a2f702fbe7bccbf5a13972d3fead54a3b2ef85",
+        "results/modal/finetuned/splits_fa-eval/m1_decoder//predictions.jsonl": "b67d5e443abf4aacaa3effd8c62a1c85f83e3df545db6e884c13eff5dd7a2410"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\splits_fa-eval__m1_decoder_vs_tugstugi_a100.json": "d10e0d267635ec4e9484ab89cf0d3f57d83e589015b5c7e825addde600950b14"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl --b results/modal/finetuned/splits_fa-eval/m1_decoder//predictions.jsonl --name splits_fa-eval__m1_decoder_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T19:48:52",
+      "end": "2026-10-13T19:48:52",
+      "runtime_s": 0.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl": "eb2392fcc6065f891c8511c242a2f702fbe7bccbf5a13972d3fead54a3b2ef85",
+        "results/modal/finetuned/splits_fa-eval/m1_decoder//predictions.jsonl": "b67d5e443abf4aacaa3effd8c62a1c85f83e3df545db6e884c13eff5dd7a2410"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\splits_fa-eval__m1_decoder_vs_tugstugi_a100.json": "d10e0d267635ec4e9484ab89cf0d3f57d83e589015b5c7e825addde600950b14"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl --b results/modal/finetuned/splits_fa-eval/m1_decoder//predictions.jsonl --name splits_fa-eval__m1_decoder_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T20:27:09",
+      "end": "2026-10-13T20:27:10",
+      "runtime_s": 0.6,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl": "eb2392fcc6065f891c8511c242a2f702fbe7bccbf5a13972d3fead54a3b2ef85",
+        "results/modal/finetuned/splits_fa-eval/m1_decoder//predictions.jsonl": "b67d5e443abf4aacaa3effd8c62a1c85f83e3df545db6e884c13eff5dd7a2410"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\splits_fa-eval__m1_decoder_vs_tugstugi_a100.json": "d10e0d267635ec4e9484ab89cf0d3f57d83e589015b5c7e825addde600950b14"
+      }
+    },
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl --b results/modal/finetuned/splits_fa-eval/m1_decoder//predictions.jsonl --name splits_fa-eval__m1_decoder_vs_tugstugi_a100 --out_dir results/compare/phase4",
+      "git_commit": "647999392ef40daeb9f6d531eadfdd57dda0cd94",
+      "git_dirty": false,
+      "start": "2026-10-13T21:01:33",
+      "end": "2026-10-13T21:01:33",
+      "runtime_s": 0.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl": "eb2392fcc6065f891c8511c242a2f702fbe7bccbf5a13972d3fead54a3b2ef85",
+        "results/modal/finetuned/splits_fa-eval/m1_decoder//predictions.jsonl": "b67d5e443abf4aacaa3effd8c62a1c85f83e3df545db6e884c13eff5dd7a2410"
+      },
+      "outputs": {
+        "results\\compare\\phase4\\splits_fa-eval__m1_decoder_vs_tugstugi_a100.json": "d10e0d267635ec4e9484ab89cf0d3f57d83e589015b5c7e825addde600950b14"
+      }
+    }
+  ]
+}

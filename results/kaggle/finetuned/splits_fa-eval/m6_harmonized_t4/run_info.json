@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python3 /tmp/code/pipeline/eval_zero_shot.py --batch_size 8 --manifest data/splits_fa/eval.csv --model models/m6_harmonized --name m6_harmonized_t4 --out_dir results/finetuned",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-11T17:11:11",
+      "end": "2026-10-11T17:48:56",
+      "runtime_s": 2265.4,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.15",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.15.0",
+        "numpy": "2.1.3",
+        "pandas": "2.3.3",
+        "gpu": "Tesla T4"
+      },
+      "inputs": {
+        "data/splits_fa/eval.csv": "6ce00c484d1581ac60849749e8a20211518b1046a61dfce02015725fedd80238"
+      },
+      "outputs": {
+        "results/finetuned/splits_fa-eval/m6_harmonized_t4/predictions.jsonl": "e136caebf69ed8ab35086dff8b868c7d9794ba654cdcbefa6126c019deb0c0f8",
+        "results/finetuned/splits_fa-eval/m6_harmonized_t4/metrics.json": "4b81f27707a924aae54c8941f53dce74940416eefe338cae9523bf9e7caaa47f"
+      }
+    }
+  ]
+}

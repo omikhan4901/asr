@@ -1,0 +1,29 @@
+{
+  "pred": "results/zeroshot/splits_fa-eval/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl",
+  "nbest": "data/nbest_fa/eval_nbest.jsonl",
+  "n_candidates": 12,
+  "hyp_words": 120381,
+  "hyp_errors": 24354,
+  "ref_deletions_not_scored": 2897,
+  "n_groups": 22,
+  "auroc": 0.8229608245933685,
+  "auroc_ci95": [
+    0.8116317830229722,
+    0.8340477495869315
+  ],
+  "mean_a_correct": 11.211721703270955,
+  "mean_a_by_error_type": {
+    "convention": 9.607,
+    "insertion": 6.357,
+    "near_miss": 7.372,
+    "number": 10.284,
+    "segmentation": 9.069,
+    "substitution": 5.068,
+    "vowel_shift": 7.611
+  },
+  "share_errors_full_agreement": 0.1816949987681695,
+  "share_variant_errors_full_agreement": 0.25364543361473524,
+  "share_other_errors_full_agreement": 0.1278535534816942,
+  "n_boot": 1000,
+  "seed": 0
+}

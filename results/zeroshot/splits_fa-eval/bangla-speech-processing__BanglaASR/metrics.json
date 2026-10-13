@@ -1,0 +1,24 @@
+{
+  "wer": 0.5820426730206867,
+  "cer": 0.31975080785291676,
+  "n_utterances": 4234,
+  "ref_words": 120029,
+  "n_groups": 22,
+  "wer_ci95": [
+    0.5464033872135172,
+    0.6265040020472701
+  ],
+  "cer_ci95": [
+    0.28998459866164444,
+    0.3562957659129066
+  ],
+  "set": "splits_fa-eval",
+  "model": "bangla-speech-processing/BanglaASR",
+  "family": "whisper",
+  "manifest": "data\\splits_fa\\eval.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy",
+  "last_run_seconds": 2874.1,
+  "last_run_audio_hours": 16.848,
+  "last_run_rtf": 0.0474
+}

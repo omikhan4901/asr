@@ -1,0 +1,19 @@
+{
+  "a": "results/phase3/kathbath-valid/mbr_lm_x/predictions.jsonl",
+  "b": "results/modal/finetuned/kathbath-valid/m1_full/predictions.jsonl",
+  "n_utterances": 2236,
+  "n_groups": 17,
+  "ref_words": 23995,
+  "wer_a": 0.14252969368618462,
+  "wer_b": 0.13477807876640968,
+  "diff_b_minus_a": -0.007751614919774953,
+  "diff_ci95": [
+    -0.013824358674791785,
+    -0.0014560853919975058
+  ],
+  "p_b_better": 0.991,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

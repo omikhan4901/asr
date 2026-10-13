@@ -1,0 +1,22 @@
+{
+  "wer": 0.13477807876640968,
+  "cer": 0.027157711747094613,
+  "n_utterances": 2236,
+  "ref_words": 23995,
+  "n_groups": 17,
+  "wer_ci95": [
+    0.1262194524537565,
+    0.14416281499083716
+  ],
+  "cer_ci95": [
+    0.024452342020172806,
+    0.029861511393496232
+  ],
+  "set": "kathbath-valid",
+  "model": "checkpoints/m1_full/final",
+  "adapter": null,
+  "family": "auto",
+  "manifest": "data/external/kathbath/valid.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy"
+}

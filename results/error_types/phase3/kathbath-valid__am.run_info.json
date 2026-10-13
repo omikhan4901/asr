@@ -1,0 +1,51 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/error_types.py --out_dir results/error_types/phase3 --pred results/phase3/kathbath-valid/am/predictions.jsonl results/phase3/kathbath-valid/greedy/predictions.jsonl results/phase3/kathbath-valid/lm/predictions.jsonl results/phase3/kathbath-valid/lm_x/predictions.jsonl results/phase3/kathbath-valid/mbr_lm/predictions.jsonl results/phase3/kathbath-valid/mbr_lm_x/predictions.jsonl results/phase3/kathbath-valid/rewrite/predictions.jsonl results/phase3/kathbath-valid/rewrite_sel/predictions.jsonl results/phase3/kathbath-valid/rover/predictions.jsonl",
+      "git_commit": "0233644c1e56ea704ccf194dc0eb85326f368595",
+      "git_dirty": false,
+      "start": "2026-10-09T21:53:25",
+      "end": "2026-10-09T21:53:37",
+      "runtime_s": 11.8,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results\\phase3\\kathbath-valid\\am\\predictions.jsonl": "b0cdbd6ee58f5b1556fce578e8ad49c1dd19f5424e73dbf4843ef11cc54223e3",
+        "results\\phase3\\kathbath-valid\\greedy\\predictions.jsonl": "52307f26f8a8f68dfca2a75382036f33cd1c1161b5690ab335e4310e988b33c7",
+        "results\\phase3\\kathbath-valid\\lm\\predictions.jsonl": "cd46cb308b290415bb91d52a4ce73d3c50d861d8e06006c3cbd9a91cb631be16",
+        "results\\phase3\\kathbath-valid\\lm_x\\predictions.jsonl": "ec271aab3499db469c6442774de7e5be6ca8f7887e0f668add945e3ae7204b3d",
+        "results\\phase3\\kathbath-valid\\mbr_lm\\predictions.jsonl": "6c4f2b892453aa70d2a3d54a8f97082bfbf31278d2d5c7c11954354c840bc249",
+        "results\\phase3\\kathbath-valid\\mbr_lm_x\\predictions.jsonl": "17d24b92b47524ae6a572d015601561416dc16a2444321291ad38690b482328c",
+        "results\\phase3\\kathbath-valid\\rewrite\\predictions.jsonl": "f5d3d2f5667a940f93e475a8c964372ae209fba3e5bcaf1ad2a2ae53a0210308",
+        "results\\phase3\\kathbath-valid\\rewrite_sel\\predictions.jsonl": "f5d3d2f5667a940f93e475a8c964372ae209fba3e5bcaf1ad2a2ae53a0210308",
+        "results\\phase3\\kathbath-valid\\rover\\predictions.jsonl": "7376668287b9c96b13efd1ee0abe42ed27d89a0f6e7dc95bae4582a4d0610d18"
+      },
+      "outputs": {
+        "results\\error_types\\phase3\\kathbath-valid\\am\\summary.json": "d9667d4b964f025ae3952556c5e74446624f50c2c332b5f80b4c7fdeaca8f6f8",
+        "results\\error_types\\phase3\\kathbath-valid\\am\\errors.csv": "b4ed4748732d9aab2fb90f8be4cb757601c5c1249fba4008654e54b8cdb2fb93",
+        "results\\error_types\\phase3\\kathbath-valid\\greedy\\summary.json": "0fb208080fb8b68cb92357a68e9b1381fb70bc87d4f5fdc63bd0d40dbca12171",
+        "results\\error_types\\phase3\\kathbath-valid\\greedy\\errors.csv": "7f6d751b82137e17ed3ba629ead2a233eeede9aa00182b325002a03e2b935a24",
+        "results\\error_types\\phase3\\kathbath-valid\\lm\\summary.json": "53f73d07a387326d076ed15ef93f8bc161b9e76df782c39209d4c291c0747c50",
+        "results\\error_types\\phase3\\kathbath-valid\\lm\\errors.csv": "989f6a3758ee063cea47a2c12fe850e9b201018f2a3d5cf8886ca226343a8c1f",
+        "results\\error_types\\phase3\\kathbath-valid\\lm_x\\summary.json": "6936145e86b94f9b63358f8de009ec9e9c41f06029f4e0eac3484f333873d1f0",
+        "results\\error_types\\phase3\\kathbath-valid\\lm_x\\errors.csv": "a77506085544ca426198858441774e8f105719aeebcc1aaf74b0b99b2f3ffce2",
+        "results\\error_types\\phase3\\kathbath-valid\\mbr_lm\\summary.json": "39c5834a7ea64e14f58dc0688ad174fdaf94d64b206a68bb2b1dbc65b0e05aff",
+        "results\\error_types\\phase3\\kathbath-valid\\mbr_lm\\errors.csv": "9835ec710279146c2ef852860822ab801c371cc81d499989652c3c065fb6796e",
+        "results\\error_types\\phase3\\kathbath-valid\\mbr_lm_x\\summary.json": "2bb42c14c8ac48ae9e80d29ad3e31a7677a45a27283293eb6fe89127a40e3739",
+        "results\\error_types\\phase3\\kathbath-valid\\mbr_lm_x\\errors.csv": "58fed82c7e8af5ec531c49d0f795f2244ecb1e94d3c5cff1b8916be50a7e1306",
+        "results\\error_types\\phase3\\kathbath-valid\\rewrite\\summary.json": "b2f2d44b763f7b6bae7723ab47012ad4f2cdd01f48c56091a72d9427b3ea2807",
+        "results\\error_types\\phase3\\kathbath-valid\\rewrite\\errors.csv": "75c8922baf7f5cb32ffb6fa4e0e263a8aac8acf041b564f733a68f75ff25e1ec",
+        "results\\error_types\\phase3\\kathbath-valid\\rewrite_sel\\summary.json": "59dce569531e88e97b1b152b66322bb3fb5918e9cf324bcb10eb2943d20b5739",
+        "results\\error_types\\phase3\\kathbath-valid\\rewrite_sel\\errors.csv": "75c8922baf7f5cb32ffb6fa4e0e263a8aac8acf041b564f733a68f75ff25e1ec",
+        "results\\error_types\\phase3\\kathbath-valid\\rover\\summary.json": "bd8b6f308c7ce81cd0fe30041b4819d4f01ee80a3d6018dde82ca179005e5e2a",
+        "results\\error_types\\phase3\\kathbath-valid\\rover\\errors.csv": "c6c2f0c0031ffd9038c5ffead3e1514d6bd77593aeb5efe9a88630c787b533e5"
+      }
+    }
+  ]
+}

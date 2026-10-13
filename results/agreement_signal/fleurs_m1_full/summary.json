@@ -1,0 +1,30 @@
+{
+  "pred": "results/modal/finetuned/fleurs-test/m1_full/predictions.jsonl",
+  "nbest": "data/kaggle_out/session_B/phase4/nbest/fleurs-test__m1_full_scored.jsonl",
+  "n_candidates": 12,
+  "hyp_words": 18065,
+  "hyp_errors": 3030,
+  "ref_deletions_not_scored": 228,
+  "n_groups": 349,
+  "auroc": 0.7512350280588418,
+  "auroc_ci95": [
+    0.73662324554357,
+    0.7647659235477653
+  ],
+  "mean_a_correct": 11.75623545061523,
+  "mean_a_by_error_type": {
+    "convention": 11.281,
+    "insertion": 8.576,
+    "near_miss": 9.67,
+    "number": 5.723,
+    "script": 8.755,
+    "segmentation": 10.056,
+    "substitution": 8.186,
+    "vowel_shift": 10.238
+  },
+  "share_errors_full_agreement": 0.4250825082508251,
+  "share_variant_errors_full_agreement": 0.5642161204605846,
+  "share_other_errors_full_agreement": 0.34245134139926353,
+  "n_boot": 1000,
+  "seed": 0
+}

@@ -1,0 +1,24 @@
+{
+  "wer": 0.798941798941799,
+  "cer": 0.31722674150119,
+  "n_utterances": 920,
+  "ref_words": 17766,
+  "n_groups": 349,
+  "wer_ci95": [
+    0.7499384875320115,
+    0.8528050139342779
+  ],
+  "cer_ci95": [
+    0.28879857527178016,
+    0.3491918789579432
+  ],
+  "set": "fleurs-test",
+  "model": "openai/whisper-large-v3",
+  "family": "whisper",
+  "manifest": "data\\external\\fleurs\\test.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy",
+  "last_run_seconds": 1304.5,
+  "last_run_audio_hours": 3.433,
+  "last_run_rtf": 0.1055
+}

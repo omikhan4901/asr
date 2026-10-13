@@ -1,0 +1,14 @@
+{
+  "nbest": "data/nbest_ext/kathbath_tugstugi.jsonl",
+  "n_utterances": 2236,
+  "n_candidates_max": 12,
+  "ref_words": 23995,
+  "wer_1best": 0.1768701812877683,
+  "wer_mbr": 0.1451135653261096,
+  "wer_utt_oracle": 0.09331110648051677,
+  "coverage_miss_rate": 0.06976453427797458,
+  "mbr_gap_recovery": 0.3800498753117207,
+  "onebest_ref_errors": 3713,
+  "onebest_ref_errors_selection_proof_frac": 0.4508483705898196,
+  "mbr_temperature": 0.5
+}

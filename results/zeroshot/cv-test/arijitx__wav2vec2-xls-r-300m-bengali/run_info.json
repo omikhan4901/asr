@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe pipeline/eval_zero_shot.py --manifest data/external/cv/test.csv --model arijitx/wav2vec2-xls-r-300m-bengali",
+      "git_commit": "2cda47b567498b7b205252bdb232ed919ec107e6",
+      "git_dirty": false,
+      "start": "2026-10-09T10:31:00",
+      "end": "2026-10-09T10:34:14",
+      "runtime_s": 194.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "data\\external\\cv\\test.csv": "aaaba46c8afefba104f9a879de5887a27396402ad5d06730b30577144db1f501"
+      },
+      "outputs": {
+        "results\\zeroshot\\cv-test\\arijitx__wav2vec2-xls-r-300m-bengali\\predictions.jsonl": "695ed5ebc7c9a9ea1342ad3cb1cb72e63aaa411716148bd114901062a7aba591",
+        "results\\zeroshot\\cv-test\\arijitx__wav2vec2-xls-r-300m-bengali\\metrics.json": "a37affe13cd458d2bf78ed76090931742c4390c293126d3a05f55299e81b07a6"
+      }
+    }
+  ]
+}

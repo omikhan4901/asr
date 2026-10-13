@@ -1,0 +1,19 @@
+{
+  "a": "results/zeroshot/fleurs-test/bangla-speech-processing__BanglaASR/predictions.jsonl",
+  "b": "data/nbest_ext/fleurs_banglaasr.jsonl:rank0",
+  "n_utterances": 920,
+  "n_groups": 349,
+  "ref_words": 17766,
+  "wer_a": 0.32939322301024426,
+  "wer_b": 0.35596082404593044,
+  "diff_b_minus_a": 0.02656760103568614,
+  "diff_ci95": [
+    0.02074728342195714,
+    0.03211802686465442
+  ],
+  "p_b_better": 0.0,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

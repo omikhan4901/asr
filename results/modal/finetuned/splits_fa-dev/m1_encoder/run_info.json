@@ -1,0 +1,74 @@
+{
+  "runs": [
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/splits_fa/dev.csv --model checkpoints/m1_encoder/final --name m1_encoder --out_dir results/finetuned --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T21:31:15",
+      "end": "2026-10-09T21:36:59",
+      "runtime_s": 343.6,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-80GB"
+      },
+      "inputs": {
+        "data/splits_fa/dev.csv": "99325905fab2fdcb48f01ddf066ee4d5cd47da60eb4310336c10da148573d7db"
+      },
+      "outputs": {
+        "results/finetuned/splits_fa-dev/m1_encoder/predictions.jsonl": "60a401c729308306cce162763a2e7d2db3095a2d36f33aab0ecf81127c065ae1",
+        "results/finetuned/splits_fa-dev/m1_encoder/metrics.json": "3b7b0c3c8f4f802e5f1d20cc0176fe661265dffd0d90071d5c1a5d60432afb45"
+      }
+    },
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/splits_fa/dev.csv --model checkpoints/m1_encoder/final --name m1_encoder --out_dir results/finetuned --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T21:50:04",
+      "end": "2026-10-09T21:50:04",
+      "runtime_s": 0.7,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/splits_fa/dev.csv": "99325905fab2fdcb48f01ddf066ee4d5cd47da60eb4310336c10da148573d7db"
+      },
+      "outputs": {
+        "results/finetuned/splits_fa-dev/m1_encoder/predictions.jsonl": "60a401c729308306cce162763a2e7d2db3095a2d36f33aab0ecf81127c065ae1",
+        "results/finetuned/splits_fa-dev/m1_encoder/metrics.json": "6e6184646b138be37a30f10677a033e2cae52a1802d9e3db87f7f05f8f538b55"
+      }
+    },
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/splits_fa/dev.csv --model checkpoints/m1_encoder/final --name m1_encoder --out_dir results/finetuned --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-09T22:43:53",
+      "end": "2026-10-09T22:43:53",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/splits_fa/dev.csv": "99325905fab2fdcb48f01ddf066ee4d5cd47da60eb4310336c10da148573d7db"
+      },
+      "outputs": {
+        "results/finetuned/splits_fa-dev/m1_encoder/predictions.jsonl": "60a401c729308306cce162763a2e7d2db3095a2d36f33aab0ecf81127c065ae1",
+        "results/finetuned/splits_fa-dev/m1_encoder/metrics.json": "6e6184646b138be37a30f10677a033e2cae52a1802d9e3db87f7f05f8f538b55"
+      }
+    }
+  ]
+}

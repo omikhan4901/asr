@@ -1,0 +1,19 @@
+{
+  "a": "results/modal/finetuned/fleurs-test/m1_full/predictions.jsonl",
+  "b": "data/kaggle_out/session_B/phase4/nbest/fleurs-test__m1_full_scored.jsonl:rank0",
+  "n_utterances": 920,
+  "n_groups": 349,
+  "ref_words": 17766,
+  "wer_a": 0.1833839918946302,
+  "wer_b": 0.19357199144433188,
+  "diff_b_minus_a": 0.010187999549701678,
+  "diff_ci95": [
+    0.006478772924694159,
+    0.014248245948794595
+  ],
+  "p_b_better": 0.0,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

@@ -1,0 +1,19 @@
+{
+  "a": "D:\\Projects\\ASR Paper Code\\results\\modal\\finetuned\\splits_fa-eval\\m1_full\\predictions.jsonl",
+  "b": "D:\\Projects\\ASR Paper Code\\results\\ensemble\\splits_fa-eval\\rover_all\\predictions.jsonl",
+  "n_utterances": 4234,
+  "n_groups": 22,
+  "ref_words": 120029,
+  "wer_a": 0.11343092086079197,
+  "wer_b": 0.11473060677003058,
+  "diff_b_minus_a": 0.0012996859092386007,
+  "diff_ci95": [
+    -0.0019141861746296246,
+    0.004518713815067512
+  ],
+  "p_b_better": 0.2,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

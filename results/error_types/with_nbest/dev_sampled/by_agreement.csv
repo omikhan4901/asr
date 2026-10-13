@@ -1,0 +1,10 @@
+﻿type,fixable,selection_proof
+number,0,30
+script,0,0
+segmentation,122,105
+convention,226,239
+vowel_shift,395,309
+near_miss,829,705
+substitution,332,678
+deletion,192,486
+insertion,0,0

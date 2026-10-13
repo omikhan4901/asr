@@ -1,0 +1,19 @@
+{
+  "a": "D:\\Projects\\ASR Paper Code\\results\\modal\\finetuned\\cv-test\\m1_full\\predictions.jsonl",
+  "b": "D:\\Projects\\ASR Paper Code\\results\\ensemble\\cv-test\\rover_all\\predictions.jsonl",
+  "n_utterances": 9408,
+  "n_groups": 7377,
+  "ref_words": 86891,
+  "wer_a": 0.12799944758375437,
+  "wer_b": 0.10904466515519444,
+  "diff_b_minus_a": -0.01895478242855992,
+  "diff_ci95": [
+    -0.020382172936677767,
+    -0.017497037089630678
+  ],
+  "p_b_better": 1.0,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

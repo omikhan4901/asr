@@ -1,0 +1,127 @@
+{
+  "predictions": "results\\zeroshot\\kathbath-valid\\bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium\\predictions.jsonl",
+  "nbest": "data/nbest_ext/kathbath_tugstugi.jsonl",
+  "n_utterances": 2236,
+  "n_groups": 17,
+  "ref_words": 23995,
+  "edits": 3550,
+  "wer": {
+    "value": 0.14794748906022087,
+    "ci95": [
+      0.13669266804358374,
+      0.1614883532370203
+    ]
+  },
+  "variant_share": {
+    "value": 0.4983098591549296,
+    "ci95": [
+      0.46738324488685834,
+      0.5349824729068072
+    ]
+  },
+  "wer_without_variants": {
+    "value": 0.07422379662429673,
+    "ci95": [
+      0.064237957591406,
+      0.08561342068163426
+    ]
+  },
+  "type_share": {
+    "number": {
+      "value": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "script": {
+      "value": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "segmentation": {
+      "value": 0.26,
+      "ci95": [
+        0.22999456218627998,
+        0.2934980437098529
+      ]
+    },
+    "convention": {
+      "value": 0.13154929577464788,
+      "ci95": [
+        0.1158358450920535,
+        0.1489971809534143
+      ]
+    },
+    "vowel_shift": {
+      "value": 0.10676056338028168,
+      "ci95": [
+        0.09704666152631211,
+        0.1178797200794578
+      ]
+    },
+    "near_miss": {
+      "value": 0.3135211267605634,
+      "ci95": [
+        0.29519686702778664,
+        0.33025603398751374
+      ]
+    },
+    "substitution": {
+      "value": 0.11577464788732394,
+      "ci95": [
+        0.09967685138699345,
+        0.13182178249163304
+      ]
+    },
+    "deletion": {
+      "value": 0.02676056338028169,
+      "ci95": [
+        0.01895703342539239,
+        0.03546571234685643
+      ]
+    },
+    "insertion": {
+      "value": 0.04563380281690141,
+      "ci95": [
+        0.034113845458782426,
+        0.056444779170063804
+      ]
+    }
+  },
+  "edge_error_share": {
+    "value": 0.4030985915492958,
+    "ci95": [
+      0.3911921340371795,
+      0.41538381890149106
+    ]
+  },
+  "edge_word_share": 0.37274432173369454,
+  "selection_proof": {
+    "ref_position_errors": 3068,
+    "selection_proof": 1671,
+    "selection_proof_frac": 0.5446544980443285,
+    "variant_share_of_selection_proof": 0.44344703770197486,
+    "variant_share_of_fixable": 0.5068002863278454,
+    "type_share_of_selection_proof": {
+      "number": 0.0,
+      "script": 0.0,
+      "segmentation": 0.1855176540993417,
+      "convention": 0.14422501496110113,
+      "vowel_shift": 0.11370436864153202,
+      "near_miss": 0.3518850987432675,
+      "substitution": 0.16696588868940754,
+      "deletion": 0.03770197486535009,
+      "insertion": 0.0
+    },
+    "variant_share_of_selection_proof_ci": {
+      "value": 0.44344703770197486,
+      "ci95": [
+        0.41459126424410847,
+        0.47676004279074924
+      ]
+    }
+  }
+}

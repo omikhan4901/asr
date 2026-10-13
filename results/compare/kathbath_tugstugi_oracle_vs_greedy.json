@@ -1,0 +1,19 @@
+{
+  "a": "results/zeroshot/kathbath-valid/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl",
+  "b": "data/nbest_ext/kathbath_tugstugi.jsonl:oracle",
+  "n_utterances": 2236,
+  "n_groups": 17,
+  "ref_words": 23995,
+  "wer_a": 0.14794748906022087,
+  "wer_b": 0.09331110648051677,
+  "diff_b_minus_a": -0.05463638257970411,
+  "diff_ci95": [
+    -0.05906557601578216,
+    -0.050653492228829436
+  ],
+  "p_b_better": 1.0,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

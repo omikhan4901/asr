@@ -1,0 +1,21 @@
+{
+  "wer": 0.08318399666597208,
+  "cer": 0.014815053278820461,
+  "n_utterances": 2236,
+  "ref_words": 23995,
+  "n_groups": 17,
+  "wer_ci95": [
+    0.07852567771419239,
+    0.08856038613352235
+  ],
+  "cer_ci95": [
+    0.013276738363290257,
+    0.01647374327296204
+  ],
+  "set": "kathbath-valid",
+  "model": "hishab/titu_stt_bn_conformer_large",
+  "family": "auto",
+  "manifest": "data\\external\\kathbath\\valid.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy"
+}

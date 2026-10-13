@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/finetuned/cv-test/m1_full/predictions.jsonl --b results/kaggle/finetuned/cv-test/m1_lora_t4/predictions.jsonl --name cv-test__m1_lora_vs_m1_full --out_dir results/compare/phase4_final",
+      "git_commit": "93d0200cf58e6c042a61cec0a3e42df10bc9378a",
+      "git_dirty": false,
+      "start": "2026-10-12T03:51:52",
+      "end": "2026-10-12T03:51:53",
+      "runtime_s": 0.6,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/finetuned/cv-test/m1_full/predictions.jsonl": "0cddb88b48239bccab7d69ea088ccc87d0bf1abdd9af958a90073fe32fe4641d",
+        "results/kaggle/finetuned/cv-test/m1_lora_t4/predictions.jsonl": "78cab8c0ebf705fd22b667b6dd13625849fa86fd4c8817f8a4aa8cbda5dde611"
+      },
+      "outputs": {
+        "results\\compare\\phase4_final\\cv-test__m1_lora_vs_m1_full.json": "aba9b03e915d03b135ea507af498128a45e4f39af246a3e0ab66e4d39e3d8b52"
+      }
+    }
+  ]
+}

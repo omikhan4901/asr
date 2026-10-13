@@ -1,0 +1,52 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/error_types.py --pred results/zeroshot/splits_fa-eval/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl --nbest data/nbest_fa/eval_nbest.jsonl",
+      "git_commit": "35fc07b402b991b3abef744b9a7dd973effbfa86",
+      "git_dirty": true,
+      "start": "2026-10-08T20:50:28",
+      "end": "2026-10-08T20:51:04",
+      "runtime_s": 36.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results\\zeroshot\\splits_fa-eval\\bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium\\predictions.jsonl": "1bcaf5ccb7c1ea6117167c58dead56a143c89378409f1c105f217f1014b5da98",
+        "data/nbest_fa/eval_nbest.jsonl": "3a4114e10d56fac596643bb089c9c66337f3f52d3c422fe77c5246cb17625028"
+      },
+      "outputs": {
+        "results\\error_types\\with_nbest\\eval_nbest\\summary.json": "6c850d939ab68b0c499a3b11c1ad6299f4b8bca5ffeabd2c079e9b0cc4dacd47",
+        "results\\error_types\\with_nbest\\eval_nbest\\errors.csv": "9f852ea7d4178a98bb4319ec237741fe82a8ed8e427ab6f16461c2fb24edc77b"
+      }
+    },
+    {
+      "command": "python.exe analysis/error_types.py --pred results/zeroshot/splits_fa-eval/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl --nbest data/nbest_fa/eval_nbest.jsonl",
+      "git_commit": "35fc07b402b991b3abef744b9a7dd973effbfa86",
+      "git_dirty": true,
+      "start": "2026-10-08T20:56:49",
+      "end": "2026-10-08T20:57:20",
+      "runtime_s": 31.4,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results\\zeroshot\\splits_fa-eval\\bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium\\predictions.jsonl": "1bcaf5ccb7c1ea6117167c58dead56a143c89378409f1c105f217f1014b5da98",
+        "data/nbest_fa/eval_nbest.jsonl": "3a4114e10d56fac596643bb089c9c66337f3f52d3c422fe77c5246cb17625028"
+      },
+      "outputs": {
+        "results\\error_types\\with_nbest\\eval_nbest\\summary.json": "b65893a8d7349d619a9077f923caf28fd7b8618fa59aa1c763bc1529ca179d3a",
+        "results\\error_types\\with_nbest\\eval_nbest\\errors.csv": "878c5ec55d7f673ad2461aca84c7a5246277f82c3efc3c7cb05c5092844c2ac3"
+      }
+    }
+  ]
+}

@@ -543,6 +543,19 @@ which is the condition under which voting helps, unlike the candidates of a sing
 eleven decodings and is reported as a reference, not as a system. Choosing its members on DL Sprint dev alone selects
 only the over-fitted 4-epoch model: a development set from a single corpus is not a safe selector.
 
+**Averaging weights and beam search (single models).** All fine-tuned models start from the same checkpoint and move
+about 1% from it, so their weights can be averaged into one model of the same size and speed. Averaging M1 full and M5
+gives the best single-model average so far, **12.89%** (DL Sprint eval 11.96, FLEURS 16.97, Common Voice 11.14,
+Kathbath 11.47): against M1 it is better on FLEURS (−1.37 [−1.91, −0.90]), Common Voice (−1.65) and Kathbath (−2.01)
+and worse on DL Sprint eval (+0.62 [+0.29, +1.03]); against M5 it is better on DL Sprint eval (−1.87) and close
+elsewhere (+0.12 n.s. to +0.40). Averaging all five single-corpus and merged models (M1–M5) gives the lowest Common
+Voice WER of any model (10.38) but loses 3.9 points on DL Sprint eval (average 13.20); mixing 25% of the zero-shot
+weights into M1 helps Common Voice and Kathbath (−0.5 to −0.6) at +0.52 on DL Sprint eval. These recipes were compared on
+the test sets, so they are exploratory until chosen on a development set that mixes all sources. Beam search (5 beams)
+on M1 full lowers DL Sprint eval to 10.84 (−0.50 [−0.77, −0.29]), about as much as ROVER over 12 sampled candidates
+(10.89), with smaller gains elsewhere (FLEURS −0.33, Common Voice −0.23, Kathbath −0.08 n.s.); it is about 5× slower
+than greedy (real-time factor 0.20 vs 0.04 on a T4), against about 14× for the 12-candidate ROVER.
+
 **The gap on FLEURS.** Hishab remains 2.2 points ahead on FLEURS (14.24 vs 16.44 for the best single model):
 
 | FLEURS, WER points | Hishab | M3 Kathbath | Gap |
@@ -556,12 +569,33 @@ speech; 85% of the edit difference comes from 10% of the utterances. Word-bounda
 cause (equal or in our favour). Words absent from the training text cost every model about five points, Hishab
 included.
 
-### 5.11 Planned work
-- **Released model:** full fine-tuning on all four corpora together (unharmonized, 2 epochs at 1e-5), chosen on a
-  dev set mixing every source, then ROVER on its 12-best; compared with IndicConformer and the DL Sprint finalist models.
+### 5.11 Human verification (in progress)
+
+The error types come from rules, and the references themselves may be wrong, so two native-speaker annotators checked
+a sample by hand, independently and without seeing which system produced a transcript. Disagreements are being
+adjudicated by a third annotator; the numbers below may still change slightly.
+
+| Task | Labels | Done by both | Agreement |
+|---|---|---:|---|
+| Verified references (listen, correct the transcript) | 605 clips (663 labels): 305 DL Sprint, 100 each FLEURS, Kathbath, Common Voice | 64 clips | 73% same status; corrected texts differ by 3.9% WER |
+| Word pairs (same word in another spelling, dialect form, or a different word) | 896 pairs | 150 | Cohen's κ 0.71 |
+| Error audit (each difference: recognizer wrong, transcript wrong, or only spelling) | 214 clips, 999 differences | 228 differences | Cohen's κ 0.58 |
+
+**The rules hold up:** pairs the rules call a spelling convention are spelling to the annotators in 97% of cases;
+segmentation pairs in 81%; the near-miss type is a genuine mix (about a third each spelling, dialect, different word).
+**Many apparent errors are not the model's:** of all differences between the zero-shot model and the reference on DL
+Sprint eval, 41% [36, 47] are recognizer errors, 21% [18, 25] transcript errors and 33% only spelling or dialect. Among
+the errors no candidate can fix, **57% [51, 64] are not recognizer errors** (transcript wrong 25%, spelling or dialect
+32%), which supports the diagnosis of §5.3–5.4: the selection ceiling is mostly convention and reference noise.
+**Reference noise by test set** (share of reference words the annotators changed): DL Sprint 1.8% [1.3, 2.3] (30% of
+clips needed a correction), FLEURS 4.0% [2.9, 5.4], Common Voice 1.7% [0.8, 2.9], Kathbath 1.0% [0.3, 1.9]. Once the
+disagreements are settled, every model's WER is also reported against the verified references.
+
+### 5.12 Planned work
+- **Released model:** full fine-tuning on all four corpora together (unharmonized, 2 epochs at 1e-5), then ROVER on
+  its 12-best as an offline mode; compared with IndicConformer and the DL Sprint finalist models.
 - **Whole-recording evaluation:** transcribing each raw evaluation recording end to end (no reference-guided cuts).
-- **Human verification:** inter-annotator agreement, the share of DL Sprint references annotators corrected,
-  every model's WER against the verified references, and the human precision of each error type.
+- **Human verification:** adjudication of the disagreements, and every model's WER against the verified references.
 
 ---
 
@@ -621,6 +655,13 @@ human-verified references, which will separate recognizer errors from reference 
 ## Reproducing
 
 Python 3.13; the repository root doubles as a Windows virtual environment (`./Scripts/python.exe`).
+
+**Every result is in `results/`:** per-system predictions (`predictions.jsonl`) and metrics with confidence intervals
+(`metrics.json`) under `results/{zeroshot,modal,kaggle}/<test set>/<system>/`, paired tests in `results/compare/`,
+list correction and stacking in `results/phase3/` and `results/phase4_stack/`, model combinations in `results/ensemble/`,
+and the human-label summaries in `results/labels/`. The per-error tables of `analysis/error_types.py` are not
+committed (they are large and regenerated in minutes from the predictions). Audio and trained models are not in the
+repository.
 
 | Step | Command |
 |---|---|

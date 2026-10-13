@@ -38,17 +38,17 @@ Freeze: **Nov 12**; report: **Dec 1**. Times and costs marked *est.* are estimat
 | 1 | Merged training list (DL Sprint 59.6 h + CV 34.4 h + Kathbath 33.9 h + Shrutilipi 28.1 h + new corpora, **~250-300 h, each new source capped so DL Sprint stays >= ~20%**), mixed dev set (DL Sprint dev + CV dev + FLEURS dev + held-out Kathbath train speakers), `--source all` | Omi | PC (CPU) | Oct | - | $0 |
 | 2 | Whole-recording evaluation code (VAD cuts the raw recording, the model transcribes, the text is joined, WER per recording on the 22 eval recordings) | Omi | PC | Oct | - | $0 |
 | 3 | Kaggle job for baselines: IndicConformer + the released DL Sprint finalist models on the 4 test sets; whole-recording eval of zero-shot and M1 full | Omi, **1 Kaggle session** | Kaggle | Oct | ~6-9 h est. | $0 |
-| 4 | Upload the merged list to the hub | **you run 1 command** | PC | Oct 31 | ~10 min | $0 |
-| 5 | Train the released model (M7, ~250-300 h, 2 epochs at 1e-5) | **you run 1 command** | Modal (November credit) | Nov 1 | ~5-6 h est. | ~$11-14 est. |
-| 6 | Send M7 to the hub (`to_hf --run m7_all`) | **you run 1 command** | Modal | Nov 1 | ~10 min | ~$0.05 |
-| 7 | Score M7 + its 12-best for ROVER + whole-recording eval | **you start** (1-2 Kaggle sessions) | Kaggle | Nov 2-3 | ~10 h est. | $0 |
+| 4 | Upload the merged list to the hub | Omi, **1 command** | PC | Oct 31 | ~10 min | $0 |
+| 5 | Train the released model (M7, ~250-300 h, 2 epochs at 1e-5) | Omi, **1 command** | Modal (November credit) | Nov 1 | ~5-6 h est. | ~$11-14 est. |
+| 6 | Send M7 to the hub (`to_hf --run m7_all`) | Omi, **1 command** | Modal | Nov 1 | ~10 min | ~$0.05 |
+| 7 | Score M7 + its 12-best for ROVER + whole-recording eval | Omi, **1-2 Kaggle sessions** | Kaggle | Nov 2-3 | ~10 h est. | $0 |
 | 8 | Analysis, tables, figures, README, paper text | Omi | PC | Nov 3-11 | - | $0 |
 | 9 | Release on Hugging Face (model card, FA segmentation, normalizer, scoring harness) | Omi (public) | HF | Nov 11 | - | $0 |
 | 10 | Human verification of 300 references (optional, Gate 3: how much of the error is reference noise) | team | spreadsheet | Oct-Nov | ~3-4 h per person est. | $0 |
-| 11 | Whisper-small variant (optional, size/speed trade-off) | you run 1 command | Modal | Nov | ~1 h est. | ~$2 est. |
+| 11 | Whisper-small variant (optional, size/speed trade-off) | Omi, 1 command | Modal | Nov | ~1 h est. | ~$2 est. |
 
-**Your part: about 6 actions** (steps 0b, 3, 4, 5, 6, 7), each a single command or one Kaggle "Save & Run All".
-The exact commands go into a Phase 5 runbook (like `docs/PHASE4_RUNBOOK.md`) when the code is ready.
+**Hands-on runs: about 6** (steps 0b, 3, 4, 5, 6, 7), each a single command or one Kaggle "Save & Run All".
+The exact commands are in the Phase 5 runbook (`docs/PHASE5_RUNBOOK.md`).
 
 ## Money
 

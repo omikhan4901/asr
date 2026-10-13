@@ -104,8 +104,7 @@ For each session: **Output** tab -> download `phase4_outputs.zip` -> unzip into 
 ```bash
 bash runs/phase5_finish.sh
 ```
-It writes `results/phase5_summary.txt`, the source for the results,
-README, figures and the faculty table.
+It writes `results/phase5_summary.txt`, the source for the results, README, figures and the faculty table.
 
 ---
 

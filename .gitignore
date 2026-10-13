@@ -85,3 +85,17 @@ notebooks/*.zip
 
 # Fine-tuning outputs (pipeline/11_finetune.py)
 /checkpoints/
+
+# ── AI assistant files — never commit ────────────────────────────────────
+# Instructions, settings and notes for coding assistants stay local.
+CLAUDE.md
+CLAUDE.local.md
+**/CLAUDE.md
+.claude/
+AGENTS.md
+GEMINI.md
+.cursor/
+.cursorrules
+.windsurfrules
+.aider*
+.github/copilot-instructions.md

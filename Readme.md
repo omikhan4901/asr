@@ -1,8 +1,40 @@
 # Why N-best Rescoring Plateaus for Bangla Speech Recognition, and How Far Fixing the Cause Goes
 
-*CSE499 capstone, North South University (499A: Sept 2026; 499B: in progress, results frozen Nov 12, 2026).*
+**CSE499 capstone, North South University.** Team: Mehboob Ehsan Khan, Nabigah Bin Sayeed, Nafisa Rodela.
+Supervisor: Dr. Nabeel Mohammed.
+
 *This README is the working paper. Every number comes from a result file in this repository's pipeline, with
 95% cluster-bootstrap confidence intervals; numbers still running are marked* **pending**.
+
+## At a glance
+
+- **Problem.** For Bangla media speech (drama, narration, news), choosing among a Whisper model's candidate
+  transcripts (N-best rescoring) stops helping early. We ask why, and whether fixing the cause helps.
+- **Why it stalls.** Most remaining errors are in *every* candidate, so no selection rule can recover them, and
+  about 41% of errors are the same word in another spelling or dialect form (ছিল/ছিলো, কি/কী).
+- **Fixing the cause.** On our held-out media test set (DL Sprint eval), word error rate (WER) falls from 22.71%
+  to 17.46% by adding learned spelling variants to the candidate list (no retraining of the speech model), and to
+  11.34% by fine-tuning on 60 h of in-domain speech.
+- **Across corpora.** Each public corpus trains its own test set best; 10 h from each of four corpora gives the
+  best average over the four test sets (13.18%).
+
+| Part | Status |
+|---|---|
+| 499A (Sept 2026): first rescoring study | done |
+| 499B: rebuilt evaluation, diagnosis, list correction, fine-tuning, train × test matrix (§3–5) | done |
+| Human verification of the references (§5.11) | in progress |
+| Final model on all four corpora (156 h, then ~300 h), whole-recording evaluation (§5.12) | November 2026 |
+| Results frozen / final report | Nov 12 / Dec 1, 2026 |
+| Public release of the model, segmentation and scoring code on Hugging Face | planned; not yet published |
+
+**Links:** [Bangla subtitle demo](https://asr-phi.vercel.app) · [Setup](#setup) · [Data](#data) ·
+[Reproducing](#reproducing) · [All results](results/)
+
+<p align="center"><img src="figures/png/pipeline_overview.drawio.png" width="900" alt="Pipeline overview: DL Sprint recordings are cut into clips by forced alignment and split by recording; tugstugi produces greedy output and 12 candidates; the agreement anatomy finds that candidates share spelling variants; list correction fixes the candidate lists and fine-tuning fixes the model; one frozen harness scores everything."></p>
+
+**Figure 1.** Overview. Data preparation (grey), the diagnosis of the plateau (blue), the two ways of fixing
+the cause (orange: change the candidate list; green: change the model), and the work still running (dashed).
+Editable source: `figures/pipeline_overview.drawio`.
 
 ---
 
@@ -108,11 +140,7 @@ to locate which part of the network fixes which error type.
 
 ## 3. Method
 
-<p align="center"><img src="figures/png/pipeline_overview.drawio.png" width="900" alt="Pipeline overview: DL Sprint recordings are cut into clips by forced alignment and split by recording; tugstugi produces greedy output and 12 candidates; the agreement anatomy finds that candidates share spelling variants; list correction fixes the candidate lists and fine-tuning fixes the model; one frozen harness scores everything."></p>
-
-**Figure 1.** Overview. Data preparation (grey), the diagnosis of the plateau (blue), the two ways of fixing
-the cause (orange: change the candidate list; green: change the model), and the work still running (dashed).
-Editable source: `figures/pipeline_overview.drawio`.
+Figure 1 (top of the page) shows the whole pipeline.
 
 ### 3.1 Forced-alignment segmentation
 Each DL Sprint recording comes with one untimed transcript for 40–86 minutes of audio. The earlier pipeline
@@ -652,9 +680,44 @@ human-verified references, which will separate recognizer errors from reference 
 
 ---
 
+## Setup
+
+Python 3.12 or newer (developed on 3.13). From the repository root:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+pip install -e ".[all,dev]"
+python tests/test_smoke.py       # quick check; needs no data or GPU
+```
+
+`tests/test_mbr.py`, `tests/test_variants.py` and `tests/test_phase3.py` run the same way (they are scripts, not
+pytest files).
+
+Run every script from the repository root. A CUDA GPU is needed for fine-tuning (we used a Modal A100-40GB) and
+recommended for scoring (a 12 GB RTX 3060 or a Kaggle T4 is enough). The cloud runners need a Modal account
+(`pipeline/modal_launch.py`); the Kaggle notebooks in `notebooks/` read their inputs from our private Hugging Face
+dataset, so point them at your own copy.
+
+## Data
+
+Audio, trained models and large intermediate files are not in the repository (`data/` is git-ignored). Every
+reported number can still be checked without audio: `results/` holds each system's predictions, metrics with
+confidence intervals, and paired tests. To rerun from audio:
+
+| Corpus | Used for | Source | Prepared by |
+|---|---|---|---|
+| DL Sprint 4.0 training recordings (Bengali-Loop [1]) | media-speech train / dev / eval | BUET DL Sprint 4.0 Kaggle competition (long-form ASR track); audio in `data/raw/train/audio`, transcripts in `data/raw/train/annotation` | `pipeline/01_segment.py`, `pipeline/02_split.py` |
+| FLEURS, Bengali | test | `google/fleurs` (`bn_in`) on Hugging Face | `pipeline/data/prepare_hf.py --preset fleurs` |
+| Kathbath, Bengali | test (valid split), training | `ai4bharat/Kathbath` on Hugging Face (accept the terms first) | `prepare_hf.py --preset kathbath`, `prepare_matrix.py kathbath` |
+| Shrutilipi, Bengali | training | `ai4bharat/Shrutilipi` on Hugging Face (accept the terms first) | `pipeline/data/prepare_matrix.py shrutilipi` |
+| Common Voice 27.0, Bengali | test, training | Mozilla Common Voice, extracted to `data/CommonVoiceCorpus/bn/` | `pipeline/data/prepare_cv.py`, `prepare_matrix.py cv` |
+| OpenSLR 53 | extra training hours (final model) | [openslr.org/resources/53](https://www.openslr.org/resources/53) | `pipeline/data/prepare_openslr53.py` |
+
 ## Reproducing
 
-Python 3.13; the repository root doubles as a Windows virtual environment (`./Scripts/python.exe`).
+The commands below assume the setup above (on Windows the original runs used the repository root as the virtual
+environment, so older runbooks call `./Scripts/python.exe`).
 
 **Every result is in `results/`:** per-system predictions (`predictions.jsonl`) and metrics with confidence intervals
 (`metrics.json`) under `results/{zeroshot,modal,kaggle}/<test set>/<system>/`, paired tests in `results/compare/`,
@@ -684,7 +747,7 @@ repository.
 row is identified by its `num_beams` field (> 1) and its output folder name (`*_beam5*`). This affects only that
 label: the WER, CER and confidence intervals in the file are computed from the predictions as decoded.
 
-Tests: `PYTHONPATH=src ./Scripts/python.exe tests/test_smoke.py` and `tests/test_mbr.py`.
+Tests: see [Setup](#setup).
 Step-by-step guide for the cloud runs: [`docs/PHASE4_RUNBOOK.md`](docs/PHASE4_RUNBOOK.md).
 
 **Layout.** `src/bangla_asr/` (config, text normalization and WER, forced aligner, Whisper wrapper and N-best

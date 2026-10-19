@@ -29,7 +29,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import modal  # noqa: E402
 
-from modal_finetune import APP, TEST_SETS, TRAIN_SOURCES, TUGSTUGI, _git_state  # noqa: E402
+from modal_finetune import APP, SHIPPED, TEST_SETS, TRAIN_SOURCES, TUGSTUGI, _git_state  # noqa: E402
 
 CALLS = Path("logs/modal_calls.jsonl")
 DEPLOYED = Path("logs/modal_deployed.json")
@@ -58,13 +58,16 @@ def deploy():
 
 
 def _check_deployed() -> dict:
-    """The deployed code must be the code at HEAD, otherwise the launch record would lie."""
+    """The deployed code must match HEAD in the shipped files, otherwise the launch record would lie.
+    Commits that touch only other files (docs, analysis) do not need a new deploy."""
     profile = _profile()
     dep = json.loads(DEPLOYED.read_text()).get("by_profile", {}).get(profile) if DEPLOYED.exists() else None
     if dep is None:
         sys.exit(f"Not deployed to Modal account '{profile}' yet: run  pipeline/modal_launch.py deploy")
     now = _git_state()
-    if now["git_dirty_shipped"] or now["git_commit"] != dep["git_commit"]:
+    same = now["git_commit"] == dep["git_commit"] or subprocess.run(
+        ["git", "diff", "--quiet", dep["git_commit"], "HEAD", "--", *SHIPPED]).returncode == 0
+    if now["git_dirty_shipped"] or not same:
         sys.exit(f"The deployed code ({dep['git_commit'][:7]}) is not the current code ({now['git_commit'][:7]}, "
                  f"uncommitted changes: {now['git_dirty_shipped']}). Commit, then run  modal_launch.py deploy.")
     return {**now, "profile": profile}

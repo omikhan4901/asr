@@ -352,14 +352,16 @@ def score_remote(run: str, model: str, adapter: str, sets: list[str], out: str, 
 
 # ---------------------------------------------------------------- local entry points
 
+SHIPPED = ["src/bangla_asr", "pipeline/11_finetune.py", "pipeline/checkpoint_to_model.py",
+           "pipeline/eval_zero_shot.py", "pipeline/modal_finetune.py", "pipeline/data", "pipeline/kaggle_phase4.py",
+           "pipeline/03_generate_nbest.py", "pipeline/rescore_nbest.py"]  # the code Modal runs
+
+
 def _git_state() -> dict:
     """Local commit and whether the files shipped to Modal differ from it (run_info.json cannot see git there)."""
     def git(*a):
         return subprocess.run(["git", *a], capture_output=True, text=True).stdout.strip()
-    shipped = ["src/bangla_asr", "pipeline/11_finetune.py", "pipeline/checkpoint_to_model.py",
-               "pipeline/eval_zero_shot.py", "pipeline/modal_finetune.py", "pipeline/data", "pipeline/kaggle_phase4.py",
-               "pipeline/03_generate_nbest.py", "pipeline/rescore_nbest.py"]
-    return {"git_commit": git("rev-parse", "HEAD"), "git_dirty_shipped": bool(git("status", "--porcelain", "--", *shipped))}
+    return {"git_commit": git("rev-parse", "HEAD"), "git_dirty_shipped": bool(git("status", "--porcelain", "--", *SHIPPED))}
 
 
 def _download(entries, base: str, dest: Path, skip=lambda rel: False) -> int:

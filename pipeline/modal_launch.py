@@ -87,8 +87,12 @@ def _spawn(fn_name: str, kind: str, record: dict, *args, **kwargs):
 def status():
     if not CALLS.exists():
         sys.exit("no jobs launched yet")
+    profile, other = _profile(), 0
     for line in CALLS.read_text(encoding="utf-8").splitlines():
         e = json.loads(line)
+        if e.get("profile") != profile:  # calls of another account cannot be looked up from this one
+            other += 1
+            continue
         try:
             out = modal.FunctionCall.from_id(e["call_id"]).get(timeout=0)
             state = f"finished, exit code {out}"
@@ -97,6 +101,7 @@ def status():
         except Exception as ex:  # cancelled, failed, or results expired (7 days)
             state = f"{type(ex).__name__}: {str(ex)[:80]}"
         print(f"{e['time']}  {e['kind']:5}  {e['run']:16} {state}")
+    print(f"(account '{profile}'; {other} older jobs of other accounts not shown)")
 
 
 def main():

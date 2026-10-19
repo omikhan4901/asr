@@ -31,10 +31,12 @@ Expected end: `hub code/latest.txt = <12 characters> (OK)`. Run it again wheneve
 
 ---
 
-## October (new Modal account, fresh $30): train M5-full now
+## October (new Modal account, fresh $30): train M5-full and M5-300 now
 
-The new account's volume starts empty. M5-full needs only data that is on the hub; M5-300 also needs the 7.9 GB
-OpenSLR zip, which exists only on the friend's volume, so M5-300 stays on the friend's account (Nov 1, below).
+The new account's volume starts empty. M5-full needs only data that is on the hub (N5). M5-300 also needs the
+OpenSLR zip, which is not on the hub, so N6b rebuilds it on the new volume (same script, seed 0). Total est. ~$26
+(caps $12.5 + $15.5). The friend's November credit then stays free as the backup. If N6b is skipped, M5-300 runs
+on the friend's account on Nov 1 (below).
 
 | # | Do | Time | Cost |
 |---|---|---|---|
@@ -44,7 +46,8 @@ OpenSLR zip, which exists only on the friend's volume, so M5-300 stays on the fr
 | N4 | `./Scripts/python.exe pipeline/modal_launch.py deploy` | 2 min | $0 |
 | N5 | `PYTHONIOENCODING=utf-8 ./Scripts/modal.exe run pipeline/modal_finetune.py::from_hf --patterns "zips/splits_fa-train.zip,zips/splits_fa-dev.zip,zips/cv-train.zip,zips/kathbath-train.zip,zips/shrutilipi-train.zip,manifests/*"` (keep the window open; if it stops, run it again) | ~20-40 min est. | ~$0.2 est. |
 | N6 | `./Scripts/python.exe pipeline/modal_launch.py train --method full --run m5_full --source m5full --budget 12.5`, then `status` until `exit code 0` | ~5 h est. | ~$11 est. |
-| N7 | `PYTHONIOENCODING=utf-8 ./Scripts/modal.exe run pipeline/modal_finetune.py::to_hf --run m5_full` | ~5 min | ~$0.05 |
+| N6b | (at the same time as N6) `./Scripts/python.exe pipeline/modal_launch.py prep --sources openslr53`, `status` until the `prep` line says `exit code 0`, then `./Scripts/python.exe pipeline/modal_launch.py train --method full --run m5_300 --source m5_300 --budget 15.5` | prep ~1-2 h est., training ~6.5 h est. | ~$0.5 + ~$14 est. |
+| N7 | `PYTHONIOENCODING=utf-8 ./Scripts/modal.exe run pipeline/modal_finetune.py::to_hf --run m5_full` (and `--run m5_300` when it is done) | ~5 min each | ~$0.05 each |
 | N8 | `./Scripts/modal.exe profile activate mehboobehsankhan` | - | - |
 
 After N7, M5-full can be scored on Kaggle right away (step 9a, `GPU0` line).

@@ -31,7 +31,25 @@ Expected end: `hub code/latest.txt = <12 characters> (OK)`. Run it again wheneve
 
 ---
 
-## November 1: training on the friend's Modal (the data is already on their volume)
+## October (new Modal account, fresh $30): train M5-full now
+
+The new account's volume starts empty. M5-full needs only data that is on the hub; M5-300 also needs the 7.9 GB
+OpenSLR zip, which exists only on the friend's volume, so M5-300 stays on the friend's account (Nov 1, below).
+
+| # | Do | Time | Cost |
+|---|---|---|---|
+| N1 | modal.com: sign up, add the card, check Settings -> Usage & Billing shows the $30 free credit | 5 min | $0 |
+| N2 | `./Scripts/modal.exe token new --profile newacct` (approve in the browser), then `./Scripts/modal.exe profile activate newacct` and `./Scripts/modal.exe profile current` (must print `newacct`) | 2 min | $0 |
+| N3 | modal.com/secrets -> Create new secret -> Custom: name `huggingface`, key `HF_TOKEN`, value = a write token from huggingface.co/settings/tokens | 2 min | $0 |
+| N4 | `./Scripts/python.exe pipeline/modal_launch.py deploy` | 2 min | $0 |
+| N5 | `PYTHONIOENCODING=utf-8 ./Scripts/modal.exe run pipeline/modal_finetune.py::from_hf --patterns "zips/splits_fa-train.zip,zips/splits_fa-dev.zip,zips/cv-train.zip,zips/kathbath-train.zip,zips/shrutilipi-train.zip,manifests/*"` (keep the window open; if it stops, run it again) | ~20-40 min est. | ~$0.2 est. |
+| N6 | `./Scripts/python.exe pipeline/modal_launch.py train --method full --run m5_full --source m5full --budget 12.5`, then `status` until `exit code 0` | ~5 h est. | ~$11 est. |
+| N7 | `PYTHONIOENCODING=utf-8 ./Scripts/modal.exe run pipeline/modal_finetune.py::to_hf --run m5_full` | ~5 min | ~$0.05 |
+| N8 | `./Scripts/modal.exe profile activate mehboobehsankhan` | - | - |
+
+After N7, M5-full can be scored on Kaggle right away (step 9a, `GPU0` line).
+
+## November 1: M5-300 on the friend's Modal (the data is already on their volume)
 
 ### 3. Switch to the friend's account
 ```bash
@@ -45,7 +63,9 @@ Must print `friend`. Everything until step 8 bills the friend's credit ($30 rese
 ./Scripts/python.exe pipeline/modal_launch.py deploy
 ```
 
-### 5. Prepare OpenSLR 53 and the two training lists (~1-2 h est., ~$0.3-0.6 est.; runs on its own)
+### 5. DONE (2026-10-12/13): OpenSLR 53 and both training lists are on the friend's volume
+OpenSLR 53: 22,786 joined samples, 144.1 h, 317 speakers, 24 test sentences dropped; `m5-full` 73,879 rows,
+`m5-300` 96,665 rows (checked read-only 2026-10-19). Skip this step. For reference, the command was:
 ```bash
 ./Scripts/python.exe pipeline/modal_launch.py prep --sources openslr53
 ./Scripts/python.exe pipeline/modal_launch.py status
@@ -54,9 +74,8 @@ Repeat `status` until the newest `prep` line says `finished, exit code 0`. It do
 Modal, joins the clips, drops the 11 sentences that are also in Common Voice test, and builds `m5-full` (156 h) and
 `m5-300` (~300 h). If it fails with "No space left on device", stop and fix the prep step before going on.
 
-### 6. Train both models (in parallel; ~5 h and ~6.5 h est.; each stops itself at its cap)
+### 6. Train M5-300 (~6.5 h est.; stops itself at its cap). M5-full only if N6 above was not done
 ```bash
-./Scripts/python.exe pipeline/modal_launch.py train --method full --run m5_full --source m5full --budget 12.5
 ./Scripts/python.exe pipeline/modal_launch.py train --method full --run m5_300 --source m5_300 --budget 15.5
 ```
 Check with `status` (you may close everything meanwhile). `exit code 0` = done. `exit code 3` = stopped at the cap

@@ -83,8 +83,9 @@ class IndicConformerModel:
         from transformers import AutoModel
 
         self.decoding = decoding
-        self.model = AutoModel.from_pretrained(model_id, trust_remote_code=True)
+        self.model = AutoModel.from_pretrained(model_id, trust_remote_code=True)  # picks the GPU itself (ONNX + TorchScript)
 
+    @torch.inference_mode()
     def transcribe(self, audios):
         return [str(self.model(torch.from_numpy(np.asarray(a, dtype=np.float32)).unsqueeze(0), "bn", self.decoding)).strip()
                 for a in audios]

@@ -193,6 +193,11 @@ def drop_old_torchao():
 def run_queue(gpu: int, jobs: list[str], args, logs: Path, status: dict):
     env = {**os.environ, "CUDA_VISIBLE_DEVICES": "-1" if args.cpu else str(gpu), "PYTHONPATH": str(REPO / "src"),
            "PYTHONIOENCODING": "utf-8", "TQDM_MININTERVAL": "60"}
+    # faster-whisper (CTranslate2) loads cuDNN / cuBLAS by name: point it at the copies that come with torch's pip wheels
+    import site
+    nv = [str(d) for sp in site.getsitepackages() for d in Path(sp, "nvidia").glob("*/lib") if d.is_dir()]
+    if nv:
+        env["LD_LIBRARY_PATH"] = ":".join(nv + [os.environ.get("LD_LIBRARY_PATH", "")]).rstrip(":")
     limit = ["--limit", str(args.limit)] if args.limit else []
     for job in jobs:
         status[job] = "running"

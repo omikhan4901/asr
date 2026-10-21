@@ -201,7 +201,7 @@ def run_queue(gpu: int, jobs: list[str], args, logs: Path, status: dict):
     limit = ["--limit", str(args.limit)] if args.limit else []
     for job in jobs:
         status[job] = "running"
-        log = logs / f"{job.replace(':', '_')}.log"
+        log = logs / f"{job.replace(':', '_').replace('/', '__')}.log"
         t0 = time.time()
         for cmd in job_commands(job, sys.executable, limit):
             with log.open("a", encoding="utf-8") as f:

@@ -19,6 +19,9 @@ Jobs
   longform:<run> whole-recording evaluation (pipeline/eval_longform.py) of models/<run> ('base' = zero-shot
                  tugstugi) on the 22 raw DL Sprint eval recordings (zips/longform-eval.zip) -> results/longform/<run>_t4.
   beam:<run>     models/<run> with beam search (5 beams) on the 5 test sets as <run>_beam5_t4 (speed in metrics).
+  dev:<run>      models/<run> on the mixed dev sets cv-dev and fleurs-validation (soups score them too).
+  zs:<HF id>[@ctc]  an outside model zero-shot on the 5 test sets -> results/zeroshot/<set>/<id>_t4 (IndicConformer:
+                 RNN-T, or its CTC head with @ctc; '-ct2' ids run with faster-whisper).
 
 Every step is resumable (the scripts skip finished utterances), and outputs are written straight to
 /kaggle/working, so a second session continues where the first stopped (add the first session's
@@ -50,6 +53,9 @@ SETS = {"splits_fa-dev": "data/splits_fa/dev.csv", "splits_fa-eval": "data/split
         "cv-test": "data/external/cv/test.csv"}
 SHORT = {"dev": "splits_fa-dev", "eval": "splits_fa-eval", "fleurs": "fleurs-test", "kathbath": "kathbath-valid"}
 TEST_SETS = list(SETS)
+# mixed development set (runs/prepare_mixed_dev.py) with DL Sprint dev: only for choosing between model variants
+DEV_SETS = {"cv-dev": "data/external/cv/dev.csv", "fleurs-validation": "data/external/fleurs/validation.csv"}
+SETS.update(DEV_SETS)
 
 
 def job_needs(job: str) -> tuple[list[str], list[str]]:
@@ -65,7 +71,11 @@ def job_needs(job: str) -> tuple[list[str], list[str]]:
     if kind == "score":
         return TEST_SETS, [arg]
     if kind == "soup":
-        return TEST_SETS, sorted({m for m in arg.split("+") if m != "base"})
+        return TEST_SETS + list(DEV_SETS), sorted({m for m in arg.split("+") if m != "base"})
+    if kind == "dev":
+        return list(DEV_SETS), [arg]
+    if kind == "zs":
+        return TEST_SETS, []
     if kind == "beam":
         return TEST_SETS, [arg]
     if kind == "longform":
@@ -88,8 +98,18 @@ def job_commands(job: str, py: str, limit: list[str]) -> list[list[str]]:
         return [ev + ["--manifest", SETS[s], *model, "--name", f"{arg}_t4", "--out_dir", "results/finetuned"] for s in TEST_SETS]
     if kind == "soup":
         soup = f"soups/{arg}"
-        return [[py, str(REPO / "pipeline/make_soup.py"), "--members", arg, "--models_dir", "models", "--out", soup]] +             [ev + ["--manifest", SETS[s], "--model", soup, "--name", f"soup_{arg}_t4", "--out_dir", "results/finetuned"]
-             for s in TEST_SETS]
+        return [[py, str(REPO / "pipeline/make_soup.py"), "--members", arg, "--models_dir", "models", "--out", soup]] + \
+            [ev + ["--manifest", SETS[s], "--model", soup, "--name", f"soup_{arg}_t4", "--out_dir", "results/finetuned"]
+             for s in list(DEV_SETS) + TEST_SETS]
+    if kind == "dev":
+        return [ev + ["--manifest", SETS[s], "--model", f"models/{arg}", "--name", f"{arg}_t4", "--out_dir", "results/finetuned"]
+                for s in DEV_SETS]
+    if kind == "zs":  # zs:<HF id>[@ctc]: an outside model, zero-shot (IndicConformer RNN-T by default, @ctc its CTC head)
+        mid, _, dec = arg.partition("@")
+        fam = ["--family", f"indicconformer-{dec}"] if dec else []
+        name = mid.replace("/", "__") + (f"_{dec}" if dec else "") + "_t4"
+        return [ev + ["--manifest", SETS[s], "--model", mid, *fam, "--name", name, "--out_dir", "results/zeroshot"]
+                for s in TEST_SETS]
     if kind == "longform":
         model = TUGSTUGI if arg == "base" else f"models/{arg}"
         return [[py, str(REPO / "pipeline/eval_longform.py"), "--recordings_dir", "data/clips/longform-eval", "--model", model,
@@ -249,6 +269,10 @@ def main():
     drop_old_torchao()
     if any(j.startswith("longform:") for j in jobs):  # Silero VAD (not in Kaggle's image); same version as the PC
         subprocess.run([sys.executable, "-m", "pip", "install", "-q", "silero-vad==6.2.1"], check=True)
+    if any(j.startswith("zs:") and "indic-conformer" in j for j in jobs):  # versions from the IndicConformer model card
+        subprocess.run([sys.executable, "-m", "pip", "install", "-q", "onnx==1.20.1", "onnxruntime-gpu==1.20.1"], check=True)
+    if any(j.startswith("zs:") and j.split("@")[0].endswith("-ct2") for j in jobs):
+        subprocess.run([sys.executable, "-m", "pip", "install", "-q", "faster-whisper==1.1.1"], check=True)
 
     status, threads = {}, []
     for gpu, q in enumerate(queues):

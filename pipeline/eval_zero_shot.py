@@ -75,13 +75,57 @@ class WhisperModel:
         return self.m.transcribe_batch(audios, sampling_rate=16000, num_beams=self.num_beams)
 
 
+class IndicConformerModel:
+    """AI4Bharat IndicConformer (ONNX, trust_remote_code; gated on HF). One utterance per call, language 'bn';
+    decoding 'rnnt' or 'ctc' (both greedy in the released code)."""
+
+    def __init__(self, model_id, device, decoding):
+        from transformers import AutoModel
+
+        self.decoding = decoding
+        self.model = AutoModel.from_pretrained(model_id, trust_remote_code=True)
+
+    def transcribe(self, audios):
+        return [str(self.model(torch.from_numpy(np.asarray(a, dtype=np.float32)).unsqueeze(0), "bn", self.decoding)).strip()
+                for a in audios]
+
+
+class CT2WhisperModel:
+    """A Whisper model converted to CTranslate2 (faster-whisper), e.g. a DL Sprint 4.0 finalist's release.
+    Greedy: beam 1, temperature 0 only (no fallback), no timestamps, no VAD, no previous-text conditioning."""
+
+    def __init__(self, model_id, device):
+        from faster_whisper import WhisperModel as FW
+
+        cuda = device.type == "cuda"
+        self.m = FW(model_id, device="cuda" if cuda else "cpu", compute_type="float16" if cuda else "int8")
+
+    def transcribe(self, audios):
+        out = []
+        for a in audios:
+            segs, _ = self.m.transcribe(np.asarray(a, dtype=np.float32), language="bn", task="transcribe", beam_size=1,
+                                        temperature=0.0, without_timestamps=True, condition_on_previous_text=False,
+                                        vad_filter=False)
+            out.append(" ".join(seg.text.strip() for seg in segs).strip())
+        return out
+
+
 def build(model_id, family, device, adapter=None, num_beams=1):
     if family == "auto":
-        from transformers import AutoConfig
-        arch = (AutoConfig.from_pretrained(model_id).architectures or [""])[0].lower()
-        family = "whisper" if "whisper" in arch else "ctc"
+        if "indic-conformer" in model_id:
+            family = "indicconformer-rnnt"
+        elif model_id.endswith("-ct2"):
+            family = "ct2"
+        else:
+            from transformers import AutoConfig
+            arch = (AutoConfig.from_pretrained(model_id).architectures or [""])[0].lower()
+            family = "whisper" if "whisper" in arch else "ctc"
     if family == "whisper":
         return WhisperModel(model_id, device, adapter, num_beams), family
+    if family.startswith("indicconformer-"):
+        return IndicConformerModel(model_id, device, family.split("-")[1]), family
+    if family == "ct2":
+        return CT2WhisperModel(model_id, device), family
     return CTCModel(model_id, device), family
 
 
@@ -89,7 +133,8 @@ def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--manifest", required=True)
     p.add_argument("--model", required=True)
-    p.add_argument("--family", choices=["auto", "whisper", "ctc"], default="auto")
+    p.add_argument("--family", choices=["auto", "whisper", "ctc", "indicconformer-rnnt", "indicconformer-ctc", "ct2"],
+                   default="auto")
     p.add_argument("--num_beams", type=int, default=1, help="Whisper only: 1 = greedy (every reported row), >1 = beam search")
     p.add_argument("--adapter", default=None, help="LoRA adapter folder (pipeline/11_finetune.py final/) on top of --model")
     p.add_argument("--name", default=None, help="Output folder name; default: the model id, or <run folder> for an adapter")

@@ -1,0 +1,13 @@
+{
+  "model": "models/m5_full",
+  "num_beams": 1,
+  "recordings": 22,
+  "wer": 0.1462125433382863,
+  "wer_ci95": [
+    0.11894058030586839,
+    0.17763304643535172
+  ],
+  "audio_hours": 20.415,
+  "rtf": 0.089,
+  "test_mode": false
+}

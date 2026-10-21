@@ -1,0 +1,60 @@
+{
+  "meta": {
+    "tuned_on": "splits_fa-dev",
+    "lm_order": 3,
+    "dev_perplexity_by_order": {
+      "2": 1419.125882117399,
+      "3": 1396.1123335657612,
+      "4": 1387.9428647134896
+    },
+    "lm_text": "data/splits_fa/train_clean.csv",
+    "lm_sentences": 15325,
+    "n_rules": 2167,
+    "rule_source": "results/zeroshot/splits_fa-train/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl",
+    "n_boot": 2000,
+    "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+  },
+  "tuned": {
+    "greedy": {},
+    "am": {
+      "order": 2,
+      "lam": 0,
+      "beta": 0.5
+    },
+    "lm": {
+      "order": 3,
+      "lam": 0.05,
+      "beta": 0.5
+    },
+    "mbr_lm": {
+      "order": 3,
+      "lam": 0.05,
+      "beta": 1,
+      "T": 1
+    },
+    "rover": {
+      "order": 3,
+      "lam": 0,
+      "beta": -1,
+      "T": 16
+    },
+    "rewrite": {
+      "rules": "all|2|0.9"
+    },
+    "rewrite_sel": {
+      "rules": "all|2|0.9",
+      "max_agree": 12
+    },
+    "lm_x": {
+      "order": 3,
+      "lam": 0.05,
+      "beta": 0.5
+    },
+    "mbr_lm_x": {
+      "order": 3,
+      "lam": 0.1,
+      "beta": 1,
+      "T": 8
+    }
+  }
+}

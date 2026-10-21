@@ -23,7 +23,9 @@ variants to the candidate lists moves the oracle from 18.35% to 13.75% and the W
 without retraining the speech model (only a word n-gram LM and spelling rules built from the training text); fine-tuning the model on 60 h of in-domain data reaches **11.34%** (−11.36 points
 [−12.32, −10.46]), and five predictions derived from the diagnosis all hold. A train × test matrix
 over four public corpora shows that each corpus trains its own test set best, and that 10 h from each of
-four corpora gives the best average over the four test sets (13.18% vs 13.99% for the in-domain model). After
+four corpora gives the best average over the four test sets (13.18% vs 13.99% for the in-domain model); with every
+hour of the four corpora plus 144 h of public read speech (300 h), one model of the same size and speed reaches an
+average of **11.78%** while matching the in-domain model on DL Sprint (11.49%). After
 fine-tuning, rescoring gains almost vanish (−0.45 points): training removes exactly the errors that
 selection could reach. We release the
 forced-aligned segmentation of 93.1 hours of Bengali-Loop recordings and the scoring code.
@@ -591,11 +593,51 @@ the errors no candidate can fix, **57% [51, 64] are not recognizer errors** (tra
 clips needed a correction), FLEURS 4.0% [2.9, 5.4], Common Voice 1.7% [0.8, 2.9], Kathbath 1.0% [0.3, 1.9]. Once the
 disagreements are settled, every model's WER is also reported against the verified references.
 
-### 5.12 Planned work
-- **Released model:** full fine-tuning on all four corpora together (unharmonized, 2 epochs at 1e-5), then ROVER on
-  its 12-best as an offline mode; compared with IndicConformer and the DL Sprint finalist models.
-- **Whole-recording evaluation:** transcribing each raw evaluation recording end to end (no reference-guided cuts).
-- **Human verification:** adjudication of the disagreements, and every model's WER against the verified references.
+### 5.12 All the training data: the final model
+
+The matrix (§5.8) showed that mixing corpora works and that M5's remaining gap to the in-domain model is on DL Sprint,
+where it had 10 h instead of 60 h. Two runs with M5's recipe unchanged (full fine-tuning, 2 epochs at 1e-5,
+unharmonized spelling, no selection on any test set) test whether hours close that gap: **M5-full** trains on every
+hour of the four corpora (156 h, 73,879 clips), and **M5-300** adds 144 h of OpenSLR 53 read speech (short clips of
+one speaker joined into samples of up to 25 s; 24 sentences that also occur in a test set removed), about 300 h in
+all. The targets for M5-full were fixed before any score: DL Sprint eval at most 12.0%, every other set within 0.5 of
+its specialist, and an average of at most 12.5%.
+
+| WER % (T4, greedy) | DL Sprint eval | FLEURS | Common Voice | Kathbath | Average |
+|---|---:|---:|---:|---:|---:|
+| M1 (DL Sprint, 60 h) | 11.34 | 18.34 | 12.80 | 13.48 | 13.99 |
+| M5 (10 h × 4) | 13.84 | 16.85 | 10.97 | 11.06 | 13.18 |
+| M5-full (156 h) | 11.50 | 16.23 | 10.35 | 10.07 | 12.04 |
+| **M5-300 (300 h)** | **11.49** | **15.35** | **10.21** | **10.07** | **11.78** |
+| Hishab conformer (reference) | 21.18 | 14.24 | – | – | – |
+
+**M5-full meets all three targets** and is significantly better than M5 on every set (DL Sprint eval −2.34 [−2.67,
+−2.03], FLEURS −0.62 [−1.18, −0.06], Common Voice −0.62, Kathbath −1.00); it is within 0.16 of the DL Sprint
+specialist and better than the CV, Kathbath and FLEURS specialists. **M5-300 is better again where the added data is
+of its kind:** FLEURS −0.88 [−1.30, −0.45] against M5-full, Common Voice −0.14 [−0.29, +0.00], DL Sprint eval and
+Kathbath unchanged (−0.02, 0.00); its average is 0.26 lower (about [−0.40, −0.12] when the per-set intervals are
+combined). Against M1 it ties on DL Sprint eval (+0.14 [−0.20, +0.47]) and is 2.6 to 3.4 points better on the
+other three sets. The gap to Hishab on FLEURS halves (+1.11 [+0.21, +2.01], from +2.20), while M5-300 stays 9.7 points
+ahead on DL Sprint eval. Both models have the size and speed of every other model here (real-time factor 0.040 to
+0.052 on a T4, greedy). On DL Sprint dev, M5-300 is 0.74 behind M1 (17.48 vs 16.74): the larger eval split does not
+show this.
+
+**Rescoring the final model.** ROVER over M5-300's own 12 sampled candidates, fixed as the target before any score,
+gives DL Sprint eval 11.25 (−0.23 [−0.41, −0.08]), FLEURS 15.10 (−0.25 [−0.55, −0.03]) and Kathbath 9.94 (−0.13, n.s.),
+at about 14 times the decoding cost. The oracle of the same lists is 8.22% on DL Sprint eval: 3.3 points of headroom,
+of which voting recovers 7%. As in §5.9, a stronger model leaves selection less to do, and what remains is shared by
+the candidates.
+
+**Whole recordings.** Transcribing each of the 22 raw evaluation recordings end to end (20.4 h; voice detection cuts
+the audio, the chunk texts are joined, no reference-guided cuts) gives 26.11% [22.89, 29.63] for the zero-shot model,
+14.55% for M1, 14.62% for M5-full and **14.21% [11.59, 17.25]** for M5-300. The whole-recording WER is about 2.7 points
+above the clip-level WER of the same model, because the raw audio includes material the forced-aligned clips leave out
+and the cuts are not reference-guided; the fine-tuned models differ by less than the intervals.
+
+### 5.13 Remaining work
+- **Human verification:** adjudication of the annotator disagreements, and every model's WER against the verified
+  references.
+- **Baselines not yet measured:** IndicConformer and the DL Sprint finalist models on the four test sets.
 
 ---
 
@@ -646,9 +688,12 @@ to the candidate lists takes DL Sprint eval from 22.71% to 17.46% without retrai
 11.34%, with all five predictions derived from the diagnosis holding. Stacking the two adds little (10.89%): after
 fine-tuning, spelling expansion no longer raises the oracle, and what remains is mostly selection-proof. Across
 four Bangla corpora each training set wins its own test set, and a merged 40 h set gives the best average
-(13.18%), so a released model should be trained on mixed sources, without forcing one spelling convention, and
-selected on the average rather than on in-domain dev data, which rewards over-fitting. Next: the
-human-verified references, which will separate recognizer errors from reference noise.
+(13.18%), so a model should be trained on mixed sources, without forcing one spelling convention, and
+selected on the average rather than on in-domain dev data, which rewards over-fitting. Following that rule with all
+the data we have (300 h) gives one Whisper-medium model with an average of 11.78% over the four test sets, the
+in-domain result on DL Sprint (11.49%) and half the former gap to the strongest open baseline on FLEURS; rescoring its
+candidates adds only 0.1 to 0.25 points. Next: the human-verified references, which will separate recognizer errors
+from reference noise.
 
 ---
 

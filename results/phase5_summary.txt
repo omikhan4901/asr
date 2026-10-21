@@ -1,10 +1,57 @@
 Phase 5 summary (WER %, B - A in points [95% cluster CI])
+cv-test__m5_300_vs_m1_full                 A  12.80  B  10.21  B-A  -2.59 [-2.80, -2.38]
+cv-test__m5_300_vs_m5_full                 A  10.35  B  10.21  B-A  -0.14 [-0.29, +0.00]
+cv-test__m5_300_vs_zeroshot                A  14.80  B  10.21  B-A  -4.59 [-4.84, -4.36]
+cv-test__m5_full_vs_m5                     A  10.97  B  10.35  B-A  -0.62 [-0.79, -0.45]
+cv-test__m5_full_vs_zeroshot               A  14.80  B  10.35  B-A  -4.45 [-4.68, -4.22]
+fleurs-test__m5_300_vs_hishab              A  14.24  B  15.35  B-A  +1.11 [+0.21, +2.01]
+fleurs-test__m5_300_vs_m1_full             A  18.34  B  15.35  B-A  -2.99 [-3.69, -2.31]
+fleurs-test__m5_300_vs_m5_full             A  16.23  B  15.35  B-A  -0.88 [-1.30, -0.45]
+fleurs-test__m5_300_vs_zeroshot            A  21.54  B  15.35  B-A  -6.19 [-7.05, -5.34]
+fleurs-test__m5_full_vs_m5                 A  16.85  B  16.23  B-A  -0.62 [-1.18, -0.06]
+fleurs-test__m5_full_vs_zeroshot           A  21.54  B  16.23  B-A  -5.31 [-6.16, -4.50]
+kathbath-valid__m5_300_vs_m1_full          A  13.48  B  10.07  B-A  -3.41 [-3.88, -2.98]
+kathbath-valid__m5_300_vs_m5_full          A  10.07  B  10.07  B-A  +0.00 [-0.23, +0.22]
+kathbath-valid__m5_300_vs_zeroshot         A  14.81  B  10.07  B-A  -4.74 [-5.54, -4.09]
+kathbath-valid__m5_full_vs_m5              A  11.06  B  10.07  B-A  -1.00 [-1.39, -0.67]
+kathbath-valid__m5_full_vs_zeroshot        A  14.81  B  10.07  B-A  -4.74 [-5.68, -4.01]
+splits_fa-dev__m5_300_vs_m1_full           A  16.74  B  17.48  B-A  +0.74 [+0.14, +1.53]
+splits_fa-dev__m5_300_vs_m5_full           A  17.07  B  17.48  B-A  +0.41 [-0.25, +0.97]
+splits_fa-dev__m5_300_vs_zeroshot          A  29.31  B  17.48  B-A -11.83 [-13.44, -10.25]
+splits_fa-dev__m5_full_vs_m5               A  19.11  B  17.07  B-A  -2.04 [-2.87, -0.68]
+splits_fa-dev__m5_full_vs_zeroshot         A  29.31  B  17.07  B-A -12.24 [-13.97, -10.62]
+splits_fa-eval__m5_300_vs_hishab           A  21.18  B  11.49  B-A  -9.70 [-10.77, -8.71]
+splits_fa-eval__m5_300_vs_m1_full          A  11.34  B  11.49  B-A  +0.14 [-0.20, +0.47]
+splits_fa-eval__m5_300_vs_m5_full          A  11.50  B  11.49  B-A  -0.02 [-0.35, +0.21]
+splits_fa-eval__m5_300_vs_zeroshot         A  22.70  B  11.49  B-A -11.22 [-12.15, -10.31]
+splits_fa-eval__m5_full_vs_m5              A  13.84  B  11.50  B-A  -2.34 [-2.67, -2.03]
+splits_fa-eval__m5_full_vs_zeroshot        A  22.70  B  11.50  B-A -11.20 [-12.13, -10.32]
+
+ROVER / stacking on M5-300 (results/phase5_stack/summary.csv):
+  set=splits_fa-dev, n_utterances=646, n_groups=6, ref_words=18329, greedy_wer=0.17480, am_wer=0.16640, am_diff=-0.00840, am_ci_lo=-0.01724, am_ci_hi=-0.00263, am_p_better=1.00000, lm_wer=0.16558, lm_diff=-0.00922, lm_ci_l
+  set=splits_fa-eval, n_utterances=4234, n_groups=22, ref_words=120029, greedy_wer=0.11486, am_wer=0.11421, am_diff=-0.00065, am_ci_lo=-0.00230, am_ci_hi=0.00067, am_p_better=0.80700, lm_wer=0.11344, lm_diff=-0.00142, lm_c
+  set=fleurs-test, n_utterances=920, n_groups=349, ref_words=17766, greedy_wer=0.15350, am_wer=0.15699, am_diff=0.00349, am_ci_lo=0.00084, am_ci_hi=0.00628, am_p_better=0.00850, lm_wer=0.15417, lm_diff=0.00068, lm_ci_lo=-0
+  set=kathbath-valid, n_utterances=2236, n_groups=17, ref_words=23995, greedy_wer=0.10069, am_wer=0.10040, am_diff=-0.00029, am_ci_lo=-0.00185, am_ci_hi=0.00122, am_p_better=0.62800, lm_wer=0.09935, lm_diff=-0.00133, lm_ci
 
 Whole-recording WER (results/longform):
+  base_t4               26.11 [22.89, 29.63]  22 recordings, 20.415 h, RTF 0.0936
+  m1_full_t4            14.55 [11.88, 17.70]  22 recordings, 20.415 h, RTF 0.0907
+  m5_300_t4             14.21 [11.59, 17.25]  22 recordings, 20.415 h, RTF 0.0895
+  m5_full_t4            14.62 [11.89, 17.76]  22 recordings, 20.415 h, RTF 0.089
 
 Speed (T4 real-time factor, greedy):
+  cv-test/m5_300_t4                             RTF 0.0519
+  cv-test/m5_full_t4                            RTF 0.0497
   cv-test/m5_merged_t4                          RTF 0.0469
+  fleurs-test/m5_300_t4                         RTF 0.0362
+  fleurs-test/m5_full_t4                        RTF 0.0367
   fleurs-test/m5_merged_t4                      RTF 0.0346
+  kathbath-valid/m5_300_t4                      RTF 0.0510
+  kathbath-valid/m5_full_t4                     RTF 0.0504
   kathbath-valid/m5_merged_t4                   RTF 0.0469
+  splits_fa-dev/m5_300_t4                       RTF 0.0437
+  splits_fa-dev/m5_full_t4                      RTF 0.0437
   splits_fa-dev/m5_merged_t4                    RTF 0.0404
+  splits_fa-eval/m5_300_t4                      RTF 0.0403
+  splits_fa-eval/m5_full_t4                     RTF 0.0418
   splits_fa-eval/m5_merged_t4                   RTF 0.0384

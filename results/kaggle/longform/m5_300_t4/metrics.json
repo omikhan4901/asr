@@ -1,0 +1,13 @@
+{
+  "model": "models/m5_300",
+  "num_beams": 1,
+  "recordings": 22,
+  "wer": 0.14214184001981178,
+  "wer_ci95": [
+    0.11589507940505528,
+    0.1724605137130673
+  ],
+  "audio_hours": 20.415,
+  "rtf": 0.0895,
+  "test_mode": false
+}

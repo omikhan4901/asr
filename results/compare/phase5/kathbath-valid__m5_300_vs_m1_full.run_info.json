@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/finetuned/kathbath-valid/m1_full/predictions.jsonl --b results/kaggle/finetuned/kathbath-valid/m5_300_t4/predictions.jsonl --name kathbath-valid__m5_300_vs_m1_full --out_dir results/compare/phase5",
+      "git_commit": "1ccd2e3d272ed669ccd8f0d60e179ae5d08f37e1",
+      "git_dirty": false,
+      "start": "2026-10-21T18:25:32",
+      "end": "2026-10-21T18:25:32",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/finetuned/kathbath-valid/m1_full/predictions.jsonl": "c770a8980a3d03709a432abf947d605a4a9c7d4dfb7519a2d607cab07e369416",
+        "results/kaggle/finetuned/kathbath-valid/m5_300_t4/predictions.jsonl": "3487e56037006977f21ba3e882fbfeed39e84150fc7285ee626f116694b1f4fe"
+      },
+      "outputs": {
+        "results\\compare\\phase5\\kathbath-valid__m5_300_vs_m1_full.json": "4ff352567311afe96bb402d47c9472f77f08aeec8ec39a0e36758cb8b7233dd9"
+      }
+    }
+  ]
+}

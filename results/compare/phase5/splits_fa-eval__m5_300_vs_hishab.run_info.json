@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/zeroshot/splits_fa-eval/hishab__titu_stt_bn_conformer_large/predictions.jsonl --b results/kaggle/finetuned/splits_fa-eval/m5_300_t4/predictions.jsonl --name splits_fa-eval__m5_300_vs_hishab --out_dir results/compare/phase5",
+      "git_commit": "1ccd2e3d272ed669ccd8f0d60e179ae5d08f37e1",
+      "git_dirty": false,
+      "start": "2026-10-21T18:25:40",
+      "end": "2026-10-21T18:25:40",
+      "runtime_s": 0.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/zeroshot/splits_fa-eval/hishab__titu_stt_bn_conformer_large/predictions.jsonl": "a0dcd5cd1883870cff104285048f8a34a869b49dffa4e06f7124ebdf73d5afdb",
+        "results/kaggle/finetuned/splits_fa-eval/m5_300_t4/predictions.jsonl": "9ae0f16625fc8a730ae61a7b56e7508af6a7f73342859dcb5d63b4824b810f54"
+      },
+      "outputs": {
+        "results\\compare\\phase5\\splits_fa-eval__m5_300_vs_hishab.json": "39e134ae18e8b1d06fbe39243707002629fb77e24f448177631fb119c94303e7"
+      }
+    }
+  ]
+}

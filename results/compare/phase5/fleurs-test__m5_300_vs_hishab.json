@@ -1,0 +1,19 @@
+{
+  "a": "results/zeroshot/fleurs-test/hishab__titu_stt_bn_conformer_large/predictions.jsonl",
+  "b": "results/kaggle/finetuned/fleurs-test/m5_300_t4/predictions.jsonl",
+  "n_utterances": 920,
+  "n_groups": 349,
+  "ref_words": 17766,
+  "wer_a": 0.1424068445345041,
+  "wer_b": 0.1534954407294833,
+  "diff_b_minus_a": 0.011088596194979174,
+  "diff_ci95": [
+    0.002081862615987999,
+    0.020119027313922958
+  ],
+  "p_b_better": 0.007,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

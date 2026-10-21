@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/finetuned/fleurs-test/m1_full/predictions.jsonl --b results/kaggle/finetuned/fleurs-test/m5_300_t4/predictions.jsonl --name fleurs-test__m5_300_vs_m1_full --out_dir results/compare/phase5",
+      "git_commit": "1ccd2e3d272ed669ccd8f0d60e179ae5d08f37e1",
+      "git_dirty": false,
+      "start": "2026-10-21T18:24:13",
+      "end": "2026-10-21T18:24:13",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/finetuned/fleurs-test/m1_full/predictions.jsonl": "6a415e10fb47f59e1b28720ded8fa4e22074cf21bb4d346b6448ce90a347664b",
+        "results/kaggle/finetuned/fleurs-test/m5_300_t4/predictions.jsonl": "91fa8637b257f0d308e665ddd4892631cbb3e866ee415bc741cbfaab98f5d58e"
+      },
+      "outputs": {
+        "results\\compare\\phase5\\fleurs-test__m5_300_vs_m1_full.json": "1d09fd0663ed7c0974af8bf19c81d1b97837468d92f665f346b14b45bfe7be07"
+      }
+    }
+  ]
+}

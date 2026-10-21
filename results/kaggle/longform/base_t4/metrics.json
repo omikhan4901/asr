@@ -1,0 +1,13 @@
+{
+  "model": "bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium",
+  "num_beams": 1,
+  "recordings": 22,
+  "wer": 0.26112091381872216,
+  "wer_ci95": [
+    0.22892248789342945,
+    0.2963118457589426
+  ],
+  "audio_hours": 20.415,
+  "rtf": 0.0936,
+  "test_mode": false
+}

@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python3 /tmp/code/pipeline/eval_zero_shot.py --batch_size 8 --manifest data/splits_fa/eval.csv --model models/m5_300 --name m5_300_t4 --out_dir results/finetuned",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-20T11:33:28",
+      "end": "2026-10-20T12:14:20",
+      "runtime_s": 2451.3,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.15",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.15.0",
+        "numpy": "2.1.3",
+        "pandas": "2.3.3",
+        "gpu": "Tesla T4"
+      },
+      "inputs": {
+        "data/splits_fa/eval.csv": "6ce00c484d1581ac60849749e8a20211518b1046a61dfce02015725fedd80238"
+      },
+      "outputs": {
+        "results/finetuned/splits_fa-eval/m5_300_t4/predictions.jsonl": "9ae0f16625fc8a730ae61a7b56e7508af6a7f73342859dcb5d63b4824b810f54",
+        "results/finetuned/splits_fa-eval/m5_300_t4/metrics.json": "5facf48f198eb5347fb75ee8c0bbc5298edfb8f4fb4c3b05b75c72d7eaf54df1"
+      }
+    }
+  ]
+}

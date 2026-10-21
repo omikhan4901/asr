@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/kaggle/finetuned/splits_fa-eval/m5_merged_t4/predictions.jsonl --b results/kaggle/finetuned/splits_fa-eval/m5_full_t4/predictions.jsonl --name splits_fa-eval__m5_full_vs_m5 --out_dir results/compare/phase5",
+      "git_commit": "1ccd2e3d272ed669ccd8f0d60e179ae5d08f37e1",
+      "git_dirty": false,
+      "start": "2026-10-21T18:23:17",
+      "end": "2026-10-21T18:23:17",
+      "runtime_s": 0.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/kaggle/finetuned/splits_fa-eval/m5_merged_t4/predictions.jsonl": "f486dc369044618bc208863ebb121d83e7e067fc6bdaaa129161a607f8db237a",
+        "results/kaggle/finetuned/splits_fa-eval/m5_full_t4/predictions.jsonl": "ff66ee18a1c7f72905f53d09a00652aeaaa1513f0c94113f1d3b1a089de4828c"
+      },
+      "outputs": {
+        "results\\compare\\phase5\\splits_fa-eval__m5_full_vs_m5.json": "4c6811b46dbba1f1cbdce68048a954a704f522aaa077ae5e68a2a1728bd87050"
+      }
+    }
+  ]
+}

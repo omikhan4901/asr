@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/splits_fa-dev/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/splits_fa-dev/m5_full_t4/predictions.jsonl --name splits_fa-dev__m5_full_vs_zeroshot --out_dir results/compare/phase5",
+      "git_commit": "1ccd2e3d272ed669ccd8f0d60e179ae5d08f37e1",
+      "git_dirty": false,
+      "start": "2026-10-21T18:22:22",
+      "end": "2026-10-21T18:22:22",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/splits_fa-dev/tugstugi_a100/predictions.jsonl": "594d6bc2c5e9cacc20b66de6c77699082448112bf49aac04e95d365f7cbe57eb",
+        "results/kaggle/finetuned/splits_fa-dev/m5_full_t4/predictions.jsonl": "f22f867942e131dc70cb5041053baafb3a6f529f0c689eb6948093ccf1b1fec5"
+      },
+      "outputs": {
+        "results\\compare\\phase5\\splits_fa-dev__m5_full_vs_zeroshot.json": "e954abae8c75cbc295f9521eccf119e662fc726884e86989b297ce02ac5745f1"
+      }
+    }
+  ]
+}

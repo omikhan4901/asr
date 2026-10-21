@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/kathbath-valid/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/kathbath-valid/m5_300_t4/predictions.jsonl --name kathbath-valid__m5_300_vs_zeroshot --out_dir results/compare/phase5",
+      "git_commit": "1ccd2e3d272ed669ccd8f0d60e179ae5d08f37e1",
+      "git_dirty": false,
+      "start": "2026-10-21T18:25:09",
+      "end": "2026-10-21T18:25:09",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/kathbath-valid/tugstugi_a100/predictions.jsonl": "603714b998c93bf29548d41d629ab4a55018bf5592d66805fc83aaec0e464804",
+        "results/kaggle/finetuned/kathbath-valid/m5_300_t4/predictions.jsonl": "3487e56037006977f21ba3e882fbfeed39e84150fc7285ee626f116694b1f4fe"
+      },
+      "outputs": {
+        "results\\compare\\phase5\\kathbath-valid__m5_300_vs_zeroshot.json": "89035ae1bcc05b627d72822e9f3a82cc784cf3c34afb3ee5ffab87da877f22cb"
+      }
+    }
+  ]
+}

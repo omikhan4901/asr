@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Phase 5 finish (CPU, ~20-40 min): after the Phase 5 Kaggle sessions are unpacked under data/phase5/<any>/phase4/.
+# Phase 5 finish (CPU, ~20-40 min): after the Phase 5 Kaggle sessions are unpacked under data/phase5/<any>/ (with or without the phase4/ level).
 #   1. Kaggle results -> results/kaggle (never overwrites)
 #   2. paired tests: M5-full vs M5, M5-300 vs M5-full, both vs zero-shot / M1 full / Hishab (FLEURS, eval)
 #   3. ROVER on M5-300's own 12-best (pre-registered target, chosen before any Phase 5 score): 12_raise_ceiling.py
@@ -14,7 +14,7 @@ OUT=results/compare/phase5
 mkdir -p results/kaggle "$OUT"
 
 echo "== 1. Kaggle results -> results/kaggle"
-for r in data/phase5/*/phase4/results; do [ -d "$r" ] && cp -rn "$r"/* results/kaggle/; done
+for r in data/phase5/*/phase4/results data/phase5/*/results; do [ -d "$r" ] && cp -rn "$r"/* results/kaggle/; done
 
 pair() {  # pair <a.jsonl> <b.jsonl> <name>
   if [ -f "$1" ] && [ -f "$2" ] && [ "$(wc -l < "$1")" = "$(wc -l < "$2")" ]; then
@@ -37,7 +37,7 @@ done
 echo "== 3. ROVER on M5-300's 12-best"
 pools=()
 for s in splits_fa-dev splits_fa-eval fleurs-test kathbath-valid; do
-  p=$(ls data/phase5/*/phase4/nbest/${s}__m5_300_pool.jsonl 2>/dev/null | head -1)
+  p=$(ls data/phase5/*/phase4/nbest/${s}__m5_300_pool.jsonl data/phase5/*/nbest/${s}__m5_300_pool.jsonl 2>/dev/null | head -1)
   [ -n "$p" ] && pools+=("$s=$p")
 done
 if [ ${#pools[@]} -eq 4 ]; then

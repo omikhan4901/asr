@@ -274,8 +274,8 @@ def main():
     drop_old_torchao()
     if any(j.startswith("longform:") for j in jobs):  # Silero VAD (not in Kaggle's image); same version as the PC
         subprocess.run([sys.executable, "-m", "pip", "install", "-q", "silero-vad==6.2.1"], check=True)
-    if any(j.startswith("zs:") and "indic-conformer" in j for j in jobs):  # versions from the IndicConformer model card
-        subprocess.run([sys.executable, "-m", "pip", "install", "-q", "onnx==1.20.1", "onnxruntime-gpu==1.20.1"], check=True)
+    if any(j.startswith("zs:") and "indic-conformer" in j for j in jobs):  # model card pins onnxruntime-gpu 1.20.1, which has no Python 3.13 wheel
+        subprocess.run([sys.executable, "-m", "pip", "install", "-q", "onnx==1.20.1", "onnxruntime-gpu==1.20.2"], check=True)
     if any(j.startswith("zs:") and j.split("@")[0].endswith("-ct2") for j in jobs):
         subprocess.run([sys.executable, "-m", "pip", "install", "-q", "faster-whisper==1.1.1"], check=True)
 

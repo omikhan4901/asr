@@ -1,0 +1,19 @@
+{
+  "a": "results/modal/zeroshot/cv-test/tugstugi_a100/predictions.jsonl",
+  "b": "results/kaggle/finetuned/cv-test/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl",
+  "n_utterances": 9408,
+  "n_groups": 7377,
+  "ref_words": 86891,
+  "wer_a": 0.1480130278164597,
+  "wer_b": 0.10133385505978755,
+  "diff_b_minus_a": -0.04667917275667215,
+  "diff_ci95": [
+    -0.04906802939525751,
+    -0.04440852795231399
+  ],
+  "p_b_better": 1.0,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

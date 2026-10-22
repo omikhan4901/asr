@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/splits_fa-eval/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl --name p5_final_vs_zeroshot_splits_fa-eval",
+      "git_commit": "15ed3da2b18d8915cbe1ec83ad203380b888a391",
+      "git_dirty": false,
+      "start": "2026-10-23T04:03:18",
+      "end": "2026-10-23T04:03:19",
+      "runtime_s": 0.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl": "eb2392fcc6065f891c8511c242a2f702fbe7bccbf5a13972d3fead54a3b2ef85",
+        "results/kaggle/finetuned/splits_fa-eval/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl": "bab9bcd89e002a216fd60501bb555950fdf6bfaf11e655d56963971ac6ae3115"
+      },
+      "outputs": {
+        "results\\compare\\p5_final_vs_zeroshot_splits_fa-eval.json": "7545d65e81a4c17919914cd798f5cad7474a316ed5905bc5580ab36cfd4ce308"
+      }
+    }
+  ]
+}

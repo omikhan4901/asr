@@ -1,0 +1,25 @@
+model,set,wer,baseline_minus_final,ci_low,ci_high,flag,source
+Final model (ours),splits_fa-eval,11.176,,,,,results/kaggle/finetuned/splits_fa-eval/soup_m1_full+m5_300+m5_300+m5_300_t4
+Final model (ours),fleurs-test,15.597,,,,,results/kaggle/finetuned/fleurs-test/soup_m1_full+m5_300+m5_300+m5_300_t4
+Final model (ours),cv-test,10.133,,,,,results/kaggle/finetuned/cv-test/soup_m1_full+m5_300+m5_300+m5_300_t4
+Final model (ours),kathbath-valid,10.281,,,,,results/kaggle/finetuned/kathbath-valid/soup_m1_full+m5_300+m5_300+m5_300_t4
+Hishab conformer large,splits_fa-eval,21.184,10.008,9.039,11.064,,results/zeroshot/splits_fa-eval/hishab__titu_stt_bn_conformer_large
+Hishab conformer large,fleurs-test,14.241,-1.357,-2.291,-0.427,,results/zeroshot/fleurs-test/hishab__titu_stt_bn_conformer_large
+Hishab conformer large,cv-test,7.725,,,,‡,results/zeroshot/cv-test/hishab__titu_stt_bn_conformer_large
+Hishab conformer large,kathbath-valid,8.318,,,,‡,results/zeroshot/kathbath-valid/hishab__titu_stt_bn_conformer_large
+IndicConformer 600M,splits_fa-eval,28.132,16.955,13.549,21.116,,results/kaggle/zeroshot/splits_fa-eval/ai4bharat__indic-conformer-600m-multilingual_ctc_t4
+IndicConformer 600M,fleurs-test,15.715,0.118,-0.769,0.923,,results/kaggle/zeroshot/fleurs-test/ai4bharat__indic-conformer-600m-multilingual_t4
+IndicConformer 600M,cv-test,13.2,3.067,2.851,3.299,,results/kaggle/zeroshot/cv-test/ai4bharat__indic-conformer-600m-multilingual_t4
+IndicConformer 600M,kathbath-valid,10.644,,,,?,results/kaggle/zeroshot/kathbath-valid/ai4bharat__indic-conformer-600m-multilingual_t4
+Team Villagers,splits_fa-eval,13.875,,,,*,results/kaggle/zeroshot/splits_fa-eval/teamvillagers__whisper-bengali-ct2_t4
+Team Villagers,fleurs-test,19.571,3.974,3.248,4.666,,results/kaggle/zeroshot/fleurs-test/teamvillagers__whisper-bengali-ct2_t4
+Team Villagers,cv-test,15.617,5.484,5.259,5.714,,results/kaggle/zeroshot/cv-test/teamvillagers__whisper-bengali-ct2_t4
+Team Villagers,kathbath-valid,14.653,4.372,3.914,4.805,,results/kaggle/zeroshot/kathbath-valid/teamvillagers__whisper-bengali-ct2_t4
+zarifmahir21,splits_fa-eval,8.511,,,,*,results/kaggle/zeroshot/splits_fa-eval/zarifmahir21__whisper-medium-bangla_t4
+zarifmahir21,fleurs-test,20.111,4.514,2.933,6.692,,results/kaggle/zeroshot/fleurs-test/zarifmahir21__whisper-medium-bangla_t4
+zarifmahir21,cv-test,13.708,3.575,3.35,3.826,,results/kaggle/zeroshot/cv-test/zarifmahir21__whisper-medium-bangla_t4
+zarifmahir21,kathbath-valid,14.511,4.23,3.594,4.89,,results/kaggle/zeroshot/kathbath-valid/zarifmahir21__whisper-medium-bangla_t4
+"tugstugi, zero-shot",splits_fa-eval,22.705,11.528,10.643,12.423,,results/modal/zeroshot/splits_fa-eval/tugstugi_a100
+"tugstugi, zero-shot",fleurs-test,21.541,5.944,5.145,6.771,,results/modal/zeroshot/fleurs-test/tugstugi_a100
+"tugstugi, zero-shot",cv-test,14.801,4.668,4.441,4.907,,results/modal/zeroshot/cv-test/tugstugi_a100
+"tugstugi, zero-shot",kathbath-valid,14.811,4.53,3.819,5.379,,results/modal/zeroshot/kathbath-valid/tugstugi_a100

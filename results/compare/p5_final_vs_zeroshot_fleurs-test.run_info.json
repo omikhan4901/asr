@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/fleurs-test/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl --name p5_final_vs_zeroshot_fleurs-test",
+      "git_commit": "15ed3da2b18d8915cbe1ec83ad203380b888a391",
+      "git_dirty": false,
+      "start": "2026-10-23T04:03:27",
+      "end": "2026-10-23T04:03:27",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl": "5d810667c6c80a847d7365e10832f2163cb68c6457411436129c45830ab933e4",
+        "results/kaggle/finetuned/fleurs-test/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl": "938a7783eb8121dae4898698f7fd2ecaf04e7bcf6ea5c55baaaf4392da6822c7"
+      },
+      "outputs": {
+        "results\\compare\\p5_final_vs_zeroshot_fleurs-test.json": "b6677fa00e8ddf77c9910a8719d311703a65c733f8401b2f764864905a13258c"
+      }
+    }
+  ]
+}

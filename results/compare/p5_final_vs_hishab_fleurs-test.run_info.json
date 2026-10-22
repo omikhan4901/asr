@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/zeroshot/fleurs-test/hishab__titu_stt_bn_conformer_large/predictions.jsonl --b results/kaggle/finetuned/fleurs-test/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl --name p5_final_vs_hishab_fleurs-test",
+      "git_commit": "15ed3da2b18d8915cbe1ec83ad203380b888a391",
+      "git_dirty": false,
+      "start": "2026-10-23T04:02:16",
+      "end": "2026-10-23T04:02:17",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/zeroshot/fleurs-test/hishab__titu_stt_bn_conformer_large/predictions.jsonl": "58a26ba5b450da77a5eb3e9065824a749e6a26cace942340e4aeefeaae4f28a4",
+        "results/kaggle/finetuned/fleurs-test/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl": "938a7783eb8121dae4898698f7fd2ecaf04e7bcf6ea5c55baaaf4392da6822c7"
+      },
+      "outputs": {
+        "results\\compare\\p5_final_vs_hishab_fleurs-test.json": "f77f83de0194869ba8a4eae6095b72273e40873917bce848a67c8c1cbad13e0e"
+      }
+    }
+  ]
+}

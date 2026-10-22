@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/modal/zeroshot/cv-test/tugstugi_a100/predictions.jsonl --b results/kaggle/finetuned/cv-test/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl --name p5_final_vs_zeroshot_cv-test",
+      "git_commit": "15ed3da2b18d8915cbe1ec83ad203380b888a391",
+      "git_dirty": false,
+      "start": "2026-10-23T04:03:35",
+      "end": "2026-10-23T04:03:36",
+      "runtime_s": 0.7,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/modal/zeroshot/cv-test/tugstugi_a100/predictions.jsonl": "8055f44246657b89de8e1f37bd72e5b9a56c965648c049b0aa7b9b7b9ed7f053",
+        "results/kaggle/finetuned/cv-test/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl": "32ceca2f3779a6072255bba6b343ea2e279b02fcb5e5b5fbfbfd8e8d74cdcb1b"
+      },
+      "outputs": {
+        "results\\compare\\p5_final_vs_zeroshot_cv-test.json": "6cfe868855a5a95ef04d709709fea826cf94c7ac8c54e38f0ca56f4c47034390"
+      }
+    }
+  ]
+}

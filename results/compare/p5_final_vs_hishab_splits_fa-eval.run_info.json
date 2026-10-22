@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/zeroshot/splits_fa-eval/hishab__titu_stt_bn_conformer_large/predictions.jsonl --b results/kaggle/finetuned/splits_fa-eval/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl --name p5_final_vs_hishab_splits_fa-eval",
+      "git_commit": "15ed3da2b18d8915cbe1ec83ad203380b888a391",
+      "git_dirty": false,
+      "start": "2026-10-23T04:02:07",
+      "end": "2026-10-23T04:02:08",
+      "runtime_s": 0.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/zeroshot/splits_fa-eval/hishab__titu_stt_bn_conformer_large/predictions.jsonl": "a0dcd5cd1883870cff104285048f8a34a869b49dffa4e06f7124ebdf73d5afdb",
+        "results/kaggle/finetuned/splits_fa-eval/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl": "bab9bcd89e002a216fd60501bb555950fdf6bfaf11e655d56963971ac6ae3115"
+      },
+      "outputs": {
+        "results\\compare\\p5_final_vs_hishab_splits_fa-eval.json": "885a27472b084adf1c94f382d04c3488c823500aad80046f4d8c92477389baec"
+      }
+    }
+  ]
+}

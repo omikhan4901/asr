@@ -22,7 +22,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from bangla_asr.common.text import normalize_bangla_text as N  # noqa: E402
 
 UTT = "train_033_0003"   # found by searching eval for clips where all 12 candidates share one variant (PROGRESS §69)
-FINAL = "m5_300_t4"
+FINAL = "soup_m1_full+m5_300+m5_300+m5_300_t4"  # the final model (PROGRESS §70)
 GLOSS = "“I was so worried about you. This time you will live.”"
 
 

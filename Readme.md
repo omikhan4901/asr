@@ -4,6 +4,11 @@
 *This README is the working paper. Every number comes from a result file in this repository's pipeline, with
 95% cluster-bootstrap confidence intervals; numbers still running are marked* **pending**.
 
+<p align="center"><img src="figures/png/f0_hero.png" width="900" alt="DL Sprint eval WER: zero-shot greedy 22.7, MBR rescoring 22.8, best of 12 candidates 18.3, list correction 17.5, final fine-tuned model 11.2; average over four test sets from 18.5 to 11.8."></p>
+
+**At a glance.** Rescoring the zero-shot model's candidates does not beat greedy decoding; adding the missing spelling
+variants to the list (no retraining) and fine-tuning (final model) attack the cause.
+
 ---
 
 ## Abstract
@@ -25,7 +30,10 @@ without retraining the speech model (only a word n-gram LM and spelling rules bu
 over four public corpora shows that each corpus trains its own test set best, and that 10 h from each of
 four corpora gives the best average over the four test sets (13.18% vs 13.99% for the in-domain model); with every
 hour of the four corpora plus 144 h of public read speech (300 h), one model of the same size and speed reaches an
-average of **11.78%** while matching the in-domain model on DL Sprint (11.49%). After
+average of 11.78% while matching the in-domain model on DL Sprint (11.49%), and averaging its weights with the in-domain
+model, chosen on development data, gives **11.18%** on DL Sprint and an average of **11.80%**. Against every open Bangla
+model we scored, the final model is best on every clean test set except FLEURS, where a non-commercial conformer leads
+by 1.4 points. After
 fine-tuning, rescoring gains almost vanish (−0.45 points): training removes exactly the errors that
 selection could reach. We release the
 forced-aligned segmentation of 93.1 hours of Bengali-Loop recordings and the scoring code.
@@ -291,6 +299,12 @@ come close to it. The oracle keeps falling, but slowly: on eval 23.2 (N = 2) →
 candidates add headroom that MBR cannot use (Table above), because the new correct words are minority votes.
 
 ### 5.3 Candidate agreement
+
+<p align="center"><img src="figures/png/f1_example.png" width="900" alt="One DL Sprint eval clip with its 12 sampled candidates: all 12 write ছিলো where the reference writes ছিল; 4 of 12 differ on বড় and তোরে, where the majority is right; the fine-tuned model writes the reference exactly."></p>
+
+**Example.** One DL Sprint eval clip (`train_033_0003`) and its 12 sampled candidates. Where the candidates
+disagree, the majority is right and voting fixes the word; where all 12 share a spelling variant, no selector can
+output the reference word. The final model writes it.
 
 <p align="center"><img src="figures/png/f2_mbr_fix_by_agreement.png" width="560" alt="Errors of the first sampled candidate on DL Sprint eval by the number of candidates with the reference word right, split into fixed and not fixed by MBR; the share fixed rises from 0% at c=0 to nearly 100% at c=11."></p>
 
@@ -608,7 +622,8 @@ its specialist, and an average of at most 12.5%.
 | M1 (DL Sprint, 60 h) | 11.34 | 18.34 | 12.80 | 13.48 | 13.99 |
 | M5 (10 h × 4) | 13.84 | 16.85 | 10.97 | 11.06 | 13.18 |
 | M5-full (156 h) | 11.50 | 16.23 | 10.35 | 10.07 | 12.04 |
-| **M5-300 (300 h)** | **11.49** | **15.35** | **10.21** | **10.07** | **11.78** |
+| M5-300 (300 h) | 11.49 | 15.35 | 10.21 | 10.07 | 11.78 |
+| **Final: 0.25 M1 + 0.75 M5-300 (weight average)** | **11.18** | **15.60** | **10.13** | **10.28** | **11.80** |
 | Hishab conformer (reference) | 21.18 | 14.24 | – | – | – |
 
 **M5-full meets all three targets** and is significantly better than M5 on every set (DL Sprint eval −2.34 [−2.67,
@@ -622,7 +637,17 @@ ahead on DL Sprint eval. Both models have the size and speed of every other mode
 0.052 on a T4, greedy). On DL Sprint dev, M5-300 is 0.74 behind M1 (17.48 vs 16.74): the larger eval split does not
 show this.
 
-**Rescoring the final model.** ROVER over M5-300's own 12 sampled candidates, fixed as the target before any score,
+**Weight averaging (the final model).** Averaging the weights of fine-tuned models from the same starting point
+costs nothing at inference. Four candidates were fixed before any score (M5-300 alone; M5-full + M5-300; M1 + M5-300;
+0.25 M1 + 0.75 M5-300), with the rule: pick the lowest average WER over three development sets (DL Sprint dev, 1,999
+Common Voice dev clips and FLEURS validation, with every sentence that occurs in a training or test set removed), and
+adopt it only if it beats M5-300 alone. The rule picks **0.25 M1 + 0.75 M5-300** (dev average 13.86 vs 14.21), which
+is the final model. On the test sets it is the same model in a different balance: DL Sprint eval −0.31 [−0.42, −0.22]
+against M5-300, Kathbath +0.21 [+0.06, +0.36], FLEURS and Common Voice n.s., average 11.80 vs 11.78. Two thirds of
+its dev gain came from DL Sprint dev (6 recordings), and M1 is the DL Sprint model. The equal average of M5-full and
+M5-300 would have scored 11.67 on test, but it lost on dev (13.91), so it is reported and not used.
+
+**Rescoring the final model** (measured on M5-300, before the weight average was chosen). ROVER over M5-300's own 12 sampled candidates, fixed as the target before any score,
 gives DL Sprint eval 11.25 (−0.23 [−0.41, −0.08]), FLEURS 15.10 (−0.25 [−0.55, −0.03]) and Kathbath 9.94 (−0.13, n.s.),
 at about 14 times the decoding cost. The oracle of the same lists is 8.22% on DL Sprint eval: 3.3 points of headroom,
 of which voting recovers 7%. As in §5.9, a stronger model leaves selection less to do, and what remains is shared by
@@ -634,10 +659,41 @@ the audio, the chunk texts are joined, no reference-guided cuts) gives 26.11% [2
 above the clip-level WER of the same model, because the raw audio includes material the forced-aligned clips leave out
 and the cuts are not reference-guided; the fine-tuned models differ by less than the intervals.
 
-### 5.13 Remaining work
+### 5.13 Against other open Bangla models
+
+<p align="center"><img src="figures/png/f14_baselines.png" width="900" alt="Leaderboard of WER on four test sets: the final model is lowest on DL Sprint eval (11.2), Common Voice (10.1) and Kathbath (10.3); Hishab is lowest on FLEURS (14.2 vs 15.6). Cells where a model trained on the test material are hatched and not ranked."></p>
+
+**Figure 14.** The final model against the open Bangla models we scored with the same harness (greedy, T4).
+Under each WER: that model's WER minus ours, from the paired cluster bootstrap. Hatched cells are not ranked: the model
+trained on that material (flags set before scoring).
+
+Four more open models were scored zero-shot: AI4Bharat's IndicConformer 600M (both heads), the DL Sprint 4.0 finalist
+Team Villagers' release (faster-whisper), `zarifmahir21/whisper-medium-bangla` and `psdn-ai/bangla-asr`. **The final
+model is the best rankable model on DL Sprint eval, Common Voice and Kathbath**: 17.0 points better than IndicConformer
+on DL Sprint eval and 2.7 better than the Team Villagers model, whose eval row is not even clean. **FLEURS is the one
+loss:** Hishab's non-commercial conformer is 1.36 [0.43, 2.29] points ahead, and IndicConformer ties (+0.12, n.s.).
+Two caveats on the baselines: IndicConformer's RNN-T decoder returns an empty transcript for many clips over 15 s
+(41–75% of them on DL Sprint dev), so its row uses the better head per set, which favours it; and `psdn-ai/bangla-asr`
+writes case endings as separate words (প্রোগ্রাম এর), which gives 63–76% WER at a normal 10–17% CER, so it is left
+out of the figure. `zarifmahir21` beats our model on DL Sprint eval (8.51%), but it was trained on DL Sprint-era data
+that includes our evaluation recordings; on the three clean sets it is 3.6 to 4.5 points worse.
+
+| WER % (T4, greedy) | DL Sprint eval | FLEURS | Common Voice | Kathbath |
+|---|---:|---:|---:|---:|
+| **Final model** | **11.18** | 15.60 | **10.13** | **10.28** |
+| Hishab conformer large (CC-BY-NC) | 21.18 | **14.24** | 7.72‡ | 8.32‡ |
+| IndicConformer 600M, CTC / RNN-T | 28.13 / 31.02 | 16.03 / 15.72 | 14.04 / 13.20 | 11.20 / 10.64? |
+| Team Villagers (DL Sprint 4.0 finalist) | 13.87* | 19.57 | 15.62 | 14.65 |
+| zarifmahir21/whisper-medium-bangla | 8.51* | 20.11 | 13.71 | 14.51 |
+| psdn-ai/bangla-asr (WER / CER) | 75.87 / 16.9 | 69.26 | 62.69 | 66.40 / 10.2 |
+
+\* trained on DL Sprint 4.0 data. ‡ trained on this corpus. ? training data not stated (AI4Bharat built Kathbath).
+
+### 5.14 Remaining work
 - **Human verification:** adjudication of the annotator disagreements, and every model's WER against the verified
   references.
-- **Baselines not yet measured:** IndicConformer and the DL Sprint finalist models on the four test sets.
+- **Model release:** the final weights are built from M1 and M5-300 by `pipeline/make_soup.py --members
+  m1_full+m5_300+m5_300+m5_300`; they are not yet published.
 
 ---
 
@@ -690,9 +746,9 @@ fine-tuning, spelling expansion no longer raises the oracle, and what remains is
 four Bangla corpora each training set wins its own test set, and a merged 40 h set gives the best average
 (13.18%), so a model should be trained on mixed sources, without forcing one spelling convention, and
 selected on the average rather than on in-domain dev data, which rewards over-fitting. Following that rule with all
-the data we have (300 h) gives one Whisper-medium model with an average of 11.78% over the four test sets, the
-in-domain result on DL Sprint (11.49%) and half the former gap to the strongest open baseline on FLEURS; rescoring its
-candidates adds only 0.1 to 0.25 points. Next: the human-verified references, which will separate recognizer errors
+the data we have (300 h), and a weight average chosen on development data, gives one Whisper-medium model with
+11.18% on DL Sprint and an average of 11.80% over the four test sets: the best open model we know of on Bangla media
+speech, and on every clean test set except FLEURS; rescoring its candidates adds only 0.1 to 0.25 points. Next: the human-verified references, which will separate recognizer errors
 from reference noise.
 
 ---
@@ -719,6 +775,7 @@ repository.
 | Fine-tuning | `pipeline/11_finetune.py` (locally) or `pipeline/modal_launch.py train` (cloud A100) |
 | Fine-tuning analysis | `runs/phase4_analysis.sh` |
 | Model averaging, beam search (Kaggle jobs `soup:`, `beam:`) | `pipeline/make_soup.py`, `pipeline/eval_zero_shot.py --num_beams` |
+| Model selection on mixed dev; outside baselines (Kaggle jobs `dev:`, `soup:`, `zs:`) | `runs/prepare_mixed_dev.py`, `pipeline/kaggle_phase4.py` |
 | Combining models; gap to Hishab | `analysis/cross_model_rover.py`, `analysis/hishab_gap.py` |
 | Whole-recording evaluation | `pipeline/eval_longform.py` (Kaggle job `longform:`; data `runs/phase5_upload_longform.sh`) |
 | OpenSLR 53 with joined clips; merged training lists | `pipeline/data/prepare_openslr53.py`, `pipeline/data/prepare_matrix.py merged` |

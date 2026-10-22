@@ -18,7 +18,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from html_fig import ACCENT, BASE, GRID, INK, INK2, INK3, LIST, ROOT, render  # noqa: E402
 
-FINAL = "m5_300_t4"  # the final model's result folder (change here if the dev rule picks a weight average)
+FINAL = "soup_m1_full+m5_300+m5_300+m5_300_t4"  # the final model: 0.25 M1 + 0.75 M5-300, chosen by the dev rule (PROGRESS §70)
 SETS = [("splits_fa-eval", "DL Sprint eval"), ("fleurs-test", "FLEURS"), ("cv-test", "Common Voice"),
         ("kathbath-valid", "Kathbath")]
 

@@ -1,0 +1,19 @@
+{
+  "a": "results/zeroshot/splits_fa-eval/hishab__titu_stt_bn_conformer_large/predictions.jsonl",
+  "b": "results/kaggle/finetuned/splits_fa-eval/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl",
+  "n_utterances": 4234,
+  "n_groups": 22,
+  "ref_words": 120029,
+  "wer_a": 0.2118404718859609,
+  "wer_b": 0.11176465687458864,
+  "diff_b_minus_a": -0.10007581501137225,
+  "diff_ci95": [
+    -0.11063619054039207,
+    -0.09038803370231886
+  ],
+  "p_b_better": 1.0,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

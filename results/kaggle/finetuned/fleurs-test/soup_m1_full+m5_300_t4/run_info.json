@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python3 /tmp/code/pipeline/eval_zero_shot.py --batch_size 8 --manifest data/external/fleurs/test.csv --model soups/m1_full+m5_300 --name soup_m1_full+m5_300_t4 --out_dir results/finetuned",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-21T14:11:22",
+      "end": "2026-10-21T14:18:31",
+      "runtime_s": 429.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.15",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.15.0",
+        "numpy": "2.1.3",
+        "pandas": "2.3.3",
+        "gpu": "Tesla T4"
+      },
+      "inputs": {
+        "data/external/fleurs/test.csv": "73efc47ff0f7219f2cb56abfeb3ee94f070b4ea5be7d3b96e8dd12c389f2bf4f"
+      },
+      "outputs": {
+        "results/finetuned/fleurs-test/soup_m1_full+m5_300_t4/predictions.jsonl": "1063000bc15ae3ce6e3c189d802b048098f09acc5651a57bcab139b992366ce7",
+        "results/finetuned/fleurs-test/soup_m1_full+m5_300_t4/metrics.json": "c8e9f71f3dce29ec4f6524e84f63416db8adda054124522ba38570a3a4b4170b"
+      }
+    }
+  ]
+}

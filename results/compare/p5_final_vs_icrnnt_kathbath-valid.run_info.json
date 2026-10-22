@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/kaggle/zeroshot/kathbath-valid/ai4bharat__indic-conformer-600m-multilingual_t4/predictions.jsonl --b results/kaggle/finetuned/kathbath-valid/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl --name p5_final_vs_icrnnt_kathbath-valid",
+      "git_commit": "2f2246d771e2951df50c26b83a39c8031892ff35",
+      "git_dirty": false,
+      "start": "2026-10-23T03:56:43",
+      "end": "2026-10-23T03:56:44",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/kaggle/zeroshot/kathbath-valid/ai4bharat__indic-conformer-600m-multilingual_t4/predictions.jsonl": "b05f511347e2f2b61a653887744c0941e41eac8f70c14ed79995ad7741a8a42a",
+        "results/kaggle/finetuned/kathbath-valid/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl": "36c377450982256a4b350eea32c253b1da4fa735cfe481a499c574232c919379"
+      },
+      "outputs": {
+        "results\\compare\\p5_final_vs_icrnnt_kathbath-valid.json": "ef2ccaf7491033d5e22f88f304ce582e338e97bae3a5e398b2da72a2b7356817"
+      }
+    }
+  ]
+}

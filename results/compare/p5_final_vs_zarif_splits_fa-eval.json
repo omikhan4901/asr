@@ -1,0 +1,19 @@
+{
+  "a": "results/kaggle/zeroshot/splits_fa-eval/zarifmahir21__whisper-medium-bangla_t4/predictions.jsonl",
+  "b": "results/kaggle/finetuned/splits_fa-eval/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl",
+  "n_utterances": 4234,
+  "n_groups": 22,
+  "ref_words": 120029,
+  "wer_a": 0.08511276441526631,
+  "wer_b": 0.11176465687458864,
+  "diff_b_minus_a": 0.02665189245932233,
+  "diff_ci95": [
+    0.01229694790780069,
+    0.040671414462507244
+  ],
+  "p_b_better": 0.001,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

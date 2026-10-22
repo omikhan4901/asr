@@ -1,0 +1,26 @@
+{
+  "wer": 0.1589095744680851,
+  "cer": 0.04033197437390798,
+  "n_utterances": 402,
+  "ref_words": 7520,
+  "n_groups": 150,
+  "wer_ci95": [
+    0.14167283985561957,
+    0.17553091707720894
+  ],
+  "cer_ci95": [
+    0.033746843596749725,
+    0.04712563876136225
+  ],
+  "set": "fleurs-validation",
+  "model": "soups/m5_full+m5_300",
+  "adapter": null,
+  "num_beams": 1,
+  "family": "whisper",
+  "manifest": "data/external/fleurs/validation.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy",
+  "last_run_seconds": 179.5,
+  "last_run_audio_hours": 1.448,
+  "last_run_rtf": 0.0344
+}

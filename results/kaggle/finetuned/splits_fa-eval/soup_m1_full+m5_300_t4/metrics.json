@@ -1,0 +1,26 @@
+{
+  "wer": 0.11093152488148697,
+  "cer": 0.03933556991052663,
+  "n_utterances": 4234,
+  "ref_words": 120029,
+  "n_groups": 22,
+  "wer_ci95": [
+    0.096256708849346,
+    0.12958320144013982
+  ],
+  "cer_ci95": [
+    0.031472803495543204,
+    0.04947946635269585
+  ],
+  "set": "splits_fa-eval",
+  "model": "soups/m1_full+m5_300",
+  "adapter": null,
+  "num_beams": 1,
+  "family": "whisper",
+  "manifest": "data/splits_fa/eval.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy",
+  "last_run_seconds": 2327.4,
+  "last_run_audio_hours": 16.848,
+  "last_run_rtf": 0.0384
+}

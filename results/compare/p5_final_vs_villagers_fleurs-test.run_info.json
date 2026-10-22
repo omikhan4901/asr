@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/kaggle/zeroshot/fleurs-test/teamvillagers__whisper-bengali-ct2_t4/predictions.jsonl --b results/kaggle/finetuned/fleurs-test/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl --name p5_final_vs_villagers_fleurs-test",
+      "git_commit": "2f2246d771e2951df50c26b83a39c8031892ff35",
+      "git_dirty": false,
+      "start": "2026-10-23T03:55:40",
+      "end": "2026-10-23T03:55:40",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/kaggle/zeroshot/fleurs-test/teamvillagers__whisper-bengali-ct2_t4/predictions.jsonl": "d2846f93d8159b50c4a251e13c5a29427f105878edb68dea962dd73ebd7ccfe3",
+        "results/kaggle/finetuned/fleurs-test/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl": "938a7783eb8121dae4898698f7fd2ecaf04e7bcf6ea5c55baaaf4392da6822c7"
+      },
+      "outputs": {
+        "results\\compare\\p5_final_vs_villagers_fleurs-test.json": "c8744475caa8ed5d6e4e3d1ec6d2ac419fe5853fdea03188d9d2439dc19a3d8d"
+      }
+    }
+  ]
+}

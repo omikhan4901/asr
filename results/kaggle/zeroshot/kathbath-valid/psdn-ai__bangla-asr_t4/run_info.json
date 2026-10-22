@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python3 /tmp/code/pipeline/eval_zero_shot.py --batch_size 8 --manifest data/external/kathbath/valid.csv --model psdn-ai/bangla-asr --name psdn-ai__bangla-asr_t4 --out_dir results/zeroshot",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-21T20:14:06",
+      "end": "2026-10-21T20:33:46",
+      "runtime_s": 1179.6,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.15",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.15.0",
+        "numpy": "2.1.3",
+        "pandas": "2.3.3",
+        "gpu": "Tesla T4"
+      },
+      "inputs": {
+        "data/external/kathbath/valid.csv": "48520d1d09f4a741f0669d5d99f8e63953424febed731a0cd19673e7dd1abfbc"
+      },
+      "outputs": {
+        "results/zeroshot/kathbath-valid/psdn-ai__bangla-asr_t4/predictions.jsonl": "0bfacd6c399740879ec12dde6e9bf135df06333a0828322a200fd2da6e45509d",
+        "results/zeroshot/kathbath-valid/psdn-ai__bangla-asr_t4/metrics.json": "96bda3847d0d16a413870b84792181efa12cb981cfbd8c9d33b7504a44003546"
+      }
+    }
+  ]
+}

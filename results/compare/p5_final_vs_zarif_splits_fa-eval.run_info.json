@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/kaggle/zeroshot/splits_fa-eval/zarifmahir21__whisper-medium-bangla_t4/predictions.jsonl --b results/kaggle/finetuned/splits_fa-eval/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl --name p5_final_vs_zarif_splits_fa-eval",
+      "git_commit": "2f2246d771e2951df50c26b83a39c8031892ff35",
+      "git_dirty": false,
+      "start": "2026-10-23T03:55:12",
+      "end": "2026-10-23T03:55:13",
+      "runtime_s": 0.6,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/kaggle/zeroshot/splits_fa-eval/zarifmahir21__whisper-medium-bangla_t4/predictions.jsonl": "4ea709e61a1bf4132b5d79cc4e21bae30bcfdbc0de1ded2ac8bdb588546b6da4",
+        "results/kaggle/finetuned/splits_fa-eval/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl": "bab9bcd89e002a216fd60501bb555950fdf6bfaf11e655d56963971ac6ae3115"
+      },
+      "outputs": {
+        "results\\compare\\p5_final_vs_zarif_splits_fa-eval.json": "b8bbf74aac46bed0c3bb9f9ad0cd7ac36d5c89f2ac78374803219945b447549b"
+      }
+    }
+  ]
+}

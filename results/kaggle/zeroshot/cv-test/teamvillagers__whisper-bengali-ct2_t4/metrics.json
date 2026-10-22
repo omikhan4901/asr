@@ -1,0 +1,26 @@
+{
+  "wer": 0.15617267611144997,
+  "cer": 0.050562358186161324,
+  "n_utterances": 9408,
+  "ref_words": 86891,
+  "n_groups": 7377,
+  "wer_ci95": [
+    0.1528921554564782,
+    0.15967627869708484
+  ],
+  "cer_ci95": [
+    0.04881251354380522,
+    0.05231637510572889
+  ],
+  "set": "cv-test",
+  "model": "teamvillagers/whisper-bengali-ct2",
+  "adapter": null,
+  "num_beams": 1,
+  "family": "ct2",
+  "manifest": "data/external/cv/test.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy",
+  "last_run_seconds": 5764.0,
+  "last_run_audio_hours": 16.751,
+  "last_run_rtf": 0.0956
+}

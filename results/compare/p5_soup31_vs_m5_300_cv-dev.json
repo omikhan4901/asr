@@ -1,0 +1,19 @@
+{
+  "a": "results/kaggle/finetuned/cv-dev/m5_300_t4/predictions.jsonl",
+  "b": "results/kaggle/finetuned/cv-dev/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl",
+  "n_utterances": 1999,
+  "n_groups": 1523,
+  "ref_words": 18556,
+  "wer_a": 0.09409355464539772,
+  "wer_b": 0.09366242724725156,
+  "diff_b_minus_a": -0.0004311273981461522,
+  "diff_ci95": [
+    -0.0029940444728816704,
+    0.0023194231479993833
+  ],
+  "p_b_better": 0.6365,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

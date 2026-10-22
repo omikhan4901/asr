@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/kaggle/zeroshot/cv-test/ai4bharat__indic-conformer-600m-multilingual_ctc_t4/predictions.jsonl --b results/kaggle/finetuned/cv-test/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl --name p5_final_vs_icctc_cv-test",
+      "git_commit": "2f2246d771e2951df50c26b83a39c8031892ff35",
+      "git_dirty": false,
+      "start": "2026-10-23T03:55:57",
+      "end": "2026-10-23T03:55:58",
+      "runtime_s": 0.7,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/kaggle/zeroshot/cv-test/ai4bharat__indic-conformer-600m-multilingual_ctc_t4/predictions.jsonl": "d6b880e298bf616d7e7ae337f6159c2cb6554574c2e65aa9bf6da989044d94a5",
+        "results/kaggle/finetuned/cv-test/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl": "32ceca2f3779a6072255bba6b343ea2e279b02fcb5e5b5fbfbfd8e8d74cdcb1b"
+      },
+      "outputs": {
+        "results\\compare\\p5_final_vs_icctc_cv-test.json": "d3b6e3d3c840eedcea9cbbd1bc474a97c928fd83d82e6d2ee7c78ad6e65db702"
+      }
+    }
+  ]
+}

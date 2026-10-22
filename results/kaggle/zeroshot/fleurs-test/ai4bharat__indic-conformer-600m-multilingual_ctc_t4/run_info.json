@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python3 /tmp/code/pipeline/eval_zero_shot.py --batch_size 8 --manifest data/external/fleurs/test.csv --model ai4bharat/indic-conformer-600m-multilingual --family indicconformer-ctc --name ai4bharat__indic-conformer-600m-multilingual_ctc_t4 --out_dir results/zeroshot",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-22T17:29:34",
+      "end": "2026-10-22T18:01:12",
+      "runtime_s": 1897.8,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.15",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.15.0",
+        "numpy": "2.1.3",
+        "pandas": "2.3.3",
+        "gpu": "Tesla T4"
+      },
+      "inputs": {
+        "data/external/fleurs/test.csv": "73efc47ff0f7219f2cb56abfeb3ee94f070b4ea5be7d3b96e8dd12c389f2bf4f"
+      },
+      "outputs": {
+        "results/zeroshot/fleurs-test/ai4bharat__indic-conformer-600m-multilingual_ctc_t4/predictions.jsonl": "4edf455a43b3fea09195e1c5465494f090aec6bf4c279bcc486f148999e1e7b5",
+        "results/zeroshot/fleurs-test/ai4bharat__indic-conformer-600m-multilingual_ctc_t4/metrics.json": "ebf1c2037edf094c587fd5f927fd0e7bbb812bb1d5cf9907ad83b8bdd27064bc"
+      }
+    }
+  ]
+}

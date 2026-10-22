@@ -1,0 +1,26 @@
+{
+  "wer": 0.13200446536465227,
+  "cer": 0.029335853259065656,
+  "n_utterances": 9408,
+  "ref_words": 86891,
+  "n_groups": 7377,
+  "wer_ci95": [
+    0.12903745623025792,
+    0.13520259382320535
+  ],
+  "cer_ci95": [
+    0.02829008049105995,
+    0.030437995358211775
+  ],
+  "set": "cv-test",
+  "model": "ai4bharat/indic-conformer-600m-multilingual",
+  "adapter": null,
+  "num_beams": 1,
+  "family": "indicconformer-rnnt",
+  "manifest": "data/external/cv/test.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy",
+  "last_run_seconds": 11376.1,
+  "last_run_audio_hours": 16.751,
+  "last_run_rtf": 0.1886
+}

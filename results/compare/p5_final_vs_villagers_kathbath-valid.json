@@ -1,0 +1,19 @@
+{
+  "a": "results/kaggle/zeroshot/kathbath-valid/teamvillagers__whisper-bengali-ct2_t4/predictions.jsonl",
+  "b": "results/kaggle/finetuned/kathbath-valid/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl",
+  "n_utterances": 2236,
+  "n_groups": 17,
+  "ref_words": 23995,
+  "wer_a": 0.14653052719316526,
+  "wer_b": 0.10281308605959574,
+  "diff_b_minus_a": -0.04371744113356949,
+  "diff_ci95": [
+    -0.048052327558124816,
+    -0.03913509000759568
+  ],
+  "p_b_better": 1.0,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

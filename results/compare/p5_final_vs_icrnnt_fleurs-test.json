@@ -1,0 +1,19 @@
+{
+  "a": "results/kaggle/zeroshot/fleurs-test/ai4bharat__indic-conformer-600m-multilingual_t4/predictions.jsonl",
+  "b": "results/kaggle/finetuned/fleurs-test/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl",
+  "n_utterances": 920,
+  "n_groups": 349,
+  "ref_words": 17766,
+  "wer_a": 0.1571541146009231,
+  "wer_b": 0.15597208150399638,
+  "diff_b_minus_a": -0.001182033096926714,
+  "diff_ci95": [
+    -0.009234884265405106,
+    0.007690543060811168
+  ],
+  "p_b_better": 0.5965,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

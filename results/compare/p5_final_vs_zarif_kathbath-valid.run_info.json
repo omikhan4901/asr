@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/kaggle/zeroshot/kathbath-valid/zarifmahir21__whisper-medium-bangla_t4/predictions.jsonl --b results/kaggle/finetuned/kathbath-valid/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl --name p5_final_vs_zarif_kathbath-valid",
+      "git_commit": "2f2246d771e2951df50c26b83a39c8031892ff35",
+      "git_dirty": false,
+      "start": "2026-10-23T03:57:01",
+      "end": "2026-10-23T03:57:01",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/kaggle/zeroshot/kathbath-valid/zarifmahir21__whisper-medium-bangla_t4/predictions.jsonl": "55250433f7a71e0ee1998509e27ff4c1e180a52d0c7cce55c4430867657a0550",
+        "results/kaggle/finetuned/kathbath-valid/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl": "36c377450982256a4b350eea32c253b1da4fa735cfe481a499c574232c919379"
+      },
+      "outputs": {
+        "results\\compare\\p5_final_vs_zarif_kathbath-valid.json": "2d4d4c1b248018cfdbf68e3ef201d2fdede29fed597edcb42e8196c20cc7afc7"
+      }
+    }
+  ]
+}

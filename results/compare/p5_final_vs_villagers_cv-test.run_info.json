@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/kaggle/zeroshot/cv-test/teamvillagers__whisper-bengali-ct2_t4/predictions.jsonl --b results/kaggle/finetuned/cv-test/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl --name p5_final_vs_villagers_cv-test",
+      "git_commit": "2f2246d771e2951df50c26b83a39c8031892ff35",
+      "git_dirty": false,
+      "start": "2026-10-23T03:56:16",
+      "end": "2026-10-23T03:56:17",
+      "runtime_s": 0.7,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/kaggle/zeroshot/cv-test/teamvillagers__whisper-bengali-ct2_t4/predictions.jsonl": "86385a21944b7120ca561818cce2c8d9342354b7fb8f1fce552d465b394ca836",
+        "results/kaggle/finetuned/cv-test/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl": "32ceca2f3779a6072255bba6b343ea2e279b02fcb5e5b5fbfbfd8e8d74cdcb1b"
+      },
+      "outputs": {
+        "results\\compare\\p5_final_vs_villagers_cv-test.json": "b5734e890ab85c8b2f9ec32ac9e51210be4842e55fdb237befdd29c4365cebf9"
+      }
+    }
+  ]
+}

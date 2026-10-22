@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/kaggle/finetuned/fleurs-validation/m5_300_t4/predictions.jsonl --b results/kaggle/finetuned/fleurs-validation/soup_m5_full+m5_300_t4/predictions.jsonl --name p5_soupfull_vs_m5_300_fleurs-validation",
+      "git_commit": "792a8fbf1a87aa5a558962be4595caa9f7a1bf82",
+      "git_dirty": false,
+      "start": "2026-10-21T23:42:10",
+      "end": "2026-10-21T23:42:11",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/kaggle/finetuned/fleurs-validation/m5_300_t4/predictions.jsonl": "42db160864d70f12d7cdaf54aef55e877b5800b77796b6f54deaae5e15b864de",
+        "results/kaggle/finetuned/fleurs-validation/soup_m5_full+m5_300_t4/predictions.jsonl": "7aefe87b8692504655c1a9c68c5d601e7222d053fcce94495e62ad44ba1beb3d"
+      },
+      "outputs": {
+        "results\\compare\\p5_soupfull_vs_m5_300_fleurs-validation.json": "62fa0625598c87324d5fce9819d032024a96cdf2f74da1ec5ab8a5b61c4fe617"
+      }
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python3 /tmp/code/pipeline/eval_zero_shot.py --batch_size 8 --manifest data/splits_fa/eval.csv --model ai4bharat/indic-conformer-600m-multilingual --name ai4bharat__indic-conformer-600m-multilingual_t4 --out_dir results/zeroshot",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-21T19:14:57",
+      "end": "2026-10-21T22:51:00",
+      "runtime_s": 12962.9,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.15",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.15.0",
+        "numpy": "2.1.3",
+        "pandas": "2.3.3",
+        "gpu": "Tesla T4"
+      },
+      "inputs": {
+        "data/splits_fa/eval.csv": "6ce00c484d1581ac60849749e8a20211518b1046a61dfce02015725fedd80238"
+      },
+      "outputs": {
+        "results/zeroshot/splits_fa-eval/ai4bharat__indic-conformer-600m-multilingual_t4/predictions.jsonl": "9813349161c09f958d3bac6528ab8d2120a37584324912519205c2708bfffcde",
+        "results/zeroshot/splits_fa-eval/ai4bharat__indic-conformer-600m-multilingual_t4/metrics.json": "c8c7c5f97b990335f3b08acaded343c09705ecefe34881188ed7625bcc43a83a"
+      }
+    }
+  ]
+}

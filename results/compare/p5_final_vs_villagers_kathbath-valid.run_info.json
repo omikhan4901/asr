@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/kaggle/zeroshot/kathbath-valid/teamvillagers__whisper-bengali-ct2_t4/predictions.jsonl --b results/kaggle/finetuned/kathbath-valid/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl --name p5_final_vs_villagers_kathbath-valid",
+      "git_commit": "2f2246d771e2951df50c26b83a39c8031892ff35",
+      "git_dirty": false,
+      "start": "2026-10-23T03:56:52",
+      "end": "2026-10-23T03:56:53",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/kaggle/zeroshot/kathbath-valid/teamvillagers__whisper-bengali-ct2_t4/predictions.jsonl": "583e8403a6d0a32dab9c5fc9616480e98dd04cc1f8eebae18aeef15055965491",
+        "results/kaggle/finetuned/kathbath-valid/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl": "36c377450982256a4b350eea32c253b1da4fa735cfe481a499c574232c919379"
+      },
+      "outputs": {
+        "results\\compare\\p5_final_vs_villagers_kathbath-valid.json": "cfe5def6c6d2476251188a2682da3358233efde78599ebb87105c5dc5045e876"
+      }
+    }
+  ]
+}

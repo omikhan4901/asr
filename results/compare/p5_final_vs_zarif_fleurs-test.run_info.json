@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/kaggle/zeroshot/fleurs-test/zarifmahir21__whisper-medium-bangla_t4/predictions.jsonl --b results/kaggle/finetuned/fleurs-test/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl --name p5_final_vs_zarif_fleurs-test",
+      "git_commit": "2f2246d771e2951df50c26b83a39c8031892ff35",
+      "git_dirty": false,
+      "start": "2026-10-23T03:55:48",
+      "end": "2026-10-23T03:55:48",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/kaggle/zeroshot/fleurs-test/zarifmahir21__whisper-medium-bangla_t4/predictions.jsonl": "1bdbfe80ad3b216f92695543cc83dc77c3b8644d15124bb4dc61ab07c777d27d",
+        "results/kaggle/finetuned/fleurs-test/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl": "938a7783eb8121dae4898698f7fd2ecaf04e7bcf6ea5c55baaaf4392da6822c7"
+      },
+      "outputs": {
+        "results\\compare\\p5_final_vs_zarif_fleurs-test.json": "4c757c170efc7328fe5cdf9634a039092a1263f2aaf0294013a5fc04177e4d44"
+      }
+    }
+  ]
+}

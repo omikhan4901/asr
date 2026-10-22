@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/kaggle/zeroshot/fleurs-test/ai4bharat__indic-conformer-600m-multilingual_t4/predictions.jsonl --b results/kaggle/finetuned/fleurs-test/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl --name p5_final_vs_icrnnt_fleurs-test",
+      "git_commit": "2f2246d771e2951df50c26b83a39c8031892ff35",
+      "git_dirty": false,
+      "start": "2026-10-23T03:55:31",
+      "end": "2026-10-23T03:55:31",
+      "runtime_s": 0.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/kaggle/zeroshot/fleurs-test/ai4bharat__indic-conformer-600m-multilingual_t4/predictions.jsonl": "77be6b7b59d2a4d9757ae89ddfc30e08c0f26e117ef0cf148f0e0793e4ad2a54",
+        "results/kaggle/finetuned/fleurs-test/soup_m1_full+m5_300+m5_300+m5_300_t4/predictions.jsonl": "938a7783eb8121dae4898698f7fd2ecaf04e7bcf6ea5c55baaaf4392da6822c7"
+      },
+      "outputs": {
+        "results\\compare\\p5_final_vs_icrnnt_fleurs-test.json": "3227925224e464f9227e42944e9536cf4157ef3e7eed001d0402d10a422babcc"
+      }
+    }
+  ]
+}

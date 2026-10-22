@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a results/kaggle/finetuned/splits_fa-eval/m5_300_t4/predictions.jsonl --b results/kaggle/finetuned/splits_fa-eval/soup_m5_full+m5_300_t4/predictions.jsonl --name p5_soupfull_vs_m5_300_splits_fa-eval",
+      "git_commit": "792a8fbf1a87aa5a558962be4595caa9f7a1bf82",
+      "git_dirty": false,
+      "start": "2026-10-21T23:40:36",
+      "end": "2026-10-21T23:40:36",
+      "runtime_s": 0.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.7",
+        "torch": "2.13.0+cu126",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/kaggle/finetuned/splits_fa-eval/m5_300_t4/predictions.jsonl": "9ae0f16625fc8a730ae61a7b56e7508af6a7f73342859dcb5d63b4824b810f54",
+        "results/kaggle/finetuned/splits_fa-eval/soup_m5_full+m5_300_t4/predictions.jsonl": "0a9144f17e492202f162f7c6a02f0b7d35ae78944382b9870bf590be4c1151d2"
+      },
+      "outputs": {
+        "results\\compare\\p5_soupfull_vs_m5_300_splits_fa-eval.json": "a494fc9232533e85f7163d66e939bc9e1bc6fb5b53e5dd649f15161750351c87"
+      }
+    }
+  ]
+}

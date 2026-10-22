@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python3 /tmp/code/pipeline/eval_zero_shot.py --batch_size 8 --manifest data/splits_fa/eval.csv --model zarifmahir21/whisper-medium-bangla --name zarifmahir21__whisper-medium-bangla_t4 --out_dir results/zeroshot",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-10-21T22:06:19",
+      "end": "2026-10-21T23:33:28",
+      "runtime_s": 5229.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.15",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.15.0",
+        "numpy": "2.1.3",
+        "pandas": "2.3.3",
+        "gpu": "Tesla T4"
+      },
+      "inputs": {
+        "data/splits_fa/eval.csv": "6ce00c484d1581ac60849749e8a20211518b1046a61dfce02015725fedd80238"
+      },
+      "outputs": {
+        "results/zeroshot/splits_fa-eval/zarifmahir21__whisper-medium-bangla_t4/predictions.jsonl": "4ea709e61a1bf4132b5d79cc4e21bae30bcfdbc0de1ded2ac8bdb588546b6da4",
+        "results/zeroshot/splits_fa-eval/zarifmahir21__whisper-medium-bangla_t4/metrics.json": "29883bb794729cd45f3a43ea6e97f08816f17e8ff4ab579362f28c881f031e52"
+      }
+    }
+  ]
+}

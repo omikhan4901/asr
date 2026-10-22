@@ -1,25 +1,29 @@
-model,set,wer,baseline_minus_final,ci_low,ci_high,flag,source
-Final model (ours),splits_fa-eval,11.176,,,,,results/kaggle/finetuned/splits_fa-eval/soup_m1_full+m5_300+m5_300+m5_300_t4
-Final model (ours),fleurs-test,15.597,,,,,results/kaggle/finetuned/fleurs-test/soup_m1_full+m5_300+m5_300+m5_300_t4
-Final model (ours),cv-test,10.133,,,,,results/kaggle/finetuned/cv-test/soup_m1_full+m5_300+m5_300+m5_300_t4
-Final model (ours),kathbath-valid,10.281,,,,,results/kaggle/finetuned/kathbath-valid/soup_m1_full+m5_300+m5_300+m5_300_t4
-Hishab conformer large,splits_fa-eval,21.184,10.008,9.039,11.064,,results/zeroshot/splits_fa-eval/hishab__titu_stt_bn_conformer_large
-Hishab conformer large,fleurs-test,14.241,-1.357,-2.291,-0.427,,results/zeroshot/fleurs-test/hishab__titu_stt_bn_conformer_large
-Hishab conformer large,cv-test,7.725,,,,‡,results/zeroshot/cv-test/hishab__titu_stt_bn_conformer_large
-Hishab conformer large,kathbath-valid,8.318,,,,‡,results/zeroshot/kathbath-valid/hishab__titu_stt_bn_conformer_large
-IndicConformer 600M,splits_fa-eval,28.132,16.955,13.549,21.116,,results/kaggle/zeroshot/splits_fa-eval/ai4bharat__indic-conformer-600m-multilingual_ctc_t4
-IndicConformer 600M,fleurs-test,15.715,0.118,-0.769,0.923,,results/kaggle/zeroshot/fleurs-test/ai4bharat__indic-conformer-600m-multilingual_t4
-IndicConformer 600M,cv-test,13.2,3.067,2.851,3.299,,results/kaggle/zeroshot/cv-test/ai4bharat__indic-conformer-600m-multilingual_t4
-IndicConformer 600M,kathbath-valid,10.644,,,,?,results/kaggle/zeroshot/kathbath-valid/ai4bharat__indic-conformer-600m-multilingual_t4
-Team Villagers,splits_fa-eval,13.875,,,,*,results/kaggle/zeroshot/splits_fa-eval/teamvillagers__whisper-bengali-ct2_t4
-Team Villagers,fleurs-test,19.571,3.974,3.248,4.666,,results/kaggle/zeroshot/fleurs-test/teamvillagers__whisper-bengali-ct2_t4
-Team Villagers,cv-test,15.617,5.484,5.259,5.714,,results/kaggle/zeroshot/cv-test/teamvillagers__whisper-bengali-ct2_t4
-Team Villagers,kathbath-valid,14.653,4.372,3.914,4.805,,results/kaggle/zeroshot/kathbath-valid/teamvillagers__whisper-bengali-ct2_t4
-zarifmahir21,splits_fa-eval,8.511,,,,*,results/kaggle/zeroshot/splits_fa-eval/zarifmahir21__whisper-medium-bangla_t4
-zarifmahir21,fleurs-test,20.111,4.514,2.933,6.692,,results/kaggle/zeroshot/fleurs-test/zarifmahir21__whisper-medium-bangla_t4
-zarifmahir21,cv-test,13.708,3.575,3.35,3.826,,results/kaggle/zeroshot/cv-test/zarifmahir21__whisper-medium-bangla_t4
-zarifmahir21,kathbath-valid,14.511,4.23,3.594,4.89,,results/kaggle/zeroshot/kathbath-valid/zarifmahir21__whisper-medium-bangla_t4
-"tugstugi, zero-shot",splits_fa-eval,22.705,11.528,10.643,12.423,,results/modal/zeroshot/splits_fa-eval/tugstugi_a100
-"tugstugi, zero-shot",fleurs-test,21.541,5.944,5.145,6.771,,results/modal/zeroshot/fleurs-test/tugstugi_a100
-"tugstugi, zero-shot",cv-test,14.801,4.668,4.441,4.907,,results/modal/zeroshot/cv-test/tugstugi_a100
-"tugstugi, zero-shot",kathbath-valid,14.811,4.53,3.819,5.379,,results/modal/zeroshot/kathbath-valid/tugstugi_a100
+set,system,wer,lo,hi,contaminated
+DL Sprint eval,tugstugi zero-shot,22.704513076006634,20.68555255578561,25.320609073516344,False
+DL Sprint eval,zarifmahir21,8.51127644152663,6.794115588865582,10.757459312190761,True
+DL Sprint eval,Team Villagers (DL Sprint 4.0),13.874980213115165,12.078937514903169,16.166170387878704,True
+DL Sprint eval,IndicConformer RNN-T,31.02333602712678,25.632970308168453,37.904291074570615,False
+DL Sprint eval,IndicConformer CTC,28.13153487907089,23.867732673727694,33.61990266277885,False
+DL Sprint eval,Hishab conformer large,21.18404718859609,19.037992379941443,23.862672903357026,False
+DL Sprint eval,Final model (ours),11.176465687458863,9.698614097521235,13.09624050938959,False
+FLEURS,tugstugi zero-shot,21.541146009231117,20.052399610865447,22.894839896291465,False
+FLEURS,zarifmahir21,20.11144883485309,18.10564025228512,22.321560391981212,False
+FLEURS,Team Villagers (DL Sprint 4.0),19.57109084768659,18.29198233876132,20.77063714729395,False
+FLEURS,IndicConformer RNN-T,15.71541146009231,14.50261528451974,16.789523426876805,False
+FLEURS,IndicConformer CTC,16.030620285939435,14.812543791754928,17.1281819154942,False
+FLEURS,Hishab conformer large,14.240684453450411,12.792573502067262,15.508180018095091,False
+FLEURS,Final model (ours),15.597208150399638,14.421181789033247,16.760461328763572,False
+Common Voice,tugstugi zero-shot,14.801302781645969,14.475185991827221,15.171830972771815,False
+Common Voice,zarifmahir21,13.70797896214798,13.379038465850602,14.06498542289398,False
+Common Voice,Team Villagers (DL Sprint 4.0),15.617267611144998,15.289215545647819,15.967627869708483,False
+Common Voice,IndicConformer RNN-T,13.200446536465227,12.903745623025792,13.520259382320535,False
+Common Voice,IndicConformer CTC,14.039428709532634,13.75573332310885,14.378104467900824,False
+Common Voice,Hishab conformer large,7.724620501547916,7.4842025792219795,7.976150693145982,True
+Common Voice,Final model (ours),10.133385505978755,9.864171711919445,10.435679517081601,False
+Kathbath valid,tugstugi zero-shot,14.811419045634509,13.685461296054175,16.176260266965382,False
+Kathbath valid,zarifmahir21,14.51135653261096,13.444275205990309,15.484415216777721,False
+Kathbath valid,Team Villagers (DL Sprint 4.0),14.653052719316525,13.744287066321245,15.607131442962116,False
+Kathbath valid,IndicConformer RNN-T,10.643884142529695,9.958268176416825,11.43150972966741,False
+Kathbath valid,IndicConformer CTC,11.20233381954574,10.467438592599876,12.002520179300214,False
+Kathbath valid,Hishab conformer large,8.318399666597207,7.852567771419238,8.856038613352235,True
+Kathbath valid,Final model (ours),10.281308605959575,9.564620065601343,10.955787941448788,False

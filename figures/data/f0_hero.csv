@@ -1,16 +1,14 @@
-panel,item,wer
-DL Sprint eval,Zero-shot (greedy decoding),22.707
-DL Sprint eval,"Rescoring (MBR, 12 candidates)",22.844
-DL Sprint eval,Ceiling (best of 12 candidates),18.348
-DL Sprint eval,List correction (no retraining),17.461
-DL Sprint eval,"Final model (fine-tuned, 300 h)",11.176
-four test sets,DL Sprint eval: zero-shot,22.705
-four test sets,FLEURS: zero-shot,21.541
-four test sets,Common Voice: zero-shot,14.801
-four test sets,Kathbath: zero-shot,14.811
-four test sets,DL Sprint eval: final,11.176
-four test sets,FLEURS: final,15.597
-four test sets,Common Voice: final,10.133
-four test sets,Kathbath: final,10.281
-four test sets,average: zero-shot,18.465
-four test sets,average: final,11.797
+panel,item,wer,lo,hi
+a,zero-shot greedy,22.707,,
+a,MBR rescoring,22.844,,
+a,best of 12 (ceiling),18.348,,
+a,list correction (no retraining),17.461,,
+a,final model (fine-tuned),11.176,,
+b,Kathbath valid: zero-shot,14.811,13.685,16.176
+b,Kathbath valid: final,10.281,9.565,10.956
+b,Common Voice: zero-shot,14.801,14.475,15.172
+b,Common Voice: final,10.133,9.864,10.436
+b,FLEURS: zero-shot,21.541,20.052,22.895
+b,FLEURS: final,15.597,14.421,16.76
+b,DL Sprint eval: zero-shot,22.705,20.686,25.321
+b,DL Sprint eval: final,11.176,9.699,13.096

@@ -1,5 +1,5 @@
 """
-Designed figures (hero, examples) as HTML/SVG, rendered to PNG and PDF by a headless Chromium (Edge or Chrome).
+Figures with Bengali script (the candidate-list example, f1) as HTML/SVG, rendered to PNG and PDF by a headless Chromium (Edge or Chrome).
 A browser shapes Bengali script correctly; matplotlib does not (conjuncts break).
 
 Fonts: Inter (Latin) and Noto Sans Bengali from Google Fonts, Nirmala UI as the offline fallback.

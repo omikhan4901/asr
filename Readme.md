@@ -4,10 +4,11 @@
 *This README is the working paper. Every number comes from a result file in this repository's pipeline, with
 95% cluster-bootstrap confidence intervals; numbers still running are marked* **pending**.
 
-<p align="center"><img src="figures/png/f0_hero.png" width="900" alt="DL Sprint eval WER: zero-shot greedy 22.7, MBR rescoring 22.8, best of 12 candidates 18.3, list correction 17.5, final fine-tuned model 11.2; average over four test sets from 18.5 to 11.8."></p>
+<p align="center"><img src="figures/png/f0_hero.png" width="900" alt="(a) DL Sprint eval WER: zero-shot greedy 22.7, MBR rescoring 22.8, best of 12 candidates 18.3, list correction 17.5, final fine-tuned model 11.2. (b) Zero-shot vs final model on four test sets: 22.7 to 11.2, 21.5 to 15.6, 14.8 to 10.1, 14.8 to 10.3."></p>
 
-**At a glance.** Rescoring the zero-shot model's candidates does not beat greedy decoding; adding the missing spelling
-variants to the list (no retraining) and fine-tuning (final model) attack the cause.
+**At a glance.** (a) Rescoring the zero-shot model's candidates does not beat greedy decoding, and even a perfect
+selector stops at 18.3%; adding the missing spelling variants to the list (no retraining) and fine-tuning attack the
+cause. (b) The final model on the four test sets, with 95% confidence intervals.
 
 ---
 
@@ -637,6 +638,11 @@ ahead on DL Sprint eval. Both models have the size and speed of every other mode
 0.052 on a T4, greedy). On DL Sprint dev, M5-300 is 0.74 behind M1 (17.48 vs 16.74): the larger eval split does not
 show this.
 
+<p align="center"><img src="figures/png/f16_data_scale.png" width="440" alt="WER against training hours for M5 (40 h), M5-full (156 h) and M5-300 (300 h) on four test sets; every set improves or stays level; M1 (60 h of DL Sprint) is a separate hollow marker."></p>
+
+**Figure 14.** WER against training hours with the same recipe (M5, M5-full, M5-300; filled) and the in-domain M1
+(hollow square, DL Sprint only). 95% cluster-bootstrap CIs.
+
 **Weight averaging (the final model).** Averaging the weights of fine-tuned models from the same starting point
 costs nothing at inference. Four candidates were fixed before any score (M5-300 alone; M5-full + M5-300; M1 + M5-300;
 0.25 M1 + 0.75 M5-300), with the rule: pick the lowest average WER over three development sets (DL Sprint dev, 1,999
@@ -646,6 +652,11 @@ is the final model. On the test sets it is the same model in a different balance
 against M5-300, Kathbath +0.21 [+0.06, +0.36], FLEURS and Common Voice n.s., average 11.80 vs 11.78. Two thirds of
 its dev gain came from DL Sprint dev (6 recordings), and M1 is the DL Sprint model. The equal average of M5-full and
 M5-300 would have scored 11.67 on test, but it lost on dev (13.91), so it is reported and not used.
+
+<p align="center"><img src="figures/png/f15_weight_averaging.png" width="900" alt="(a) Dev average against test average WER for four weight-averaging candidates; the chosen 0.25 M1 + 0.75 M5-300 has the lowest dev average, 13.86, and test average 11.80. (b) Per-set difference of the chosen average against M5-300: DL Sprint dev -0.98, DL Sprint eval -0.31, Kathbath +0.21, others not significant."></p>
+
+**Figure 15.** (a) The four pre-registered candidates: average WER over the three dev sets (used to choose) against
+the average over the four test sets. (b) The chosen average against M5-300 per set (orange = dev), paired 95% CIs.
 
 **Rescoring the final model** (measured on M5-300, before the weight average was chosen). ROVER over M5-300's own 12 sampled candidates, fixed as the target before any score,
 gives DL Sprint eval 11.25 (−0.23 [−0.41, −0.08]), FLEURS 15.10 (−0.25 [−0.55, −0.03]) and Kathbath 9.94 (−0.13, n.s.),
@@ -661,11 +672,10 @@ and the cuts are not reference-guided; the fine-tuned models differ by less than
 
 ### 5.13 Against other open Bangla models
 
-<p align="center"><img src="figures/png/f14_baselines.png" width="900" alt="Leaderboard of WER on four test sets: the final model is lowest on DL Sprint eval (11.2), Common Voice (10.1) and Kathbath (10.3); Hishab is lowest on FLEURS (14.2 vs 15.6). Cells where a model trained on the test material are hatched and not ranked."></p>
+<p align="center"><img src="figures/png/f14_baselines.png" width="900" alt="WER with confidence intervals for seven systems on four test sets; the final model is lowest on DL Sprint eval, Common Voice and Kathbath among models not trained on that material; Hishab is lower on FLEURS."></p>
 
-**Figure 14.** The final model against the open Bangla models we scored with the same harness (greedy, T4).
-Under each WER: that model's WER minus ours, from the paired cluster bootstrap. Hatched cells are not ranked: the model
-trained on that material (flags set before scoring).
+**Figure 16.** The final model against the open Bangla models we scored with the same harness (greedy), with 95%
+cluster-bootstrap CIs. Hollow marker: the model was trained on that material (flags set before scoring; not compared).
 
 Four more open models were scored zero-shot: AI4Bharat's IndicConformer 600M (both heads), the DL Sprint 4.0 finalist
 Team Villagers' release (faster-whisper), `zarifmahir21/whisper-medium-bangla` and `psdn-ai/bangla-asr`. **The final

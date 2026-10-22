@@ -5,10 +5,14 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "bangla_asr"
 version = "1.0.0"
-description = "Inference-only rescoring and candidate optimization for Bangla speech recognition on media recordings"
+description = "Why N-best rescoring plateaus for Bangla speech recognition: evaluation harness, rescoring, spelling-variant list correction and Whisper fine-tuning"
 readme = "Readme.md"
 requires-python = ">=3.9"
-authors = [{ name = "Bangla ASR Research Team" }]
+authors = [
+    { name = "Mehboob Ehsan Khan" },
+    { name = "Nabigah Bin Sayeed" },
+    { name = "Nafisa Rodela" },
+]
 dependencies = [
     "torch",
     "transformers",

@@ -7,8 +7,10 @@ and computes from it (or from --snapshot, offline):
   refs    agreement on double-labeled chunks (status agreement, WER between the
           two corrected texts); reference noise per source (E6): word edit rate
           original -> verified, typed with the same rules (spelling / dialect /
-          content); every zero-shot model's WER on the verified chunks against
+          content); every scored model's WER on the verified chunks against
           the original vs the verified reference, paired cluster bootstrap.
+          Disagreements are settled by results/labels/adjudication.json (one of the two
+          answers per item) unless the database has an agreed answer.
   audit   judgment shares over all differences (model wrong / transcript wrong /
           both wrong / spelling / dialect / can't tell), by rule type, and split
           by selection-proof (no N-best candidate has the reference words, c = 0)
@@ -17,11 +19,12 @@ and computes from it (or from --snapshot, offline):
   pairs   Fleiss / pairwise Cohen kappa on the overlap pairs; human label shares
           per rule type (unweighted and weighted by pair frequency).
 
-Outputs: results/labels/summary.json, verified_refs.csv, audit_units.csv, pair_labels.csv.
+Outputs: results/labels/summary.json, verified_refs.csv (every label), verified_references.csv (one final
+verification per clip), audit_units.csv, pair_labels.csv.
 
 Usage:
-  PYTHONPATH=src ./Scripts/python.exe analysis/labeling/import_labels.py
-  PYTHONPATH=src ./Scripts/python.exe analysis/labeling/import_labels.py --snapshot results/labels/snapshot_X.json
+  PYTHONPATH=src .venv/bin/python analysis/labeling/import_labels.py
+  PYTHONPATH=src .venv/bin/python analysis/labeling/import_labels.py --snapshot results/labels/snapshot_X.json
 """
 
 import argparse
@@ -49,6 +52,9 @@ from build_tasks import read_env  # noqa: E402
 
 AUDIT = ["model", "ref", "both", "spelling", "dialect", "unsure"]
 PAIR = ["spelling", "dialect", "different", "unsure"]
+# every scored system: zero-shot (PC), Modal A100 and Kaggle T4 rows (fine-tuned models, weight averages, baselines)
+MODEL_ROOTS = ["results/zeroshot", "results/modal/zeroshot", "results/modal/finetuned", "results/kaggle/zeroshot",
+               "results/kaggle/finetuned"]
 SET_OF_SOURCE = {"dlsprint": "splits_fa-eval", "fleurs": "fleurs-test", "kathbath": "kathbath-valid",
                  "commonvoice": "cv-test"}
 
@@ -98,7 +104,7 @@ def shares_ci(df, value_col, cats, group_col, weight_col="w", n_boot=1000):
     return out
 
 
-def refs_results(items, labels, res, n_boot):
+def refs_results(items, labels, resolved, n_boot):
     ref_items = {i["id"]: i for i in items if i["task"] == "ref"}
     L = [l for l in labels if l["item_id"] in ref_items and l["status"] == "done"]
     rows = []
@@ -117,7 +123,7 @@ def refs_results(items, labels, res, n_boot):
     R = R.sort_values("updated_at")
     R["final"] = ~R.duplicated("id", keep="first")  # first finished label, unless the team agreed on one
     agreed = []
-    for iid, d in res.items():
+    for iid, d in resolved.items():
         if iid in ref_items:
             it = ref_items[iid]
             agreed.append({"id": iid, "annotator": "_agreed", "source": it["meta"]["source"], "utt_id": it["meta"]["utt_id"],
@@ -125,7 +131,7 @@ def refs_results(items, labels, res, n_boot):
                            "text_verified": d["text"], "cut_off": d.get("cut_off", False), "note": "", "updated_at": "",
                            "final": True})
     if agreed:
-        R.loc[R["id"].isin(res), "final"] = False
+        R.loc[R["id"].isin(resolved), "final"] = False
         R = pd.concat([R, pd.DataFrame(agreed)], ignore_index=True)
     pairs = [g for _, g in R[R["annotator"] != "_agreed"].groupby("id") if len(g) > 1]
     if pairs:
@@ -159,7 +165,7 @@ def refs_results(items, labels, res, n_boot):
                  "edits_by_kind": dict(kinds), "original_words": n_words, "models": {}}
         ver = {r["utt_id"]: r["text_verified"] for _, r in U.iterrows()}
         grp = {r["utt_id"]: r["group"] for _, r in U.iterrows()}
-        for pp in sorted(Path("results/zeroshot", SET_OF_SOURCE[src]).glob("*/predictions.jsonl")):
+        for pp in sorted(pp for root in MODEL_ROOTS for pp in Path(root, SET_OF_SOURCE[src]).glob("*/predictions.jsonl")):
             g, eo, wo, ev, wv = [], [], [], [], []
             for r in read_jsonl(pp):
                 if r["utt_id"] in ver:
@@ -174,7 +180,7 @@ def refs_results(items, labels, res, n_boot):
             sums = [np.bincount(gi, np.asarray(x, float), G) for x in (eo, wo, ev, wv)]
             samp = np.random.default_rng(0).integers(0, G, size=(n_boot, G))
             diff = sums[2][samp].sum(1) / sums[3][samp].sum(1) - sums[0][samp].sum(1) / sums[1][samp].sum(1)
-            entry["models"][pp.parent.name] = {
+            entry["models"][f"{pp.parent.parent.parent.relative_to('results').as_posix()}/{pp.parent.name}"] = {
                 "utts": len(g), "wer_original": sum(eo) / sum(wo), "wer_verified": sum(ev) / sum(wv),
                 "diff_verified_minus_original": sum(ev) / sum(wv) - sum(eo) / sum(wo),
                 "diff_ci95": [float(np.percentile(diff, 2.5)), float(np.percentile(diff, 97.5))]}
@@ -182,7 +188,7 @@ def refs_results(items, labels, res, n_boot):
     return R, res
 
 
-def audit_results(items, labels, res, nbest_path, n_boot):
+def audit_results(items, labels, resolved, nbest_path, n_boot):
     aud = {i["id"]: i for i in items if i["task"] == "audit"}
     L = [l for l in labels if l["item_id"] in aud and l["status"] == "done"]
     nbest = {r["utt_id"]: r for r in read_jsonl(nbest_path)} if Path(nbest_path).exists() else {}
@@ -204,9 +210,9 @@ def audit_results(items, labels, res, nbest_path, n_boot):
                 sp = "insertion" if u["r1"] == u["r0"] else "unknown"
             # Agreed answer (if the team settled this item) carries the weight; independent labels keep
             # weight 0 then, but stay in the table for kappa.
-            votes = [(l["annotator"], l["data"]["units"][k], 0.0 if iid in res else 1 / len(ls)) for l in ls]
-            if iid in res:
-                votes.append(("_agreed", res[iid]["units"][k], 1.0))
+            votes = [(l["annotator"], l["data"]["units"][k], 0.0 if iid in resolved else 1 / len(ls)) for l in ls]
+            if iid in resolved:
+                votes.append(("_agreed", resolved[iid]["units"][k], 1.0))
             for who, judgment, w in votes:
                 rows.append({"item": iid, "unit": k, "annotator": who, "judgment": judgment,
                              "w": w, "group": m["group"], "rule_type": m["unit_types"][k],
@@ -228,6 +234,11 @@ def audit_results(items, labels, res, nbest_path, n_boot):
             bootstrap_ratio(D["group"].tolist(), D["not_model_error"] * D["w"], D["w"], n_boot=n_boot))
         for g, D in A.groupby("agreement") if len(D) >= 20}
     indep = A[A["annotator"] != "_agreed"]
+    wide = indep.pivot_table(index=["item", "unit"], columns="annotator", values="judgment", aggfunc="first").dropna()
+    if wide.shape[1] == 2 and len(wide):  # units judged by both of two annotators
+        a, b = (list(wide[c]) for c in wide.columns)
+        res["cohen_kappa"] = {"units": len(wide), "annotators": list(wide.columns),
+                              "raw_agreement": float(np.mean([x == y for x, y in zip(a, b)])), "kappa": cohen_kappa(a, b)}
     multi = indep.groupby(["item", "unit"]).filter(lambda g: g["annotator"].nunique() >= 3)
     if len(multi):
         tab = multi.pivot_table(index=["item", "unit"], columns="judgment", values="w", aggfunc="count", fill_value=0)
@@ -237,7 +248,7 @@ def audit_results(items, labels, res, nbest_path, n_boot):
     return A, res
 
 
-def pair_results(items, labels, res):
+def pair_results(items, labels, resolved):
     pit = {i["id"]: i for i in items if i["task"] == "pair"}
     rows = [{"id": l["item_id"], "annotator": l["annotator"], "label": l["data"]["label"], "note": l["data"].get("note", ""),
              "ref_word": pit[l["item_id"]]["payload"]["ref_word"], "hyp_word": pit[l["item_id"]]["payload"]["hyp_word"],
@@ -257,11 +268,11 @@ def pair_results(items, labels, res):
         res["agreement"] = {"pairs": int(full["id"].nunique()), "annotators": names,
                             "fleiss_kappa": fleiss_kappa(tab.reindex(columns=PAIR, fill_value=0).values),
                             "cohen_kappa": {f"{a}~{b}": cohen_kappa(list(wide[a]), list(wide[b])) for a, b in combinations(names, 2)}}
-    P["w"] = np.where(P["id"].isin(res), 0.0, 1 / P.groupby("id")["id"].transform("count"))
+    P["w"] = np.where(P["id"].isin(resolved), 0.0, 1 / P.groupby("id")["id"].transform("count"))
     agreed = [{"id": iid, "annotator": "_agreed", "label": d["label"], "note": "", "w": 1.0,
                "ref_word": pit[iid]["payload"]["ref_word"], "hyp_word": pit[iid]["payload"]["hyp_word"],
                **{k: pit[iid]["meta"][k] for k in ("rule_type", "stratum", "model", "count")}, "target": pit[iid]["target"]}
-              for iid, d in res.items() if iid in pit]
+              for iid, d in resolved.items() if iid in pit]
     if agreed:
         P = pd.concat([P, pd.DataFrame(agreed)], ignore_index=True)
     res["rule_vs_human"] = {}
@@ -276,6 +287,8 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--snapshot", default=None, help="use a saved snapshot instead of downloading")
     p.add_argument("--nbest", default="data/nbest_fa/eval_nbest.jsonl", help="for selection-proof vs fixable (texts only)")
+    p.add_argument("--adjudication", default="results/labels/adjudication.json",
+                   help="settled disagreements (one of the two answers per item); used where the database has none")
     p.add_argument("--out_dir", default="results/labels")
     p.add_argument("--n_boot", type=int, default=1000)
     args = p.parse_args()
@@ -294,8 +307,11 @@ def main():
         snap_path = out / f"snapshot_{time.strftime('%Y%m%d_%H%M')}.json"
         atomic_write_text(snap_path, json.dumps(snap, ensure_ascii=False))
     snap = json.loads(snap_path.read_text(encoding="utf-8"))
-    with RunRecord(out / "run_info.json", inputs=[snap_path, args.nbest]) as rec:
-        res = {r["item_id"]: r["data"] for r in snap.get("resolutions", [])}
+    with RunRecord(out / "run_info.json", inputs=[snap_path, args.nbest, args.adjudication]) as rec:
+        res = {}
+        if Path(args.adjudication).exists():
+            res = {r["item_id"]: r["data"] for r in json.loads(Path(args.adjudication).read_text(encoding="utf-8"))["resolutions"]}
+        res.update({r["item_id"]: r["data"] for r in snap.get("resolutions", [])})  # the database wins
         R, refs = refs_results(snap["items"], snap["labels"], res, args.n_boot)
         A, audit = audit_results(snap["items"], snap["labels"], res, args.nbest, args.n_boot)
         P, pairs = pair_results(snap["items"], snap["labels"], res)
@@ -303,9 +319,15 @@ def main():
         summary = {"snapshot": str(snap_path), **summary_res, "refs": refs, "audit": audit, "pairs": pairs}
         atomic_write_text(out / "summary.json", json.dumps(summary, ensure_ascii=False, indent=2))
         R.to_csv(out / "verified_refs.csv", index=False, encoding="utf-8-sig")
+        if len(R):  # one row per clip: the final (agreed or only) verification, for release
+            V = R[R["final"]].rename(columns={"group": "recording"})
+            V["settled"] = V["annotator"] == "_agreed"
+            V[["source", "utt_id", "recording", "status", "text_original", "text_verified", "cut_off", "settled"]].sort_values(
+                ["source", "utt_id"]).to_csv(out / "verified_references.csv", index=False, encoding="utf-8-sig")
         A.to_csv(out / "audit_units.csv", index=False, encoding="utf-8-sig")
         P.to_csv(out / "pair_labels.csv", index=False, encoding="utf-8-sig")
-        rec.outputs = [out / "summary.json", out / "verified_refs.csv", out / "audit_units.csv", out / "pair_labels.csv"]
+        rec.outputs = [out / "summary.json", out / "verified_refs.csv", out / "verified_references.csv", out / "audit_units.csv",
+                       out / "pair_labels.csv"]
     print(f"refs {refs['labels']} labels, audit {audit['labels']} labels / {audit['units']} units, pairs {pairs['labels']} labels "
           f"-> {out / 'summary.json'}")
 

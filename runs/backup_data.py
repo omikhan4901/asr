@@ -200,7 +200,7 @@ def main():
             volume_get(src, [(f, d) for f, d, _ in small[src]])
         print(f"   done; free disk {free_gb():.1f} GB", flush=True)
     shutil.rmtree(tmp, ignore_errors=True)
-    print("\nall copied into data/backup/. Tell Claude: 'backup done'.")
+    print("\nall copied into data/backup/.")
 
 
 if __name__ == "__main__":

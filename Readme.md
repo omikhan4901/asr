@@ -3,8 +3,8 @@
 **CSE499 capstone, North South University.** Team: Mehboob Ehsan Khan, Nabigah Bin Sayeed, Nafisa Rodela.
 Supervisor: Dr. Nabeel Mohammed.
 
-*This README is the working paper. Every number comes from a result file in this repository's pipeline, with
-95% cluster-bootstrap confidence intervals; numbers still running are marked* **pending**.
+*This README is the paper. Every number comes from a result file in this repository's pipeline, with 95%
+cluster-bootstrap confidence intervals. All experiments are complete (October 2026).*
 
 ## At a glance
 
@@ -31,7 +31,7 @@ cause. (b) The final model on the four test sets, with 95% confidence intervals.
 |---|---|
 | 499A (Sept 2026): first rescoring study | done |
 | 499B: rebuilt evaluation, diagnosis, list correction, fine-tuning, train × test matrix (§3–5) | done |
-| Human verification of the references (§5.11) | in progress |
+| Human verification of the references (§5.11) | done |
 | Final model on all four corpora (156 h, then ~300 h), whole-recording evaluation (§5.12) | done |
 | Comparison with other open Bangla models (§5.13) | done |
 | Results frozen / final report | Nov 12 / Dec 1, 2026 |
@@ -72,8 +72,10 @@ model, chosen on development data, gives **11.18%** on DL Sprint and an average 
 model we scored, the final model is best on every clean test set except FLEURS, where a non-commercial conformer leads
 by 1.4 points. After
 fine-tuning, rescoring gains almost vanish (−0.45 points): training removes exactly the errors that
-selection could reach. We release the
-forced-aligned segmentation of 93.1 hours of Bengali-Loop recordings and the scoring code.
+selection could reach. Against 605 human-verified references, about 2% of the media reference words are wrong, most
+errors that no candidate contains are spelling, dialect or transcript errors rather than recognizer errors, and every
+model's WER changes by less than 2 points. We release the forced-aligned segmentation of 93.1 hours of Bengali-Loop
+recordings, the verified references and the scoring code.
 
 **Keywords:** speech recognition, Bangla, N-best rescoring, minimum Bayes risk, error analysis, spelling variation, Whisper
 
@@ -113,8 +115,9 @@ reference word, how many of the candidates contain it.
 - **Tests of the diagnosis:** hypothesis expansion with a learned convention rewriter and an n-gram LM, and
   an error-locus comparison of LoRA, decoder-only, encoder-only and full fine-tuning against five
   predictions derived from the diagnosis.
-- **Released resources:** the forced-aligned segmentation of the DL Sprint / Bengali-Loop recordings and the
-  normalizer and scoring code (human-verified references follow when the labeling is complete).
+- **Released resources:** the forced-aligned segmentation of the DL Sprint / Bengali-Loop recordings, 605
+  human-verified references with agreement statistics (`results/labels/verified_references.csv`), and the
+  normalizer and scoring code.
 
 ---
 
@@ -206,7 +209,7 @@ Each error gets one type by rules on a folding key that maps common spelling var
 ি/ী, ু/ূ, chandrabindu, য়/য, ঙ/ং, hasanta): *convention* (ছিল/ছিলো, কি/কী), *vowel shift* (নিয়ে/নিয়া,
 তোমার/তুমার), *segmentation* (দু পাশে/দুপাশে), near miss, substitution, number, deletion, insertion. The
 first three form the **variant share**. The rules are proxies; human labels measure their precision
-(labeling in progress).
+(§5.11).
 
 ### 3.6 List correction: raising the ceiling without retraining
 Each clip's pool is the 12 sampled candidates plus the greedy output, scored by
@@ -528,7 +531,8 @@ Sprint eval, with 95% CIs.
 WER rises steeply as the aligner becomes less sure of a clip: 16.2% for the most confident clips vs 43.9% for the
 least confident (zero-shot), 7.0% vs 25.8% after fine-tuning. Low aligner confidence marks clips with music, crosstalk
 or transcripts that do not match the audio, so part of the error in those bins is likely in the reference, not the
-recognizer; the human-verified references will separate the two. Clip length and speaking rate barely matter
+recognizer. The human-verified references separate the two (§5.11): reference noise is 3.5 times higher in the
+least confident third of the clips, but at 2.8% of words it explains only a small part of the rise. Clip length and speaking rate barely matter
 (zero-shot 21–24% in every length bin; fine-tuned 10.6–11.8%), so clip length up to the 25 s limit is not a source of errors.
 
 ### 5.8 Train × test matrix
@@ -618,27 +622,64 @@ speech; 85% of the edit difference comes from 10% of the utterances. Word-bounda
 cause (equal or in our favour). Words absent from the training text cost every model about five points, Hishab
 included.
 
-### 5.11 Human verification (in progress)
+### 5.11 Human verification
 
 The error types come from rules, and the references themselves may be wrong, so two native-speaker annotators checked
-a sample by hand, independently and without seeing which system produced a transcript. Disagreements are being
-adjudicated by a third annotator; the numbers below may still change slightly.
+a sample by hand, independently and without seeing which system produced a transcript, following a written guide
+(`labeling_site/guide/labeling_guide.html`: valid spellings stay, dialect forms are written as spoken, an accent on one
+sound keeps the standard spelling, numbers as spoken words).
 
 | Task | Labels | Done by both | Agreement |
 |---|---|---:|---|
-| Verified references (listen, correct the transcript) | 605 clips (663 labels): 305 DL Sprint, 100 each FLEURS, Kathbath, Common Voice | 64 clips | 73% same status; corrected texts differ by 3.9% WER |
-| Word pairs (same word in another spelling, dialect form, or a different word) | 896 pairs | 150 | Cohen's κ 0.71 |
-| Error audit (each difference: recognizer wrong, transcript wrong, or only spelling) | 214 clips, 999 differences | 228 differences | Cohen's κ 0.58 |
+| Verified references (listen, correct the transcript) | 605 clips (669 labels): 305 DL Sprint, 100 each FLEURS, Kathbath, Common Voice | 64 clips | 73% same status; corrected texts differ by 3.9% WER |
+| Word pairs (same word in another spelling, dialect form, or a different word) | 746 pairs (896 labels) | 150 | Cohen's κ 0.71 |
+| Error audit (each difference: recognizer wrong, transcript wrong, or only spelling) | 208 clips, 1,180 differences | 370 differences | Cohen's κ 0.56 (71% raw) |
 
-**The rules hold up:** pairs the rules call a spelling convention are spelling to the annotators in 97% of cases;
-segmentation pairs in 81%; the near-miss type is a genuine mix (about a third each spelling, dialect, different word).
+**Settling disagreements.** The 103 items the two annotators disagreed on (30 references, 29 word pairs, 109
+judgments in 44 audit clips) were settled by a third party in one adjudication pass: for every item
+one of the two answers was chosen, never a third, by the guide's rules, with the outputs of two recognizers (zero-shot
+tugstugi and the final model) as evidence of what was said, since the pass did not re-listen to the audio. Each
+decision and its reason is in `results/labels/adjudication.json`. Because one of the recognizers is the final model,
+we checked that this does not favour it: putting the other annotator's text on every settled clip changes the final
+model's verified WER by −0.02 points on DL Sprint and −0.11 to −0.37 elsewhere, no more than for the baselines
+(zero-shot −0.11 to −0.37, Hishab 0.00 to −0.47; `analysis/labeling/adjudication_sensitivity.py`).
+
+**The rules hold up:** pairs the rules call a spelling convention are spelling to the annotators in 98% of cases
+(99% in the audit); segmentation differences in 83%; the near-miss type is a genuine mix (33% spelling, 30% dialect,
+36% different word); every number difference in the audit is a transcript error (digits where words were spoken).
 **Many apparent errors are not the model's:** of all differences between the zero-shot model and the reference on DL
-Sprint eval, 41% [36, 47] are recognizer errors, 21% [18, 25] transcript errors and 33% only spelling or dialect. Among
-the errors no candidate can fix, **57% [51, 64] are not recognizer errors** (transcript wrong 25%, spelling or dialect
-32%), which supports the diagnosis of §5.3–5.4: the selection ceiling is mostly convention and reference noise.
-**Reference noise by test set** (share of reference words the annotators changed): DL Sprint 1.8% [1.3, 2.3] (30% of
-clips needed a correction), FLEURS 4.0% [2.9, 5.4], Common Voice 1.7% [0.8, 2.9], Kathbath 1.0% [0.3, 1.9]. Once the
-disagreements are settled, every model's WER is also reported against the verified references.
+Sprint eval, 40% [34, 46] are recognizer errors, 18% [16, 21] transcript errors and 38% only spelling or dialect.
+Among the errors no candidate can fix, **59% [51, 66] are not recognizer errors** (transcript wrong 22% [18, 26],
+spelling or dialect 37%), and transcript errors are twice as common there as among the errors a candidate can fix (11%
+[8, 14]): the selection ceiling of §5.3–5.4 is mostly convention and reference noise.
+
+**Reference noise by test set** (share of reference words the annotators changed): DL Sprint 1.9% [1.3, 2.5] (30% of
+clips needed a correction), FLEURS 4.4% [3.2, 5.9] (46%), Common Voice 1.8% [0.9, 3.1] (14%), Kathbath 1.2% [0.4, 2.0]
+(9%). On DL Sprint it follows the aligner's confidence (§5.7): 2.8% [1.9, 3.7] of words in the least confident third of
+the clips vs 0.8% [0.4, 1.3] in the most confident third (39% vs 15% of clips corrected;
+`analysis/labeling/noise_by_alignment.py`). Reference noise is real but small next to the WER rise across those bins
+(16% to 44% zero-shot), so most of the error in low-confidence clips is the recognizer's.
+
+<p align="center"><img src="figures/png/f17_verified_references.png" width="900" alt="WER against the original and the human-verified reference for six systems on the verified clips of four test sets; every system changes by less than two points and the order of the systems stays the same."></p>
+
+**Figure 17.** WER on the verified clips against the original (hollow) and the verified reference (filled); the number
+is the paired change in points (bold: the 95% cluster-bootstrap CI excludes 0).
+
+**WER against the verified references** (the official second number for every model; all 31–35 scored systems are in
+`results/labels/summary.json`). Correcting the references lowers WER by at most 1.9 points, most for the zero-shot
+model on FLEURS, and leaves the order of the systems unchanged:
+
+| WER % on the verified clips: verified (original) | DL Sprint eval (305) | FLEURS (100) | Common Voice (100) | Kathbath (100) |
+|---|---:|---:|---:|---:|
+| **Final model** | **10.65** (11.07) | 15.60 (16.52) | **11.71** (11.70) | **9.17** (9.07) |
+| M1 (DL Sprint, 60 h) | 9.89 (10.23) | 18.67 (19.25) | 13.45 (13.33) | 11.74 (11.73) |
+| Team Villagers (DL Sprint 4.0 finalist) | 12.85* (13.15) | 20.12 (20.67) | 15.73 (15.49) | 13.85 (13.93) |
+| IndicConformer 600M, CTC | 26.08 (26.48) | 15.25 (16.83) | 14.75 (15.49) | 10.46 (10.63) |
+| Hishab conformer large | 19.80 (20.35) | **14.05** (15.31) | 9.65‡ (9.21) | 7.52‡ (7.61) |
+| tugstugi zero-shot | 21.00 (21.63) | 20.02 (21.93) | 13.23 (13.43) | 15.05 (14.94) |
+
+\* trained on DL Sprint 4.0 data. ‡ trained on this corpus. The subsets are small (100 clips), so differences of under
+about 1.5 points between systems are within noise there; the full test sets of §5.13 are the main comparison.
 
 ### 5.12 All the training data: the final model
 
@@ -732,8 +773,6 @@ that includes our evaluation recordings; on the three clean sets it is 3.6 to 4.
 \* trained on DL Sprint 4.0 data. ‡ trained on this corpus. ? training data not stated (AI4Bharat built Kathbath).
 
 ### 5.14 Remaining work
-- **Human verification:** adjudication of the annotator disagreements, and every model's WER against the verified
-  references.
 - **Model release:** the final weights are built from M1 and M5-300 by `pipeline/make_soup.py --members
   m1_full+m5_300+m5_300+m5_300`; they are not yet published.
 
@@ -756,7 +795,9 @@ variants. The variant share rises as models improve: weak models make so many ac
 hardly matters, while for the best models it becomes a large part of what is left. For the weaker BanglaASR
 model MBR is harmful: when most candidates are wrong, the majority is wrong too.
 
-**What we cannot claim.** The error types come from rules until the human labels give their precision. The
+**What we cannot claim.** The error types come from rules; the human labels give their precision (§5.11), which
+is high for the spelling convention and mixed for near misses. The disagreements between the two annotators were
+settled without re-listening to the audio (§5.11). The
 evaluation clips are cut with the help of the reference, so the numbers measure recognition on well-cut clips
 from long media recordings, not end-to-end transcription of a raw recording; we never call this long-form
 recognition. Commercial systems report much lower Bengali WER on other benchmarks, so every comparison is
@@ -766,8 +807,8 @@ same data would be the fully fair comparison.
 **Threats to validity.** The DL Sprint split shares narrators and serialized stories between training and
 evaluation, which can favor fine-tuned systems and rules learned from training text; FLEURS, Kathbath and
 Common Voice share nothing with our training data and are the strict test (and there the fine-tuning gains are
-smaller: −1.3 to −3.2 points). The DL Sprint references may be partly machine-generated [4]; the verified
-references will bound this effect. Greedy output depends slightly on batch size and GPU, so every row of a
+smaller: −1.3 to −3.2 points). The DL Sprint references may be partly machine-generated [4]; against the verified
+references every model's WER changes by less than 2 points and the order of the systems is unchanged (§5.11). Greedy output depends slightly on batch size and GPU, so every row of a
 comparison uses one batch size, and rows from two GPU types (A100, T4) are mixed only after checking that the
 same model gives the same WER on both (within 0.01 points). Kathbath results use its validation split, and the DL Sprint
 test is our held-out recordings rather than the hidden competition test.
@@ -790,8 +831,9 @@ four Bangla corpora each training set wins its own test set, and a merged 40 h s
 selected on the average rather than on in-domain dev data, which rewards over-fitting. Following that rule with all
 the data we have (300 h), and a weight average chosen on development data, gives one Whisper-medium model with
 11.18% on DL Sprint and an average of 11.80% over the four test sets: the best open model we know of on Bangla media
-speech, and on every clean test set except FLEURS; rescoring its candidates adds only 0.1 to 0.25 points. Next: the human-verified references, which will separate recognizer errors
-from reference noise.
+speech, and on every clean test set except FLEURS; rescoring its candidates adds only 0.1 to 0.25 points. Against 605 human-verified references the picture
+holds: about 2% of DL Sprint reference words are wrong, most of the errors no candidate can fix are spelling, dialect
+or transcript errors rather than recognizer errors, and every model's WER moves by less than 2 points.
 
 ---
 
@@ -853,6 +895,7 @@ repository.
 | Fine-tuning analysis | `runs/phase4_analysis.sh` |
 | Model averaging, beam search (Kaggle jobs `soup:`, `beam:`) | `pipeline/make_soup.py`, `pipeline/eval_zero_shot.py --num_beams` |
 | Model selection on mixed dev; outside baselines (Kaggle jobs `dev:`, `soup:`, `zs:`) | `runs/prepare_mixed_dev.py`, `pipeline/kaggle_phase4.py` |
+| Human labels: import, agreement, settled disagreements, WER vs verified references | `analysis/labeling/import_labels.py` (`--snapshot results/labels/snapshot_<time>.json` offline; settled answers in `results/labels/adjudication.json`), `analysis/labeling/noise_by_alignment.py`, `analysis/labeling/adjudication_sensitivity.py` |
 | Combining models; gap to Hishab | `analysis/cross_model_rover.py`, `analysis/hishab_gap.py` |
 | Whole-recording evaluation | `pipeline/eval_longform.py` (Kaggle job `longform:`; data `runs/phase5_upload_longform.sh`) |
 | OpenSLR 53 with joined clips; merged training lists | `pipeline/data/prepare_openslr53.py`, `pipeline/data/prepare_matrix.py merged` |

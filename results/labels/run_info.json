@@ -51,6 +51,112 @@
         "results\\labels\\audit_units.csv": "d0af277a3a05fc3d7dac4f9bcd63c5375770107b5a992c67794eb843ebe6f0af",
         "results\\labels\\pair_labels.csv": "6a29e627b061aab114d9ac729a3f42d49094239e47833f10925b7a93943726f1"
       }
+    },
+    {
+      "command": "python analysis/labeling/import_labels.py --snapshot results/labels/snapshot_20261027_0118.json",
+      "git_commit": "1e68ed8cb7a5444de079e86edd0031552ac701f3",
+      "git_dirty": true,
+      "start": "2026-10-27T01:23:50",
+      "end": "2026-10-27T01:23:55",
+      "runtime_s": 4.9,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.8",
+        "torch": "2.14.1+cpu",
+        "numpy": "1.26.4",
+        "pandas": "2.3.3"
+      },
+      "inputs": {
+        "results/labels/snapshot_20261027_0118.json": "9469606d6eec8f785c997d2f322432b3383904cb1751105dce23280c7fd1e0f9",
+        "data/nbest_fa/eval_nbest.jsonl": "3a4114e10d56fac596643bb089c9c66337f3f52d3c422fe77c5246cb17625028",
+        "results/labels/adjudication.json": "623a4352308136d3752b84afec1dbfe8037d2fce8c9c41623e320b61badb7d5d"
+      },
+      "outputs": {
+        "results/labels/summary.json": "d64bfe3fa0e842e1427fdcdda6164a641bdc1e650fa31696579d9d2599266ca3",
+        "results/labels/verified_refs.csv": "60ca3def8bf6c035a6d5415a9424b18436f8cb3ba6c9ee00e3e2617659f614ab",
+        "results/labels/audit_units.csv": "8bcfef9607a41e8c52784ce5867af8ff68ba973f64cf4a019295b8fa597972c3",
+        "results/labels/pair_labels.csv": "cb7d793964628159080e17a5c12812107cb873fccec48b1d4f8b088ff8653077"
+      }
+    },
+    {
+      "command": "python analysis/labeling/import_labels.py --snapshot results/labels/snapshot_20261027_0118.json",
+      "git_commit": "1e68ed8cb7a5444de079e86edd0031552ac701f3",
+      "git_dirty": true,
+      "start": "2026-10-27T01:24:34",
+      "end": "2026-10-27T01:24:39",
+      "runtime_s": 4.9,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.8",
+        "torch": "2.14.1+cpu",
+        "numpy": "1.26.4",
+        "pandas": "2.3.3"
+      },
+      "inputs": {
+        "results/labels/snapshot_20261027_0118.json": "9469606d6eec8f785c997d2f322432b3383904cb1751105dce23280c7fd1e0f9",
+        "data/nbest_fa/eval_nbest.jsonl": "3a4114e10d56fac596643bb089c9c66337f3f52d3c422fe77c5246cb17625028",
+        "results/labels/adjudication.json": "623a4352308136d3752b84afec1dbfe8037d2fce8c9c41623e320b61badb7d5d"
+      },
+      "outputs": {
+        "results/labels/summary.json": "e052d630d1feaac7ab57ceb89ac4a81eafcd40f390aa1e6af497f8827052d880",
+        "results/labels/verified_refs.csv": "60ca3def8bf6c035a6d5415a9424b18436f8cb3ba6c9ee00e3e2617659f614ab",
+        "results/labels/audit_units.csv": "8bcfef9607a41e8c52784ce5867af8ff68ba973f64cf4a019295b8fa597972c3",
+        "results/labels/pair_labels.csv": "cb7d793964628159080e17a5c12812107cb873fccec48b1d4f8b088ff8653077"
+      }
+    },
+    {
+      "command": "python analysis/labeling/import_labels.py --snapshot results/labels/snapshot_20261027_0118.json",
+      "git_commit": "1e68ed8cb7a5444de079e86edd0031552ac701f3",
+      "git_dirty": true,
+      "start": "2026-10-27T01:25:11",
+      "end": "2026-10-27T01:25:15",
+      "runtime_s": 4.7,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.8",
+        "torch": "2.14.1+cpu",
+        "numpy": "1.26.4",
+        "pandas": "2.3.3"
+      },
+      "inputs": {
+        "results/labels/snapshot_20261027_0118.json": "9469606d6eec8f785c997d2f322432b3383904cb1751105dce23280c7fd1e0f9",
+        "data/nbest_fa/eval_nbest.jsonl": "3a4114e10d56fac596643bb089c9c66337f3f52d3c422fe77c5246cb17625028",
+        "results/labels/adjudication.json": "623a4352308136d3752b84afec1dbfe8037d2fce8c9c41623e320b61badb7d5d"
+      },
+      "outputs": {
+        "results/labels/summary.json": "e052d630d1feaac7ab57ceb89ac4a81eafcd40f390aa1e6af497f8827052d880",
+        "results/labels/verified_refs.csv": "60ca3def8bf6c035a6d5415a9424b18436f8cb3ba6c9ee00e3e2617659f614ab",
+        "results/labels/verified_references.csv": "e305ecbe160365c7da15e578d76df42f48782c5f4f62d3565f7c7830fbe02b68",
+        "results/labels/audit_units.csv": "8bcfef9607a41e8c52784ce5867af8ff68ba973f64cf4a019295b8fa597972c3",
+        "results/labels/pair_labels.csv": "cb7d793964628159080e17a5c12812107cb873fccec48b1d4f8b088ff8653077"
+      }
+    },
+    {
+      "command": "python analysis/labeling/import_labels.py --snapshot results/labels/snapshot_20261027_0118.json",
+      "git_commit": "1e68ed8cb7a5444de079e86edd0031552ac701f3",
+      "git_dirty": true,
+      "start": "2026-10-27T01:25:51",
+      "end": "2026-10-27T01:25:56",
+      "runtime_s": 4.9,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.8",
+        "torch": "2.14.1+cpu",
+        "numpy": "1.26.4",
+        "pandas": "2.3.3"
+      },
+      "inputs": {
+        "results/labels/snapshot_20261027_0118.json": "9469606d6eec8f785c997d2f322432b3383904cb1751105dce23280c7fd1e0f9",
+        "data/nbest_fa/eval_nbest.jsonl": "3a4114e10d56fac596643bb089c9c66337f3f52d3c422fe77c5246cb17625028",
+        "results/labels/adjudication.json": "623a4352308136d3752b84afec1dbfe8037d2fce8c9c41623e320b61badb7d5d"
+      },
+      "outputs": {
+        "results/labels/summary.json": "a1e1ff040ac55a945502005c8d5292a91e8e45a213979d875a58dd36f87f1a0a",
+        "results/labels/verified_refs.csv": "60ca3def8bf6c035a6d5415a9424b18436f8cb3ba6c9ee00e3e2617659f614ab",
+        "results/labels/verified_references.csv": "e305ecbe160365c7da15e578d76df42f48782c5f4f62d3565f7c7830fbe02b68",
+        "results/labels/audit_units.csv": "8bcfef9607a41e8c52784ce5867af8ff68ba973f64cf4a019295b8fa597972c3",
+        "results/labels/pair_labels.csv": "cb7d793964628159080e17a5c12812107cb873fccec48b1d4f8b088ff8653077"
+      }
     }
   ]
 }

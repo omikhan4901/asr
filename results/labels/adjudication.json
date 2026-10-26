@@ -1,0 +1,1762 @@
+{
+ "method": "For every item two annotators disagreed on, one of the two answers was chosen (no third option), following the labeling guide (labeling_site/guide/labeling_guide.html): valid spellings stay, dialect forms as spoken, an accent keeps the standard spelling, numbers as spoken words, names keep the transcript's spelling unless clearly another name. The adjudicator could not hear the audio; the outputs of two recognizers (zero-shot tugstugi and the final fine-tuned model) served as acoustic evidence for what was said.",
+ "adjudicator": "third party (one adjudication pass, 2026-10-27)",
+ "snapshot": "results/labels/snapshot_20261027_0118.json",
+ "resolutions": [
+  {
+   "item_id": "R0006",
+   "task": "ref",
+   "chosen": "Omi",
+   "reason": "ভাবি / ভুক(ভুখ) fix nonsense words (ভাবে, ভোগ); both recognizers hear ভুগ/ভুখ there",
+   "data": {
+    "note": "",
+    "text": "মাওলানা বললেন দাঁড়ায় আছো কেন চলো রওনা দেই তোমার ভাবি চিন্তাযুক্ত আছে মেয়ে ছেলেরে বেশি সময় চিন্তার মধ্যে রাখা ঠিক না পুরুষ মানুষ দীর্ঘ সময় চিন্তায় থাকতে পারে মেয়েরা পারে না তোমার কি ভুক লেগেছে হুম ঘরে যাবা গরম পানি দিয়ে গোসল দিবা তারপরে গরম গরম খিচুড়ি খাবা অমৃতের মত লাগবে",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0007",
+   "task": "ref",
+   "chosen": "Nafisa",
+   "reason": "কুক্ষণে: both recognizers hear it; কখনোই does not fit",
+   "data": {
+    "note": "Confusion in কুক্ষণে,ভয়ে/বয়ে",
+    "text": "সুকুমার রায় যদি এখন বেঁচে থাকতেন এবং ওই বিকুর গুলোকে দেখতেন তাহলে কি বিখ্যাত ছড়াটা এত মজা করে লিখতে পারতেন ইস কি কুক্ষণে না ওই বিকুর ছানাগুলোকে বাড়ি ভয়ে এনেছিলাম",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0009",
+   "task": "ref",
+   "chosen": "Nabigah",
+   "reason": "both fix তাড়ায়; নেবে is not supported (both recognizers: নেবেন)",
+   "data": {
+    "note": "",
+    "text": "আর আপনারা কেউ বাধা দিলেন না। কোন ধারণা আছে আপনাদের যে কত বড় অন্যায় হয়েছে এটা। ছি পুজোর সময় মানুষ বাড়ির কুকুর বেড়াল কেউ তাড়ায় না। আর আপনারা গ্রাম থেকে এতগুলো মানুষকে বের করে দিলেন একখানা মেলার জন্য। ছি! মা এমন গ্রামে আসবেন আবার পুজো নেবেন। এ কথা আপনারা ভাবলেন কি করে?",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0011",
+   "task": "ref",
+   "chosen": "Nabigah",
+   "reason": "30 is the number spoken; the other text has a non-word (এিশ)",
+   "data": {
+    "note": "",
+    "text": "এবার অরূপ বাবু মহিলাটির দিকে দৃষ্টি দিলেন বছর 30 বয়স সুশ্রী চেহারা হাসি হাসি মুখ করে তার দিকে চেয়ে আছেন আর এক পা দুপা করে এগিয়ে আসছেন",
+    "status": "correct",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0013",
+   "task": "ref",
+   "chosen": "Nafisa",
+   "reason": "পিস্তা -> তিস্তা (the character's name; both recognizers)",
+   "data": {
+    "note": "ঐদিন আর(?)",
+    "text": "বলতে বলতে থেমে গেল বিতান তিস্তা চুপ করে দাঁড়িয়ে রয়েছে একটা কথাও বলছে না আমার বাবা ঐদিন আর বাড়ি ফেরেনি জানেন তিস্তা রেললাইন বরাবর সোজা হেঁটে গিয়েছিল যতক্ষণ না ট্রেনটা বাবার উপর দিয়ে চলে যায় উফ মাগো বলে তিস্তা নিজের মুখ ঢাকলো",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0014",
+   "task": "ref",
+   "chosen": "Nafisa",
+   "reason": "extra এই: both recognizers hear তিস্তা তিস্তা",
+   "data": {
+    "note": "",
+    "text": "না তাও সাড়া নেই বিতানের উৎকণ্ঠা বাড়লো এবার শুধু টোকা নয় তিস্তা তিস্তা বলে ডাকলো তিস্তা তিস্তা",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0016",
+   "task": "ref",
+   "chosen": "Nabigah",
+   "reason": "ঘড়ির কাটা is the grammatical phrase; the zero-shot model hears an extra word where ধুর is added",
+   "data": {
+    "note": "",
+    "text": "এই চল ধুর এরম ঘড়ির কাটা দিয়া কি খেলা হয় নাকি জিতেই গেছিলাম ম্যাচটা",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0017",
+   "task": "ref",
+   "chosen": "Nabigah",
+   "reason": "both cut সাধারণ নাম; মেয়ের রূপে is supported by both recognizers",
+   "data": {
+    "note": "",
+    "text": "যোগী জপে ও সাধনায় বশীভূত হয় এদের মধ্যে যে কেউ যার সাধনা তুমি করবে সে তোমার আপন হয়ে থাকতে পারে নানাভাবে এদের সাধনা করা যায় কিসকিনী দেবীকে মায়ের রূপে পেতে পারো কনকবতী দেবীকে পাওয়া যায় মেয়ের রূপে",
+    "status": "corrected",
+    "cut_off": true
+   }
+  },
+  {
+   "item_id": "R0018",
+   "task": "ref",
+   "chosen": "Nafisa",
+   "reason": "dialect forms as spoken (guide rule); আমারে, গিরামে, এইদিক heard by the zero-shot model",
+   "data": {
+    "note": "",
+    "text": "তো এইদিক কই যাইতেছিলেন আপনি আরে কই আর যামু বহু বছর পর শ্বশুর বাড়ি আইলাম ভাবলাম একটু ঘুরে টুরে দেখি গ্রামটা কি আগের মত আছে কিনা তোমার কি অবস্থা দুলাভাই আমি কিন্তু একদম মাইন্ড করলাম বুচ্ছেন আপনার এইরম একটা শালা থাকতে আপনি গিরামে একা একা ঘুরতেছেন আমি কি মইরা গেছি নাকি আমারে একটা ফোন দিবেন না আপনি",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0019",
+   "task": "ref",
+   "chosen": "Nafisa",
+   "reason": "হুকুমই: both recognizers",
+   "data": {
+    "note": "",
+    "text": "ঠিক আছে ঠিক আছে যা হয় সবই আল্লাহ পাকের হুকুমই হয় উনার হুকুম বিনা কিছু হয় না তুমি নিজের মত লেখাপড়া চালিয়ে যাবে তোমার মা কোথায় থাকে কি সমাচার তা নিয়ে মাথা ঘামাবে না ঠিক আছে",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0020",
+   "task": "ref",
+   "chosen": "Nafisa",
+   "reason": "numbers as spoken words (guide); the other only changes the digit script, which is not what was said",
+   "data": {
+    "note": "",
+    "text": "আধুনিক বাংলা সাহিত্যের এক পরিচিত নাম বিনোদ ঘোষাল তার প্রথম গল্পগ্রন্থ ডানাঅলা মানুষ দুহাজার এগারো সালে লাভ করে বাংলা ভাষায় প্রথম সাহিত্য আকাদেমি যুব পুরস্কার তারপর দুহাজার চৌদ্দ সালে পশ্চিমবঙ্গ বাংলা আকাদেমি পুরস্কার",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0021",
+   "task": "ref",
+   "chosen": "Nafisa",
+   "reason": "করেছি কলকাতায়: both recognizers",
+   "data": {
+    "note": "",
+    "text": "মেয়েটি জানলো না যে আমি অপূর্ব কৃষ্ণ অনেক বিদ্যা উপার্জন করেছি কলকাতায় বহুকাল কাটিয়ে এসেছি দৈবাত পা পিছলে কাঁদায় পড়ে গেলেও আমি উপহাসের পাত্র যে সে গ্রাম্য যুবক নই",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0023",
+   "task": "ref",
+   "chosen": "Nabigah",
+   "reason": "মল্লিক is the name (the other annotator's own note says 'means মল্লিক'); the other edits are not supported",
+   "data": {
+    "note": "",
+    "text": "অমলেশ মল্লিক এবার একদম থেমে গিয়ে অরূপ বাবুর দিকে ফিরে বললেন অনেকে জেনে গেছে সেই রকমই তো দেখলাম কেন আপনার কি তাতে অসুবিধা হলো মানে আমি আবার একটু একা থাকতে",
+    "status": "correct",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0028",
+   "task": "ref",
+   "chosen": "Nafisa",
+   "reason": "কামান দেগে: both recognizers, and the idiom",
+   "data": {
+    "note": "",
+    "text": "দুটো রাস্তা আছে এক দুর্গ ছেড়ে পালানো তাতে প্রাণ বাঁচবে বটে কিন্তু দুর্গ ওদের দখলে চলে যাবে দ্বিতীয় রাস্তা দুর্গের তরণ বন্ধ করে বসে থাকা কিন্তু ওদের সঙ্গে কুড়িটা কামান আছে তোর না ছোট দুর্গ ওরা কামান দেগে দুর্গ ধুলো করে উড়িয়ে দেবে",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0049",
+   "task": "ref",
+   "chosen": "Nafisa",
+   "reason": "বিদেশেও, বাচ্চাডারে heard by the zero-shot model; dialect as spoken",
+   "data": {
+    "note": "",
+    "text": "আমার বাচ্চা নষ্ট করা তুমি কে বাচ্চার বাবা আমি না আমি সিদ্ধান্ত নিমু বাচ্চা দুনিয়াতে আসবে কি আসবে না তুমি নেওয়ার কে তুমি যে সিদ্ধান্ত নিবা কোন মুখে নিবা কি খাওয়াবা বাচ্চারে দুনিয়া আইনা তোমার বাপ দাদার কোন ভিটা আছে তুমি তো এতিম তোমার তো বাপ মাও নাই তোমারে কে খাওয়াইবো তোমারে কে চাকরি বাকরি দিবো আর এখন কি করবা বিদেশেও তো যাইতে পারবা না তাইলে অযথা এই বাচ্চাডারে আমি দুনিয়ায় কেন আনমু কও",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0264",
+   "task": "ref",
+   "chosen": "Nafisa",
+   "reason": "শীতল পাটি (the object), সিলেটে: both recognizers",
+   "data": {
+    "note": "",
+    "text": "শশি মাস্টারের জন্যে কিনলো নকশী করা সিলেটে শীতল পাটি জিনিসগুলি হাতে নিয়ে সে কিছুক্ষণ কাঁদলো",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0301",
+   "task": "ref",
+   "chosen": "Nafisa",
+   "reason": "পদ্ধতিতে: both recognizers",
+   "data": {
+    "note": "",
+    "text": "শেষ ইচ্ছাকে সম্মান জানাতেই সিএনজি পদ্ধতিতে দাহ করা হয় তাঁকে",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0302",
+   "task": "ref",
+   "chosen": "Nabigah",
+   "reason": "মো is the abbreviation (Md.); both recognizers",
+   "data": {
+    "note": "",
+    "text": "চিরনিদ্রায় শায়িত হলেন বিয়ানীবাজার উপজেলার মোল্লাপুর ইউনিয়ন উচ্চ বিদ্যালয়ের সিনিয়র শিক্ষক মো",
+    "status": "correct",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0303",
+   "task": "ref",
+   "chosen": "Nabigah",
+   "reason": "accent keeps the standard spelling (guide): ক্রীড়াবিদ",
+   "data": {
+    "note": "",
+    "text": "আমরা মার্কিন যুক্তরাষ্ট্রের অলিম্পিক কমিটির এই বক্তব্যের সাথে একমত যে আমাদের ক্রীড়াবিদ ও ক্লাব এবং তাদের খেলাধূলার স্বার্থে, ডি সার্টিফিকেশনের পরিবর্তে আমাদের সংস্থার মধ্যে অর্থবহ পরিবর্তনের সাথে এগোলে বিষয়টিতে আরও ভালভাবে সাহায্য হতে পারে।",
+    "status": "correct",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0309",
+   "task": "ref",
+   "chosen": "Nabigah",
+   "reason": "ছয় বাই ছয় (the other text has a non-word, বায়)",
+   "data": {
+    "note": "",
+    "text": "দ্বিতীয় সেটটির প্রথম দিকে ডেল পোট্রো প্রাধান্য পেয়েছিল, তবে ছয় বাই ছয় এ পৌঁছনোর পরে এটির ক্ষেত্রেও টাই ব্রেকারের প্রয়োজন হয়।",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0312",
+   "task": "ref",
+   "chosen": "Nafisa",
+   "reason": "36 = ছত্রিশ (ছত্তিরিশ); the other wrote চত্তিরিশ, a different number",
+   "data": {
+    "note": "",
+    "text": "কিন্তু, অধিনায়কের উইকেট হারানোর পরে ভারত মাত্র ছত্তিরিশ রান করতে সাত উইকেট হারিয়ে ফেললে ইনিংস শেষ হয়ে যায়।",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0314",
+   "task": "ref",
+   "chosen": "Nabigah",
+   "reason": "accent keeps the standard spelling (guide): কুমার",
+   "data": {
+    "note": "",
+    "text": "এদিন প্রথম ওভারেই মিরাজের উইকেট ছিটকে দেন ভুবনেশ্বর কুমার",
+    "status": "correct",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0315",
+   "task": "ref",
+   "chosen": "Nafisa",
+   "reason": "বাংলাদেশি: both recognizers",
+   "data": {
+    "note": "",
+    "text": "কুয়েতের জেলিব আল সুয়েকের বাঙালি অধ্যুষিত হাসিবিয়া শাহজালাল বাকালার এক গোডাউনে অগ্নিকাণ্ডে তিন বাংলাদেশি আহত",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0316",
+   "task": "ref",
+   "chosen": "Nabigah",
+   "reason": "সতেরো correctly spelled; the other adds non-words",
+   "data": {
+    "note": "",
+    "text": "দুই হাজার সতেরো এর সেপ্টেম্বরে সেতুটি পুরোপুরি চালু হওয়ার কথা রয়েছে যখন ব্রাজিলের কাস্টমস চেকপয়েন্টগুলি শেষ হওয়ার আশা করা হচ্ছে।",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0319",
+   "task": "ref",
+   "chosen": "Nafisa",
+   "reason": "এ গ্রন্থে: both recognizers",
+   "data": {
+    "note": "",
+    "text": "এ গ্রন্থে মোট বারোটি কবিতা আছে।",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0320",
+   "task": "ref",
+   "chosen": "Nabigah",
+   "reason": "মাধ্যমে correctly spelled (the other: মাধমে)",
+   "data": {
+    "note": "",
+    "text": "পৃথকীকরণ এবং পুনঃসংযোগ প্রতিটি প্রজন্মের দুটি পুলের মাধ্যমে বৈচিত্র আনা নেওয়া করতে সাহায্য করে।",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0324",
+   "task": "ref",
+   "chosen": "Nafisa",
+   "reason": "উদ্দীপ্ত করে: both recognizers",
+   "data": {
+    "note": "",
+    "text": "এই তত্ত্বগুলো লক্ষ্য করে নির্দিষ্ট কিছু লোকদের ওপর যে কি তাদের উদ্দীপ্ত করে কাজগুলি করতে যা তারা করে এবং তাদের পরিবেশের কোন জিনিসগুলি তাদের নির্দিষ্ট কিছু করতে বা না করতে উদ্দীপ্ত করে।",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0326",
+   "task": "ref",
+   "chosen": "Nafisa",
+   "reason": "ইতিহাস: both recognizers; numbers as words",
+   "data": {
+    "note": "",
+    "text": "প্রাচীন চীনদের ইতিহাস রক্তাক্ত যুগের মধ্যে তিন কিন্ডম এক অন্যতম ছিল রক্তাক্ত যুগের হাজার হাজার মানুষ শি'আনের ভবনের প্রাসাদের সর্বোচ্চ আসনে বসতে লড়াই করে মারা গিয়েছিল।",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0328",
+   "task": "ref",
+   "chosen": "Nabigah",
+   "reason": "নেওয়ার / নেয়ার are both valid spellings: leave it (guide)",
+   "data": {
+    "note": "",
+    "text": "মসজিদটি বেছে নেওয়ার কারণ এটি তুরস্কের নিকটতম মুসলিম সংখ্যাগরিষ্ঠ অংশে অবস্থিত এবং তার পূর্বপুরুষদের দ্বারা নির্মিত।",
+    "status": "correct",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "R0330",
+   "task": "ref",
+   "chosen": "Nafisa",
+   "reason": "numbers as spoken words (দু হাজার পাঁচ, দশ); দেওয়া heard by both recognizers",
+   "data": {
+    "note": "",
+    "text": "কংগ্রেস দু হাজার পাঁচ-এর অর্থবছরে অশ্লীল উদ্যোগকে অর্থ জোগান দেওয়া শুরু করে এবং নির্দিষ্ট করে দেয় যে, এফবিআই-কে অবশ্যই প্রাপ্তবয়স্কদের পর্নোগ্রাফিতে দশ জন এজেন্টদের নিযুক্ত করতে হবে।",
+    "status": "corrected",
+    "cut_off": false
+   }
+  },
+  {
+   "item_id": "P0004",
+   "task": "pair",
+   "chosen": "Nafisa",
+   "reason": "কোন / কোনও: accepted spellings of the same word",
+   "data": {
+    "note": "",
+    "label": "spelling"
+   }
+  },
+  {
+   "item_id": "P0005",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "কোনদিন / কোনোদিন: accepted spellings",
+   "data": {
+    "note": "",
+    "label": "spelling"
+   }
+  },
+  {
+   "item_id": "P0015",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "ভেদু / বেদু: a name written wrong, not a dialect form",
+   "data": {
+    "note": "",
+    "label": "different"
+   }
+  },
+  {
+   "item_id": "P0034",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "চাচা (uncle) / চেঁচা (shout): different words",
+   "data": {
+    "note": "",
+    "label": "different"
+   }
+  },
+  {
+   "item_id": "P0043",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "জোচনা / জোছনা: one word, misspelled",
+   "data": {
+    "note": "",
+    "label": "spelling"
+   }
+  },
+  {
+   "item_id": "P0048",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "ভণ্ড / ফন্ড: misheard, different word",
+   "data": {
+    "note": "",
+    "label": "different"
+   }
+  },
+  {
+   "item_id": "P0052",
+   "task": "pair",
+   "chosen": "Nafisa",
+   "reason": "বিপদজনক / বিপজ্জনক: common and standard spelling of one word",
+   "data": {
+    "note": "",
+    "label": "spelling"
+   }
+  },
+  {
+   "item_id": "P0053",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "৳50000 / হাজার: the same amount written as digits or words",
+   "data": {
+    "note": "",
+    "label": "spelling"
+   }
+  },
+  {
+   "item_id": "P0068",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "এদিকে / এদিক: different form, not a spelling",
+   "data": {
+    "note": "",
+    "label": "different"
+   }
+  },
+  {
+   "item_id": "P0072",
+   "task": "pair",
+   "chosen": "Nafisa",
+   "reason": "বেরিয়ে / বেরি: truncated, not a dialect form",
+   "data": {
+    "note": "",
+    "label": "different"
+   }
+  },
+  {
+   "item_id": "P0079",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "বোডা / ভোডা: misheard",
+   "data": {
+    "note": "",
+    "label": "different"
+   }
+  },
+  {
+   "item_id": "P0081",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "বৌদি / বউতি: the same word written wrong, not a dialect form",
+   "data": {
+    "note": "",
+    "label": "spelling"
+   }
+  },
+  {
+   "item_id": "P0086",
+   "task": "pair",
+   "chosen": "Nafisa",
+   "reason": "দেখলে / দেখলি: different person (polite vs intimate), a different word form",
+   "data": {
+    "note": "",
+    "label": "different"
+   }
+  },
+  {
+   "item_id": "P0099",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "শোনো / শুনো: colloquial form",
+   "data": {
+    "note": "",
+    "label": "dialect"
+   }
+  },
+  {
+   "item_id": "P0101",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "সেটাই / সেইটাই: colloquial form",
+   "data": {
+    "note": "",
+    "label": "dialect"
+   }
+  },
+  {
+   "item_id": "P0107",
+   "task": "pair",
+   "chosen": "Nafisa",
+   "reason": "আর / আরো: different words",
+   "data": {
+    "note": "",
+    "label": "different"
+   }
+  },
+  {
+   "item_id": "P0108",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "ইত্যাদি / ইত্তাদি: misspelling of one word",
+   "data": {
+    "note": "",
+    "label": "spelling"
+   }
+  },
+  {
+   "item_id": "P0109",
+   "task": "pair",
+   "chosen": "Nafisa",
+   "reason": "শর্টগান / শটগান: same word (closer than 'different')",
+   "data": {
+    "note": "",
+    "label": "dialect"
+   }
+  },
+  {
+   "item_id": "P0111",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "a mangled name: different",
+   "data": {
+    "note": "",
+    "label": "different"
+   }
+  },
+  {
+   "item_id": "P0112",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "দাঁড়াও / দারো: colloquial (দাঁড়ো)",
+   "data": {
+    "note": "",
+    "label": "dialect"
+   }
+  },
+  {
+   "item_id": "P0121",
+   "task": "pair",
+   "chosen": "Nafisa",
+   "reason": "চলে / চুলে (hair): different words",
+   "data": {
+    "note": "",
+    "label": "different"
+   }
+  },
+  {
+   "item_id": "P0123",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "মো / মও: not a word",
+   "data": {
+    "note": "",
+    "label": "different"
+   }
+  },
+  {
+   "item_id": "P0124",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "ওই / ই: part of the word lost",
+   "data": {
+    "note": "",
+    "label": "different"
+   }
+  },
+  {
+   "item_id": "P0125",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "আপনি / পনি: part of the word lost",
+   "data": {
+    "note": "",
+    "label": "different"
+   }
+  },
+  {
+   "item_id": "P0128",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "তখন / খন: part of the word lost",
+   "data": {
+    "note": "",
+    "label": "different"
+   }
+  },
+  {
+   "item_id": "P0132",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "পায়ে / পায়: case ending lost (and পায় is another word)",
+   "data": {
+    "note": "",
+    "label": "different"
+   }
+  },
+  {
+   "item_id": "P0134",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "আপনার / পনার: part of the word lost",
+   "data": {
+    "note": "",
+    "label": "different"
+   }
+  },
+  {
+   "item_id": "P0140",
+   "task": "pair",
+   "chosen": "Nafisa",
+   "reason": "তোমার / তমার: misspelling of one word",
+   "data": {
+    "note": "",
+    "label": "spelling"
+   }
+  },
+  {
+   "item_id": "P0145",
+   "task": "pair",
+   "chosen": "Nabigah",
+   "reason": "আমাদের / মাদের: part of the word lost",
+   "data": {
+    "note": "",
+    "label": "different"
+   }
+  },
+  {
+   "item_id": "A0001",
+   "task": "audit",
+   "chosen": {
+    "3": "Nafisa"
+   },
+   "reason": {
+    "3": "accepted spelling variants or split words: same word"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "ref",
+     "model",
+     "model",
+     "spelling",
+     "model",
+     "model",
+     "ref"
+    ]
+   }
+  },
+  {
+   "item_id": "A0002",
+   "task": "audit",
+   "chosen": {
+    "1": "Nafisa",
+    "2": "Nabigah",
+    "3": "Nafisa",
+    "4": "Nafisa"
+   },
+   "reason": {
+    "1": "same name, spelled differently",
+    "2": "the recognizer merged two words",
+    "3": "same word",
+    "4": "accepted spelling variants or split words: same word"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "model",
+     "spelling",
+     "model",
+     "spelling",
+     "spelling",
+     "model",
+     "model"
+    ]
+   }
+  },
+  {
+   "item_id": "A0003",
+   "task": "audit",
+   "chosen": {
+    "1": "Nafisa",
+    "9": "Nabigah",
+    "11": "Nabigah"
+   },
+   "reason": {
+    "1": "accepted spelling variants or split words: same word",
+    "9": "recognizer wrong (final model agrees with the transcript)",
+    "11": "দেবী: final model agrees with the transcript"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "spelling",
+     "spelling",
+     "spelling",
+     "spelling",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "spelling",
+     "model",
+     "model",
+     "model",
+     "model"
+    ]
+   }
+  },
+  {
+   "item_id": "A0005",
+   "task": "audit",
+   "chosen": {
+    "0": "Nafisa",
+    "3": "Nabigah"
+   },
+   "reason": {
+    "0": "recognizer merged the name",
+    "3": "both recognizers hear তার: transcript likely wrong, so 'model' is not right"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "model",
+     "unsure",
+     "spelling",
+     "unsure"
+    ]
+   }
+  },
+  {
+   "item_id": "A0006",
+   "task": "audit",
+   "chosen": {
+    "1": "Nafisa",
+    "2": "Nafisa",
+    "4": "Nafisa"
+   },
+   "reason": {
+    "1": "accepted spelling variants or split words: same word",
+    "2": "accepted spelling variants or split words: same word",
+    "4": "accepted spelling variants or split words: same word"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "model",
+     "spelling",
+     "spelling",
+     "model",
+     "spelling",
+     "ref"
+    ]
+   }
+  },
+  {
+   "item_id": "A0007",
+   "task": "audit",
+   "chosen": {
+    "1": "Nabigah",
+    "2": "Nabigah",
+    "3": "Nafisa",
+    "4": "Nafisa",
+    "5": "Nafisa",
+    "6": "Nafisa"
+   },
+   "reason": {
+    "1": "কি কি is spoken (both recognizers); the transcript left it out",
+    "2": "same",
+    "3": "accepted spelling variants or split words: same word",
+    "4": "dialect form or accent: same word",
+    "5": "same word; the transcript lacks the chandrabindu",
+    "6": "same"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "model",
+     "ref",
+     "ref",
+     "spelling",
+     "dialect",
+     "spelling",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0009",
+   "task": "audit",
+   "chosen": {
+    "0": "Nafisa",
+    "1": "Nabigah",
+    "2": "Nabigah",
+    "3": "Nafisa",
+    "4": "Nafisa"
+   },
+   "reason": {
+    "0": "accepted spelling variants or split words: same word",
+    "1": "কেন কে জানে: both recognizers",
+    "2": "বটু: both recognizers",
+    "3": "name spelling",
+    "4": "accepted spelling variants or split words: same word"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "spelling",
+     "ref",
+     "ref",
+     "spelling",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0010",
+   "task": "audit",
+   "chosen": {
+    "2": "Nabigah",
+    "3": "Nafisa"
+   },
+   "reason": {
+    "2": "dialect form or accent: same word",
+    "3": "বল / বলো: accepted spellings"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "model",
+     "model",
+     "dialect",
+     "spelling",
+     "model",
+     "model",
+     "ref",
+     "spelling",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0012",
+   "task": "audit",
+   "chosen": {
+    "2": "Nabigah",
+    "3": "Nabigah"
+   },
+   "reason": {
+    "2": "accepted spelling variants or split words: same word",
+    "3": "dialect form or accent: same word"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "spelling",
+     "model",
+     "spelling",
+     "dialect"
+    ]
+   }
+  },
+  {
+   "item_id": "A0015",
+   "task": "audit",
+   "chosen": {
+    "2": "Nafisa",
+    "4": "Nabigah",
+    "5": "Nabigah",
+    "6": "Nabigah"
+   },
+   "reason": {
+    "2": "final model hears নিবেন",
+    "4": "words spoken (final model) and dropped",
+    "5": "same",
+    "6": "same"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "spelling",
+     "ref",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0017",
+   "task": "audit",
+   "chosen": {
+    "0": "Nabigah"
+   },
+   "reason": {
+    "0": "same word, written phonetically"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0018",
+   "task": "audit",
+   "chosen": {
+    "0": "Nabigah",
+    "1": "Nabigah",
+    "2": "Nabigah",
+    "3": "Nabigah"
+   },
+   "reason": {
+    "0": "both recognizers hear ঠিক আছে: transcript wrong",
+    "1": "same",
+    "2": "accepted spelling variants or split words: same word",
+    "3": "accepted spelling variants or split words: same word"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "ref",
+     "ref",
+     "spelling",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0019",
+   "task": "audit",
+   "chosen": {
+    "1": "Nabigah"
+   },
+   "reason": {
+    "1": "ছ is the colloquial form of ছয়"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "ref",
+     "dialect",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0022",
+   "task": "audit",
+   "chosen": {
+    "0": "Nabigah",
+    "1": "Nabigah"
+   },
+   "reason": {
+    "0": "same word split",
+    "1": "same"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "spelling",
+     "spelling",
+     "spelling",
+     "model",
+     "model",
+     "spelling",
+     "spelling",
+     "model",
+     "spelling",
+     "spelling",
+     "spelling",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0023",
+   "task": "audit",
+   "chosen": {
+    "0": "Nabigah",
+    "3": "Nabigah"
+   },
+   "reason": {
+    "0": "recognizer wrong (final model: প্রথমবার)",
+    "3": "recognizer wrong (final model: গুণের)"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "model",
+     "model",
+     "spelling",
+     "model",
+     "spelling",
+     "model",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0024",
+   "task": "audit",
+   "chosen": {
+    "1": "Nabigah"
+   },
+   "reason": {
+    "1": "recognizer wrong"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "unsure",
+     "model",
+     "ref",
+     "ref",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0026",
+   "task": "audit",
+   "chosen": {
+    "0": "Nafisa"
+   },
+   "reason": {
+    "0": "যজ্ঞ is pronounced close to যোগ্য: a phonetic spelling, closer than 'transcript wrong'"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "spelling",
+     "spelling",
+     "model",
+     "model",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0028",
+   "task": "audit",
+   "chosen": {
+    "4": "Nafisa",
+    "5": "Nafisa",
+    "7": "Nafisa",
+    "8": "Nafisa"
+   },
+   "reason": {
+    "4": "spoken (final model) and dropped",
+    "5": "same",
+    "7": "beyond the clip (final model ends before it): transcript wrong",
+    "8": "same"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "model",
+     "spelling",
+     "spelling",
+     "spelling",
+     "model",
+     "model",
+     "both",
+     "ref",
+     "ref"
+    ]
+   }
+  },
+  {
+   "item_id": "A0029",
+   "task": "audit",
+   "chosen": {
+    "0": "Nabigah",
+    "2": "Nafisa",
+    "3": "Nafisa"
+   },
+   "reason": {
+    "0": "same name, spelled differently",
+    "2": "recognizer broke the words",
+    "3": "same"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "spelling",
+     "spelling",
+     "model",
+     "model",
+     "spelling",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0030",
+   "task": "audit",
+   "chosen": {
+    "3": "Nabigah",
+    "5": "Nabigah",
+    "6": "Nabigah"
+   },
+   "reason": {
+    "3": "both recognizers hear ঢুলে",
+    "5": "accepted spelling variants or split words: same word",
+    "6": "accepted spelling variants or split words: same word"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "spelling",
+     "spelling",
+     "ref",
+     "ref",
+     "spelling",
+     "spelling",
+     "spelling",
+     "spelling",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0032",
+   "task": "audit",
+   "chosen": {
+    "6": "Nabigah",
+    "7": "Nabigah"
+   },
+   "reason": {
+    "6": "spoken (final model) and dropped",
+    "7": "same"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "spelling",
+     "model",
+     "spelling",
+     "spelling",
+     "model",
+     "ref",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model"
+    ]
+   }
+  },
+  {
+   "item_id": "A0034",
+   "task": "audit",
+   "chosen": {
+    "1": "Nafisa",
+    "2": "Nabigah"
+   },
+   "reason": {
+    "1": "both recognizers hear শিখর",
+    "2": "dialect form or accent: same word"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "model",
+     "ref",
+     "dialect",
+     "ref",
+     "ref",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0035",
+   "task": "audit",
+   "chosen": {
+    "0": "Nabigah",
+    "1": "Nabigah",
+    "5": "Nabigah",
+    "7": "Nafisa"
+   },
+   "reason": {
+    "0": "হাসেনি: same word split",
+    "1": "same",
+    "5": "same word (closer than 'model wrong')",
+    "7": "শেয়ালই: both recognizers hear the particle"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "spelling",
+     "spelling",
+     "model",
+     "model",
+     "model",
+     "dialect",
+     "model",
+     "ref",
+     "model",
+     "unsure"
+    ]
+   }
+  },
+  {
+   "item_id": "A0036",
+   "task": "audit",
+   "chosen": {
+    "1": "Nafisa"
+   },
+   "reason": {
+    "1": "an extra vowel: accent"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "spelling",
+     "dialect"
+    ]
+   }
+  },
+  {
+   "item_id": "A0037",
+   "task": "audit",
+   "chosen": {
+    "4": "Nabigah",
+    "5": "Nabigah"
+   },
+   "reason": {
+    "4": "dialect form or accent: same word",
+    "5": "ওপর / উপর: same word"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "spelling",
+     "spelling",
+     "model",
+     "spelling",
+     "dialect",
+     "dialect",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0039",
+   "task": "audit",
+   "chosen": {
+    "0": "Nafisa",
+    "1": "Nafisa",
+    "8": "Nabigah",
+    "9": "Nabigah"
+   },
+   "reason": {
+    "0": "both recognizers hear যেটা",
+    "1": "same",
+    "8": "final model hears শোন",
+    "9": "dialect form or accent: same word"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "ref",
+     "ref",
+     "model",
+     "model",
+     "model",
+     "model",
+     "spelling",
+     "model",
+     "model",
+     "dialect"
+    ]
+   }
+  },
+  {
+   "item_id": "A0040",
+   "task": "audit",
+   "chosen": {
+    "1": "Nabigah",
+    "2": "Nafisa"
+   },
+   "reason": {
+    "1": "final model hears no নামে: recognizer inserted it, 'transcript wrong' is not right",
+    "2": "final model hears নিয়ে"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "model",
+     "unsure",
+     "model",
+     "ref",
+     "model",
+     "model"
+    ]
+   }
+  },
+  {
+   "item_id": "A0041",
+   "task": "audit",
+   "chosen": {
+    "0": "Nabigah",
+    "5": "Nabigah",
+    "6": "Nabigah"
+   },
+   "reason": {
+    "0": "accepted spelling variants or split words: same word",
+    "5": "accepted spelling variants or split words: same word",
+    "6": "accepted spelling variants or split words: same word"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "spelling",
+     "model",
+     "spelling",
+     "spelling",
+     "spelling",
+     "spelling",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0042",
+   "task": "audit",
+   "chosen": {
+    "0": "Nabigah",
+    "1": "Nabigah",
+    "4": "Nafisa",
+    "6": "Nafisa",
+    "9": "Nabigah"
+   },
+   "reason": {
+    "0": "both recognizers hear এই কি: transcript wrong",
+    "1": "same",
+    "4": "final model hears শুয়ে",
+    "6": "same",
+    "9": "dialect form or accent: same word"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "ref",
+     "ref",
+     "spelling",
+     "spelling",
+     "model",
+     "spelling",
+     "model",
+     "model",
+     "model",
+     "dialect",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0043",
+   "task": "audit",
+   "chosen": {
+    "2": "Nafisa"
+   },
+   "reason": {
+    "2": "final model hears one খুব: transcript has an extra word"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "model",
+     "model",
+     "ref"
+    ]
+   }
+  },
+  {
+   "item_id": "A0044",
+   "task": "audit",
+   "chosen": {
+    "0": "Nafisa",
+    "2": "Nabigah"
+   },
+   "reason": {
+    "0": "final model hears দিয়ে",
+    "2": "final model hears তার"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "model",
+     "model",
+     "model",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0046",
+   "task": "audit",
+   "chosen": {
+    "0": "Nafisa",
+    "1": "Nabigah"
+   },
+   "reason": {
+    "0": "recognizer wrong",
+    "1": "dialect form or accent: same word"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "model",
+     "dialect"
+    ]
+   }
+  },
+  {
+   "item_id": "A0047",
+   "task": "audit",
+   "chosen": {
+    "3": "Nabigah",
+    "4": "Nabigah",
+    "5": "Nabigah"
+   },
+   "reason": {
+    "3": "accepted spelling variants or split words: same word",
+    "4": "accepted spelling variants or split words: same word",
+    "5": "accepted spelling variants or split words: same word"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "model",
+     "model",
+     "spelling",
+     "spelling",
+     "spelling",
+     "spelling",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0048",
+   "task": "audit",
+   "chosen": {
+    "0": "Nabigah",
+    "1": "Nabigah",
+    "5": "Nabigah",
+    "6": "Nabigah"
+   },
+   "reason": {
+    "0": "accepted spelling variants or split words: same word",
+    "1": "accepted spelling variants or split words: same word",
+    "5": "accepted spelling variants or split words: same word",
+    "6": "accepted spelling variants or split words: same word"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "spelling",
+     "spelling",
+     "ref",
+     "ref",
+     "spelling",
+     "spelling",
+     "spelling",
+     "spelling",
+     "spelling",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0049",
+   "task": "audit",
+   "chosen": {
+    "1": "Nafisa",
+    "2": "Nafisa",
+    "7": "Nafisa"
+   },
+   "reason": {
+    "1": "final model hears যাক সে",
+    "2": "same",
+    "7": "final model hears থেকে"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "ref",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model"
+    ]
+   }
+  },
+  {
+   "item_id": "A0050",
+   "task": "audit",
+   "chosen": {
+    "1": "Nabigah",
+    "2": "Nabigah"
+   },
+   "reason": {
+    "1": "both recognizers hear আচরণ: transcript wrong",
+    "2": "same"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "spelling",
+     "ref",
+     "ref"
+    ]
+   }
+  },
+  {
+   "item_id": "A0051",
+   "task": "audit",
+   "chosen": {
+    "1": "Nafisa",
+    "2": "Nafisa"
+   },
+   "reason": {
+    "1": "আর আমি fits the sentence; the recognizers disagree with each other",
+    "2": "same"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "ref",
+     "model",
+     "model",
+     "model",
+     "spelling",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0052",
+   "task": "audit",
+   "chosen": {
+    "11": "Nabigah"
+   },
+   "reason": {
+    "11": "পড়াশোনা / পড়াশুনা: same word"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "spelling",
+     "ref",
+     "spelling",
+     "model",
+     "model",
+     "spelling",
+     "model",
+     "model",
+     "model",
+     "model",
+     "model",
+     "dialect",
+     "model",
+     "model",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0053",
+   "task": "audit",
+   "chosen": {
+    "0": "Nafisa",
+    "3": "Nabigah",
+    "6": "Nabigah"
+   },
+   "reason": {
+    "0": "recognizer wrong",
+    "3": "dialect form or accent: same word",
+    "6": "dialect form or accent: same word"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "model",
+     "spelling",
+     "ref",
+     "dialect",
+     "spelling",
+     "spelling",
+     "dialect",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0054",
+   "task": "audit",
+   "chosen": {
+    "0": "Nafisa",
+    "7": "Nabigah",
+    "8": "Nabigah"
+   },
+   "reason": {
+    "0": "জোছনা is the colloquial form of জ্যোৎস্না",
+    "7": "accepted spelling variants or split words: same word",
+    "8": "accepted spelling variants or split words: same word"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "dialect",
+     "spelling",
+     "ref",
+     "ref",
+     "ref",
+     "ref",
+     "ref",
+     "spelling",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0055",
+   "task": "audit",
+   "chosen": {
+    "0": "Nafisa"
+   },
+   "reason": {
+    "0": "recognizer wrong"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "model",
+     "spelling",
+     "model",
+     "model"
+    ]
+   }
+  },
+  {
+   "item_id": "A0057",
+   "task": "audit",
+   "chosen": {
+    "4": "Nafisa"
+   },
+   "reason": {
+    "4": "recognizer inserted a sound"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "spelling",
+     "spelling",
+     "model",
+     "model",
+     "model",
+     "spelling"
+    ]
+   }
+  },
+  {
+   "item_id": "A0059",
+   "task": "audit",
+   "chosen": {
+    "0": "Nabigah"
+   },
+   "reason": {
+    "0": "উরস: same word, written phonetically"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "spelling",
+     "ref"
+    ]
+   }
+  },
+  {
+   "item_id": "A0060",
+   "task": "audit",
+   "chosen": {
+    "1": "Nabigah"
+   },
+   "reason": {
+    "1": "dialect form or accent: same word"
+   },
+   "data": {
+    "note": "",
+    "units": [
+     "model",
+     "dialect",
+     "model",
+     "model"
+    ]
+   }
+  }
+ ]
+}

@@ -1,6 +1,6 @@
 {
-  "snapshot": "results\\labels\\snapshot_20261013_0514.json",
-  "resolutions": 0,
+  "snapshot": "results/labels/snapshot_20261027_0118.json",
+  "resolutions": 103,
   "refs": {
     "labels": 669,
     "agreement": {
@@ -12,79 +12,329 @@
       "commonvoice": {
         "chunks": 100,
         "unusable": 0,
-        "corrected_share": 0.13,
+        "corrected_share": 0.14,
         "cut_off_share": 0.0,
         "edit_rate": {
-          "value": 0.01733477789815818,
+          "value": 0.018418201516793065,
           "ci95": [
-            0.007903780735201139,
-            0.029289022188774275
+            0.009304871830307999,
+            0.03125174776286353
           ]
         },
         "edits_by_kind": {
-          "content": 12,
+          "content": 13,
           "dialect": 4
         },
         "original_words": 923,
         "models": {
-          "ai4bharat__indicwav2vec_v1_bengali": {
+          "kaggle/finetuned/m1_full_4ep_t4": {
+            "utts": 100,
+            "wer_original": 0.15926327193932827,
+            "wer_verified": 0.16268980477223427,
+            "diff_verified_minus_original": 0.003426532832906004,
+            "diff_ci95": [
+              -0.0041126938113186145,
+              0.01133165754913159
+            ]
+          },
+          "kaggle/finetuned/m1_full_beam5_t4": {
+            "utts": 100,
+            "wer_original": 0.13217768147345613,
+            "wer_verified": 0.1334056399132321,
+            "diff_verified_minus_original": 0.0012279584397759669,
+            "diff_ci95": [
+              -0.005555903989585213,
+              0.009004787907406423
+            ]
+          },
+          "kaggle/finetuned/m1_lora_t4": {
+            "utts": 100,
+            "wer_original": 0.13434452871072589,
+            "wer_verified": 0.13557483731019523,
+            "diff_verified_minus_original": 0.0012303085994693486,
+            "diff_ci95": [
+              -0.005559336118601121,
+              0.009002498981581715
+            ]
+          },
+          "kaggle/finetuned/m2_cv_t4": {
+            "utts": 100,
+            "wer_original": 0.10184182015167931,
+            "wer_verified": 0.10086767895878525,
+            "diff_verified_minus_original": -0.0009741411928940596,
+            "diff_ci95": [
+              -0.008786370569318651,
+              0.006671407604343111
+            ]
+          },
+          "kaggle/finetuned/m3_kathbath_t4": {
+            "utts": 100,
+            "wer_original": 0.11267605633802817,
+            "wer_verified": 0.11279826464208242,
+            "diff_verified_minus_original": 0.00012220830405425265,
+            "diff_ci95": [
+              -0.006929317526203334,
+              0.007886369631367575
+            ]
+          },
+          "kaggle/finetuned/m4_shrutilipi_t4": {
+            "utts": 100,
+            "wer_original": 0.13759479956663057,
+            "wer_verified": 0.13557483731019523,
+            "diff_verified_minus_original": -0.0020199622564353314,
+            "diff_ci95": [
+              -0.009817181396166549,
+              0.0046841129038280764
+            ]
+          },
+          "kaggle/finetuned/m5_300_t4": {
+            "utts": 100,
+            "wer_original": 0.1105092091007584,
+            "wer_verified": 0.10845986984815618,
+            "diff_verified_minus_original": -0.002049339252602214,
+            "diff_ci95": [
+              -0.009487025097092627,
+              0.005593767763861178
+            ]
+          },
+          "kaggle/finetuned/m5_full_t4": {
+            "utts": 100,
+            "wer_original": 0.11592632719393282,
+            "wer_verified": 0.11171366594360087,
+            "diff_verified_minus_original": -0.004212661250331956,
+            "diff_ci95": [
+              -0.011633782365026121,
+              0.003196519600857307
+            ]
+          },
+          "kaggle/finetuned/m5_merged_t4": {
+            "utts": 100,
+            "wer_original": 0.10617551462621885,
+            "wer_verified": 0.10629067245119306,
+            "diff_verified_minus_original": 0.00011515782497420468,
+            "diff_ci95": [
+              -0.007095305988155307,
+              0.007965402692654942
+            ]
+          },
+          "kaggle/finetuned/m6_harmonized_t4": {
+            "utts": 100,
+            "wer_original": 0.11159263271939328,
+            "wer_verified": 0.11171366594360087,
+            "diff_verified_minus_original": 0.00012103322420758955,
+            "diff_ci95": [
+              -0.007095305988155293,
+              0.00796612126202795
+            ]
+          },
+          "kaggle/finetuned/soup_m1_full+m1_full+m1_full+base_t4": {
+            "utts": 100,
+            "wer_original": 0.12351029252437704,
+            "wer_verified": 0.12472885032537961,
+            "diff_verified_minus_original": 0.0012185578010025788,
+            "diff_ci95": [
+              -0.005569793498983556,
+              0.009009365759055865
+            ]
+          },
+          "kaggle/finetuned/soup_m1_full+m2_cv+m3_kathbath+m4_shrutilipi+m5_merged_t4": {
+            "utts": 100,
+            "wer_original": 0.10725893824485373,
+            "wer_verified": 0.10737527114967461,
+            "diff_verified_minus_original": 0.00011633290482088166,
+            "diff_ci95": [
+              -0.006929317526203334,
+              0.00786829701689207
+            ]
+          },
+          "kaggle/finetuned/soup_m1_full+m5_300+m5_300+m5_300_t4": {
+            "utts": 100,
+            "wer_original": 0.11700975081256772,
+            "wer_verified": 0.11713665943600868,
+            "diff_verified_minus_original": 0.00012690862344096054,
+            "diff_ci95": [
+              -0.006929317526203361,
+              0.00788503737843893
+            ]
+          },
+          "kaggle/finetuned/soup_m1_full+m5_300_t4": {
+            "utts": 100,
+            "wer_original": 0.11484290357529794,
+            "wer_verified": 0.11496746203904555,
+            "diff_verified_minus_original": 0.0001245584637476066,
+            "diff_ci95": [
+              -0.006929317526203361,
+              0.007907027875335525
+            ]
+          },
+          "kaggle/finetuned/soup_m1_full+m5_merged_t4": {
+            "utts": 100,
+            "wer_original": 0.11484290357529794,
+            "wer_verified": 0.11496746203904555,
+            "diff_verified_minus_original": 0.0001245584637476066,
+            "diff_ci95": [
+              -0.006929317526203361,
+              0.007867343954692702
+            ]
+          },
+          "kaggle/finetuned/soup_m5_full+m5_300_t4": {
+            "utts": 100,
+            "wer_original": 0.11375947995666305,
+            "wer_verified": 0.11171366594360087,
+            "diff_verified_minus_original": -0.0020458140130621832,
+            "diff_ci95": [
+              -0.009493193288490617,
+              0.005594051300584855
+            ]
+          },
+          "kaggle/zeroshot/ai4bharat__indic-conformer-600m-multilingual_ctc_t4": {
+            "utts": 100,
+            "wer_original": 0.15492957746478872,
+            "wer_verified": 0.1475054229934924,
+            "diff_verified_minus_original": -0.007424154471296324,
+            "diff_ci95": [
+              -0.014191669045959324,
+              -0.0010474449285654789
+            ]
+          },
+          "kaggle/zeroshot/ai4bharat__indic-conformer-600m-multilingual_t4": {
+            "utts": 100,
+            "wer_original": 0.13326110509209102,
+            "wer_verified": 0.12581344902386118,
+            "diff_verified_minus_original": -0.007447656068229835,
+            "diff_ci95": [
+              -0.01422280049230215,
+              -0.0010475111075473802
+            ]
+          },
+          "kaggle/zeroshot/psdn-ai__bangla-asr_t4": {
+            "utts": 100,
+            "wer_original": 0.6294691224268689,
+            "wer_verified": 0.631236442516269,
+            "diff_verified_minus_original": 0.0017673200894000596,
+            "diff_ci95": [
+              -0.005646100834617021,
+              0.008632942661276536
+            ]
+          },
+          "kaggle/zeroshot/teamvillagers__whisper-bengali-ct2_t4": {
+            "utts": 100,
+            "wer_original": 0.15492957746478872,
+            "wer_verified": 0.15726681127982647,
+            "diff_verified_minus_original": 0.0023372338150377536,
+            "diff_ci95": [
+              -0.0042136742413785115,
+              0.009943009364647247
+            ]
+          },
+          "kaggle/zeroshot/zarifmahir21__whisper-medium-bangla_t4": {
+            "utts": 100,
+            "wer_original": 0.14842903575297942,
+            "wer_verified": 0.15184381778741865,
+            "diff_verified_minus_original": 0.0034147820344392343,
+            "diff_ci95": [
+              -0.0031058112843562816,
+              0.010928955362328917
+            ]
+          },
+          "modal/finetuned/m1_decoder": {
+            "utts": 100,
+            "wer_original": 0.14084507042253522,
+            "wer_verified": 0.1420824295010846,
+            "diff_verified_minus_original": 0.0012373590785493827,
+            "diff_ci95": [
+              -0.006136266108809053,
+              0.00910128598977382
+            ]
+          },
+          "modal/finetuned/m1_encoder": {
+            "utts": 100,
+            "wer_original": 0.15492957746478872,
+            "wer_verified": 0.1540130151843818,
+            "diff_verified_minus_original": -0.0009165622804069296,
+            "diff_ci95": [
+              -0.00785781578003305,
+              0.006830267500330884
+            ]
+          },
+          "modal/finetuned/m1_full": {
+            "utts": 100,
+            "wer_original": 0.13326110509209102,
+            "wer_verified": 0.13449023861171366,
+            "diff_verified_minus_original": 0.0012291335196226438,
+            "diff_ci95": [
+              -0.00612293988279625,
+              0.009104941645729728
+            ]
+          },
+          "modal/zeroshot/tugstugi_a100": {
+            "utts": 100,
+            "wer_original": 0.13434452871072589,
+            "wer_verified": 0.13232104121475055,
+            "diff_verified_minus_original": -0.0020234874959753346,
+            "diff_ci95": [
+              -0.009074306645735209,
+              0.004849789101843517
+            ]
+          },
+          "zeroshot/ai4bharat__indicwav2vec_v1_bengali": {
             "utts": 100,
             "wer_original": 0.28060671722643554,
-            "wer_verified": 0.27331887201735355,
-            "diff_verified_minus_original": -0.007287845209081989,
+            "wer_verified": 0.272234273318872,
+            "diff_verified_minus_original": -0.008372443907563532,
             "diff_ci95": [
-              -0.013443671266499677,
-              -0.0018543398537430352
+              -0.014681756863294248,
+              -0.0022270477604553487
             ]
           },
-          "arijitx__wav2vec2-xls-r-300m-bengali": {
+          "zeroshot/arijitx__wav2vec2-xls-r-300m-bengali": {
             "utts": 100,
             "wer_original": 0.4723726977248104,
-            "wer_verified": 0.47071583514099785,
-            "diff_verified_minus_original": -0.001656862583812535,
+            "wer_verified": 0.46963123644251625,
+            "diff_verified_minus_original": -0.002741461282294133,
             "diff_ci95": [
-              -0.008145925865457645,
-              0.004391142037843868
+              -0.009460469723333309,
+              0.003926982545983231
             ]
           },
-          "bangla-speech-processing__BanglaASR": {
+          "zeroshot/bangla-speech-processing__BanglaASR": {
             "utts": 100,
             "wer_original": 0.12242686890574214,
-            "wer_verified": 0.13449023861171366,
-            "diff_verified_minus_original": 0.012063369705971522,
+            "wer_verified": 0.13557483731019523,
+            "diff_verified_minus_original": 0.013147968404453092,
             "diff_ci95": [
-              0.005020070573471528,
-              0.019701125260914824
+              0.005679139239312985,
+              0.02111631464575314
             ]
           },
-          "bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium": {
+          "zeroshot/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium": {
             "utts": 100,
             "wer_original": 0.13542795232936078,
-            "wer_verified": 0.13449023861171366,
-            "diff_verified_minus_original": -0.0009377137176471151,
+            "wer_verified": 0.1334056399132321,
+            "diff_verified_minus_original": -0.0020223124161286854,
             "diff_ci95": [
-              -0.007159518020910511,
-              0.005618767846345102
+              -0.008705553794256204,
+              0.004568869378943213
             ]
           },
-          "hishab__titu_stt_bn_conformer_large": {
+          "zeroshot/hishab__titu_stt_bn_conformer_large": {
             "utts": 100,
             "wer_original": 0.09209100758396534,
-            "wer_verified": 0.09761388286334056,
-            "diff_verified_minus_original": 0.005522875279375228,
+            "wer_verified": 0.09652928416485901,
+            "diff_verified_minus_original": 0.004438276580893671,
             "diff_ci95": [
-              -0.0021054857015689312,
-              0.013473554026102601
+              -0.003194973330517654,
+              0.012854327785323668
             ]
           },
-          "hishab__titu_stt_bn_fastconformer": {
+          "zeroshot/hishab__titu_stt_bn_fastconformer": {
             "utts": 100,
             "wer_original": 0.409534127843987,
-            "wer_verified": 0.40997830802603036,
-            "diff_verified_minus_original": 0.0004441801820433411,
+            "wer_verified": 0.41106290672451196,
+            "diff_verified_minus_original": 0.0015287788805249392,
             "diff_ci95": [
-              -0.005643340857787784,
-              0.006803230542407782
+              -0.005139409723696847,
+              0.008735180893768959
             ]
           }
         }
@@ -92,80 +342,330 @@
       "dlsprint": {
         "chunks": 305,
         "unusable": 0,
-        "corrected_share": 0.2983606557377049,
+        "corrected_share": 0.3016393442622951,
         "cut_off_share": 0.006557377049180328,
         "edit_rate": {
-          "value": 0.01788544260810505,
+          "value": 0.018791034638895178,
           "ci95": [
-            0.013286450245250622,
-            0.02287788976974912
+            0.013446399562700906,
+            0.02464895819780417
           ]
         },
         "edits_by_kind": {
-          "content": 145,
-          "dialect": 12,
+          "content": 150,
+          "dialect": 15,
           "spelling": 1
         },
         "original_words": 8834,
         "models": {
-          "ai4bharat__indicwav2vec_v1_bengali": {
+          "kaggle/finetuned/m1_full_4ep_t4": {
+            "utts": 305,
+            "wer_original": 0.098256735340729,
+            "wer_verified": 0.09506047247654573,
+            "diff_verified_minus_original": -0.003196262864183272,
+            "diff_ci95": [
+              -0.0065978640275470716,
+              -3.2235704945712914e-05
+            ]
+          },
+          "kaggle/finetuned/m1_full_beam5_t4": {
+            "utts": 305,
+            "wer_original": 0.098256735340729,
+            "wer_verified": 0.09506047247654573,
+            "diff_verified_minus_original": -0.003196262864183272,
+            "diff_ci95": [
+              -0.00691642205409063,
+              0.000639068903991155
+            ]
+          },
+          "kaggle/finetuned/m2_cv_t4": {
+            "utts": 305,
+            "wer_original": 0.199909440796921,
+            "wer_verified": 0.19305979428054706,
+            "diff_verified_minus_original": -0.006849646516373931,
+            "diff_ci95": [
+              -0.010399629092291305,
+              -0.003500532110380221
+            ]
+          },
+          "kaggle/finetuned/m3_kathbath_t4": {
+            "utts": 305,
+            "wer_original": 0.1982114557391895,
+            "wer_verified": 0.19249463094834407,
+            "diff_verified_minus_original": -0.005716824790845426,
+            "diff_ci95": [
+              -0.009729127881499202,
+              -0.002084315525917236
+            ]
+          },
+          "kaggle/finetuned/m4_shrutilipi_t4": {
+            "utts": 305,
+            "wer_original": 0.205229793977813,
+            "wer_verified": 0.19859839493613654,
+            "diff_verified_minus_original": -0.00663139904167645,
+            "diff_ci95": [
+              -0.010629805831490513,
+              -0.0030369396971269063
+            ]
+          },
+          "kaggle/finetuned/m5_300_t4": {
+            "utts": 305,
+            "wer_original": 0.11467059089880009,
+            "wer_verified": 0.11133717644399231,
+            "diff_verified_minus_original": -0.0033334144548077815,
+            "diff_ci95": [
+              -0.0067137566691381914,
+              0.0003399037614432574
+            ]
+          },
+          "kaggle/finetuned/m5_full_t4": {
+            "utts": 305,
+            "wer_original": 0.12078333710663346,
+            "wer_verified": 0.11642364643381937,
+            "diff_verified_minus_original": -0.004359690672814082,
+            "diff_ci95": [
+              -0.00823262363042538,
+              -0.000617613003036192
+            ]
+          },
+          "kaggle/finetuned/m5_merged_t4": {
+            "utts": 305,
+            "wer_original": 0.13323522752999772,
+            "wer_verified": 0.1272747824121171,
+            "diff_verified_minus_original": -0.005960445117880631,
+            "diff_ci95": [
+              -0.00977540542217477,
+              -0.0021053336014323844
+            ]
+          },
+          "kaggle/finetuned/m6_harmonized_t4": {
+            "utts": 305,
+            "wer_original": 0.13221643649535883,
+            "wer_verified": 0.12614445574771108,
+            "diff_verified_minus_original": -0.006071980747647754,
+            "diff_ci95": [
+              -0.0099140180706366,
+              -0.002157065200386846
+            ]
+          },
+          "kaggle/finetuned/soup_m1_full+m1_full+m1_full+base_t4": {
+            "utts": 305,
+            "wer_original": 0.10968983472945439,
+            "wer_verified": 0.10512037978975924,
+            "diff_verified_minus_original": -0.004569454939695142,
+            "diff_ci95": [
+              -0.008339857740389974,
+              -0.0007620125821756933
+            ]
+          },
+          "kaggle/finetuned/soup_m1_full+m2_cv+m3_kathbath+m4_shrutilipi+m5_merged_t4": {
+            "utts": 305,
+            "wer_original": 0.1467059089880009,
+            "wer_verified": 0.14016050638634564,
+            "diff_verified_minus_original": -0.006545402601655259,
+            "diff_ci95": [
+              -0.010282099618514728,
+              -0.0030349322174137204
+            ]
+          },
+          "kaggle/finetuned/soup_m1_full+m5_300+m5_300+m5_300_t4": {
+            "utts": 305,
+            "wer_original": 0.11070862576409328,
+            "wer_verified": 0.10647677178704645,
+            "diff_verified_minus_original": -0.004231853977046826,
+            "diff_ci95": [
+              -0.00764984901185273,
+              -0.0006503302723355417
+            ]
+          },
+          "kaggle/finetuned/soup_m1_full+m5_300_t4": {
+            "utts": 305,
+            "wer_original": 0.10844464568711795,
+            "wer_verified": 0.10444218379111564,
+            "diff_verified_minus_original": -0.004002461896002313,
+            "diff_ci95": [
+              -0.007094040908231403,
+              -0.00040824715082344107
+            ]
+          },
+          "kaggle/finetuned/soup_m1_full+m5_merged_t4": {
+            "utts": 305,
+            "wer_original": 0.10946343672175685,
+            "wer_verified": 0.10523341245619984,
+            "diff_verified_minus_original": -0.004230024265557006,
+            "diff_ci95": [
+              -0.007935508504848055,
+              -0.0005095268619780571
+            ]
+          },
+          "kaggle/finetuned/soup_m5_full+m5_300_t4": {
+            "utts": 305,
+            "wer_original": 0.11127462078333711,
+            "wer_verified": 0.10726800045213067,
+            "diff_verified_minus_original": -0.00400662033120644,
+            "diff_ci95": [
+              -0.007574902200306196,
+              -0.00034467867603723217
+            ]
+          },
+          "kaggle/zeroshot/ai4bharat__indic-conformer-600m-multilingual_ctc_t4": {
+            "utts": 305,
+            "wer_original": 0.264772470002264,
+            "wer_verified": 0.26076636147846727,
+            "diff_verified_minus_original": -0.004006108523796736,
+            "diff_ci95": [
+              -0.0072195520764671475,
+              -0.0011052774348675647
+            ]
+          },
+          "kaggle/zeroshot/ai4bharat__indic-conformer-600m-multilingual_t4": {
+            "utts": 305,
+            "wer_original": 0.2930722209644555,
+            "wer_verified": 0.2897027240872612,
+            "diff_verified_minus_original": -0.003369496877194289,
+            "diff_ci95": [
+              -0.006047038905166774,
+              -0.0003268633615600204
+            ]
+          },
+          "kaggle/zeroshot/psdn-ai__bangla-asr_t4": {
+            "utts": 305,
+            "wer_original": 0.770545619198551,
+            "wer_verified": 0.765231151802871,
+            "diff_verified_minus_original": -0.005314467395679978,
+            "diff_ci95": [
+              -0.008981788016388256,
+              -0.002094403428889244
+            ]
+          },
+          "kaggle/zeroshot/teamvillagers__whisper-bengali-ct2_t4": {
+            "utts": 305,
+            "wer_original": 0.13153724247226625,
+            "wer_verified": 0.12851814174296372,
+            "diff_verified_minus_original": -0.003019100729302532,
+            "diff_ci95": [
+              -0.007493246003861276,
+              0.0014272321090391953
+            ]
+          },
+          "kaggle/zeroshot/zarifmahir21__whisper-medium-bangla_t4": {
+            "utts": 305,
+            "wer_original": 0.07652252660176591,
+            "wer_verified": 0.08036622583926754,
+            "diff_verified_minus_original": 0.0038436992375016354,
+            "diff_ci95": [
+              -0.000973534659233073,
+              0.008918243208067875
+            ]
+          },
+          "modal/finetuned/m1_decoder": {
+            "utts": 305,
+            "wer_original": 0.11953814806429704,
+            "wer_verified": 0.11642364643381937,
+            "diff_verified_minus_original": -0.003114501630477662,
+            "diff_ci95": [
+              -0.006559385523965661,
+              0.0008590219653927958
+            ]
+          },
+          "modal/finetuned/m1_encoder": {
+            "utts": 305,
+            "wer_original": 0.12644328729907175,
+            "wer_verified": 0.12252741042161185,
+            "diff_verified_minus_original": -0.003915876877459909,
+            "diff_ci95": [
+              -0.0067463425160511235,
+              -0.0011113475175067618
+            ]
+          },
+          "modal/finetuned/m1_full": {
+            "utts": 305,
+            "wer_original": 0.10233189947928459,
+            "wer_verified": 0.09890358313552616,
+            "diff_verified_minus_original": -0.003428316343758425,
+            "diff_ci95": [
+              -0.0074391864624182395,
+              0.0005601172860319779
+            ]
+          },
+          "modal/finetuned/m1_lora": {
+            "utts": 305,
+            "wer_original": 0.10346388951777225,
+            "wer_verified": 0.10014694246637278,
+            "diff_verified_minus_original": -0.0033169470513994687,
+            "diff_ci95": [
+              -0.00688858582156577,
+              0.00023112685926612124
+            ]
+          },
+          "modal/zeroshot/tugstugi_a100": {
+            "utts": 305,
+            "wer_original": 0.2163232963549921,
+            "wer_verified": 0.21001469424663727,
+            "diff_verified_minus_original": -0.006308602108354822,
+            "diff_ci95": [
+              -0.010281385764661408,
+              -0.0029925310860571346
+            ]
+          },
+          "zeroshot/ai4bharat__indicwav2vec_v1_bengali": {
             "utts": 305,
             "wer_original": 0.4164591351596106,
-            "wer_verified": 0.4139724169115985,
-            "diff_verified_minus_original": -0.0024867182480121097,
+            "wer_verified": 0.4141516898383633,
+            "diff_verified_minus_original": -0.00230744532124727,
             "diff_ci95": [
-              -0.004507931383409059,
-              -0.0006048385915637585
+              -0.00429276778450943,
+              -0.0004881517346352088
             ]
           },
-          "arijitx__wav2vec2-xls-r-300m-bengali": {
+          "zeroshot/arijitx__wav2vec2-xls-r-300m-bengali": {
             "utts": 305,
             "wer_original": 0.6473851030110935,
-            "wer_verified": 0.6467329866606376,
-            "diff_verified_minus_original": -0.0006521163504559224,
+            "wer_verified": 0.6466598847066802,
+            "diff_verified_minus_original": -0.0007252183044132998,
             "diff_ci95": [
-              -0.0017898076801787677,
-              0.0004196819001617277
+              -0.0017935673577313793,
+              0.00033842106745150254
             ]
           },
-          "bangla-speech-processing__BanglaASR": {
+          "zeroshot/bangla-speech-processing__BanglaASR": {
             "utts": 305,
             "wer_original": 0.5656554222322844,
-            "wer_verified": 0.5644359032330997,
-            "diff_verified_minus_original": -0.00121951899918471,
+            "wer_verified": 0.5643721035379224,
+            "diff_verified_minus_original": -0.0012833186943619346,
             "diff_ci95": [
-              -0.002360893314710391,
-              -4.7899125973402435e-05
+              -0.0024493248185616656,
+              -8.532502431980744e-05
             ]
           },
-          "bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium": {
+          "zeroshot/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium": {
             "utts": 305,
             "wer_original": 0.21779488340502604,
-            "wer_verified": 0.21207325344788605,
-            "diff_verified_minus_original": -0.005721629957139984,
+            "wer_verified": 0.2114841189103651,
+            "diff_verified_minus_original": -0.006310764494660948,
             "diff_ci95": [
-              -0.009101549811304064,
-              -0.0026522759531266106
+              -0.010240357915859465,
+              -0.0029798293429232517
             ]
           },
-          "hishab__titu_stt_bn_conformer_large": {
+          "zeroshot/hishab__titu_stt_bn_conformer_large": {
             "utts": 305,
             "wer_original": 0.2035318089200815,
-            "wer_verified": 0.19895998191272893,
-            "diff_verified_minus_original": -0.0045718270073525635,
+            "wer_verified": 0.19803323160393355,
+            "diff_verified_minus_original": -0.005498577316147946,
             "diff_ci95": [
-              -0.006986136934619523,
-              -0.002115099755677019
+              -0.008121238265935577,
+              -0.002861989139266848
             ]
           },
-          "hishab__titu_stt_bn_fastconformer": {
+          "zeroshot/hishab__titu_stt_bn_fastconformer": {
             "utts": 305,
             "wer_original": 0.26556486302920534,
-            "wer_verified": 0.263848066922903,
-            "diff_verified_minus_original": -0.0017167961063023207,
+            "wer_verified": 0.2637052108059229,
+            "diff_verified_minus_original": -0.0018596522232824375,
             "diff_ci95": [
-              -0.0038997016048010536,
-              0.0007640479237344966
+              -0.004349351748563016,
+              0.0010731300930934197
             ]
           }
         }
@@ -173,99 +673,359 @@
       "fleurs": {
         "chunks": 100,
         "unusable": 0,
-        "corrected_share": 0.45,
+        "corrected_share": 0.46,
         "cut_off_share": 0.0,
         "edit_rate": {
-          "value": 0.0404244567963618,
+          "value": 0.043961596766043456,
           "ci95": [
-            0.028657442644340544,
-            0.053835239546301
+            0.03225765179780104,
+            0.05888291576535342
           ]
         },
         "edits_by_kind": {
-          "content": 71,
-          "dialect": 9
+          "content": 77,
+          "dialect": 10
         },
         "original_words": 1979,
         "models": {
-          "ai4bharat__indicwav2vec_v1_bengali": {
+          "kaggle/finetuned/m1_full_4ep_t4": {
+            "utts": 100,
+            "wer_original": 0.21071248105103588,
+            "wer_verified": 0.2112393376818866,
+            "diff_verified_minus_original": 0.000526856630850725,
+            "diff_ci95": [
+              -0.008392437153688148,
+              0.008691460224026533
+            ]
+          },
+          "kaggle/finetuned/m1_full_beam5_t4": {
+            "utts": 100,
+            "wer_original": 0.1910055583628095,
+            "wer_verified": 0.18314099347717008,
+            "diff_verified_minus_original": -0.007864564885639413,
+            "diff_ci95": [
+              -0.01787088492476428,
+              0.0011088149578373171
+            ]
+          },
+          "kaggle/finetuned/m2_cv_t4": {
+            "utts": 100,
+            "wer_original": 0.1773623041940374,
+            "wer_verified": 0.1620672353236327,
+            "diff_verified_minus_original": -0.015295068870404688,
+            "diff_ci95": [
+              -0.02524965531212233,
+              -0.006317860868404104
+            ]
+          },
+          "kaggle/finetuned/m3_kathbath_t4": {
+            "utts": 100,
+            "wer_original": 0.1637190500252653,
+            "wer_verified": 0.15052684395383845,
+            "diff_verified_minus_original": -0.013192206071426849,
+            "diff_ci95": [
+              -0.021803620198258895,
+              -0.005287981233968343
+            ]
+          },
+          "kaggle/finetuned/m4_shrutilipi_t4": {
+            "utts": 100,
+            "wer_original": 0.20161697827185449,
+            "wer_verified": 0.1806322127446061,
+            "diff_verified_minus_original": -0.020984765527248372,
+            "diff_ci95": [
+              -0.030806484226283088,
+              -0.012059383471524892
+            ]
+          },
+          "kaggle/finetuned/m5_300_t4": {
+            "utts": 100,
+            "wer_original": 0.15209701869631126,
+            "wer_verified": 0.14500752634219768,
+            "diff_verified_minus_original": -0.007089492354113575,
+            "diff_ci95": [
+              -0.016108272127098765,
+              0.0013069382186607962
+            ]
+          },
+          "kaggle/finetuned/m5_full_t4": {
+            "utts": 100,
+            "wer_original": 0.1637190500252653,
+            "wer_verified": 0.15554440541896639,
+            "diff_verified_minus_original": -0.008174644606298909,
+            "diff_ci95": [
+              -0.018166217058638873,
+              0.0010132102941201985
+            ]
+          },
+          "kaggle/finetuned/m5_merged_t4": {
+            "utts": 100,
+            "wer_original": 0.1687721071248105,
+            "wer_verified": 0.15955845459106874,
+            "diff_verified_minus_original": -0.009213652533741762,
+            "diff_ci95": [
+              -0.017633475388714494,
+              -0.001672101182967459
+            ]
+          },
+          "kaggle/finetuned/m6_harmonized_t4": {
+            "utts": 100,
+            "wer_original": 0.1733198585144012,
+            "wer_verified": 0.1635725037631711,
+            "diff_verified_minus_original": -0.00974735475123012,
+            "diff_ci95": [
+              -0.01730329322666691,
+              -0.0022627411860342756
+            ]
+          },
+          "kaggle/finetuned/soup_m1_full+m1_full+m1_full+base_t4": {
+            "utts": 100,
+            "wer_original": 0.18595250126326426,
+            "wer_verified": 0.17160060210737582,
+            "diff_verified_minus_original": -0.014351899155888442,
+            "diff_ci95": [
+              -0.024014864635188378,
+              -0.005718065611435861
+            ]
+          },
+          "kaggle/finetuned/soup_m1_full+m2_cv+m3_kathbath+m4_shrutilipi+m5_merged_t4": {
+            "utts": 100,
+            "wer_original": 0.16472966144517434,
+            "wer_verified": 0.14751630707476165,
+            "diff_verified_minus_original": -0.017213354370412687,
+            "diff_ci95": [
+              -0.026039038065246045,
+              -0.008703578929916887
+            ]
+          },
+          "kaggle/finetuned/soup_m1_full+m5_300+m5_300+m5_300_t4": {
+            "utts": 100,
+            "wer_original": 0.16523496715512886,
+            "wer_verified": 0.15604616156547918,
+            "diff_verified_minus_original": -0.009188805589649685,
+            "diff_ci95": [
+              -0.017264091331474312,
+              -0.0015830998996172068
+            ]
+          },
+          "kaggle/finetuned/soup_m1_full+m5_300_t4": {
+            "utts": 100,
+            "wer_original": 0.16826680141485598,
+            "wer_verified": 0.16106372303060712,
+            "diff_verified_minus_original": -0.007203078384248857,
+            "diff_ci95": [
+              -0.015590802772877669,
+              0.000647807488804556
+            ]
+          },
+          "kaggle/finetuned/soup_m1_full+m5_merged_t4": {
+            "utts": 100,
+            "wer_original": 0.1819100555836281,
+            "wer_verified": 0.1731058705469142,
+            "diff_verified_minus_original": -0.008804185036713902,
+            "diff_ci95": [
+              -0.016665779502407774,
+              -0.0012665841234407906
+            ]
+          },
+          "kaggle/finetuned/soup_m5_full+m5_300_t4": {
+            "utts": 100,
+            "wer_original": 0.16220313289540172,
+            "wer_verified": 0.15153035624686403,
+            "diff_verified_minus_original": -0.01067277664853769,
+            "diff_ci95": [
+              -0.020150642030976003,
+              -0.0019388948531262528
+            ]
+          },
+          "kaggle/zeroshot/ai4bharat__indic-conformer-600m-multilingual_ctc_t4": {
+            "utts": 100,
+            "wer_original": 0.16826680141485598,
+            "wer_verified": 0.15253386853988962,
+            "diff_verified_minus_original": -0.015732932874966354,
+            "diff_ci95": [
+              -0.024739445710400765,
+              -0.007545284565860266
+            ]
+          },
+          "kaggle/zeroshot/ai4bharat__indic-conformer-600m-multilingual_t4": {
+            "utts": 100,
+            "wer_original": 0.17028802425467407,
+            "wer_verified": 0.1545408931259408,
+            "diff_verified_minus_original": -0.01574713112873327,
+            "diff_ci95": [
+              -0.025265873821341545,
+              -0.0069973921568260685
+            ]
+          },
+          "kaggle/zeroshot/psdn-ai__bangla-asr_t4": {
+            "utts": 100,
+            "wer_original": 0.7296614451743305,
+            "wer_verified": 0.7104867034621174,
+            "diff_verified_minus_original": -0.019174741712213117,
+            "diff_ci95": [
+              -0.030790608529704923,
+              -0.010574189674198056
+            ]
+          },
+          "kaggle/zeroshot/teamvillagers__whisper-bengali-ct2_t4": {
+            "utts": 100,
+            "wer_original": 0.2066700353713997,
+            "wer_verified": 0.2012042147516307,
+            "diff_verified_minus_original": -0.005465820619768996,
+            "diff_ci95": [
+              -0.014316257127588826,
+              0.0033822101824014963
+            ]
+          },
+          "kaggle/zeroshot/tugstugi_t4": {
+            "utts": 100,
+            "wer_original": 0.21930267812026275,
+            "wer_verified": 0.2002007024586051,
+            "diff_verified_minus_original": -0.01910197566165764,
+            "diff_ci95": [
+              -0.02848161377742741,
+              -0.010345027312768214
+            ]
+          },
+          "kaggle/zeroshot/zarifmahir21__whisper-medium-bangla_t4": {
+            "utts": 100,
+            "wer_original": 0.22435573521980798,
+            "wer_verified": 0.21726041144004013,
+            "diff_verified_minus_original": -0.007095323779767848,
+            "diff_ci95": [
+              -0.01616972895355383,
+              0.0013633630214581465
+            ]
+          },
+          "modal/finetuned/m1_decoder": {
+            "utts": 100,
+            "wer_original": 0.19605861546235473,
+            "wer_verified": 0.18564977420973408,
+            "diff_verified_minus_original": -0.010408841252620649,
+            "diff_ci95": [
+              -0.01902426409090308,
+              -0.002653776737026956
+            ]
+          },
+          "modal/finetuned/m1_encoder": {
+            "utts": 100,
+            "wer_original": 0.20717534108135421,
+            "wer_verified": 0.19919719016557952,
+            "diff_verified_minus_original": -0.007978150915774695,
+            "diff_ci95": [
+              -0.01608485561171817,
+              -0.0008272059274024342
+            ]
+          },
+          "modal/finetuned/m1_full": {
+            "utts": 100,
+            "wer_original": 0.19252147549267307,
+            "wer_verified": 0.18665328650275967,
+            "diff_verified_minus_original": -0.005868188989913398,
+            "diff_ci95": [
+              -0.014561245082677697,
+              0.0023820422697556115
+            ]
+          },
+          "modal/finetuned/m1_lora": {
+            "utts": 100,
+            "wer_original": 0.19858514401212735,
+            "wer_verified": 0.193176116407426,
+            "diff_verified_minus_original": -0.005409027604701355,
+            "diff_ci95": [
+              -0.012977478348628424,
+              0.0020429883032289133
+            ]
+          },
+          "modal/zeroshot/tugstugi_a100": {
+            "utts": 100,
+            "wer_original": 0.21930267812026275,
+            "wer_verified": 0.2002007024586051,
+            "diff_verified_minus_original": -0.01910197566165764,
+            "diff_ci95": [
+              -0.02848161377742741,
+              -0.010345027312768214
+            ]
+          },
+          "zeroshot/ai4bharat__indicwav2vec_v1_bengali": {
             "utts": 100,
             "wer_original": 0.2829711975745326,
-            "wer_verified": 0.28076343545956806,
-            "diff_verified_minus_original": -0.00220776211496454,
+            "wer_verified": 0.2809834420471651,
+            "diff_verified_minus_original": -0.0019877555273675185,
             "diff_ci95": [
-              -0.00841940570573713,
-              0.0034581651838166117
+              -0.008494021813745627,
+              0.00390930481562328
             ]
           },
-          "arijitx__wav2vec2-xls-r-300m-bengali": {
+          "zeroshot/arijitx__wav2vec2-xls-r-300m-bengali": {
             "utts": 100,
             "wer_original": 0.5053057099545225,
-            "wer_verified": 0.5007533902561527,
-            "diff_verified_minus_original": -0.004552319698369778,
+            "wer_verified": 0.5007526342197692,
+            "diff_verified_minus_original": -0.004553075734753276,
             "diff_ci95": [
-              -0.009087953624663633,
-              -0.00017714113251675675
+              -0.009386987795504498,
+              0.00011170090221909895
             ]
           },
-          "bangla-speech-processing__BanglaASR": {
+          "zeroshot/bangla-speech-processing__BanglaASR": {
             "utts": 100,
             "wer_original": 0.33602829711975746,
-            "wer_verified": 0.32847815168257155,
-            "diff_verified_minus_original": -0.007550145437185907,
+            "wer_verified": 0.32814851981936777,
+            "diff_verified_minus_original": -0.00787977730038969,
             "diff_ci95": [
-              -0.014018110631795234,
-              -0.0013171698649313882
+              -0.014337269614963104,
+              -0.0016616056151505362
             ]
           },
-          "bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium": {
+          "zeroshot/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium": {
             "utts": 100,
             "wer_original": 0.21980798383021727,
-            "wer_verified": 0.20291310899045706,
-            "diff_verified_minus_original": -0.01689487483976021,
+            "wer_verified": 0.2007024586051179,
+            "diff_verified_minus_original": -0.019105525225099368,
             "diff_ci95": [
-              -0.02606011379394811,
-              -0.008648990223926643
+              -0.02896909849759441,
+              -0.010017835273830154
             ]
           },
-          "hishab__titu_stt_bn_conformer_large": {
+          "zeroshot/hishab__titu_stt_bn_conformer_large": {
             "utts": 100,
             "wer_original": 0.1531076301162203,
-            "wer_verified": 0.14314414866901054,
-            "diff_verified_minus_original": -0.009963481447209765,
+            "wer_verified": 0.14049172102358254,
+            "diff_verified_minus_original": -0.012615909092637767,
             "diff_ci95": [
-              -0.01749252259049534,
-              -0.003534109335513315
+              -0.02067220831998584,
+              -0.00497982163593776
             ]
           },
-          "hishab__titu_stt_bn_fastconformer": {
+          "zeroshot/hishab__titu_stt_bn_fastconformer": {
             "utts": 100,
             "wer_original": 0.3567458312278929,
-            "wer_verified": 0.33550979407333,
-            "diff_verified_minus_original": -0.021236037154562903,
+            "wer_verified": 0.33266432513798294,
+            "diff_verified_minus_original": -0.024081506089909943,
             "diff_ci95": [
-              -0.0337497733241113,
-              -0.01195329754187517
+              -0.037162122134923654,
+              -0.013974901167439083
             ]
           },
-          "openai__whisper-large-v3": {
+          "zeroshot/openai__whisper-large-v3": {
             "utts": 100,
             "wer_original": 0.8302172814552804,
-            "wer_verified": 0.8287292817679558,
-            "diff_verified_minus_original": -0.0014879996873246037,
+            "wer_verified": 0.828901154039137,
+            "diff_verified_minus_original": -0.0013161274161433978,
             "diff_ci95": [
-              -0.006753199807539892,
-              0.004273678682136578
+              -0.006587299569991825,
+              0.0045938846277143
             ]
           },
-          "openai__whisper-large-v3-turbo": {
+          "zeroshot/openai__whisper-large-v3-turbo": {
             "utts": 100,
             "wer_original": 0.9504800404244568,
-            "wer_verified": 0.9447513812154696,
-            "diff_verified_minus_original": -0.00572865920898713,
+            "wer_verified": 0.9443050677370798,
+            "diff_verified_minus_original": -0.0061749726873769895,
             "diff_ci95": [
-              -0.010472354529208427,
-              -0.001825806227313729
+              -0.010890408981540912,
+              -0.002247118443466528
             ]
           }
         }
@@ -273,22 +1033,292 @@
       "kathbath": {
         "chunks": 100,
         "unusable": 0,
-        "corrected_share": 0.08,
+        "corrected_share": 0.09,
         "cut_off_share": 0.0,
         "edit_rate": {
-          "value": 0.01008249312557287,
+          "value": 0.011915673693858845,
           "ci95": [
-            0.002771571029956657,
-            0.018653381905439203
+            0.004007219209791352,
+            0.020319144387167434
           ]
         },
         "edits_by_kind": {
           "dialect": 5,
-          "content": 6
+          "content": 8
         },
         "original_words": 1091,
         "models": {
-          "ai4bharat__indicwav2vec_v1_bengali": {
+          "kaggle/finetuned/m1_full_4ep_t4": {
+            "utts": 100,
+            "wer_original": 0.13473877176901924,
+            "wer_verified": 0.13577981651376148,
+            "diff_verified_minus_original": 0.001041044744742231,
+            "diff_ci95": [
+              -0.004651773916582682,
+              0.006937373582854267
+            ]
+          },
+          "kaggle/finetuned/m1_full_beam5_t4": {
+            "utts": 100,
+            "wer_original": 0.11732355637030248,
+            "wer_verified": 0.11743119266055047,
+            "diff_verified_minus_original": 0.0001076362902479866,
+            "diff_ci95": [
+              -0.00537213470047597,
+              0.005949119950419487
+            ]
+          },
+          "kaggle/finetuned/m1_lora_t4": {
+            "utts": 100,
+            "wer_original": 0.12465627864344637,
+            "wer_verified": 0.12568807339449542,
+            "diff_verified_minus_original": 0.001031794751049045,
+            "diff_ci95": [
+              -0.003139401997697266,
+              0.0062463230013116945
+            ]
+          },
+          "kaggle/finetuned/m2_cv_t4": {
+            "utts": 100,
+            "wer_original": 0.11365719523373052,
+            "wer_verified": 0.11559633027522936,
+            "diff_verified_minus_original": 0.0019391350414988406,
+            "diff_ci95": [
+              -0.0027300036147431617,
+              0.007387084456389039
+            ]
+          },
+          "kaggle/finetuned/m3_kathbath_t4": {
+            "utts": 100,
+            "wer_original": 0.0843263061411549,
+            "wer_verified": 0.081651376146789,
+            "diff_verified_minus_original": -0.0026749299943659016,
+            "diff_ci95": [
+              -0.007813670148710856,
+              0.001140730614459727
+            ]
+          },
+          "kaggle/finetuned/m4_shrutilipi_t4": {
+            "utts": 100,
+            "wer_original": 0.13382218148487626,
+            "wer_verified": 0.13211009174311927,
+            "diff_verified_minus_original": -0.0017120897417569891,
+            "diff_ci95": [
+              -0.007452559518559072,
+              0.00489387415271805
+            ]
+          },
+          "kaggle/finetuned/m5_300_t4": {
+            "utts": 100,
+            "wer_original": 0.09715857011915674,
+            "wer_verified": 0.0981651376146789,
+            "diff_verified_minus_original": 0.0010065674955221648,
+            "diff_ci95": [
+              -0.004722395777515254,
+              0.00685868637727313
+            ]
+          },
+          "kaggle/finetuned/m5_full_t4": {
+            "utts": 100,
+            "wer_original": 0.08340971585701192,
+            "wer_verified": 0.0853211009174312,
+            "diff_verified_minus_original": 0.0019113850604192822,
+            "diff_ci95": [
+              -0.0027300036147431617,
+              0.007356084495367848
+            ]
+          },
+          "kaggle/finetuned/m5_merged_t4": {
+            "utts": 100,
+            "wer_original": 0.10265811182401467,
+            "wer_verified": 0.10366972477064221,
+            "diff_verified_minus_original": 0.0010116129466275353,
+            "diff_ci95": [
+              -0.004704479664923347,
+              0.0068620660014696916
+            ]
+          },
+          "kaggle/finetuned/m6_harmonized_t4": {
+            "utts": 100,
+            "wer_original": 0.10449129239230064,
+            "wer_verified": 0.10550458715596331,
+            "diff_verified_minus_original": 0.0010132947636626727,
+            "diff_ci95": [
+              -0.00470319533807317,
+              0.006865633961997272
+            ]
+          },
+          "kaggle/finetuned/soup_m1_full+m1_full+m1_full+base_t4": {
+            "utts": 100,
+            "wer_original": 0.11274060494958753,
+            "wer_verified": 0.11284403669724771,
+            "diff_verified_minus_original": 0.00010343174766018481,
+            "diff_ci95": [
+              -0.00537213470047597,
+              0.005937184135441081
+            ]
+          },
+          "kaggle/finetuned/soup_m1_full+m2_cv+m3_kathbath+m4_shrutilipi+m5_merged_t4": {
+            "utts": 100,
+            "wer_original": 0.09899175068744272,
+            "wer_verified": 0.1,
+            "diff_verified_minus_original": 0.0010082493125572883,
+            "diff_ci95": [
+              -0.004710804604208218,
+              0.006859549971227165
+            ]
+          },
+          "kaggle/finetuned/soup_m1_full+m5_300+m5_300+m5_300_t4": {
+            "utts": 100,
+            "wer_original": 0.09074243813015583,
+            "wer_verified": 0.09174311926605505,
+            "diff_verified_minus_original": 0.0010006811358992257,
+            "diff_ci95": [
+              -0.0047223796616875785,
+              0.00685320495525417
+            ]
+          },
+          "kaggle/finetuned/soup_m1_full+m5_300_t4": {
+            "utts": 100,
+            "wer_original": 0.09899175068744272,
+            "wer_verified": 0.1,
+            "diff_verified_minus_original": 0.0010082493125572883,
+            "diff_ci95": [
+              -0.004697977451534034,
+              0.006871405536233532
+            ]
+          },
+          "kaggle/finetuned/soup_m1_full+m5_merged_t4": {
+            "utts": 100,
+            "wer_original": 0.10265811182401467,
+            "wer_verified": 0.10366972477064221,
+            "diff_verified_minus_original": 0.0010116129466275353,
+            "diff_ci95": [
+              -0.004695360450350648,
+              0.006865516251790385
+            ]
+          },
+          "kaggle/finetuned/soup_m5_full+m5_300_t4": {
+            "utts": 100,
+            "wer_original": 0.08799266727772685,
+            "wer_verified": 0.0889908256880734,
+            "diff_verified_minus_original": 0.0009981584103465474,
+            "diff_ci95": [
+              -0.0047301178544440535,
+              0.006839097907433435
+            ]
+          },
+          "kaggle/zeroshot/ai4bharat__indic-conformer-600m-multilingual_ctc_t4": {
+            "utts": 100,
+            "wer_original": 0.10632447296058661,
+            "wer_verified": 0.10458715596330276,
+            "diff_verified_minus_original": -0.0017373169972838554,
+            "diff_ci95": [
+              -0.007503648359337072,
+              0.004893616691491711
+            ]
+          },
+          "kaggle/zeroshot/ai4bharat__indic-conformer-600m-multilingual_t4": {
+            "utts": 100,
+            "wer_original": 0.10357470210815765,
+            "wer_verified": 0.1018348623853211,
+            "diff_verified_minus_original": -0.0017398397228365475,
+            "diff_ci95": [
+              -0.00749019496644262,
+              0.004893616691491711
+            ]
+          },
+          "kaggle/zeroshot/psdn-ai__bangla-asr_t4": {
+            "utts": 100,
+            "wer_original": 0.6471127406049496,
+            "wer_verified": 0.6495412844036698,
+            "diff_verified_minus_original": 0.002428543798720151,
+            "diff_ci95": [
+              -0.00404872122634799,
+              0.008687378586346356
+            ]
+          },
+          "kaggle/zeroshot/teamvillagers__whisper-bengali-ct2_t4": {
+            "utts": 100,
+            "wer_original": 0.13932172318973418,
+            "wer_verified": 0.13853211009174313,
+            "diff_verified_minus_original": -0.0007896130979910543,
+            "diff_ci95": [
+              -0.00553147724502011,
+              0.003686398316232558
+            ]
+          },
+          "kaggle/zeroshot/tugstugi_t4": {
+            "utts": 100,
+            "wer_original": 0.14940421631530706,
+            "wer_verified": 0.15045871559633028,
+            "diff_verified_minus_original": 0.001054499281023219,
+            "diff_ci95": [
+              -0.004614818522825443,
+              0.006955416411144633
+            ]
+          },
+          "kaggle/zeroshot/zarifmahir21__whisper-medium-bangla_t4": {
+            "utts": 100,
+            "wer_original": 0.1228230980751604,
+            "wer_verified": 0.12110091743119267,
+            "diff_verified_minus_original": -0.00172218064396773,
+            "diff_ci95": [
+              -0.007460919289113214,
+              0.004893967774982173
+            ]
+          },
+          "modal/finetuned/m1_decoder": {
+            "utts": 100,
+            "wer_original": 0.12098991750687443,
+            "wer_verified": 0.12201834862385322,
+            "diff_verified_minus_original": 0.001028431116978784,
+            "diff_ci95": [
+              -0.004663494016511132,
+              0.006922600018749598
+            ]
+          },
+          "modal/finetuned/m1_encoder": {
+            "utts": 100,
+            "wer_original": 0.13565536205316223,
+            "wer_verified": 0.13211009174311927,
+            "diff_verified_minus_original": -0.003545270310042953,
+            "diff_ci95": [
+              -0.008142190874040675,
+              0.0010000000000000009
+            ]
+          },
+          "modal/finetuned/m1_full": {
+            "utts": 100,
+            "wer_original": 0.11732355637030248,
+            "wer_verified": 0.11743119266055047,
+            "diff_verified_minus_original": 0.0001076362902479866,
+            "diff_ci95": [
+              -0.00537213470047597,
+              0.005947283671192033
+            ]
+          },
+          "modal/finetuned/m1_lora": {
+            "utts": 64,
+            "wer_original": 0.12583668005354753,
+            "wer_verified": 0.128686327077748,
+            "diff_verified_minus_original": 0.002849647024200458,
+            "diff_ci95": [
+              -0.0037270565821471207,
+              0.010753262015399232
+            ]
+          },
+          "modal/zeroshot/tugstugi_a100": {
+            "utts": 100,
+            "wer_original": 0.14940421631530706,
+            "wer_verified": 0.15045871559633028,
+            "diff_verified_minus_original": 0.001054499281023219,
+            "diff_ci95": [
+              -0.004614818522825443,
+              0.006955416411144633
+            ]
+          },
+          "zeroshot/ai4bharat__indicwav2vec_v1_bengali": {
             "utts": 100,
             "wer_original": 0.230980751604033,
             "wer_verified": 0.22935779816513763,
@@ -298,7 +1328,7 @@
               0.002933275048996474
             ]
           },
-          "arijitx__wav2vec2-xls-r-300m-bengali": {
+          "zeroshot/arijitx__wav2vec2-xls-r-300m-bengali": {
             "utts": 100,
             "wer_original": 0.39413382218148485,
             "wer_verified": 0.3926605504587156,
@@ -308,47 +1338,47 @@
               0.0029332750489964735
             ]
           },
-          "bangla-speech-processing__BanglaASR": {
+          "zeroshot/bangla-speech-processing__BanglaASR": {
             "utts": 100,
             "wer_original": 0.3464711274060495,
-            "wer_verified": 0.3458715596330275,
-            "diff_verified_minus_original": -0.0005995677730220028,
+            "wer_verified": 0.344954128440367,
+            "diff_verified_minus_original": -0.0015169989656825256,
             "diff_ci95": [
-              -0.004527384914288156,
-              0.0036631716906946137
+              -0.004848510022959475,
+              0.001982656591179868
             ]
           },
-          "bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium": {
+          "zeroshot/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium": {
             "utts": 100,
             "wer_original": 0.14940421631530706,
-            "wer_verified": 0.15229357798165138,
-            "diff_verified_minus_original": 0.00288936166634432,
+            "wer_verified": 0.15045871559633028,
+            "diff_verified_minus_original": 0.001054499281023219,
             "diff_ci95": [
-              -0.0024317777531188663,
-              0.008463449707616512
+              -0.004614818522825443,
+              0.006955416411144633
             ]
           },
-          "hishab__titu_stt_bn_conformer_large": {
+          "zeroshot/hishab__titu_stt_bn_conformer_large": {
             "utts": 100,
             "wer_original": 0.076076993583868,
-            "wer_verified": 0.07706422018348624,
-            "diff_verified_minus_original": 0.0009872265996182378,
+            "wer_verified": 0.07522935779816514,
+            "diff_verified_minus_original": -0.0008476357857028632,
             "diff_ci95": [
-              -0.0039106345663265304,
-              0.006828010844132788
+              -0.006737308166023811,
+              0.00487368194305004
             ]
           },
-          "hishab__titu_stt_bn_fastconformer": {
+          "zeroshot/hishab__titu_stt_bn_fastconformer": {
             "utts": 100,
             "wer_original": 0.2080659945004583,
-            "wer_verified": 0.20642201834862386,
-            "diff_verified_minus_original": -0.0016439761518344254,
+            "wer_verified": 0.20458715596330276,
+            "diff_verified_minus_original": -0.0034788385371555264,
             "diff_ci95": [
-              -0.006237218661930201,
-              0.0029332750489964735
+              -0.007458922127236823,
+              0.0001977971341508527
             ]
           },
-          "openai__whisper-large-v3": {
+          "zeroshot/openai__whisper-large-v3": {
             "utts": 100,
             "wer_original": 0.9880843263061412,
             "wer_verified": 0.9871559633027523,
@@ -358,7 +1388,7 @@
               0.0
             ]
           },
-          "openai__whisper-large-v3-turbo": {
+          "zeroshot/openai__whisper-large-v3-turbo": {
             "utts": 100,
             "wer_original": 0.9367552703941339,
             "wer_verified": 0.9357798165137615,
@@ -373,110 +1403,110 @@
     }
   },
   "audit": {
-    "labels": 214,
-    "units": 999,
+    "labels": 268,
+    "units": 1180,
     "shares": {
       "model": {
-        "value": 0.4134134134134134,
+        "value": 0.4,
         "ci95": [
-          0.3549645717660584,
-          0.46691113822082797
+          0.33838713386030983,
+          0.46362105241337853
         ]
       },
       "ref": {
-        "value": 0.21171171171171171,
+        "value": 0.18389830508474575,
         "ci95": [
-          0.18367271982250297,
-          0.24550619434765775
+          0.156872729452589,
+          0.21468816223245724
         ]
       },
       "both": {
-        "value": 0.00950950950950951,
+        "value": 0.005932203389830509,
         "ci95": [
-          0.0031614308799199726,
-          0.01718884698275862
+          0.0016339535814325731,
+          0.010683772011203293
         ]
       },
       "spelling": {
-        "value": 0.3178178178178178,
+        "value": 0.35423728813559324,
         "ci95": [
-          0.27414152997078517,
-          0.3587717523322761
+          0.30084636846817436,
+          0.4068882503688747
         ]
       },
       "dialect": {
-        "value": 0.008008008008008008,
+        "value": 0.027966101694915254,
         "ci95": [
-          0.004333460220784164,
-          0.01215838766673671
+          0.019100967108661087,
+          0.0370051251827758
         ]
       },
       "unsure": {
-        "value": 0.03953953953953954,
+        "value": 0.027966101694915254,
         "ci95": [
-          0.01980978533327986,
-          0.06242924514712746
+          0.014278221778221778,
+          0.04414870981040574
         ]
       }
     },
     "shares_by_agreement": {
       "fixable": {
         "model": {
-          "value": 0.46055979643765904,
+          "value": 0.42340425531914894,
           "ci95": [
-            0.3873316591333609,
-            0.5322591971728887
+            0.3485122604850596,
+            0.4944043295164973
           ]
         },
         "ref": {
-          "value": 0.12849872773536897,
+          "value": 0.10638297872340426,
           "ci95": [
-            0.09574034121906462,
-            0.16159481277364832
+            0.07738643996186678,
+            0.13741774151092392
           ]
         },
         "both": {
-          "value": 0.005089058524173028,
+          "value": 0.002127659574468085,
           "ci95": [
             0.0,
-            0.012316795103155635
+            0.006803107606679034
           ]
         },
         "spelling": {
-          "value": 0.37404580152671757,
+          "value": 0.4021276595744681,
           "ci95": [
-            0.3156085313711843,
-            0.4344770065284178
+            0.34211552628157904,
+            0.46825011001906996
           ]
         },
         "dialect": {
-          "value": 0.011450381679389313,
+          "value": 0.04893617021276596,
           "ci95": [
-            0.003955738274938128,
-            0.019545910184442655
+            0.033006062263548935,
+            0.06488673540200257
           ]
         },
         "unsure": {
-          "value": 0.020356234096692113,
+          "value": 0.01702127659574468,
           "ci95": [
-            0.004900477140008546,
-            0.042582525912573235
+            0.004123711340206186,
+            0.036782879278592744
           ]
         }
       },
       "insertion": {
         "model": {
-          "value": 0.5214285714285715,
+          "value": 0.47674418604651164,
           "ci95": [
-            0.36056791569086655,
-            0.6513438703465981
+            0.35294117647058826,
+            0.5816522762951334
           ]
         },
         "ref": {
-          "value": 0.4,
+          "value": 0.38372093023255816,
           "ci95": [
-            0.277759009009009,
-            0.5556249999999999
+            0.2948684210526316,
+            0.4838709677419355
           ]
         },
         "both": {
@@ -487,10 +1517,10 @@
           ]
         },
         "spelling": {
-          "value": 0.014285714285714285,
+          "value": 0.08139534883720931,
           "ci95": [
-            0.0,
-            0.030865788468881248
+            0.03333333333333333,
+            0.13275811209439528
           ]
         },
         "dialect": {
@@ -501,90 +1531,90 @@
           ]
         },
         "unsure": {
-          "value": 0.06428571428571428,
+          "value": 0.05813953488372093,
           "ci95": [
-            0.019689849624060153,
-            0.12121212121212122
+            0.016129032258064516,
+            0.1176719840478564
           ]
         }
       },
       "selection_proof": {
         "model": {
-          "value": 0.36473880597014924,
+          "value": 0.3717948717948718,
           "ci95": [
-            0.28707883728061206,
-            0.43998255501878686
+            0.29428210986755293,
+            0.4492396694214876
           ]
         },
         "ref": {
-          "value": 0.24813432835820895,
+          "value": 0.21474358974358973,
           "ci95": [
-            0.21033622182927048,
-            0.28850716729655385
+            0.17583160009117327,
+            0.26060931399888454
           ]
         },
         "both": {
-          "value": 0.013992537313432836,
+          "value": 0.009615384615384616,
           "ci95": [
-            0.0035385874685323324,
-            0.028031700555990538
+            0.0016743519905954816,
+            0.01914580265095729
           ]
         },
         "spelling": {
-          "value": 0.3162313432835821,
+          "value": 0.3557692307692308,
           "ci95": [
-            0.2568152530459232,
-            0.37284333603676667
+            0.28610693835713275,
+            0.4197562919002088
           ]
         },
         "dialect": {
-          "value": 0.0065298507462686565,
+          "value": 0.016025641025641024,
           "ci95": [
-            0.0016861284335140396,
-            0.013348596064732862
+            0.004664551517228324,
+            0.029214675560946025
           ]
         },
         "unsure": {
-          "value": 0.05037313432835821,
+          "value": 0.03205128205128205,
           "ci95": [
-            0.02153045737510933,
-            0.08248547529399526
+            0.012010857010857011,
+            0.05486968869641624
           ]
         }
       }
     },
     "shares_by_rule_type": {
       "convention": {
-        "model": 0.014492753623188406,
-        "ref": 0.007246376811594203,
-        "both": 0.004830917874396135,
-        "spelling": 0.966183574879227,
-        "dialect": 0.007246376811594203,
+        "model": 0.004149377593360996,
+        "ref": 0.0,
+        "both": 0.0,
+        "spelling": 0.991701244813278,
+        "dialect": 0.004149377593360996,
         "unsure": 0.0
       },
       "deletion": {
-        "model": 0.576271186440678,
-        "ref": 0.3220338983050847,
-        "both": 0.00847457627118644,
-        "spelling": 0.00847457627118644,
+        "model": 0.6119402985074627,
+        "ref": 0.2835820895522388,
+        "both": 0.0,
+        "spelling": 0.04477611940298507,
         "dialect": 0.0,
-        "unsure": 0.0847457627118644
+        "unsure": 0.05970149253731343
       },
       "insertion": {
-        "model": 0.5214285714285715,
-        "ref": 0.4,
+        "model": 0.47674418604651164,
+        "ref": 0.38372093023255816,
         "both": 0.0,
-        "spelling": 0.014285714285714285,
+        "spelling": 0.08139534883720931,
         "dialect": 0.0,
-        "unsure": 0.06428571428571428
+        "unsure": 0.05813953488372093
       },
       "near_miss": {
-        "model": 0.5078740157480315,
-        "ref": 0.2933070866141732,
-        "both": 0.00984251968503937,
-        "spelling": 0.1437007874015748,
-        "dialect": 0.005905511811023622,
-        "unsure": 0.03937007874015748
+        "model": 0.5168918918918919,
+        "ref": 0.25,
+        "both": 0.006756756756756757,
+        "spelling": 0.16554054054054054,
+        "dialect": 0.02702702702702703,
+        "unsure": 0.033783783783783786
       },
       "number": {
         "model": 0.0,
@@ -595,52 +1625,61 @@
         "unsure": 0.0
       },
       "segmentation": {
-        "model": 0.1267605633802817,
-        "ref": 0.056338028169014086,
+        "model": 0.125,
+        "ref": 0.05,
         "both": 0.0,
-        "spelling": 0.8098591549295775,
+        "spelling": 0.825,
         "dialect": 0.0,
-        "unsure": 0.007042253521126761
+        "unsure": 0.0
       },
       "substitution": {
-        "model": 0.6637426900584795,
-        "ref": 0.2134502923976608,
-        "both": 0.017543859649122806,
-        "spelling": 0.02631578947368421,
-        "dialect": 0.008771929824561403,
-        "unsure": 0.07017543859649122
+        "model": 0.6617647058823529,
+        "ref": 0.1715686274509804,
+        "both": 0.014705882352941176,
+        "spelling": 0.09803921568627451,
+        "dialect": 0.00980392156862745,
+        "unsure": 0.04411764705882353
       },
       "vowel_shift": {
-        "model": 0.5242718446601942,
-        "ref": 0.23300970873786409,
-        "both": 0.019417475728155338,
-        "spelling": 0.1650485436893204,
-        "dialect": 0.03398058252427184,
-        "unsure": 0.024271844660194174
+        "model": 0.373134328358209,
+        "ref": 0.208955223880597,
+        "both": 0.014925373134328358,
+        "spelling": 0.23134328358208955,
+        "dialect": 0.16417910447761194,
+        "unsure": 0.007462686567164179
       }
     },
     "not_model_error_share_by_agreement": {
       "fixable": {
-        "value": 0.5139949109414759,
+        "value": 0.5574468085106383,
         "ci95": [
-          0.44457109776151965,
-          0.5844140025575447
+          0.4905949202716937,
+          0.631474846510646
         ]
       },
       "insertion": {
-        "value": 0.4142857142857143,
+        "value": 0.46511627906976744,
         "ci95": [
-          0.29053509154315604,
-          0.5667123287671232
+          0.37167509481668776,
+          0.5714285714285714
         ]
       },
       "selection_proof": {
-        "value": 0.5708955223880597,
+        "value": 0.5865384615384616,
         "ci95": [
-          0.5068070757146537,
-          0.641979155835153
+          0.5125966644326442,
+          0.6616662624302692
         ]
       }
+    },
+    "cohen_kappa": {
+      "units": 370,
+      "annotators": [
+        "Nabigah",
+        "Nafisa"
+      ],
+      "raw_agreement": 0.7054054054054054,
+      "kappa": 0.5632823666998743
     }
   },
   "pairs": {
@@ -660,45 +1699,45 @@
       "convention": {
         "pairs": 222,
         "share": {
-          "spelling": 0.9752252252252253,
+          "spelling": 0.9774774774774775,
           "dialect": 0.0045045045045045045,
-          "different": 0.02027027027027027,
+          "different": 0.018018018018018018,
           "unsure": 0.0
         },
         "share_weighted_by_count": {
-          "spelling": 0.9680172575501782,
+          "spelling": 0.972800600262615,
           "dialect": 0.023822922528606266,
-          "different": 0.008159819921215531,
+          "different": 0.0033764772087788407,
           "unsure": 0.0
         }
       },
       "near_miss": {
         "pairs": 259,
         "share": {
-          "spelling": 0.3223938223938224,
-          "dialect": 0.3166023166023166,
-          "different": 0.34555984555984554,
-          "unsure": 0.015444015444015444
+          "spelling": 0.3281853281853282,
+          "dialect": 0.2972972972972973,
+          "different": 0.36293436293436293,
+          "unsure": 0.011583011583011582
         },
         "share_weighted_by_count": {
-          "spelling": 0.32108317214700194,
-          "dialect": 0.3191489361702128,
-          "different": 0.33945841392649906,
-          "unsure": 0.020309477756286266
+          "spelling": 0.3239845261121857,
+          "dialect": 0.2751450676982592,
+          "different": 0.38249516441005804,
+          "unsure": 0.0183752417794971
         }
       },
       "number": {
         "pairs": 23,
         "share": {
-          "spelling": 0.8478260869565217,
+          "spelling": 0.8695652173913043,
           "dialect": 0.0,
-          "different": 0.15217391304347827,
+          "different": 0.13043478260869565,
           "unsure": 0.0
         },
         "share_weighted_by_count": {
-          "spelling": 0.8333333333333334,
+          "spelling": 0.845679012345679,
           "dialect": 0.0,
-          "different": 0.16666666666666666,
+          "different": 0.15432098765432098,
           "unsure": 0.0
         }
       },
@@ -736,15 +1775,15 @@
         "pairs": 178,
         "share": {
           "spelling": 0.2808988764044944,
-          "dialect": 0.550561797752809,
-          "different": 0.1601123595505618,
-          "unsure": 0.008426966292134831
+          "dialect": 0.5393258426966292,
+          "different": 0.17415730337078653,
+          "unsure": 0.0056179775280898875
         },
         "share_weighted_by_count": {
-          "spelling": 0.22423398328690808,
-          "dialect": 0.5423398328690808,
-          "different": 0.22506963788300835,
-          "unsure": 0.008356545961002786
+          "spelling": 0.23788300835654597,
+          "dialect": 0.5008356545961002,
+          "different": 0.2545961002785515,
+          "unsure": 0.006685236768802228
         }
       }
     }

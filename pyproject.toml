@@ -44,6 +44,7 @@ all = [
     "pyctcdecode",
     "pyyaml",
 ]
+notebooks = ["nbformat", "nbclient", "ipykernel", "matplotlib"]
 dev = ["pytest"]
 
 [tool.setuptools.packages.find]

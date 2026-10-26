@@ -3,7 +3,7 @@ F15: model selection by weight averaging. (a) Each pre-registered candidate's av
 against its average over the four test sets; the rule picks the lowest dev average. (b) Per-set paired difference of
 the chosen average (0.25 M1 + 0.75 M5-300) against M5-300 alone, with 95% cluster-bootstrap CIs.
 
-Inputs: results/kaggle/finetuned/<set>/<candidate>/metrics.json, results/compare/p5_soup31_vs_m5_300_<set>.json
+Inputs: results/kaggle/finetuned/<set>/<candidate>/metrics.json, results/compare/soup31_vs_m5_300_<set>.json
 Run:    ./Scripts/python.exe figures/scripts/f15_weight_averaging.py
 """
 
@@ -31,7 +31,7 @@ def wer(s, c):
 rows = [{"panel": "a", "candidate": name, "dev_avg": sum(wer(s, c) for s in DEV) / len(DEV),
          "test_avg": sum(wer(s, c) for s in TEST) / len(TEST)} for c, name in CANDS.items()]
 for s, name in {**DEV, **TEST}.items():
-    r = json.loads((ROOT / f"results/compare/p5_soup31_vs_m5_300_{s}.json").read_text(encoding="utf-8"))
+    r = json.loads((ROOT / f"results/compare/soup31_vs_m5_300_{s}.json").read_text(encoding="utf-8"))
     rows.append({"panel": "b", "set": name, "diff": 100 * r["diff_b_minus_a"], "lo": 100 * r["diff_ci95"][0],
                  "hi": 100 * r["diff_ci95"][1], "split": "dev" if s in DEV else "test"})
 d = pd.DataFrame(rows)

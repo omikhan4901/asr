@@ -45,7 +45,7 @@ cause. (b) The final model on the four test sets, with 95% confidence intervals.
 | Public release of the model, segmentation and scoring code on Hugging Face | planned; not yet published |
 
 **Links:** [Bangla subtitle demo](https://asr-phi.vercel.app) · [Setup](#setup) · [Data](#data) ·
-[Reproducing](#reproducing) · [All results](results/)
+[Reproducing](#reproducing) · [Notebooks](notebooks/README.md) · [All results](results/)
 
 <p align="center"><img src="figures/png/pipeline_overview.drawio.png" width="900" alt="Pipeline overview: DL Sprint recordings are cut into clips by forced alignment and split by recording; tugstugi produces greedy output and 12 candidates; the agreement anatomy finds that candidates share spelling variants; list correction fixes the candidate lists and fine-tuning fixes the model; one frozen harness scores everything."></p>
 
@@ -973,6 +973,7 @@ repository.
 | Whole-recording evaluation | `pipeline/eval_longform.py` (Kaggle job `longform:`; data `runs/upload_longform.sh`) |
 | OpenSLR 53 with joined clips; merged training lists | `pipeline/data/prepare_openslr53.py`, `pipeline/data/prepare_matrix.py merged` |
 | Cloud inference (Kaggle T4) | `notebooks/kaggle_jobs.ipynb` → `pipeline/kaggle_jobs.py` |
+| Result notebooks (read the saved results; seconds, no GPU) | `notebooks/README.md`, `notebooks/build_notebooks.py` |
 | Figures and tables | `figures/scripts/*.py` (data in `figures/data/`, PDF in `figures/`, PNG in `figures/png/`, tables in `figures/tables/`); overview diagram `figures/pipeline_overview.drawio` (draw.io) |
 
 **File names.** Result folders, runners and figures have descriptive names (October 2026); the provenance records

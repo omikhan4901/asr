@@ -1,6 +1,6 @@
 """
 Convention rewriter: word-level hyp -> ref rewrite rules learned from a model's
-own errors on TRAIN (Phase 3, E7/E8/E23; dev-tuned successor of the R7 probe).
+own errors on TRAIN (list correction, E7/E8/E23; dev-tuned successor of the R7 probe).
 
 From (reference, hypothesis) pairs we count, for every hypothesis word h, how
 often it is aligned to each reference word r (`variants.align_words`, which

@@ -1,5 +1,5 @@
 """
-Build the shared labeling tasks and upload them to Supabase (Phase 2, E5/E6).
+Build the shared labeling tasks and upload them to Supabase (E5/E6).
 
 Three tasks, every item with a priority (lower = served first) and a target
 number of annotators (> 1 = agreement item, served first within its block):

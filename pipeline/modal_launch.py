@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Start Phase 4 jobs on the DEPLOYED Modal app, so they keep running when every window on this PC closes.
+Start fine-tuning and scoring jobs on the DEPLOYED Modal app, so they keep running when every window on this PC closes.
 
 `modal run --detach` keeps a client on this PC waiting for the job; killing that client (closing
 VS Code or the terminal) cancelled every job on 2026-10-10. Here the app is deployed once, and each

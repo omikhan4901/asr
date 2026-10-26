@@ -1,6 +1,6 @@
 """
-Cross-model ROVER (Phase 5 idea 2): word-level voting over the greedy outputs of DIFFERENT fine-tuned models
-(different training data -> different errors), unlike Phase 3/4 ROVER over one model's 12-best.
+Cross-model ROVER : word-level voting over the greedy outputs of DIFFERENT fine-tuned models
+(different training data -> different errors), unlike ROVER over one model's 12-best.
 
 Members are chosen on DL Sprint dev only (pre-registered rule): start from the best single model on dev as the
 backbone, add the model that lowers dev WER most, stop when nothing helps. A second, unselected ensemble uses

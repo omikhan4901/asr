@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Training data for the Phase 4 matrix runs (M2-M5): one folder + zip + manifest per source,
+Training data for the matrix runs (M2-M5): one folder + zip + manifest per source,
 in the layout pipeline/modal_finetune.py unpacks (zip top folder = set name, manifest
 audio_path = data/clips/<set>/...).
 
@@ -11,7 +11,7 @@ audio_path = data/clips/<set>/...).
   shrutilipi  ai4bharat/Shrutilipi bengali train (HF, gated), 16 kHz FLAC, random --max_hours subset.
   merged      M5: --hours_each hours drawn at random from each source manifest given with --from
               (a source given as path:H uses H hours instead; --hours_each 0 = all of every source).
-              --name sets the list name (m5-merged; Phase 5: m5-full = all 156 h, m5-300 = + OpenSLR 53).
+              --name sets the list name (m5-merged; final model: m5-full = all 156 h, m5-300 = + OpenSLR 53).
 
 Text: the same deterministic rules as pipeline/data/clean_train_text.py (bracket tags removed,
 rows with letters outside the Bengali block dropped). Every row keeps its source text otherwise:

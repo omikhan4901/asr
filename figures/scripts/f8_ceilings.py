@@ -2,10 +2,10 @@
 F8: ceilings on DL Sprint eval (tugstugi). (a) What selection can reach and what each intervention
 reached: greedy, MBR, best single candidate (utterance oracle) and the word-coverage bound of the
 candidate pool (share of reference words no candidate contains: no selection or word-level combination
-can go below it), before and after adding spelling rewrites; then the Phase 3 and fine-tuned systems.
+can go below it), before and after adding spelling rewrites; then list correction and the fine-tuned systems.
 (b) What the selection-proof errors of greedy (no candidate has the reference word) are, by rule-based type.
 
-Inputs: results/phase3/summary.csv, results/agreement/eval_sampled_tugstugi/summary.json,
+Inputs: results/list_correction/summary.csv, results/agreement/eval_sampled_tugstugi/summary.json,
         results/error_types/with_nbest/eval_sampled/summary.json, results/modal/finetuned/splits_fa-eval/m1_full/metrics.json
 Run:    ./Scripts/python.exe figures/scripts/f8_ceilings.py
 """
@@ -19,7 +19,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from style import OKABE, PAGE_W, ROOT, plt, save  # noqa: E402
 
-p3 = pd.read_csv(ROOT / "results/phase3/summary.csv").set_index("set").loc["splits_fa-eval"]
+p3 = pd.read_csv(ROOT / "results/list_correction/summary.csv").set_index("set").loc["splits_fa-eval"]
 ag = json.loads((ROOT / "results/agreement/eval_sampled_tugstugi/summary.json").read_text(encoding="utf-8"))
 et = json.loads((ROOT / "results/error_types/with_nbest/eval_sampled/summary.json").read_text(encoding="utf-8"))
 ft = json.loads((ROOT / "results/modal/finetuned/splits_fa-eval/m1_full/metrics.json").read_text(encoding="utf-8"))

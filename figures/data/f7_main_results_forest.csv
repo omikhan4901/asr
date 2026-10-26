@@ -33,6 +33,6 @@ Common Voice,tugstugi zero-shot,zero-shot,14.813962320608578,14.50173022339615,1
 Common Voice,M1 encoder-only,finetuned,14.688517798160913,14.369051911237671,15.04796408111979,False
 Common Voice,M1 decoder-only,finetuned,13.125640169867994,12.823084884770052,13.471897162407217,False
 Common Voice,M1 full,finetuned,12.799944758375437,12.484431735524474,13.13910052881459,False
-DL Sprint eval,List correction (no retraining),phase3,17.461,17.122999999999998,17.854,False
-FLEURS,List correction (no retraining),phase3,19.481,18.819999999999997,20.066,False
-Kathbath valid,List correction (no retraining),phase3,14.252999999999998,13.985999999999999,14.527000000000001,False
+DL Sprint eval,List correction (no retraining),list_correction,17.461,17.122999999999998,17.854,False
+FLEURS,List correction (no retraining),list_correction,19.481,18.819999999999997,20.066,False
+Kathbath valid,List correction (no retraining),list_correction,14.252999999999998,13.985999999999999,14.527000000000001,False

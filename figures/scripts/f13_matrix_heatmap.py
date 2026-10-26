@@ -6,7 +6,7 @@ shade = relative WER reduction vs zero-shot in that column (columns differ in di
 model per column is outlined. M1 scored on the Modal A100, M2-M5 on Kaggle T4 (T4 = A100 within 0.01 WER
 points, results/compare/gpu_t4/).
 
-Input: results/compare/phase4/<set>__<run>_vs_tugstugi_a100.json (runs/phase4_analysis.sh)
+Input: results/compare/finetuning/<set>__<run>_vs_tugstugi_a100.json (runs/finetuning_analysis.sh)
 Run:   ./Scripts/python.exe figures/scripts/f13_matrix_heatmap.py
 """
 
@@ -29,14 +29,14 @@ RUNS = {"zero-shot": "zero-shot (no training)", "m1_full": "M1 DL Sprint (59.6 h
         "m6_harmonized_t4": "M6 merged, harmonized"}
 # a model without all four comparisons yet (e.g. M6 before its Kaggle scoring) is left out
 RUNS = {r: n for r, n in RUNS.items() if r == "zero-shot" or all(
-    (ROOT / "results/compare/phase4" / f"{s}__{r}_vs_tugstugi_a100.json").exists() for s in SETS)}
+    (ROOT / "results/compare/finetuning" / f"{s}__{r}_vs_tugstugi_a100.json").exists() for s in SETS)}
 
 rows = []
 for s, sname in SETS.items():
     for run, rname in RUNS.items():
         if run == "zero-shot":
             continue
-        d = json.loads((ROOT / "results/compare/phase4" / f"{s}__{run}_vs_tugstugi_a100.json").read_text(encoding="utf-8"))
+        d = json.loads((ROOT / "results/compare/finetuning" / f"{s}__{run}_vs_tugstugi_a100.json").read_text(encoding="utf-8"))
         rows.append({"train": rname, "test": sname, "wer": 100 * d["wer_b"], "diff": 100 * d["diff_b_minus_a"],
                      "lo": 100 * d["diff_ci95"][0], "hi": 100 * d["diff_ci95"][1], "zero_shot": 100 * d["wer_a"],
                      "n_utt": d["n_utterances"]})

@@ -1,6 +1,6 @@
 {
   "a": "results/modal/zeroshot/splits_fa-dev/tugstugi_a100/predictions.jsonl",
-  "b": "data/phase4/t4check_lora/phase4/results/zeroshot/splits_fa-dev/tugstugi_t4/predictions.jsonl",
+  "b": "data/kaggle_finetuning/t4check_lora/phase4/results/zeroshot/splits_fa-dev/tugstugi_t4/predictions.jsonl",
   "n_utterances": 646,
   "n_groups": 6,
   "ref_words": 18329,

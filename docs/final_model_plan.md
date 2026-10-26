@@ -1,4 +1,4 @@
-# Phase 5 plan: the released model, whole-recording evaluation, release
+# Plan: the released model, whole-recording evaluation, release
 
 > **Goal (Omi, 2026-10-12): the lowest WER from one fast model; release questions later.**
 > **Decision 2026-10-12 (Omi): one plan, no extras.** The final model is **M5-full** (called M7 below) = M5's recipe exactly (full FT, lr 1e-5, 2 epochs, no
@@ -16,12 +16,12 @@
 > (offline batch jobs; expected −0.2 to −0.45 by analogy with M1; measured cost ~14x greedy on a T4: 552 vs 39 min
 > for DL Sprint eval).
 
-Phase 4 answered the method questions. Phase 5 builds the one model we release and finishes the paper.
+The fine-tuning runs answered the method questions. This step builds the one model we release and finishes the paper.
 Freeze: **Nov 12**; report: **Dec 1**. Times and costs marked *est.* are estimates.
 
-## What Phase 4 decided for Phase 5
+## What the fine-tuning runs decided for the final model
 
-| Question | Answer (Phase 4) | Consequence for Phase 5 |
+| Question | Answer (fine-tuning runs) | Consequence for the final model |
 |---|---|---|
 | Which training method? | full fine-tuning is best (11.34% eval; LoRA 11.76, decoder 12.99) | full fine-tuning |
 | Which data? | each corpus wins its own test set; 10 h x 4 has the best average (13.18%) | train on **all four corpora together** (156 h, every hour they have) **plus new corpora up to ~250-300 h** |
@@ -48,11 +48,11 @@ Freeze: **Nov 12**; report: **Dec 1**. Times and costs marked *est.* are estimat
 | 11 | Whisper-small variant (optional, size/speed trade-off) | Omi, 1 command | Modal | Nov | ~1 h est. | ~$2 est. |
 
 **Hands-on runs: about 6** (steps 0b, 3, 4, 5, 6, 7), each a single command or one Kaggle "Save & Run All".
-The exact commands are in the Phase 5 runbook (`docs/PHASE5_RUNBOOK.md`).
+The exact commands are in the final-model runbook (`docs/RUNBOOK_final_model.md`).
 
 ## Money
 
-| Account | Now | Phase 5 use |
+| Account | Now | Final-model use |
 |---|---|---|
 | Omi's Modal | ~$11 left (reserve) | backup if the November run fails |
 | Friend's Modal | ~$3.5 left, resets in November ($30) | steps 5-6 (~$11-14 est.), 11 |

@@ -1,6 +1,6 @@
 {
   "a": "results/modal/zeroshot/fleurs-test/tugstugi_a100/predictions.jsonl",
-  "b": "data/phase4/t4check_lora/phase4/results/zeroshot/fleurs-test/tugstugi_t4/predictions.jsonl",
+  "b": "data/kaggle_finetuning/t4check_lora/phase4/results/zeroshot/fleurs-test/tugstugi_t4/predictions.jsonl",
   "n_utterances": 920,
   "n_groups": 349,
   "ref_words": 17766,

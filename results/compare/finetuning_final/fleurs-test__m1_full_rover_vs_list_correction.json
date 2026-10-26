@@ -1,6 +1,6 @@
 {
-  "a": "results/phase3/fleurs-test/mbr_lm_x/predictions.jsonl",
-  "b": "results/phase4_stack/fleurs-test/rover/predictions.jsonl",
+  "a": "results/list_correction/fleurs-test/mbr_lm_x/predictions.jsonl",
+  "b": "results/stacking/fleurs-test/rover/predictions.jsonl",
   "n_utterances": 920,
   "n_groups": 349,
   "ref_words": 17766,

@@ -1,4 +1,4 @@
-# Phase 4 runbook: finishing Phase 4 without the home GPU
+# Runbook: fine-tuning runs on Modal and scoring on Kaggle
 
 Plain step-by-step guide. Do the parts in order; each step says where you do it, what to type or
 click, how long it takes, what it costs, and what you should see. Nothing here uses the PC's GPU.
@@ -15,7 +15,7 @@ click, how long it takes, what it costs, and what you should see. Nothing here u
           Kaggle (Omi + friend, free T4s)          Friend's Modal (A100, $30 credit)
           scoring, T4 check, 12-best for stacking  matrix training M2-M5
                        │                                     │
-                       └──► phase4_outputs.zip ──► Omi's PC ◄┘ (models go back to the hub, then Kaggle scores them)
+                       └──► kaggle_outputs.zip ──► Omi's PC ◄┘ (models go back to the hub, then Kaggle scores them)
 ```
 
 Hugging Face is the one place everything meets: fast downloads for Kaggle and for the friend's
@@ -32,7 +32,7 @@ every container start, which the old estimates missed.
 | Friend's Modal | learning-rate check (2 runs) + 4-epoch run (3.7b) | ~$10 total |
 | Kaggle (both) | T4 check, LoRA leftovers, stacking 12-best, matrix scoring | $0 (uses the weekly 30 GPU-hours) |
 
-Omi's leftover credit (~$11) stays as the reserve for Phase 5.
+Omi's leftover credit (~$11) stays as the reserve for the final model.
 
 ---
 
@@ -131,7 +131,7 @@ Two sessions, one on each Kaggle account, both at the same time. Session A first
 
 ### 2.1 Set up a notebook (do this once per Kaggle account)
 1. Go to https://www.kaggle.com/code and click **+ New Notebook**.
-2. Menu **File -> Import Notebook**, choose the file `notebooks/kaggle_phase4.ipynb` from the project folder, **Import**.
+2. Menu **File -> Import Notebook**, choose the file `notebooks/kaggle_jobs.ipynb` from the project folder, **Import**.
    (Your friend needs this file too: send it to them, it is small and contains no secrets.)
 3. Right side panel, **Session options**:
    - **Accelerator: GPU T4 x2**
@@ -150,7 +150,7 @@ In the first code cell, keep one preset and leave the others commented out (a `#
 What they do:
 - `t4check`: scores the zero-shot model on dev, FLEURS and Kathbath on the T4 and compares every sentence with the A100 results. Kaggle numbers are trusted only if these match (A100 vs 3060 matched on 96-99% of sentences, WER within 0.02).
 - `lora`: finishes M1 LoRA on Kathbath and Common Voice (the Modal credit ran out there).
-- `stack:<set>`: the input for stacking (Phase 4.7): 12 candidates per clip from M1 full, each scored exactly, plus M1 full's greedy output.
+- `stack:<set>`: the input for stacking : 12 candidates per clip from M1 full, each scored exactly, plus M1 full's greedy output.
 
 ### 2.3 Start it
 1. Top right **Save Version** -> **Save & Run All (Commit)** -> **Save**.
@@ -158,12 +158,12 @@ What they do:
 3. To watch: https://www.kaggle.com/code -> your notebook -> the version -> **Logs**. A status line appears every 5 minutes.
 
 ### 2.4 When it is finished
-1. Open the notebook version -> **Output** tab -> download `phase4_outputs.zip`.
+1. Open the notebook version -> **Output** tab -> download `kaggle_outputs.zip`.
 2. Put it in the project folder as `data/kaggle_out/session_A.zip` (or `session_B.zip`); create the folder if needed.
 3. Start the analysis session ("Kaggle session A outputs are in data/kaggle_out"): the outputs are unpacked, checked and analysed there.
 
 **If a session stops before the end** (timeout, error): open its **Output**, click **New Notebook** / **Add to notebook**
-(adds the old output as an input), set `RESUME_FROM = "/kaggle/input/<that output's folder>/phase4"` in the first cell,
+(adds the old output as an input), set `RESUME_FROM = "/kaggle/input/<that output's folder>/outputs"` in the first cell,
 and run again with the same preset. Finished sentences are skipped.
 
 **If cell 3 fails with "No GPU"**: Session options -> Accelerator -> GPU T4 x2, then **Run All** again.
@@ -273,8 +273,8 @@ over two sessions if needed). Download and hand over as in 2.4.
 ---
 
 ## What happens with the results
-- Session A: T4 vs A100 per sentence; if they match, LoRA's Kathbath/CV rows complete Table "Phase 4 M1".
-- Session B: stacking (Phase 3 expansion + LM-MBR on the fine-tuned model's 12-best) and E11 (anatomy after fine-tuning).
+- Session A: T4 vs A100 per sentence; if they match, LoRA's Kathbath/CV rows complete the M1 table.
+- Session B: stacking (list-correction expansion + LM-MBR on the fine-tuned model's 12-best) and E11 (anatomy after fine-tuning).
 - Matrix: the train x test table (M1-M5), then M6 (harmonized spelling) is designed.
 
 ## Things that are NOT verified yet (first real run will tell)

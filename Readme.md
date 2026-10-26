@@ -413,7 +413,7 @@ spoken forms of the same word (19 typed as variants by the rules, জন্য�
 
 ### 5.5 List correction: raising the ceiling without retraining
 
-<p align="center"><img src="figures/png/f6_phase3_dumbbell.png" width="900" alt="List correction: greedy WER versus LM-MBR on the expanded list per test set, and oracle WER before and after expansion."></p>
+<p align="center"><img src="figures/png/f6_list_correction.png" width="900" alt="List correction: greedy WER versus LM-MBR on the expanded list per test set, and oracle WER before and after expansion."></p>
 
 **Figure 7.** List correction per test set: (a) greedy vs LM-weighted MBR on the expanded candidate list (95% CI of the
 paired difference); (b) oracle WER of the candidate pool before and after adding the learned spelling rewrites.
@@ -916,7 +916,7 @@ pip install -e ".[all,dev]"
 python tests/test_smoke.py       # quick check; needs no data or GPU
 ```
 
-`tests/test_mbr.py`, `tests/test_variants.py` and `tests/test_phase3.py` run the same way (they are scripts, not
+`tests/test_mbr.py`, `tests/test_variants.py` and `tests/test_list_correction.py` run the same way (they are scripts, not
 pytest files).
 
 Run every script from the repository root. A CUDA GPU is needed for fine-tuning (we used a Modal A100-40GB) and
@@ -950,7 +950,7 @@ environment, so older runbooks call `./Scripts/python.exe`).
 
 **Every result is in `results/`:** per-system predictions (`predictions.jsonl`) and metrics with confidence intervals
 (`metrics.json`) under `results/{zeroshot,modal,kaggle}/<test set>/<system>/`, paired tests in `results/compare/`,
-list correction and stacking in `results/phase3/` and `results/phase4_stack/`, model combinations in `results/ensemble/`,
+list correction and stacking in `results/list_correction/` and `results/stacking/`, model combinations in `results/ensemble/`,
 and the human-label summaries in `results/labels/`. The per-error tables of `analysis/error_types.py` are not
 committed (they are large and regenerated in minutes from the predictions). Audio and trained models are not in the
 repository.
@@ -962,25 +962,28 @@ repository.
 | 12-best + exact scores | `pipeline/03_generate_nbest.py`, `pipeline/rescore_nbest.py` |
 | Anatomy, error types, agreement signal | `analysis/agreement.py`, `analysis/error_types.py`, `analysis/agreement_signal.py` |
 | Paired comparisons | `analysis/paired_compare.py` |
-| List correction (speech model not retrained) | `pipeline/12_raise_ceiling.py` (`runs/phase3_ceiling.sh`) |
+| List correction (speech model not retrained) | `pipeline/12_raise_ceiling.py` (`runs/list_correction.sh`) |
 | Fine-tuning | `pipeline/11_finetune.py` (locally) or `pipeline/modal_launch.py train` (cloud A100) |
-| Fine-tuning analysis | `runs/phase4_analysis.sh` |
+| Fine-tuning analysis | `runs/finetuning_analysis.sh` |
 | Model averaging, beam search (Kaggle jobs `soup:`, `beam:`) | `pipeline/make_soup.py`, `pipeline/eval_zero_shot.py --num_beams` |
-| Model selection on mixed dev; outside baselines (Kaggle jobs `dev:`, `soup:`, `zs:`) | `runs/prepare_mixed_dev.py`, `pipeline/kaggle_phase4.py` |
+| Model selection on mixed dev; outside baselines (Kaggle jobs `dev:`, `soup:`, `zs:`) | `runs/prepare_mixed_dev.py`, `pipeline/kaggle_jobs.py` |
 | Spelling-aware WER (second metric) | `analysis/spelling_aware_wer.py` |
 | Human labels: import, agreement, settled disagreements, WER vs verified references | `analysis/labeling/import_labels.py` (`--snapshot results/labels/snapshot_<time>.json` offline; settled answers in `results/labels/adjudication.json`), `analysis/labeling/noise_by_alignment.py`, `analysis/labeling/adjudication_sensitivity.py` |
 | Combining models; gap to Hishab | `analysis/cross_model_rover.py`, `analysis/hishab_gap.py` |
-| Whole-recording evaluation | `pipeline/eval_longform.py` (Kaggle job `longform:`; data `runs/phase5_upload_longform.sh`) |
+| Whole-recording evaluation | `pipeline/eval_longform.py` (Kaggle job `longform:`; data `runs/upload_longform.sh`) |
 | OpenSLR 53 with joined clips; merged training lists | `pipeline/data/prepare_openslr53.py`, `pipeline/data/prepare_matrix.py merged` |
-| Cloud inference (Kaggle T4) | `notebooks/kaggle_phase4.ipynb` → `pipeline/kaggle_phase4.py` |
+| Cloud inference (Kaggle T4) | `notebooks/kaggle_jobs.ipynb` → `pipeline/kaggle_jobs.py` |
 | Figures and tables | `figures/scripts/*.py` (data in `figures/data/`, PDF in `figures/`, PNG in `figures/png/`, tables in `figures/tables/`); overview diagram `figures/pipeline_overview.drawio` (draw.io) |
+
+**File names.** Result folders, runners and figures have descriptive names (October 2026); the provenance records
+(`run_info.json`) beside each result keep the command lines and paths exactly as they were run.
 
 **Reading `metrics.json`.** The `decoding` field reads `greedy` for every row, beam search included; a beam-search
 row is identified by its `num_beams` field (> 1) and its output folder name (`*_beam5*`). This affects only that
 label: the WER, CER and confidence intervals in the file are computed from the predictions as decoded.
 
 Tests: see [Setup](#setup).
-Step-by-step guide for the cloud runs: [`docs/PHASE4_RUNBOOK.md`](docs/PHASE4_RUNBOOK.md).
+Step-by-step guide for the cloud runs: [`docs/RUNBOOK_finetuning.md`](docs/RUNBOOK_finetuning.md).
 
 **Layout.** `src/bangla_asr/` (config, text normalization and WER, forced aligner, Whisper wrapper and N-best
 generator, MBR / n-gram LM / convention rewriter / ROVER), `pipeline/` (numbered pipeline steps, fine-tuning,

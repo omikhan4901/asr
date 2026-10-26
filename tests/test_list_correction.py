@@ -1,6 +1,6 @@
 """
-Tests for the Phase 3 building blocks: n-gram LM, word-level combination, convention rewriter.
-Run: PYTHONPATH=src ./Scripts/python.exe tests/test_phase3.py
+Tests for the list correction building blocks: n-gram LM, word-level combination, convention rewriter.
+Run: PYTHONPATH=src ./Scripts/python.exe tests/test_list_correction.py
 """
 
 import io
@@ -52,4 +52,4 @@ assert select_rules(stats, min_count=5, min_p=0.5) == {}
 assert rewrite("সে কী বললো".split(), r_var) == "সে কি বলল".split()
 assert rewrite("সে কী বললো".split(), r_var, agreement=[12, 12, 3], max_agree=6) == "সে কী বলল".split()
 print("[PASS] convention rewriter.")
-print("All Phase 3 tests passed.")
+print("All list correction tests passed.")

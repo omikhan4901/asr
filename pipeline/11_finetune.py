@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Fine-tune tugstugi Whisper-medium on a chunk manifest (Phase 4: M1, E22, matrix runs).
+Fine-tune tugstugi Whisper-medium on a chunk manifest (M1, E22, matrix runs).
 
 --method
   lora     LoRA on every attention and MLP projection of encoder and decoder

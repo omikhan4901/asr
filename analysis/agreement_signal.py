@@ -14,7 +14,7 @@ reference only to score:
   - flagging curve: flag words with a <= t; share of words flagged, of errors
     caught (recall) and of flags that are errors (precision), overall and for
     variant vs other errors. This bounds agreement-guided selective expansion
-    (Phase 3). Deleted reference words have no hypothesis position and are
+    (list correction). Deleted reference words have no hypothesis position and are
     counted separately.
 
 Outputs in --out_dir/<name>/: summary.json, by_level.csv, flagging.csv.

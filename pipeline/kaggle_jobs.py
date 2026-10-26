@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Phase 4 inference on Kaggle (T4 x2): everything comes from the private Hugging Face repo HUB
+Inference on Kaggle (T4 x2): everything comes from the private Hugging Face repo HUB
 (audio zips, manifests, models, A100 reference scores); the outputs go to /kaggle/working.
 Each GPU runs its own queue of jobs; both run at the same time.
 
@@ -11,8 +11,8 @@ Jobs
   lora           M1 LoRA (models/m1_lora on tugstugi), greedy batch 8, on Kathbath (all) and Common Voice
                  (-> m1_lora_t4); the Kathbath clips the A100 already did are the per-utterance check.
   stack:<set>[@<run>]  stacking input (default M1 full; @<run> = any full model on the hub) on dev | eval | fleurs | kathbath:
-                 sampled 12-best (T 0.7, as in Phases 1-3) -> exact scores (teacher forcing) -> pool + greedy
-                 (the A100 greedy of m1_full), i.e. the same pool format as data/phase3/*_pool.jsonl.
+                 sampled 12-best (T 0.7, as in the earlier experiments) -> exact scores (teacher forcing) -> pool + greedy
+                 (the A100 greedy of m1_full), i.e. the same pool format as data/list_correction/*_pool.jsonl.
   score:<run>    any model in models/<run> (full model or LoRA adapter) on the 5 test sets (matrix runs).
   soup:<a>+<b>   weight average of full models (pipeline/make_soup.py; 'base' = tugstugi, repeat a name to
                  weight it), then scored on the 5 test sets as soup_<a>+<b>_t4. Same size/speed as one model.
@@ -27,10 +27,10 @@ Every step is resumable (the scripts skip finished utterances), and outputs are 
 /kaggle/working, so a second session continues where the first stopped (add the first session's
 output as an input dataset and pass --resume_from).
 
-  python pipeline/kaggle_phase4.py --gpu0 t4check --gpu1 lora
-  python pipeline/kaggle_phase4.py --gpu0 stack:eval --gpu1 stack:dev,stack:fleurs,stack:kathbath
+  python pipeline/kaggle_jobs.py --gpu0 t4check --gpu1 lora
+  python pipeline/kaggle_jobs.py --gpu0 stack:eval --gpu1 stack:dev,stack:fleurs,stack:kathbath
 Local test (CPU, two utterances, a local mirror of the hub):
-  python pipeline/kaggle_phase4.py --gpu0 t4check --hub_dir <mirror> --work <tmp> --out <tmp> --cpu --limit 2
+  python pipeline/kaggle_jobs.py --gpu0 t4check --hub_dir <mirror> --work <tmp> --out <tmp> --cpu --limit 2
 """
 
 import argparse
@@ -245,8 +245,8 @@ def main():
     ap.add_argument("--gpu1", default="")
     ap.add_argument("--hub_dir", default="/tmp/hub")
     ap.add_argument("--work", default="/tmp/work")
-    ap.add_argument("--out", default="/kaggle/working/phase4")
-    ap.add_argument("--resume_from", default=None, help="an earlier session's phase4/ folder (added as input)")
+    ap.add_argument("--out", default="/kaggle/working/outputs")
+    ap.add_argument("--resume_from", default=None, help="an earlier session's outputs/ folder (added as input)")
     ap.add_argument("--no_fetch", action="store_true", help="hub_dir is already a full local mirror (tests)")
     ap.add_argument("--cpu", action="store_true", help="tests only")
     ap.add_argument("--limit", type=int, default=None, help="tests only: N utterances per set")
@@ -296,8 +296,8 @@ def main():
         summary.setdefault("metrics", {})[str(m.relative_to(out))] = json.loads(m.read_text(encoding="utf-8")).get("wer")
     (out / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print(json.dumps(summary, indent=2), flush=True)
-    shutil.make_archive(str(out.parent / "phase4_outputs"), "zip", out.parent, out.name)
-    print(f"ready to download: {out.parent / 'phase4_outputs.zip'}")
+    shutil.make_archive(str(out.parent / "kaggle_outputs"), "zip", out.parent, out.name)
+    print(f"ready to download: {out.parent / 'kaggle_outputs.zip'}")
     if any(not v.startswith("done") for v in status.values()):
         raise SystemExit("some jobs did not finish: see the logs folder; run the session again to continue")
 

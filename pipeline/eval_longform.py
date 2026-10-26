@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Whole-recording evaluation (Phase 5): no reference-guided cuts. Each raw recording is cut by voice activity
+Whole-recording evaluation: no reference-guided cuts. Each raw recording is cut by voice activity
 detection only (Silero VAD, the web demo's chunker, chunks <= its max length), every chunk is transcribed,
 the texts are joined in order, and WER is computed against the recording's full transcript
 (data/raw/train/annotation/<recording>.txt, normalized like every other number). This is real long-form
@@ -8,7 +8,7 @@ recognition: the forced-alignment clip split never touches the audio the model s
 
   PYTHONPATH=src python pipeline/eval_longform.py --recordings_dir data/longform --model models/m5_full \
       --name m5_full_t4 --out_dir results/longform
-Recordings: <dir>/audio/<rec>.flac|.wav and <dir>/annotation/<rec>.txt (runs/phase5_upload_longform.sh builds
+Recordings: <dir>/audio/<rec>.flac|.wav and <dir>/annotation/<rec>.txt (runs/upload_longform.sh builds
 the 22 DL Sprint eval recordings). Output: <out_dir>/<name>/recordings.jsonl (one line per recording, resumable)
 and metrics.json (corpus WER over recordings with a 95% bootstrap CI over recordings, speed).
 """

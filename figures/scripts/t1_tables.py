@@ -1,14 +1,14 @@
 """
 Tables for the README (Bangla text: matplotlib cannot shape Bengali script, so these are Markdown):
   T-confusions  the 20 most frequent substitution pairs of zero-shot tugstugi on DL Sprint eval, with the
-                rule-based type and how often the same pair is still made by M1 full and by Phase 3.
-  T-examples    real DL Sprint eval clips: reference, zero-shot, Phase 3 (no training) and M1 full output,
+                rule-based type and how often the same pair is still made by M1 full and by list correction.
+  T-examples    real DL Sprint eval clips: reference, zero-shot, list correction (no training) and M1 full output,
                 words that differ from the reference in bold. Chosen by a fixed rule (seed 0): 6-14
                 reference words, zero-shot WER >= 25%, M1 full WER 0.
 
-Inputs: results/error_types/{splits_fa-eval/<tugstugi>,phase3/splits_fa-eval/mbr_lm_x,phase4/splits_fa-eval/m1_full}/errors.csv,
+Inputs: results/error_types/{splits_fa-eval/<tugstugi>,list_correction/splits_fa-eval/mbr_lm_x,finetuning/splits_fa-eval/m1_full}/errors.csv,
         results/modal/{zeroshot,finetuned}/splits_fa-eval/<run>/predictions.jsonl,
-        results/phase3/splits_fa-eval/mbr_lm_x/predictions.jsonl
+        results/list_correction/splits_fa-eval/mbr_lm_x/predictions.jsonl
 Output: figures/data/t_confusions.csv, figures/data/t_examples.csv, figures/tables/*.md
 Run:    PYTHONPATH=src ./Scripts/python.exe figures/scripts/t1_tables.py
 """
@@ -28,8 +28,8 @@ from bangla_asr.common.text import normalize_bangla_text  # noqa: E402
 
 TUG = "bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium"
 ERR = {"zero-shot": ROOT / "results/error_types/splits_fa-eval" / TUG / "errors.csv",
-       "List correction": ROOT / "results/error_types/phase3/splits_fa-eval/mbr_lm_x/errors.csv",
-       "M1 full": ROOT / "results/error_types/phase4/splits_fa-eval/m1_full/errors.csv"}
+       "List correction": ROOT / "results/error_types/list_correction/splits_fa-eval/mbr_lm_x/errors.csv",
+       "M1 full": ROOT / "results/error_types/finetuning/splits_fa-eval/m1_full/errors.csv"}
 TYPE = {"convention": "convention", "vowel_shift": "vowel shift", "segmentation": "segmentation",
         "near_miss": "near miss", "substitution": "substitution", "number": "number"}
 (ROOT / "figures/tables").mkdir(exist_ok=True)
@@ -60,7 +60,7 @@ def load(p):
 
 
 zs = load(ROOT / "results/modal/zeroshot/splits_fa-eval/tugstugi_a100/predictions.jsonl")
-p3 = load(ROOT / "results/phase3/splits_fa-eval/mbr_lm_x/predictions.jsonl")
+p3 = load(ROOT / "results/list_correction/splits_fa-eval/mbr_lm_x/predictions.jsonl")
 ft = load(ROOT / "results/modal/finetuned/splits_fa-eval/m1_full/predictions.jsonl")
 
 

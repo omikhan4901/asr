@@ -1,6 +1,6 @@
 {
-  "a": "results/phase3/splits_fa-eval/mbr_lm_x/predictions.jsonl",
-  "b": "results/phase4_stack/splits_fa-eval/rover/predictions.jsonl",
+  "a": "results/list_correction/splits_fa-eval/mbr_lm_x/predictions.jsonl",
+  "b": "results/stacking/splits_fa-eval/rover/predictions.jsonl",
   "n_utterances": 4234,
   "n_groups": 22,
   "ref_words": 120029,

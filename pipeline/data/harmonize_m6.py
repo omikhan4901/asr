@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-M6: the M5 merged training list with harmonized spelling (PLAN Phase 4 item 4.10, RQ3).
+M6: the M5 merged training list with harmonized spelling (RQ3).
 
 The four training sources write the same word differently (R22: DL Sprint always কি, ছিল, তার,
 কোন; FLEURS/Kathbath/CV mix কি/কী, prefer কোনো, ...). M6 keeps M5's clips and audio and rewrites

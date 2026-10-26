@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Plots Dataset Pipeline Yield Funnel (Phase 1).
+Plots Dataset Pipeline Yield Funnel.
 """
 
 from pathlib import Path
@@ -41,7 +41,7 @@ for bar, count in zip(bars, counts[::-1]):
     )
 
 ax.set_xlabel("Count", fontsize=10)
-ax.set_title("Dataset Pipeline Yield — Phase 1", fontsize=11, fontweight="bold")
+ax.set_title("Dataset Pipeline Yield", fontsize=11, fontweight="bold")
 ax.spines["top"].set_visible(False)
 ax.spines["right"].set_visible(False)
 ax.set_xscale("log")

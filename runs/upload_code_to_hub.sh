@@ -4,6 +4,7 @@
 # Needs: committed code, and `./Scripts/hf.exe auth login` done with the write token.
 #   bash runs/upload_code_to_hub.sh
 set -eu
+PY=${PY:-$( [ -x .venv/bin/python ] && echo .venv/bin/python || { [ -x ./Scripts/python.exe ] && echo ./Scripts/python.exe || echo python; } )}
 cd "$(dirname "$0")/.."
 if [ -n "$(git status --porcelain src pipeline)" ]; then
   echo "Commit the code first: Kaggle gets the code of the current commit." >&2
@@ -13,7 +14,7 @@ C=$(git rev-parse HEAD | cut -c1-12)
 TMP=$(mktemp -d)
 git archive --format=tar.gz HEAD src pipeline > "$TMP/$C.tar.gz"
 printf '%s' "$C" > "$TMP/latest.txt"
-PYTHONIOENCODING=utf-8 C="$C" TMP="$TMP" ./Scripts/python.exe - <<'EOF'
+PYTHONIOENCODING=utf-8 C="$C" TMP="$TMP" "$PY" - <<'EOF'
 import os
 from huggingface_hub import HfApi, hf_hub_download
 api, c, t, R = HfApi(), os.environ["C"], os.environ["TMP"], "OmiKhan/bangla-asr-hub"

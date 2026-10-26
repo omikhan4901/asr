@@ -1,6 +1,6 @@
 # Labeling site
 
-Shared web page where the team labels data for the Phase 2 analyses:
+Shared web page where the team labels data for the error analyses:
 
 1. **References**: listen to a chunk and correct its transcript (reference noise, E6).
 2. **Error audit**: judge each difference between transcript and recognizer output

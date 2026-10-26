@@ -1,5 +1,5 @@
 """
-Download the team's labels from Supabase and compute the Phase 2 label results.
+Download the team's labels from Supabase and compute the label results.
 
 Saves a dated snapshot of items + labels (results/labels/snapshot_<time>.json)
 and computes from it (or from --snapshot, offline):

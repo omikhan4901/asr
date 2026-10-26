@@ -3,7 +3,7 @@
 Step 3: N-best candidate generation with Whisper (batched).
 
 --decoding sampled  beam-search multinomial sampling at --temperature (the 499A /
-                    Phase 1 setup; candidates are diverse but rank 0 is worse
+                    first setup; candidates are diverse but rank 0 is worse
                     than greedy)
 --decoding beam     deterministic beam search, the N best beams (no sampling)
 """

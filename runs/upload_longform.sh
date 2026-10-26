@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
-# Phase 5: the 22 raw DL Sprint eval recordings (16 kHz mono FLAC) + their full transcripts -> the private hub
+# final model: the 22 raw DL Sprint eval recordings (16 kHz mono FLAC) + their full transcripts -> the private hub
 # as zips/longform-eval.zip, for the Kaggle job longform:<run> (pipeline/eval_longform.py). CPU only, ~10-20 min
 # (conversion + upload of ~1 GB est.). Resumable: converted files are kept.
-#   bash runs/phase5_upload_longform.sh
+#   bash runs/upload_longform.sh
 set -eu
+PY=${PY:-$( [ -x .venv/bin/python ] && echo .venv/bin/python || { [ -x ./Scripts/python.exe ] && echo ./Scripts/python.exe || echo python; } )}
 cd "$(dirname "$0")/.."
 export PYTHONPATH=src PYTHONIOENCODING=utf-8
-./Scripts/python.exe - <<'EOF'
+"$PY" - <<'EOF'
 import shutil, zipfile
 from pathlib import Path
 import pandas as pd, soundfile as sf

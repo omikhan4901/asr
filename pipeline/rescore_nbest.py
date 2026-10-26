@@ -14,7 +14,7 @@ T = 1, same function as new N-best runs: WhisperASRModel.score_texts). The
 old value is kept as "logprob_generate". Writes a NEW file (--output_jsonl);
 resumable like the generator.
 
-With --add_greedy (Phase 3), the input must already hold exact scores (N-best
+With --add_greedy (list correction), the input must already hold exact scores (N-best
 files written from 2026-10-08 on). The greedy hypothesis of each utterance is
 appended as one more candidate (source "greedy", rank = number of sampled
 candidates) and only it is scored on the GPU; sum_logprob/n_tokens of the

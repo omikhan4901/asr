@@ -1,5 +1,5 @@
 """
-Phase 3 ablation: the convention rewriter with spelling/dialect rules only
+List-correction ablation: the convention rewriter with spelling/dialect rules only
 (kind="variant") at the dev-chosen thresholds (min_count 2, min_p 0.5), versus
 all rules, on every set. Nothing is chosen on a test set: thresholds and kind
 come from the dev grid of pipeline/12_raise_ceiling.py; this only reports the
@@ -9,7 +9,7 @@ With --model, the rules are applied to another model's saved greedy transcripts 
 Hishab conformer); --rules_from picks whose TRAIN transcripts the rules are learned from
 (default tugstugi; Hishab's own come from notebooks/kaggle_hishab_train.ipynb).
 
-Usage: PYTHONPATH=src ./Scripts/python.exe analysis/phase3_rewrite_ablation.py [--model hishab__titu_stt_bn_conformer_large]
+Usage: PYTHONPATH=src ./Scripts/python.exe analysis/rewrite_ablation.py [--model hishab__titu_stt_bn_conformer_large]
 """
 
 import argparse
@@ -43,7 +43,7 @@ def main():
     args = ap.parse_args()
     tag = "" if args.model == TUGP else f"_{args.model}"
     tag += "" if args.rules_from == TUGP else f"__rules_{args.rules_from}"
-    out = Path(f"results/phase3/rewrite_ablation{tag}.json")
+    out = Path(f"results/list_correction/rewrite_ablation{tag}.json")
     train = f"results/zeroshot/splits_fa-train/{args.rules_from}/predictions.jsonl"
     with RunRecord(out.with_suffix(".run_info.json"), inputs=[train]) as rec:
         stats = count_pairs((norm(r["ref"]), norm(r["hyp"])) for r in read_jsonl(train))

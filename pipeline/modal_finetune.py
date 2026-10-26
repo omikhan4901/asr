@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Phase 4 on Modal: fine-tune with pipeline/11_finetune.py and score with pipeline/eval_zero_shot.py.
+Fine-tuning on Modal: fine-tune with pipeline/11_finetune.py and score with pipeline/eval_zero_shot.py.
 
 Both scripts are the same files as on the RTX 3060, called with the same arguments and the
 same manifest paths (so config.json and the results' set names match the local runs). Only
@@ -44,7 +44,7 @@ import modal
 
 APP = "bangla-asr-finetune"
 VOLUME = "bangla-asr-ft"
-GPU = "A100-40GB"  # full AdamW state of Whisper-medium (~12 GB) + activations fit; one GPU type for all Phase 4 rows
+GPU = "A100-40GB"  # full AdamW state of Whisper-medium (~12 GB) + activations fit; one GPU type for all fine-tuning rows
 TUGSTUGI = "bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium"
 # Cost per hour of one container (modal.com/pricing, 2026-10-10): A100 40 GB $2.10 + 4 physical cores x $0.047
 # + 24 GiB x $0.008. Used only for the budget cap; the Modal dashboard shows the billed amount.
@@ -70,7 +70,7 @@ TRAIN_SOURCES = {
     "merged": ("data/splits_fa/matrix/m5-merged.csv", ["splits_fa-train", "cv-train", "kathbath-train", "shrutilipi-train"]),
     # M6 = M5's clips with harmonized spelling (pipeline/data/harmonize_m6.py; manifest via the hub + from_hf)
     "harmonized": ("data/splits_fa/matrix/m6-harmonized.csv", ["splits_fa-train", "cv-train", "kathbath-train", "shrutilipi-train"]),
-    # Phase 5: M5's recipe on every hour of the four corpora (156 h), then + OpenSLR 53 (~144 h, joined clips)
+    # final model: M5's recipe on every hour of the four corpora (156 h), then + OpenSLR 53 (~144 h, joined clips)
     "m5full": ("data/splits_fa/matrix/m5-full.csv", ["splits_fa-train", "cv-train", "kathbath-train", "shrutilipi-train"]),
     "m5_300": ("data/splits_fa/matrix/m5-300.csv", ["splits_fa-train", "cv-train", "kathbath-train", "shrutilipi-train", "openslr53-train"]),
 }
@@ -88,7 +88,7 @@ SETS = {
     "cv-test": ("data/modal/cv-test-mp3.zip", "data/external/cv/test.csv", "external/cv/test.csv", "mp3"),
 }
 TRAIN_SETS = ["splits_fa-train", "splits_fa-dev"]
-TEST_SETS = ["splits_fa-dev", "splits_fa-eval", "fleurs-test", "kathbath-valid", "cv-test"]  # runs/phase4 order
+TEST_SETS = ["splits_fa-dev", "splits_fa-eval", "fleurs-test", "kathbath-valid", "cv-test"]  # the runners' order
 
 app = modal.App(APP)
 vol = modal.Volume.from_name(VOLUME, create_if_missing=True)
@@ -353,7 +353,7 @@ def score_remote(run: str, model: str, adapter: str, sets: list[str], out: str, 
 # ---------------------------------------------------------------- local entry points
 
 SHIPPED = ["src/bangla_asr", "pipeline/11_finetune.py", "pipeline/checkpoint_to_model.py",
-           "pipeline/eval_zero_shot.py", "pipeline/modal_finetune.py", "pipeline/data", "pipeline/kaggle_phase4.py",
+           "pipeline/eval_zero_shot.py", "pipeline/modal_finetune.py", "pipeline/data", "pipeline/kaggle_jobs.py",
            "pipeline/03_generate_nbest.py", "pipeline/rescore_nbest.py"]  # the code Modal runs
 
 
@@ -520,7 +520,7 @@ def prep_matrix_remote(sources: list[str], max_hours: float, push: bool, launch:
         cmd = [sys.executable, script, s, "--out", str(out), "--max_hours", str(max_hours)]
         if s == "kathbath":
             cmd += ["--exclude_groups", "/vol/manifests/matrix/kathbath_valid_speakers.txt"]
-        if s == "openslr53":  # Phase 5: 144 h of joined clips (156 + 144 = 300 h); test sentences dropped
+        if s == "openslr53":  # final model: 144 h of joined clips (156 + 144 = 300 h); test sentences dropped
             cmd = [sys.executable, f"{REMOTE_PROJ}/pipeline/data/prepare_openslr53.py", "--download",
                    "--raw", "/tmp/openslr53_raw", "--out", str(out), "--hours", "144", "--delete_raw",
                    "--exclude_text", *[f"/vol/manifests/{m}" for m in ("eval.csv", "dev.csv", "external/fleurs/test.csv",
@@ -538,7 +538,7 @@ def prep_matrix_remote(sources: list[str], max_hours: float, push: bool, launch:
     srcs = [s for s in srcs if Path(s).exists()]
     subprocess.run([sys.executable, script, "merged", "--out", str(out), "--hours_each", "10", "--from", *srcs], check=True)
     shutil.copy(out / "m5-merged" / "manifest.csv", "/vol/manifests/matrix/m5-merged.csv")
-    # Phase 5 lists: every hour of the four corpora (m5-full), and the same + OpenSLR 53 (m5-300)
+    # final-model lists: every hour of the four corpora (m5-full), and the same + OpenSLR 53 (m5-300)
     subprocess.run([sys.executable, script, "merged", "--out", str(out), "--hours_each", "0", "--name", "m5-full",
                     "--from", *srcs], check=True)
     shutil.copy(out / "m5-full" / "manifest.csv", "/vol/manifests/matrix/m5-full.csv")

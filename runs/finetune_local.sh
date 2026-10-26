@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Phase 4, first night: M1 = tugstugi fine-tuned on DL Sprint train (FA split,
+# Fine-tuning, first night: M1 = tugstugi fine-tuned on DL Sprint train (FA split,
 # cleaned text), two ways, each scored on every test set with the frozen harness.
 #   1) clean the training text (strip [মিউজিক]-style tags, drop 67 chunks with
 #      non-Bangla script)                                        (seconds)
@@ -7,22 +7,22 @@
 #   3) M1 decoder-only: train 2 epochs (~2.5 h), then the same test sets (~1.3 h)
 #   4) error types + paired comparisons vs tugstugi zero-shot, summary (minutes)
 # Run from the repo root, in Git Bash, with games/overlays/other GPU apps closed:
-#     bash runs/phase4_finetune.sh
+#     bash runs/finetune_local.sh
 #
 # Breakable: stop any time (Ctrl+C, shutdown, power cut) and run the same command
-# again. Finished steps are skipped (marker files in logs/phase4/done/); training
+# again. Finished steps are skipped (marker files in logs/finetuning/done/); training
 # continues from its last checkpoint (saved every 100 steps and on Ctrl+C: press it
 # once and wait for "Stopped", ~15 s; a second press quits without saving).
 # A failed step is logged and skipped; it is retried on the next run.
 
 cd "$(dirname "$0")/.." || exit 1
 export PYTHONPATH=src PYTHONIOENCODING=utf-8 PYTHONUNBUFFERED=1
-PY=./Scripts/python.exe
-LOG=logs/phase4
+PY=${PY:-$( [ -x .venv/bin/python ] && echo .venv/bin/python || { [ -x ./Scripts/python.exe ] && echo ./Scripts/python.exe || echo python; } )}  # Linux/Mac venv, Windows venv, or PATH
+LOG=logs/finetuning
 mkdir -p "$LOG/done"
 STATUS="$LOG/status.txt"
 : > "$STATUS"
-trap 'echo; echo "Stopped. Progress is saved; run  bash runs/phase4_finetune.sh  again to continue."; exit 130' INT
+trap 'echo; echo "Stopped. Progress is saved; run  bash runs/finetune_local.sh  again to continue."; exit 130' INT
 
 step() {  # step <name> <command...>
   local name=$1; shift

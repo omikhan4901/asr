@@ -1,10 +1,10 @@
 """
 F5: DL Sprint eval WER split into spelling/dialect-variant errors and all other errors (rule-based
-typer), for zero-shot tugstugi, the Phase 3 system without training (LM-MBR on the expanded
+typer), for zero-shot tugstugi, the list-correction system without training (LM-MBR on the expanded
 candidate list) and the four M1 fine-tuning variants.
 
-Inputs: results/error_types/phase4/splits_fa-eval/<run>/summary.json (A100 rows),
-        results/error_types/phase3/splits_fa-eval/mbr_lm_x/summary.json (Phase 3, RTX 3060)
+Inputs: results/error_types/finetuning/splits_fa-eval/<run>/summary.json (A100 rows),
+        results/error_types/list_correction/splits_fa-eval/mbr_lm_x/summary.json (list correction, RTX 3060)
 Run:    ./Scripts/python.exe figures/scripts/f5_gain_by_error_type.py
 """
 
@@ -17,12 +17,12 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from style import COL_W, OKABE, ROOT, plt, save  # noqa: E402
 
-SYSTEMS = [("zero-shot", "results/error_types/phase4/splits_fa-eval/tugstugi_a100"),
-           ("List correction (no retraining)", "results/error_types/phase3/splits_fa-eval/mbr_lm_x"),
-           ("encoder-only", "results/error_types/phase4/splits_fa-eval/m1_encoder"),
-           ("decoder-only", "results/error_types/phase4/splits_fa-eval/m1_decoder"),
-           ("LoRA", "results/error_types/phase4/splits_fa-eval/m1_lora"),
-           ("full", "results/error_types/phase4/splits_fa-eval/m1_full")]
+SYSTEMS = [("zero-shot", "results/error_types/finetuning/splits_fa-eval/tugstugi_a100"),
+           ("List correction (no retraining)", "results/error_types/list_correction/splits_fa-eval/mbr_lm_x"),
+           ("encoder-only", "results/error_types/finetuning/splits_fa-eval/m1_encoder"),
+           ("decoder-only", "results/error_types/finetuning/splits_fa-eval/m1_decoder"),
+           ("LoRA", "results/error_types/finetuning/splits_fa-eval/m1_lora"),
+           ("full", "results/error_types/finetuning/splits_fa-eval/m1_full")]
 
 rows = []
 for label, folder in SYSTEMS:

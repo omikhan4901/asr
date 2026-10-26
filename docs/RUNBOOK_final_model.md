@@ -1,9 +1,9 @@
-# Phase 5 runbook: from now to the final numbers
+# Runbook: the final model
 
 Every step you run, in order. Git Bash in the project folder (`D:\Projects\ASR Paper Code`) unless it says
-Kaggle. Times and costs marked *est.* are estimates. The last step writes `results/phase5_summary.txt`.
+Kaggle. Times and costs marked *est.* are estimates. The last step writes `results/final_model_summary.txt`.
 
-**What Phase 5 measures:** M5-full (M5's recipe on all 156 h) and M5-300 (+ ~144 h of OpenSLR 53 read speech,
+**What this measures:** M5-full (M5's recipe on all 156 h) and M5-300 (+ ~144 h of OpenSLR 53 read speech,
 short clips joined into ~25 s samples), each against M5 (13.18 average); ROVER on M5-300 (fixed in advance);
 whole-recording WER (raw recordings cut only by voice detection).
 
@@ -19,7 +19,7 @@ whole-recording WER (raw recordings cut only by voice detection).
 
 ### 1. Send the 22 raw eval recordings to the hub (~10-20 min, $0)
 ```bash
-bash runs/phase5_upload_longform.sh
+bash runs/upload_longform.sh
 ```
 Expected end: `done: zips/longform-eval.zip is on the hub`. If it stops, run it again (finished files are kept).
 
@@ -100,7 +100,7 @@ PYTHONIOENCODING=utf-8 ./Scripts/modal.exe run pipeline/modal_finetune.py::to_hf
 
 ## Kaggle: scoring (two sessions, one per account, at the same time; $0)
 
-Same notebook as Phase 4 (`notebooks/kaggle_phase4.ipynb`), GPU T4 x2, Internet on, secret `HF_TOKEN`. Set the first
+Same notebook as before (`notebooks/kaggle_jobs.ipynb`), GPU T4 x2, Internet on, secret `HF_TOKEN`. Set the first
 cell, then **Save Version -> Save & Run All (Commit)**. Never press Stop (a stopped run loses its output).
 
 ### 9a. Your account: scores + whole recordings (~4-5 h est.)
@@ -116,21 +116,21 @@ GPU0 = "stack:eval@m5_300"
 GPU1 = "stack:dev@m5_300,stack:fleurs@m5_300,stack:kathbath@m5_300"
 RESUME_FROM = ""
 ```
-If it ends early (time limit), resume as in `docs/PHASE4_RUNBOOK.md` 2.4 (add its output as input, set `RESUME_FROM`).
+If it ends early (time limit), resume as in `docs/RUNBOOK_finetuning.md` 2.4 (add its output as input, set `RESUME_FROM`).
 
 ### 10. Put the outputs in place
-For each session: **Output** tab -> download `phase4_outputs.zip` -> unzip into its own folder, e.g.
-`data/phase5/scores/` and `data/phase5/stack/` (each must contain `phase4/`).
+For each session: **Output** tab -> download `kaggle_outputs.zip` -> unzip into its own folder, e.g.
+`data/kaggle_final_model/scores/` and `data/kaggle_final_model/stack/` (each must contain `outputs/`).
 
 ### 11. Final analysis (~20-40 min, CPU)
 ```bash
-bash runs/phase5_finish.sh
+bash runs/final_model_finish.sh
 ```
-It writes `results/phase5_summary.txt`, the source for the results, README, figures and the faculty table.
+It writes `results/final_model_summary.txt`, the source for the results, README, figures and the faculty table.
 
 ---
 
-## Pre-registered (written before any Phase 5 score)
+## Pre-registered (written before any final-model score)
 - M5-full: DL Sprint eval <= 12.0, every other set within 0.5 of its specialist, average <= 12.5.
 - M5-300: average significantly below M5-full's; otherwise more hours of this kind do not help.
 - ROVER target = M5-300 (fixed now, not chosen by test scores).

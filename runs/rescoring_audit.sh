@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Phase 2: reference audit and error types (GPU part + the analyses that read it).
-#   - exact candidate scores for the Phase 1 eval 12-best, then MBR recomputed
+# Reference audit and error types (GPU part + the analyses that read it).
+#   - exact candidate scores for the eval 12-best of the zero-shot baselines, then MBR recomputed
 #   - dev set: greedy and sampled 12-best (decoding choices are made on dev)
 #   - agreement anatomy on more test sets and a second model (E17): tugstugi on
 #     FLEURS and Kathbath, BanglaASR (Whisper-small) on eval and FLEURS
@@ -10,21 +10,21 @@
 #   - after each N-best: anatomy (E3), error types by agreement (E5),
 #     agreement signal (E23), paired comparisons; at the end E21 + E20 + summary.
 # Run from the repo root, in Git Bash:
-#     bash runs/phase2_audit.sh
+#     bash runs/rescoring_audit.sh
 #
 # Breakable: stop any time (Ctrl+C, shutdown, power cut) and run the same command
-# again. Finished steps are skipped (marker files in logs/phase2/done/), and the
+# again. Finished steps are skipped (marker files in logs/rescoring_audit/done/), and the
 # long steps continue from the last finished batch inside the step.
 # A failed step is logged and skipped; it is retried on the next run.
 
 cd "$(dirname "$0")/.." || exit 1
 export PYTHONPATH=src PYTHONIOENCODING=utf-8 PYTHONUNBUFFERED=1
-PY=./Scripts/python.exe
-LOG=logs/phase2
+PY=${PY:-$( [ -x .venv/bin/python ] && echo .venv/bin/python || { [ -x ./Scripts/python.exe ] && echo ./Scripts/python.exe || echo python; } )}  # Linux/Mac venv, Windows venv, or PATH
+LOG=logs/rescoring_audit
 mkdir -p "$LOG/done"
 STATUS="$LOG/status.txt"
 : > "$STATUS"
-trap 'echo; echo "Stopped. Progress is saved; run  bash runs/phase2_audit.sh  again to continue."; exit 130' INT
+trap 'echo; echo "Stopped. Progress is saved; run  bash runs/rescoring_audit.sh  again to continue."; exit 130' INT
 
 step() {  # step <name> <command...>
   local name=$1; shift
@@ -64,7 +64,7 @@ anatomy() {
 # 1) Common Voice test manifest (seconds; reads the extracted corpus, copies no audio)
 step prep_cv          $PY pipeline/data/prepare_cv.py --split test
 
-# 1b) Exact candidate scores for the Phase 1 eval 12-best (~50 min). Its stored
+# 1b) Exact candidate scores for the eval 12-best of the zero-shot baselines (~50 min). Its stored
 #     "logprob" came from the wrong beams (transformers no longer returns beam
 #     scores for Whisper), so MBR there is wrong; texts, oracle and agreement are fine.
 #     Writes a new file; the original eval_nbest.jsonl is kept.

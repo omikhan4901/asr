@@ -1,5 +1,5 @@
 {
-  "a": "results/phase3/kathbath-valid/mbr_lm_x/predictions.jsonl",
+  "a": "results/list_correction/kathbath-valid/mbr_lm_x/predictions.jsonl",
   "b": "results/modal/finetuned/kathbath-valid/m1_full/predictions.jsonl",
   "n_utterances": 2236,
   "n_groups": 17,

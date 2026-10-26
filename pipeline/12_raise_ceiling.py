@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Phase 3: raising the selection ceiling without retraining (PLAN E7, E8, E23, E24).
+List correction: raising the selection ceiling without retraining (PLAN E7, E8, E23, E24).
 
 Candidate pool per utterance = the 12 sampled candidates + the greedy
 hypothesis, each with its exact acoustic score (sum of token log-probabilities,
@@ -23,7 +23,7 @@ Every weight, threshold and the LM order is chosen on the DL Sprint dev pool onl
 (splits_fa-dev) and applied unchanged to every set; test sets are never used for a
 choice. The human labels are not used.
 
-Outputs (--out_dir, default results/phase3/):
+Outputs (--out_dir, default results/list_correction/):
   <set>/<method>/predictions.jsonl  utt_id, group, ref, hyp (for error_types.py / paired_compare.py)
   summary.csv / summary.json        WER per set and method, paired difference vs greedy with a
                                     95% cluster-bootstrap CI (as paired_compare.py), oracle/coverage
@@ -31,7 +31,7 @@ Outputs (--out_dir, default results/phase3/):
   rules.csv                         the chosen rewrite rules with their train counts
   run_info.json
 
-Usage (after runs/phase3_ceiling.sh made the pools and the train greedy output):
+Usage (after runs/list_correction.sh made the pools and the train greedy output):
   PYTHONPATH=src ./Scripts/python.exe pipeline/12_raise_ceiling.py
 """
 
@@ -64,10 +64,10 @@ from bangla_asr.rescoring.ngram_lm import KneserNeyLM
 TUGP = "bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium"
 TUNE = "splits_fa-dev"
 POOLS = {
-    TUNE: "data/phase3/dev_pool.jsonl",
-    "splits_fa-eval": "data/phase3/eval_pool.jsonl",
-    "fleurs-test": "data/phase3/fleurs_pool.jsonl",
-    "kathbath-valid": "data/phase3/kathbath_pool.jsonl",
+    TUNE: "data/list_correction/dev_pool.jsonl",
+    "splits_fa-eval": "data/list_correction/eval_pool.jsonl",
+    "fleurs-test": "data/list_correction/fleurs_pool.jsonl",
+    "kathbath-valid": "data/list_correction/kathbath_pool.jsonl",
 }
 ORDERS = (2, 3, 4)
 LAMS = (0, 0.05, 0.1, 0.2, 0.3, 0.5, 0.75, 1.0, 1.5, 2.0)
@@ -245,7 +245,7 @@ def main():
                     help="set=pool.jsonl ...; the first one must be the tuning set " + TUNE)
     ap.add_argument("--train_text", default="data/splits_fa/train_clean.csv")
     ap.add_argument("--train_greedy", default=f"results/zeroshot/splits_fa-train/{TUGP}/predictions.jsonl")
-    ap.add_argument("--out_dir", default="results/phase3")
+    ap.add_argument("--out_dir", default="results/list_correction")
     ap.add_argument("--n_boot", type=int, default=2000)
     args = ap.parse_args()
 

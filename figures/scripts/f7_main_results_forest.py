@@ -1,12 +1,12 @@
 """
 F7: main results. WER with 95% cluster-bootstrap CIs for every system on every test set, one panel per
-test set. Zero-shot rows and Phase 3 were scored on the RTX 3060; fine-tuned rows on the Modal A100
+test set. Zero-shot rows and list correction were scored on the RTX 3060; fine-tuned rows on the Modal A100
 (the same model gives WER within 0.02 points on both GPUs, R40). Rows whose model declared the test set
 as training data are drawn hollow (contaminated, never compared). Generic Whisper large-v3 / turbo
 (80-93% WER) are left out of the plot range.
 
 Inputs: results/zeroshot/<set>/<model>/metrics.json, results/modal/finetuned/<set>/<run>/metrics.json,
-        results/phase3/summary.csv
+        results/list_correction/summary.csv
 Run:    ./Scripts/python.exe figures/scripts/f7_main_results_forest.py
 """
 
@@ -29,7 +29,7 @@ ZS = {"wav2vec2-xls-r-300m-bn": "arijitx__wav2vec2-xls-r-300m-bengali",
 FT = {"M1 encoder-only": "m1_encoder", "M1 decoder-only": "m1_decoder", "M1 LoRA": "m1_lora", "M1 full": "m1_full"}
 CONTAMINATED = {("kathbath-valid", "Hishab conformer large"), ("cv-test", "Hishab conformer large"),
                 ("cv-test", "BanglaASR (Whisper-small)")}
-COLOR = {"zero-shot": OKABE["grey"], "phase3": OKABE["orange"], "finetuned": OKABE["blue"]}
+COLOR = {"zero-shot": OKABE["grey"], "list_correction": OKABE["orange"], "finetuned": OKABE["blue"]}
 
 rows = []
 for s, sname in SETS.items():
@@ -46,11 +46,11 @@ for s, sname in SETS.items():
             m = json.loads(f.read_text(encoding="utf-8"))
             rows.append({"set": sname, "system": label, "kind": "finetuned", "wer": 100 * m["wer"],
                          "lo": 100 * m["wer_ci95"][0], "hi": 100 * m["wer_ci95"][1], "contaminated": False})
-p3 = pd.read_csv(ROOT / "results/phase3/summary.csv").set_index("set")
+p3 = pd.read_csv(ROOT / "results/list_correction/summary.csv").set_index("set")
 for s, sname in SETS.items():
     if s in p3.index:
         r = p3.loc[s]
-        rows.append({"set": sname, "system": "List correction (no retraining)", "kind": "phase3", "wer": 100 * r.mbr_lm_x_wer,
+        rows.append({"set": sname, "system": "List correction (no retraining)", "kind": "list_correction", "wer": 100 * r.mbr_lm_x_wer,
                      "lo": 100 * (r.greedy_wer + r.mbr_lm_x_ci_lo), "hi": 100 * (r.greedy_wer + r.mbr_lm_x_ci_hi),
                      "contaminated": False})
 d = pd.DataFrame(rows)

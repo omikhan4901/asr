@@ -1,5 +1,5 @@
 {
-  "a": "results/phase3/fleurs-test/mbr_lm_x/predictions.jsonl",
+  "a": "results/list_correction/fleurs-test/mbr_lm_x/predictions.jsonl",
   "b": "results/modal/finetuned/fleurs-test/m1_full/predictions.jsonl",
   "n_utterances": 920,
   "n_groups": 349,

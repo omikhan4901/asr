@@ -27,7 +27,7 @@ splits_fa-eval__m5_300_vs_zeroshot         A  22.70  B  11.49  B-A -11.22 [-12.1
 splits_fa-eval__m5_full_vs_m5              A  13.84  B  11.50  B-A  -2.34 [-2.67, -2.03]
 splits_fa-eval__m5_full_vs_zeroshot        A  22.70  B  11.50  B-A -11.20 [-12.13, -10.32]
 
-ROVER / stacking on M5-300 (results/phase5_stack/summary.csv):
+ROVER / stacking on M5-300 (results/stacking_final/summary.csv):
   set=splits_fa-dev, n_utterances=646, n_groups=6, ref_words=18329, greedy_wer=0.17480, am_wer=0.16640, am_diff=-0.00840, am_ci_lo=-0.01724, am_ci_hi=-0.00263, am_p_better=1.00000, lm_wer=0.16558, lm_diff=-0.00922, lm_ci_l
   set=splits_fa-eval, n_utterances=4234, n_groups=22, ref_words=120029, greedy_wer=0.11486, am_wer=0.11421, am_diff=-0.00065, am_ci_lo=-0.00230, am_ci_hi=0.00067, am_p_better=0.80700, lm_wer=0.11344, lm_diff=-0.00142, lm_c
   set=fleurs-test, n_utterances=920, n_groups=349, ref_words=17766, greedy_wer=0.15350, am_wer=0.15699, am_diff=0.00349, am_ci_lo=0.00084, am_ci_hi=0.00628, am_p_better=0.00850, lm_wer=0.15417, lm_diff=0.00068, lm_ci_lo=-0

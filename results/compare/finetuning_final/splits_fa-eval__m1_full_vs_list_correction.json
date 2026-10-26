@@ -1,5 +1,5 @@
 {
-  "a": "results/phase3/splits_fa-eval/mbr_lm_x/predictions.jsonl",
+  "a": "results/list_correction/splits_fa-eval/mbr_lm_x/predictions.jsonl",
   "b": "results/modal/finetuned/splits_fa-eval/m1_full/predictions.jsonl",
   "n_utterances": 4234,
   "n_groups": 22,

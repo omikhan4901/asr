@@ -74,7 +74,8 @@ by 1.4 points. After
 fine-tuning, rescoring gains almost vanish (−0.45 points): training removes exactly the errors that
 selection could reach. Against 605 human-verified references, about 2% of the media reference words are wrong, most
 errors that no candidate contains are spelling, dialect or transcript errors rather than recognizer errors, and every
-model's WER changes by less than 2 points. We release the forced-aligned segmentation of 93.1 hours of Bengali-Loop
+model's WER changes by less than 2 points; not counting confirmed spelling differences (15–50% of a system's
+errors) leaves the conclusions unchanged. We release the forced-aligned segmentation of 93.1 hours of Bengali-Loop
 recordings, the verified references and the scoring code.
 
 **Keywords:** speech recognition, Bangla, N-best rescoring, minimum Bayes risk, error analysis, spelling variation, Whisper
@@ -772,7 +773,43 @@ that includes our evaluation recordings; on the three clean sets it is 3.6 to 4.
 
 \* trained on DL Sprint 4.0 data. ‡ trained on this corpus. ? training data not stated (AI4Bharat built Kathbath).
 
-### 5.14 Remaining work
+### 5.14 Spelling-aware WER
+
+WER counts ছিল for ছিলো as an error, so part of every number above is spelling convention, not recognition. As a
+second metric next to the unchanged WER, the **spelling-aware WER** does not count the edits that the rules type as
+*convention* or *segmentation* (§3.5), the two types the annotators confirmed as spelling only (98–99% and 83%,
+§5.11). Everything else is as before: same normalizer, same alignment (its edit count equals the WER numerator on
+every clip), 95% cluster-bootstrap CIs, paired tests (`analysis/spelling_aware_wer.py`).
+
+| Spelling-aware WER % (standard WER) | DL Sprint eval | FLEURS | Common Voice | Kathbath | Average |
+|---|---:|---:|---:|---:|---:|
+| **Final model** | **8.82** (11.18) | 10.89 (15.60) | **6.61** (10.13) | **5.87** (10.28) | **8.04** (11.80) |
+| M5-300 (300 h) | 9.07 (11.49) | 10.87 (15.35) | 6.72 (10.21) | 5.90 (10.07) | 8.14 (11.78) |
+| M1 (DL Sprint, 60 h) | 9.16 (11.34) | 12.77 (18.34) | 8.80 (12.80) | 7.94 (13.48) | 9.67 (13.99) |
+| Hishab conformer large | 15.40 (21.18) | **10.15** (14.24) | 3.87‡ (7.72) | 4.80‡ (8.32) | – |
+| IndicConformer 600M, CTC | 23.79 (28.13) | 12.10 (16.03) | 9.77 (14.04) | 6.97 (11.20) | 13.16 (17.35) |
+| Team Villagers (DL Sprint 4.0 finalist) | 11.38* (13.87) | 14.13 (19.57) | 11.57 (15.62) | 9.13 (14.65) | 11.55 (15.93) |
+| zarifmahir21 | 7.61* (8.51) | 14.28 (20.11) | 9.53 (13.71) | 9.27 (14.51) | 10.17 (14.21) |
+| tugstugi zero-shot | 15.82 (22.70) | 14.56 (21.54) | 10.15 (14.80) | 9.02 (14.81) | 12.39 (18.46) |
+
+\* trained on DL Sprint 4.0 data. ‡ trained on this corpus. Not counting number-format differences as well (digits vs
+spoken words) lowers the final model's numbers by at most 1.4 points (FLEURS 9.47) and changes no comparison
+(`results/spelling_aware/summary.csv`, column `sa_wer_num`).
+
+<p align="center"><img src="figures/png/f18_spelling_aware.png" width="900" alt="Standard and spelling-aware WER for seven systems on four test sets; every system drops by 15–50%, the final model stays lowest wherever the comparison is clean except FLEURS, where the gap to Hishab narrows to 0.7 points."></p>
+
+**Figure 18.** Standard WER (hollow) and spelling-aware WER (filled, 95% CI) on the four full test sets.
+
+**Spelling is 15–50% of a system's errors** (final model: 21% on DL Sprint, 30–43% on the read-speech sets), which is the size of the convention problem the diagnosis describes. **The conclusions do not depend on it:** the
+final model stays best on DL Sprint eval, Common Voice and Kathbath among the outside models not trained on them
+(paired differences −1.1 to −17.6 points, all significant except IndicConformer RNN-T on Kathbath, −0.32 [−0.60,
+0.00]), and on FLEURS the lead of Hishab's conformer shrinks from 1.36 to
+0.73 points [0.01, 1.48], while IndicConformer RNN-T ties (−0.50 [−1.15, +0.20]). **Fine-tuning learns spelling as well
+as speech:** on DL Sprint eval it lowers the standard WER by 11.5 points and the spelling-aware WER by 7.0 [6.1, 8.0],
+so about 40% of the fine-tuning gain is the corpus's spelling convention, and the rest, a 44% cut in the remaining
+errors, is recognition.
+
+### 5.15 Remaining work
 - **Model release:** the final weights are built from M1 and M5-300 by `pipeline/make_soup.py --members
   m1_full+m5_300+m5_300+m5_300`; they are not yet published.
 
@@ -895,6 +932,7 @@ repository.
 | Fine-tuning analysis | `runs/phase4_analysis.sh` |
 | Model averaging, beam search (Kaggle jobs `soup:`, `beam:`) | `pipeline/make_soup.py`, `pipeline/eval_zero_shot.py --num_beams` |
 | Model selection on mixed dev; outside baselines (Kaggle jobs `dev:`, `soup:`, `zs:`) | `runs/prepare_mixed_dev.py`, `pipeline/kaggle_phase4.py` |
+| Spelling-aware WER (second metric) | `analysis/spelling_aware_wer.py` |
 | Human labels: import, agreement, settled disagreements, WER vs verified references | `analysis/labeling/import_labels.py` (`--snapshot results/labels/snapshot_<time>.json` offline; settled answers in `results/labels/adjudication.json`), `analysis/labeling/noise_by_alignment.py`, `analysis/labeling/adjudication_sensitivity.py` |
 | Combining models; gap to Hishab | `analysis/cross_model_rover.py`, `analysis/hishab_gap.py` |
 | Whole-recording evaluation | `pipeline/eval_longform.py` (Kaggle job `longform:`; data `runs/phase5_upload_longform.sh`) |

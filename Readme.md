@@ -21,7 +21,7 @@ cluster-bootstrap confidence intervals. All experiments are complete (October 20
   11.18% on DL Sprint eval and 11.80% averaged over four test sets (zero-shot: 22.70% and 18.46%). It is the best open
   model we scored on every clean test set except FLEURS, where Hishab's non-commercial conformer leads by 1.4 points,
   and ahead of every published open result on Common Voice and Kathbath (IndicWhisper, Omnilingual ASR, MMS,
-  SeamlessM4T): the best openly licensed Bangla model under 1B parameters that we know of.
+  SeamlessM4T): the strongest Bangla model under 1B parameters that we know of.
 - **Checked by hand.** Against 605 human-verified references, about 2% of the media reference words are wrong, and
   59% of the errors no candidate can fix are spelling, dialect or transcript errors, not recognizer errors.
 - **Spelling-aware WER.** Not counting the confirmed spelling differences (15–50% of every system's errors), the final
@@ -796,10 +796,9 @@ are not paired comparisons and only indicate the order of magnitude; none of the
 Every reported result is behind the final model except one FLEURS word error rate: the non-commercial Voxtral
 fine-tune, four times our size, reports 14.73% WER, but its character error rate (4.78%) is higher than ours
 (4.37%), so the difference is most likely in word segmentation and normalization rather than recognition. Taken
-together with §5.13, the final model (764M parameters, from an Apache-2.0 base) is the best openly licensed Bangla
-model we know of, and the only model under 1B parameters that is ahead on every test set except FLEURS, where the
-non-commercial Hishab conformer leads. No other model has been evaluated on Bangla media speech; Omnilingual ASR 7B,
-the strongest openly licensed alternative, is the one we have not scored ourselves.
+together with §5.13, the final model (764M parameters) is the strongest Bangla model under 1B parameters that we
+know of: ahead on every test set except FLEURS, where the non-commercial Hishab conformer leads. No other model has
+been evaluated on Bangla media speech.
 
 ### 5.14 Spelling-aware WER
 
@@ -839,7 +838,9 @@ errors, is recognition.
 
 ### 5.15 Remaining work
 - **Model release:** the final weights are built from M1 and M5-300 by `pipeline/make_soup.py --members
-  m1_full+m5_300+m5_300+m5_300`; they are not yet published.
+  m1_full+m5_300+m5_300+m5_300`; they are not yet published. Before a public release of the weights, the
+  segmentation and the verified references: written permission from the DL Sprint organizers and a license choice
+  (`docs/DATA_LICENSES.md`).
 
 ---
 
@@ -930,14 +931,18 @@ Audio, trained models and large intermediate files are not in the repository (`d
 reported number can still be checked without audio: `results/` holds each system's predictions, metrics with
 confidence intervals, and paired tests. To rerun from audio:
 
-| Corpus | Used for | Source | Prepared by |
-|---|---|---|---|
-| DL Sprint 4.0 training recordings (Bengali-Loop [1]) | media-speech train / dev / eval | BUET DL Sprint 4.0 Kaggle competition (long-form ASR track); audio in `data/raw/train/audio`, transcripts in `data/raw/train/annotation` | `pipeline/01_segment.py`, `pipeline/02_split.py` |
-| FLEURS, Bengali | test | `google/fleurs` (`bn_in`) on Hugging Face | `pipeline/data/prepare_hf.py --preset fleurs` |
-| Kathbath, Bengali | test (valid split), training | `ai4bharat/Kathbath` on Hugging Face (accept the terms first) | `prepare_hf.py --preset kathbath`, `prepare_matrix.py kathbath` |
-| Shrutilipi, Bengali | training | `ai4bharat/Shrutilipi` on Hugging Face (accept the terms first) | `pipeline/data/prepare_matrix.py shrutilipi` |
-| Common Voice 27.0, Bengali | test, training | Mozilla Common Voice, extracted to `data/CommonVoiceCorpus/bn/` | `pipeline/data/prepare_cv.py`, `prepare_matrix.py cv` |
-| OpenSLR 53 | extra training hours (final model) | [openslr.org/resources/53](https://www.openslr.org/resources/53) | `pipeline/data/prepare_openslr53.py` |
+| Corpus | Used for | Source | License | Prepared by |
+|---|---|---|---|---|
+| DL Sprint 4.0 training recordings (Bengali-Loop [1]) | media-speech train / dev / eval | BUET DL Sprint 4.0 Kaggle competition (long-form ASR track); audio in `data/raw/train/audio`, transcripts in `data/raw/train/annotation` | subject to the competition rules (no data license; YouTube media) | `pipeline/01_segment.py`, `pipeline/02_split.py` |
+| FLEURS, Bengali | test | `google/fleurs` (`bn_in`) on Hugging Face | CC BY 4.0 | `pipeline/data/prepare_hf.py --preset fleurs` |
+| Kathbath, Bengali | test (valid split), training | `ai4bharat/Kathbath` on Hugging Face (accept the terms first) | CC BY 4.0 | `prepare_hf.py --preset kathbath`, `prepare_matrix.py kathbath` |
+| Shrutilipi, Bengali | training | `ai4bharat/Shrutilipi` on Hugging Face (accept the terms first) | CC BY 4.0 | `pipeline/data/prepare_matrix.py shrutilipi` |
+| Common Voice 27.0, Bengali | test, training | Mozilla Common Voice, extracted to `data/CommonVoiceCorpus/bn/` | CC0 | `pipeline/data/prepare_cv.py`, `prepare_matrix.py cv` |
+| OpenSLR 53 | extra training hours (final model) | [openslr.org/resources/53](https://www.openslr.org/resources/53) | CC BY-SA 4.0 | `pipeline/data/prepare_openslr53.py` |
+
+The repository holds no audio, only transcripts next to model outputs and the verified references; what that means for
+each corpus, and what is still open before a public model or dataset release (the DL Sprint terms), is in
+[`docs/DATA_LICENSES.md`](docs/DATA_LICENSES.md).
 
 ## Reproducing
 

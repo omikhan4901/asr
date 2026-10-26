@@ -124,9 +124,15 @@ reference word, how many of the candidates contain it.
 - **Tests of the diagnosis:** hypothesis expansion with a learned convention rewriter and an n-gram LM, and
   an error-locus comparison of LoRA, decoder-only, encoder-only and full fine-tuning against five
   predictions derived from the diagnosis.
-- **Released resources:** the forced-aligned segmentation of the DL Sprint / Bengali-Loop recordings, 605
-  human-verified references with agreement statistics (`results/labels/verified_references.csv`), and the
-  normalizer and scoring code.
+- **A train × test matrix and a final model:** each public corpus trains its own test set best and mixing them
+  gives the best average; one Whisper-medium trained on ~300 h reaches 11.18% on media speech and 11.80% on average,
+  the strongest Bangla model under 1B parameters we know of, compared with every open model under one harness.
+- **Human verification and a second metric:** 605 references and the error types checked by two annotators, which
+  confirm the diagnosis and expose a contaminated baseline; a spelling-aware WER that leaves out the differences the
+  annotators confirmed as spelling only.
+- **Released resources:** the final model (Apache-2.0), the forced-aligned segmentation of the DL Sprint /
+  Bengali-Loop recordings, 605 human-verified references with agreement statistics
+  (`results/labels/verified_references.csv`), and the normalizer and scoring code.
 
 ---
 
@@ -279,18 +285,27 @@ clip of the remaining one fell below the filter.
 
 The split is disjoint by recording but not by speaker or series: some narrators and serialized stories appear
 on both sides. **Public test sets:** FLEURS-bn test (920 utterances, read Wikipedia), Kathbath validation
-(2,236; the public repository has no test split), Common Voice 27.0 test (9,408 clips). None is used for
-training or tuning.
+(2,236; the public repository has no test split), Common Voice 27.0 test (9,408 clips). These splits are never used
+for training or tuning. From §5.8 on, the *training* splits of Common Voice, Kathbath and Shrutilipi (and OpenSLR 53
+in §5.12) are used for training, and FLEURS validation plus a 1,999-clip Common Voice dev sample only to choose the
+final weight average.
 
 **Contamination.** Hishab's model card lists Kathbath and Common Voice among its training data, and it
 transcribes 50.9% and 61.5% of those utterances exactly; BanglaASR, fine-tuned on Common Voice, does so for
-59.1%. These rows are marked † and never compared.
+59.1%. These rows are marked † and never compared. **Our own training data** (the M5-300 list, which contains M1's) was
+checked against every test set (`analysis/own_contamination.py`): no DL Sprint training clip comes from a dev or
+evaluation recording, no Common Voice or Kathbath test speaker is in the training data, FLEURS is not used for
+training, and only 9 of 16,798 test clips share a sentence with the training text (DL Sprint radio jingles,
+advertisements and credits repeated across recordings, and three Common Voice sentences); leaving them out changes the
+final model's WER by at most 0.002 points. The base model was trained on Ben-10, a regional-dialect corpus that
+shares no data with these test sets.
 
 **Hardware.** Zero-shot, rescoring and list-correction inference on one RTX 3060 (12 GB); fine-tuning training and scoring on a
 Modal A100-40GB, the M1 rows and the zero-shot baseline scored on that same GPU; the matrix models (§5.8),
 LoRA's Kathbath and Common Voice rows and the stacking candidates on Kaggle T4s, which give the same WER as
 the A100 within 0.01 points (zero-shot tugstugi on dev, FLEURS and Kathbath; 96–99% identical outputs); the Hishab
-baseline on a Kaggle T4. Budget: $0 out of pocket (free cloud credits).
+baseline on a Kaggle T4. The final models (§5.12) were trained on a Modal A100 and every final-model, weight-average
+and outside-baseline row was scored on a Kaggle T4. Budget: $0 out of pocket (free cloud credits).
 
 ---
 
@@ -671,7 +686,7 @@ the clips vs 0.8% [0.4, 1.3] in the most confident third (39% vs 15% of clips co
 
 <p align="center"><img src="figures/png/f17_verified_references.png" width="900" alt="WER against the original and the human-verified reference for six systems on the verified clips of four test sets; every system changes by less than two points and the order of the systems stays the same."></p>
 
-**Figure 17.** WER on the verified clips against the original (hollow) and the verified reference (filled); the number
+**Figure 14.** WER on the verified clips against the original (hollow) and the verified reference (filled); the number
 is the paired change in points (bold: the 95% cluster-bootstrap CI excludes 0).
 
 **WER against the verified references** (the official second number for every model; all 31–35 scored systems are in
@@ -722,7 +737,7 @@ show this.
 
 <p align="center"><img src="figures/png/f16_data_scale.png" width="440" alt="WER against training hours for M5 (40 h), M5-full (156 h) and M5-300 (300 h) on four test sets; every set improves or stays level; M1 (60 h of DL Sprint) is a separate hollow marker."></p>
 
-**Figure 14.** WER against training hours with the same recipe (M5, M5-full, M5-300; filled) and the in-domain M1
+**Figure 15.** WER against training hours with the same recipe (M5, M5-full, M5-300; filled) and the in-domain M1
 (hollow square, DL Sprint only). 95% cluster-bootstrap CIs.
 
 **Weight averaging (the final model).** Averaging the weights of fine-tuned models from the same starting point
@@ -737,7 +752,7 @@ M5-300 would have scored 11.67 on test, but it lost on dev (13.91), so it is rep
 
 <p align="center"><img src="figures/png/f15_weight_averaging.png" width="900" alt="(a) Dev average against test average WER for four weight-averaging candidates; the chosen 0.25 M1 + 0.75 M5-300 has the lowest dev average, 13.86, and test average 11.80. (b) Per-set difference of the chosen average against M5-300: DL Sprint dev -0.98, DL Sprint eval -0.31, Kathbath +0.21, others not significant."></p>
 
-**Figure 15.** (a) The four pre-registered candidates: average WER over the three dev sets (used to choose) against
+**Figure 16.** (a) The four pre-registered candidates: average WER over the three dev sets (used to choose) against
 the average over the four test sets. (b) The chosen average against M5-300 per set (orange = dev), paired 95% CIs.
 
 **Rescoring the final model** (measured on M5-300, before the weight average was chosen). ROVER over M5-300's own 12 sampled candidates, fixed as the target before any score,
@@ -756,7 +771,7 @@ and the cuts are not reference-guided; the fine-tuned models differ by less than
 
 <p align="center"><img src="figures/png/f14_baselines.png" width="900" alt="WER with confidence intervals for seven systems on four test sets; the final model is lowest on DL Sprint eval, Common Voice and Kathbath among models not trained on that material; Hishab is lower on FLEURS."></p>
 
-**Figure 16.** The final model against the open Bangla models we scored with the same harness (greedy), with 95%
+**Figure 17.** The final model against the open Bangla models we scored with the same harness (greedy), with 95%
 cluster-bootstrap CIs. Hollow marker: the model was trained on that material (flags set before scoring; not compared).
 
 Four more open models were scored zero-shot: AI4Bharat's IndicConformer 600M (both heads), the DL Sprint 4.0 finalist
@@ -876,8 +891,10 @@ same data would be the fully fair comparison.
 
 **Threats to validity.** The DL Sprint split shares narrators and serialized stories between training and
 evaluation, which can favor fine-tuned systems and rules learned from training text; FLEURS, Kathbath and
-Common Voice share nothing with our training data and are the strict test (and there the fine-tuning gains are
-smaller: −1.3 to −3.2 points). The DL Sprint references may be partly machine-generated [4]; against the verified
+Common Voice share no recording, speaker or sentence with our training data (§4) and are the strict test (and there
+the fine-tuning gains of the in-domain model are smaller: −1.3 to −3.2 points). Our final model also passes the test
+that exposed a contaminated baseline: on the DL Sprint clips whose reference the annotators corrected it is closer to
+the corrected text than to the original (45 clips vs 18), as a model that has not seen these transcripts should be. The DL Sprint references may be partly machine-generated [4]; against the verified
 references every model's WER changes by less than 2 points and the order of the systems is unchanged (§5.11). Greedy output depends slightly on batch size and GPU, so every row of a
 comparison uses one batch size, and rows from two GPU types (A100, T4) are mixed only after checking that the
 same model gives the same WER on both (within 0.01 points). Kathbath results use its validation split, and the DL Sprint
@@ -906,7 +923,8 @@ holds: about 2% of DL Sprint reference words are wrong, most of the errors no ca
 or transcript errors rather than recognizer errors, and every model's WER moves by less than 2 points. A
 spelling-aware WER that does not count the confirmed spelling differences (8.04% average for the final model) leaves
 the conclusions unchanged and shows that about 40% of the fine-tuning gain on DL Sprint is the corpus's spelling
-convention: the rest is a 44% cut in recognition errors.
+convention: the rest is a 44% cut in recognition errors. The model is checked for contamination against every test
+set and released under Apache-2.0, with the segmentation, the verified references and the scoring code.
 
 ---
 

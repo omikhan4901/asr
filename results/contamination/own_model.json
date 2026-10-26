@@ -1,0 +1,68 @@
+{
+  "training_clips": 96665,
+  "training_sources": {
+    "openslr53-train": 22786,
+    "cv-train": 21647,
+    "kathbath-train": 19028,
+    "shrutilipi-train": 17879,
+    "train_clean": 15325
+  },
+  "dlsprint_training_clips_from_dev_or_eval_recordings": 0,
+  "cv_test_speakers_in_training": 0,
+  "kathbath_valid_speakers_in_training": 0,
+  "fleurs_clips_in_training": 0,
+  "sentence_overlap": {
+    "splits_fa-eval": {
+      "clips": 4234,
+      "clips_with_training_sentence": 6,
+      "examples": [
+        "মিরচির নিবেদন ফ্রাইডে ক্লাসিক",
+        "নাট্যরূপ মহুয়া বন্দ্যোপাধ্যায় ও উৎসব চৌধুরী শব্দগ্রহণ সত্যজিৎ সেন",
+        "শব্দ পরিকল্পনা আবহ ও মিশ্রণ সভ্যসাচী মুখার্জী পরিচালনায় শাওলী মজুমদার সৃজনশীল পরিচালনা ইন্দ্রানী চক্রবর্তী প্রযোজনা প্যাস্টেল এন্টারটেইনমেন্ট টাইমস অফ পুরান আপনার জন্য মিরচি বাংলা ইউটিউব চ্যানেল এবং গানা অপে",
+        "রুচি বারবিকিউ চানাচুরের এমনই দুর্দান্ত স্বাদ যে স্বাদ ভোলা যায় না",
+        "রুচি বারবিকিউ চানাচুরের এমনই দুর্দান্ত স্বাদ যে স্বাদ ভোলা যায় না"
+      ]
+    },
+    "fleurs-test": {
+      "clips": 920,
+      "clips_with_training_sentence": 0,
+      "examples": []
+    },
+    "cv-test": {
+      "clips": 9408,
+      "clips_with_training_sentence": 3,
+      "examples": [
+        "ব্যাংকটি ঢাকা স্টক এক্সচেঞ্জ ও চট্টগ্রাম স্টক এক্সচেঞ্জ এ নিবন্ধিত",
+        "ফিরে আসার পর যুব দলে তিনি খুব দ্রুতই উন্নতি করতে থাকেন",
+        "নদীটির উল্লেখযোগ্য কোনো শাখা প্রশাখা নেই"
+      ]
+    },
+    "kathbath-valid": {
+      "clips": 2236,
+      "clips_with_training_sentence": 0,
+      "examples": []
+    }
+  },
+  "final_model_wer_without_overlapping_clips": {
+    "splits_fa-eval": {
+      "all": 11.176,
+      "without": 11.174
+    },
+    "fleurs-test": {
+      "all": 15.597,
+      "without": 15.597
+    },
+    "cv-test": {
+      "all": 10.133,
+      "without": 10.135
+    },
+    "kathbath-valid": {
+      "all": 10.281,
+      "without": 10.281
+    }
+  },
+  "memorization_final_model": {
+    "closer_to_original": 18,
+    "closer_to_corrected": 45
+  }
+}

@@ -838,9 +838,8 @@ errors, is recognition.
 
 ### 5.15 Remaining work
 - **Model release:** the final weights are built from M1 and M5-300 by `pipeline/make_soup.py --members
-  m1_full+m5_300+m5_300+m5_300`; they are not yet published. Before a public release of the weights, the
-  segmentation and the verified references: written permission from the DL Sprint organizers and a license choice
-  (`docs/DATA_LICENSES.md`).
+  m1_full+m5_300+m5_300+m5_300`; they are not yet published. The release needs only a license choice
+  for the weights (`docs/DATA_LICENSES.md`).
 
 ---
 
@@ -933,7 +932,7 @@ confidence intervals, and paired tests. To rerun from audio:
 
 | Corpus | Used for | Source | License | Prepared by |
 |---|---|---|---|---|
-| DL Sprint 4.0 training recordings (Bengali-Loop [1]) | media-speech train / dev / eval | BUET DL Sprint 4.0 Kaggle competition (long-form ASR track); audio in `data/raw/train/audio`, transcripts in `data/raw/train/annotation` | subject to the competition rules (no data license; YouTube media) | `pipeline/01_segment.py`, `pipeline/02_split.py` |
+| DL Sprint 4.0 training recordings (Bengali-Loop [1]) | media-speech train / dev / eval | BUET DL Sprint 4.0 Kaggle competition (long-form ASR track); audio in `data/raw/train/audio`, transcripts in `data/raw/train/annotation` | no license stated; treated as permissive, removed on request | `pipeline/01_segment.py`, `pipeline/02_split.py` |
 | FLEURS, Bengali | test | `google/fleurs` (`bn_in`) on Hugging Face | CC BY 4.0 | `pipeline/data/prepare_hf.py --preset fleurs` |
 | Kathbath, Bengali | test (valid split), training | `ai4bharat/Kathbath` on Hugging Face (accept the terms first) | CC BY 4.0 | `prepare_hf.py --preset kathbath`, `prepare_matrix.py kathbath` |
 | Shrutilipi, Bengali | training | `ai4bharat/Shrutilipi` on Hugging Face (accept the terms first) | CC BY 4.0 | `pipeline/data/prepare_matrix.py shrutilipi` |
@@ -941,7 +940,7 @@ confidence intervals, and paired tests. To rerun from audio:
 | OpenSLR 53 | extra training hours (final model) | [openslr.org/resources/53](https://www.openslr.org/resources/53) | CC BY-SA 4.0 | `pipeline/data/prepare_openslr53.py` |
 
 The repository holds no audio, only transcripts next to model outputs and the verified references; what that means for
-each corpus, and what is still open before a public model or dataset release (the DL Sprint terms), is in
+each corpus, including how we treat the DL Sprint data (no license stated: used as permissive, removed on request), is in
 [`docs/DATA_LICENSES.md`](docs/DATA_LICENSES.md).
 
 ## Reproducing

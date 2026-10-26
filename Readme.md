@@ -20,6 +20,10 @@ cluster-bootstrap confidence intervals. All experiments are complete (October 20
 - **Final model.** One Whisper-medium trained on all of it (~300 h), with a weight average chosen on dev data:
   11.18% on DL Sprint eval and 11.80% averaged over four test sets (zero-shot: 22.70% and 18.46%). It is the best open
   model we scored on every clean test set except FLEURS, where Hishab's non-commercial conformer leads by 1.4 points.
+- **Checked by hand.** Against 605 human-verified references, about 2% of the media reference words are wrong, and
+  59% of the errors no candidate can fix are spelling, dialect or transcript errors, not recognizer errors.
+- **Spelling-aware WER.** Not counting the confirmed spelling differences (15–50% of every system's errors), the final
+  model reaches 8.82% on DL Sprint and 8.04% on average, and every conclusion stays the same.
 
 <p align="center"><img src="figures/png/f0_hero.png" width="900" alt="(a) DL Sprint eval WER: zero-shot greedy 22.7, MBR rescoring 22.8, best of 12 candidates 18.3, list correction 17.5, final fine-tuned model 11.2. (b) Zero-shot vs final model on four test sets: 22.7 to 11.2, 21.5 to 15.6, 14.8 to 10.1, 14.8 to 10.3."></p>
 
@@ -34,6 +38,7 @@ cause. (b) The final model on the four test sets, with 95% confidence intervals.
 | Human verification of the references (§5.11) | done |
 | Final model on all four corpora (156 h, then ~300 h), whole-recording evaluation (§5.12) | done |
 | Comparison with other open Bangla models (§5.13) | done |
+| Spelling-aware WER as a second metric (§5.14) | done |
 | Results frozen / final report | Nov 12 / Dec 1, 2026 |
 | Public release of the model, segmentation and scoring code on Hugging Face | planned; not yet published |
 
@@ -870,7 +875,10 @@ the data we have (300 h), and a weight average chosen on development data, gives
 11.18% on DL Sprint and an average of 11.80% over the four test sets: the best open model we know of on Bangla media
 speech, and on every clean test set except FLEURS; rescoring its candidates adds only 0.1 to 0.25 points. Against 605 human-verified references the picture
 holds: about 2% of DL Sprint reference words are wrong, most of the errors no candidate can fix are spelling, dialect
-or transcript errors rather than recognizer errors, and every model's WER moves by less than 2 points.
+or transcript errors rather than recognizer errors, and every model's WER moves by less than 2 points. A
+spelling-aware WER that does not count the confirmed spelling differences (8.04% average for the final model) leaves
+the conclusions unchanged and shows that about 40% of the fine-tuning gain on DL Sprint is the corpus's spelling
+convention: the rest is a 44% cut in recognition errors.
 
 ---
 

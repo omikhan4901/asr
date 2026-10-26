@@ -45,6 +45,18 @@ for s, name in SETS.items():
     rows[name] = {"clips": m["n_utterances"], "clusters (recordings / speakers)": m["n_groups"], "reference words": m["ref_words"]}
 pd.DataFrame(rows).T
 """),
+    md("""
+## Training data never touches the test sets
+Checked for the final model's whole training list (`analysis/own_contamination.py`): recordings, speakers and sentences.
+"""),
+    code("""
+c = load("results/contamination/own_model.json")
+display(pd.Series({k: v for k, v in c.items() if isinstance(v, int)}))
+pd.DataFrame({s: {"clips": v["clips"], "clips sharing a training sentence": v["clips_with_training_sentence"],
+                  "final-model WER": c["final_model_wer_without_overlapping_clips"][s]["all"],
+                  "WER without those clips": c["final_model_wer_without_overlapping_clips"][s]["without"]}
+              for s, v in c["sentence_overlap"].items()}).T
+"""),
     md("## The normalizer and the WER\nThe exact code every number in this repository goes through:"),
     code("""
 from bangla_asr.common.text import normalize_bangla_text

@@ -19,7 +19,9 @@ cluster-bootstrap confidence intervals. All experiments are complete (October 20
   best average over the four test sets (13.18%).
 - **Final model.** One Whisper-medium trained on all of it (~300 h), with a weight average chosen on dev data:
   11.18% on DL Sprint eval and 11.80% averaged over four test sets (zero-shot: 22.70% and 18.46%). It is the best open
-  model we scored on every clean test set except FLEURS, where Hishab's non-commercial conformer leads by 1.4 points.
+  model we scored on every clean test set except FLEURS, where Hishab's non-commercial conformer leads by 1.4 points,
+  and ahead of every published open result on Common Voice and Kathbath (IndicWhisper, Omnilingual ASR, MMS,
+  SeamlessM4T): the best openly licensed Bangla model under 1B parameters that we know of.
 - **Checked by hand.** Against 605 human-verified references, about 2% of the media reference words are wrong, and
   59% of the errors no candidate can fix are spelling, dialect or transcript errors, not recognizer errors.
 - **Spelling-aware WER.** Not counting the confirmed spelling differences (15–50% of every system's errors), the final
@@ -75,7 +77,8 @@ hour of the four corpora plus 144 h of public read speech (300 h), one model of 
 average of 11.78% while matching the in-domain model on DL Sprint (11.49%), and averaging its weights with the in-domain
 model, chosen on development data, gives **11.18%** on DL Sprint and an average of **11.80%**. Against every open Bangla
 model we scored, the final model is best on every clean test set except FLEURS, where a non-commercial conformer leads
-by 1.4 points. After
+by 1.4 points, and it is ahead of the published results of larger open models (Omnilingual ASR 7B, IndicWhisper,
+SeamlessM4T). After
 fine-tuning, rescoring gains almost vanish (−0.45 points): training removes exactly the errors that
 selection could reach. Against 605 human-verified references, about 2% of the media reference words are wrong, most
 errors that no candidate contains are spelling, dialect or transcript errors rather than recognizer errors, and every
@@ -778,6 +781,26 @@ that includes our evaluation recordings; on the three clean sets it is 3.6 to 4.
 
 \* trained on DL Sprint 4.0 data. ‡ trained on this corpus. ? training data not stated (AI4Bharat built Kathbath).
 
+**Reported results of other open models (not re-scored).** Several larger or newer models have published Bengali
+results on the same public test sets. They use other text normalizers and sometimes other splits or samples, so they
+are not paired comparisons and only indicate the order of magnitude; none of them reports results on media speech.
+
+| Model (size, license) | Reported Bengali result | Final model, same set | Source |
+|---|---|---|---|
+| IndicWhisper (Whisper fine-tuned on Vistaar data) | WER Kathbath 16.6, Common Voice 24.7, FLEURS 20.9 | 10.28, 10.13, 15.60 | Vistaar [5] |
+| Omnilingual ASR 7B (Meta, Apache-2.0) | WER 17.41 on Common Voice + FLEURS combined (1B: 27.23) | FLEURS 15.60, CV 10.13 | BuzzASR [16] |
+| MMS-1B (Meta) | WER 33.89 on Common Voice + FLEURS combined | FLEURS 15.60, CV 10.13 | BuzzASR [16] |
+| SeamlessM4T v2 large | CER about 9.0 on FLEURS (train, dev and test pooled) | CER 4.37 | Fleurs-SLU [17] |
+| Voxtral-Mini 3B, Bangla fine-tune (non-commercial, training data not stated) | FLEURS WER 14.73 / CER 4.78; Kathbath 10.8 and Common Voice 17 10.32 WER (1,000-clip samples) | FLEURS 15.60 / CER 4.37; 10.28; 10.13 | model card [18] |
+
+Every reported result is behind the final model except one FLEURS word error rate: the non-commercial Voxtral
+fine-tune, four times our size, reports 14.73% WER, but its character error rate (4.78%) is higher than ours
+(4.37%), so the difference is most likely in word segmentation and normalization rather than recognition. Taken
+together with §5.13, the final model (764M parameters, from an Apache-2.0 base) is the best openly licensed Bangla
+model we know of, and the only model under 1B parameters that is ahead on every test set except FLEURS, where the
+non-commercial Hishab conformer leads. No other model has been evaluated on Bangla media speech; Omnilingual ASR 7B,
+the strongest openly licensed alternative, is the one we have not scored ourselves.
+
 ### 5.14 Spelling-aware WER
 
 WER counts ছিল for ছিলো as an error, so part of every number above is spelling convention, not recognition. As a
@@ -979,6 +1002,9 @@ cloud runners), `analysis/` (every analysis behind the numbers above), `runs/` (
 13. Bhogale et al. Vimarsha. arXiv:2609.24199.
 14. What is lost in normalization? Exploring pitfalls in multilingual ASR model evaluations. EMNLP 2024, arXiv:2409.02449.
 15. asr_eval. arXiv:2601.20992.
+16. Singh et al. BuzzASR: a swarm of 100+ monolingual speech recognition models. arXiv:2609.09554 (Tables 7 and 8).
+17. Fleurs-SLU: a massively multilingual benchmark for spoken language understanding. arXiv:2501.06117.
+18. ehzawad/Voxtral-Mini-3B-2507-bn-BD, model card, Hugging Face (2026).
 
 Data: DL Sprint 4.0 / Bengali-Loop (CC-BY-4.0), FLEURS (CC-BY-4.0), Kathbath (CC-BY-4.0), Common Voice (CC0).
 Base model: `bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium` (Apache-2.0).

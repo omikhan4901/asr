@@ -768,7 +768,11 @@ Two caveats on the baselines: IndicConformer's RNN-T decoder returns an empty tr
 (41–75% of them on DL Sprint dev), so its row uses the better head per set, which favours it; and `psdn-ai/bangla-asr`
 writes case endings as separate words (প্রোগ্রাম এর), which gives 63–76% WER at a normal 10–17% CER, so it is left
 out of the figure. `zarifmahir21` beats our model on DL Sprint eval (8.51%), but it was trained on DL Sprint-era data
-that includes our evaluation recordings; on the three clean sets it is 3.6 to 4.5 points worse.
+that includes our evaluation recordings; on the three clean sets it is 3.6 to 4.5 points worse. The verified
+references confirm the contamination: on the 92 DL Sprint eval clips whose reference the annotators corrected, it is
+the only model closer to the original, erroneous transcript than to the corrected one (43 clips vs 27; ours 18 vs 45,
+zero-shot 15 vs 48), i.e. it reproduces transcript errors it was trained on. Against the corrected text it makes more
+errors than the final model on those clips (13.87% vs 11.54%; `analysis/labeling/memorization_check.py`).
 
 | WER % (T4, greedy) | DL Sprint eval | FLEURS | Common Voice | Kathbath |
 |---|---:|---:|---:|---:|

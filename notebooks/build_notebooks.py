@@ -225,6 +225,14 @@ pd.DataFrame({f"{n} / {SETS[s]}": paired(f"final_vs_{k}_{s}") for k, n in names.
 """),
     code('figure("f14_baselines")'),
     md("""
+## Is zarifmahir21's DL Sprint score real?
+It is the only model ahead on DL Sprint eval, and it was trained on DL Sprint 4.0 data. On the eval clips whose
+reference the annotators corrected (notebook 7), a recognizer should be closer to the corrected text; a model that
+learned these transcripts reproduces the original errors:
+"""),
+    code('pd.read_csv(ROOT / "results/labels/memorization_check.csv").round(4)'),
+    md("It is the only system closer to the erroneous transcripts: its DL Sprint score is inflated by having seen the test material."),
+    md("""
 ## Reported results of larger models (not re-scored)
 Published Bengali numbers on the same public test sets; other normalizers and sometimes other splits, so indicative only.
 

@@ -1,0 +1,7 @@
+system,clips,wer_vs_original,wer_vs_corrected,closer_to_original,closer_to_corrected
+zarifmahir21 (trained on DL Sprint 4.0 data),92,0.1276796973518285,0.13871374527112232,43,27
+Team Villagers (trained on DL Sprint 4.0 data),92,0.16361916771752838,0.1557377049180328,24,39
+final model,92,0.12673392181588902,0.11538461538461539,18,45
+M1 (DL Sprint train split only),92,0.13240857503152584,0.12326607818411098,23,45
+tugstugi zero-shot,92,0.24621689785624212,0.22950819672131148,15,48
+Hishab conformer large,92,0.2310844892812106,0.21658259773013872,17,46

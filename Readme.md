@@ -42,9 +42,9 @@ cause. (b) The final model on the four test sets, with 95% confidence intervals.
 | Comparison with other open Bangla models (§5.13) | done |
 | Spelling-aware WER as a second metric (§5.14) | done |
 | Results frozen / final report | Nov 12 / Dec 1, 2026 |
-| Public release of the model, segmentation and scoring code on Hugging Face | planned; not yet published |
+| Release: model on Hugging Face (Apache-2.0), segmentation, verified references and scoring code in this repository | done: [huggingface.co/OmiKhan/bangla-asr-whisper-medium](https://huggingface.co/OmiKhan/bangla-asr-whisper-medium) |
 
-**Links:** [Bangla subtitle demo](https://asr-phi.vercel.app) · [Setup](#setup) · [Data](#data) ·
+**Links:** [Model on Hugging Face](https://huggingface.co/OmiKhan/bangla-asr-whisper-medium) · [Bangla subtitle demo](https://asr-phi.vercel.app) · [Setup](#setup) · [Data](#data) ·
 [Reproducing](#reproducing) · [Notebooks](notebooks/README.md) · [All results](results/)
 
 <p align="center"><img src="figures/png/pipeline_overview.drawio.png" width="900" alt="Pipeline overview: DL Sprint recordings are cut into clips by forced alignment and split by recording; tugstugi produces greedy output and 12 candidates; the agreement anatomy finds that candidates share spelling variants; list correction fixes the candidate lists and fine-tuning fixes the model; one frozen harness scores everything."></p>
@@ -83,8 +83,8 @@ fine-tuning, rescoring gains almost vanish (−0.45 points): training removes ex
 selection could reach. Against 605 human-verified references, about 2% of the media reference words are wrong, most
 errors that no candidate contains are spelling, dialect or transcript errors rather than recognizer errors, and every
 model's WER changes by less than 2 points; not counting confirmed spelling differences (15–50% of a system's
-errors) leaves the conclusions unchanged. We release the forced-aligned segmentation of 93.1 hours of Bengali-Loop
-recordings, the verified references and the scoring code.
+errors) leaves the conclusions unchanged. We release the model (Apache-2.0), the forced-aligned segmentation of 93.1
+hours of Bengali-Loop recordings, the verified references and the scoring code.
 
 **Keywords:** speech recognition, Bangla, N-best rescoring, minimum Bayes risk, error analysis, spelling variation, Whisper
 
@@ -836,10 +836,11 @@ as speech:** on DL Sprint eval it lowers the standard WER by 11.5 points and the
 so about 40% of the fine-tuning gain is the corpus's spelling convention, and the rest, a 44% cut in the remaining
 errors, is recognition.
 
-### 5.15 Remaining work
-- **Model release:** the final weights are built from M1 and M5-300 by `pipeline/make_soup.py --members
-  m1_full+m5_300+m5_300+m5_300`; they are not yet published. The release needs only a license choice
-  for the weights (`docs/DATA_LICENSES.md`).
+### 5.15 Release
+
+The final model is published at [huggingface.co/OmiKhan/bangla-asr-whisper-medium](https://huggingface.co/OmiKhan/bangla-asr-whisper-medium) under Apache-2.0 (model card: `docs/model_card.md`). It is
+built from M1 and M5-300 by `runs/release_model.py`, which also checks it: transcribing the first 20 FLEURS test clips
+on a CPU gives the same text as the scored Kaggle run on all 20. Data terms: `docs/DATA_LICENSES.md`.
 
 ---
 

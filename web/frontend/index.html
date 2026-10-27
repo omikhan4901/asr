@@ -3,118 +3,101 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ক্যাপশন — Bangla Subtitles from Video</title>
+<title>ক্যাপশন · Bangla subtitles from your video</title>
+<meta name="description" content="Upload a Bangla video or audio file and get an .srt subtitle file, made by an open Bangla speech recognition model.">
+<meta property="og:title" content="ক্যাপশন · Bangla subtitles from your video">
+<meta property="og:description" content="An .srt subtitle file from any Bangla video, made by an open Whisper-medium model fine-tuned on about 300 hours of Bangla speech.">
+<meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151513" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f5f55'/%3E%3Crect x='7' y='19' width='18' height='3' rx='1.5' fill='%23f6f4ef'/%3E%3Crect x='10' y='24' width='12' height='3' rx='1.5' fill='%23f6f4ef' opacity='.6'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Tiro+Bangla&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Noto+Sans+Bengali:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<a class="skip" href="#app" data-i18n="skip">Skip to the upload</a>
 
-<div class="grain"></div>
-
-<header class="nav">
-  <div class="nav-mark">ক্যাপশন<span class="nav-mark-sub">/kôyapshôn</span></div>
-  <div class="nav-tag">Bangla speech &rarr; .srt</div>
+<header class="top">
+  <div class="brand"><span class="brand-mark" lang="bn">ক্যাপশন</span><span class="brand-sub" data-i18n="brandSub">Bangla subtitles</span></div>
+  <div class="lang" role="group" aria-label="Language">
+    <button type="button" data-lang="en" aria-pressed="true">English</button>
+    <button type="button" data-lang="bn" aria-pressed="false" lang="bn">বাংলা</button>
+  </div>
 </header>
 
-<main>
-  <!-- ============ HERO ============ -->
-  <section class="hero">
-    <div class="hero-copy">
-      <p class="eyebrow">00:00:00,000 &mdash; built on rescored Bangla ASR</p>
-      <h1>Your Bangla video,<br><em>captioned</em> to the second.</h1>
-      <p class="hero-sub">
-        Upload a video. We transcribe it with a Whisper-based Bangla ASR
-        pipeline, rescore every segment for accuracy, and hand back a clean
-        <code>.srt</code> file — timestamps included.
-      </p>
+<main id="main">
+  <h1 data-i18n="title">Bangla subtitles from your video</h1>
+  <p class="lede" data-i18n="lede">Upload a video or audio file. Our open Bangla speech recognition model writes an .srt subtitle file with timestamps.</p>
+
+  <section class="card" id="app" aria-live="polite">
+    <!-- 1. choose a file -->
+    <div class="state" data-state="pick">
+      <label class="drop" id="drop" for="fileInput">
+        <input type="file" id="fileInput" accept="video/*,audio/*,.mkv,.mp3,.wav,.m4a">
+        <svg class="drop-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4m0 0L8 8m4-4 4 4M5 15v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="drop-title" data-i18n="dropTitle">Choose a file or drop it here</span>
+        <span class="drop-limits" data-i18n="limits">MP4, MOV, MKV, MP3 or WAV · up to 15 minutes · up to 300 MB</span>
+      </label>
     </div>
 
-    <!-- Signature element: mock video frame with a live crawling caption bar -->
-    <div class="frame-mock" aria-hidden="true">
-      <div class="frame-inner">
-        <div class="frame-scan"></div>
-        <div class="caption-bar">
-          <span id="captionText">আপলোড করুন আপনার ভিডিও</span>
-        </div>
+    <!-- 2. file chosen -->
+    <div class="state" data-state="ready" hidden>
+      <div class="file">
+        <svg class="file-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v11a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5zM10 9.5v5l4-2.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        <div class="file-text"><span class="file-name" id="fileName"></span><span class="file-meta" id="fileMeta"></span></div>
+        <button type="button" class="link" id="changeBtn" data-i18n="change">Change file</button>
       </div>
-      <div class="frame-label">preview — this is your output format</div>
+      <button type="button" class="primary" id="startBtn" data-i18n="start">Make subtitles</button>
+    </div>
+
+    <!-- 3. working -->
+    <div class="state" data-state="working" hidden>
+      <h2 data-i18n="workingTitle">Making subtitles</h2>
+      <ol class="steps" id="steps">
+        <li data-step="upload"><span class="tick" aria-hidden="true"></span><span data-i18n="stepUpload">Uploading</span></li>
+        <li data-step="audio"><span class="tick" aria-hidden="true"></span><span data-i18n="stepAudio">Extracting the audio</span></li>
+        <li data-step="chunk"><span class="tick" aria-hidden="true"></span><span data-i18n="stepChunk">Finding the speech</span></li>
+        <li data-step="asr"><span class="tick" aria-hidden="true"></span><span data-i18n="stepAsr">Transcribing</span><span class="step-count" id="asrCount"></span></li>
+        <li data-step="srt"><span class="tick" aria-hidden="true"></span><span data-i18n="stepSrt">Writing the .srt file</span></li>
+      </ol>
+      <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="bar"><span id="barFill"></span></div>
+      <p class="note"><span id="elapsed"></span> <span data-i18n="coldStart">The first file after a quiet period waits about a minute while the server starts.</span></p>
+    </div>
+
+    <!-- 4. done -->
+    <div class="state" data-state="done" hidden>
+      <h2 data-i18n="doneTitle">Your subtitles are ready</h2>
+      <p class="summary" id="summary"></p>
+      <a class="primary" id="downloadBtn" href="#" download data-i18n="download">Download .srt</a>
+      <p class="preview-label" data-i18n="preview">Preview</p>
+      <pre class="preview" id="preview" lang="bn"></pre>
+      <button type="button" class="link" id="againBtn" data-i18n="again">Subtitle another file</button>
+    </div>
+
+    <!-- 5. error -->
+    <div class="state" data-state="error" hidden>
+      <h2 data-i18n="errorTitle">That didn't work</h2>
+      <p class="error" id="errorMsg"></p>
+      <button type="button" class="primary" id="retryBtn" data-i18n="retry">Try again</button>
     </div>
   </section>
 
-  <!-- ============ UPLOAD ============ -->
-  <section class="upload-section" id="uploadSection">
-    <p class="eyebrow">00:00:14,320 &mdash; drop a file to begin</p>
-
-    <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload a video file">
-      <input type="file" id="fileInput" accept="video/*,audio/*" hidden>
-      <div class="dropzone-inner">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
-          <path d="M12 16V4M12 4l-4 4M12 4l4 4" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <p class="dropzone-title">Drop your video here</p>
-        <p class="dropzone-sub">or click to browse &mdash; MP4, MOV, MKV, WAV, MP3</p>
-      </div>
-    </div>
-
-    <div class="filebar" id="filebar" hidden>
-      <span id="fileName">—</span>
-      <button class="btn-primary" id="startBtn">Generate subtitles</button>
-    </div>
-  </section>
-
-  <!-- ============ PROCESSING (async status) ============ -->
-  <section class="processing-section" id="processingSection" hidden>
-    <p class="eyebrow">00:00:28,900 &mdash; working on it</p>
-
-    <div class="proc-frame">
-      <div class="proc-inner">
-        <div class="proc-scan"></div>
-        <div class="caption-bar">
-          <span id="procCaptionText">শুরু হচ্ছে&hellip;</span>
-        </div>
-      </div>
-    </div>
-
-    <ul class="steps" id="steps">
-      <li data-step="upload"><span class="dot"></span><span class="step-label">Uploading media</span><span class="step-time"></span></li>
-      <li data-step="audio"><span class="dot"></span><span class="step-label">Extracting audio</span><span class="step-time"></span></li>
-      <li data-step="chunk"><span class="dot"></span><span class="step-label">Segmenting speech</span><span class="step-time"></span></li>
-      <li data-step="asr"><span class="dot"></span><span class="step-label">Transcribing (N-best beam search)</span><span class="step-time"></span></li>
-      <li data-step="rescore"><span class="dot"></span><span class="step-label">Rescoring candidates (MBR)</span><span class="step-time"></span></li>
-      <li data-step="srt"><span class="dot"></span><span class="step-label">Building .srt file</span><span class="step-time"></span></li>
-    </ul>
-
-    <p class="proc-note" id="procNote">This runs the same rescoring pipeline described in the paper — no shortcuts taken for the demo.</p>
-  </section>
-
-  <!-- ============ RESULT ============ -->
-  <section class="result-section" id="resultSection" hidden>
-    <p class="eyebrow">00:00:00,000 &mdash; ready</p>
-    <h2>Your captions are ready.</h2>
-    <div class="result-card">
-      <div class="result-meta">
-        <div><span class="meta-label">Segments</span><span class="meta-val" id="metaSegments">—</span></div>
-        <div><span class="meta-label">Duration</span><span class="meta-val" id="metaDuration">—</span></div>
-        <div><span class="meta-label">Method</span><span class="meta-val">MBR rescoring</span></div>
-      </div>
-      <a class="btn-primary" id="downloadBtn" href="#" download>Download .srt</a>
-      <button class="btn-ghost" id="resetBtn">Caption another video</button>
-    </div>
-    <pre class="srt-preview" id="srtPreview"></pre>
-  </section>
-
-  <!-- ============ ERROR ============ -->
-  <section class="error-section" id="errorSection" hidden>
-    <p class="eyebrow">something went wrong</p>
-    <p class="error-msg" id="errorMsg"></p>
-    <button class="btn-ghost" id="errorResetBtn">Try again</button>
+  <section class="how" aria-labelledby="howTitle">
+    <h2 id="howTitle" data-i18n="howTitle">How it works</h2>
+    <ol>
+      <li data-i18n="how1">Voice detection finds the speech and cuts it into pieces of up to 25 seconds.</li>
+      <li data-i18n="how2">Each piece is transcribed by our Whisper-medium model, fine-tuned on about 300 hours of Bangla speech.</li>
+      <li data-i18n="how3">On whole media recordings our fine-tuned models get about 14% of words wrong, against 26% for the model they started from.</li>
+      <li data-i18n="how4">Your video is deleted from the server as soon as the subtitles are made.</li>
+    </ol>
   </section>
 </main>
 
-<footer class="site-footer">
-  <span>Segments are chunk-level (up to 25s) in this release — sentence-level splitting is noted as future work.</span>
+<footer class="foot">
+  <a href="https://github.com/omikhan4901/asr" data-i18n="research">Research and code</a>
+  <a href="https://huggingface.co/OmiKhan/bangla-asr-whisper-medium" data-i18n="model">Model (Apache-2.0)</a>
+  <span data-i18n="credit">A CSE499 project at North South University</span>
 </footer>
 
 <script src="script.js"></script>

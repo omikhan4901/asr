@@ -38,6 +38,7 @@ UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
 SRT_DIR.mkdir(parents=True, exist_ok=True)
 
 MAX_UPLOAD_MB = 300
+MAX_VIDEO_DURATION_S = 15 * 60
 gpu_lock = threading.Lock()
 jobs: Dict[str, Dict] = {}
 
@@ -57,7 +58,7 @@ _generator: SubtitleGenerator = None
 def get_generator() -> SubtitleGenerator:
     global _generator
     if _generator is None:
-        _generator = SubtitleGenerator()
+        _generator = SubtitleGenerator(max_duration_s=MAX_VIDEO_DURATION_S)
     return _generator
 
 
@@ -94,6 +95,8 @@ def _run_job(job_id: str, video_path: str):
         jobs[job_id]["status"] = "failed"
         jobs[job_id]["error"] = str(exc)
         print(f"[Job {job_id}] Failed: {exc}")
+    finally:
+        Path(video_path).unlink(missing_ok=True)  # the upload is only needed to make the subtitles
 
 
 @app.post("/jobs")

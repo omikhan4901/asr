@@ -22,16 +22,14 @@ app = modal.App("bangla-subtitle-generator")
 image = (
     modal.Image.debian_slim(python_version="3.10")
     .apt_install("ffmpeg")
-    .pip_install(
-        "torch", "transformers", "accelerate", "librosa",
-        "soundfile", "silero-vad", "pandas", "numpy",
-        "rapidfuzz", "jiwer", "fastapi", "uvicorn", "python-multipart",
-    )
+    .pip_install("torch")
+    .pip_install_from_requirements(str(PROJECT_ROOT / "web" / "requirements.txt"))
     # The library uses a src/ layout, so add both packages explicitly for
     # remote Modal containers. add_local_python_source("bangla_asr") cannot
     # discover it from the repository root.
     .add_local_dir(PROJECT_ROOT / "src", remote_path="/root/src", copy=True)
-    .add_local_dir(PROJECT_ROOT / "web", remote_path="/root/web", copy=True)
+    .add_local_dir(PROJECT_ROOT / "web", remote_path="/root/web", copy=True,
+                   ignore=[".venv-gpu", "**/__pycache__"])
     .env({
         "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True",
         "PYTHONPATH": "/root/src:/root",
@@ -43,17 +41,17 @@ VOLUME_MOUNT_PATH = "/data"
 job_store = modal.Dict.from_name("bangla-asr-jobs", create_if_missing=True)
 
 MAX_UPLOAD_MB = 300
-MAX_VIDEO_DURATION_S = 7200
+MAX_VIDEO_DURATION_S = 15 * 60  # public demo: caps GPU time per upload
 
 
-@app.cls(image=image, gpu="A10G", volumes={VOLUME_MOUNT_PATH: volume}, timeout=1800, max_containers=5)
+@app.cls(image=image, gpu="A10G", volumes={VOLUME_MOUNT_PATH: volume}, timeout=1800, max_containers=1)
 class SubtitleWorker:
     """Serverless GPU worker running the SubtitleGenerator."""
 
     @modal.enter()
     def setup(self):
         from web.backend.pipeline import SubtitleGenerator
-        self.generator = SubtitleGenerator()
+        self.generator = SubtitleGenerator(max_duration_s=MAX_VIDEO_DURATION_S)
 
     @modal.method()
     def process(self, job_id: str, video_relpath: str):
@@ -99,6 +97,10 @@ class SubtitleWorker:
                 "error": str(exc),
                 "failed_at": time.time(),
             }
+        finally:
+            # the upload is only needed to make the subtitles: never keep users' videos
+            video_full_path.unlink(missing_ok=True)
+            volume.commit()
 
 
 fastapi_app = FastAPI(title="Bangla ASR Subtitle Generator")

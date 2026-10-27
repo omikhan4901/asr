@@ -1,0 +1,13 @@
+# Subtitle demo, besides torch (installed first: CUDA wheels locally, the default wheel on Modal)
+transformers==5.20.2
+accelerate
+librosa
+soundfile
+silero-vad
+pandas
+numpy
+rapidfuzz
+jiwer
+fastapi
+uvicorn
+python-multipart

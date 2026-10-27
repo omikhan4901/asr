@@ -1,0 +1,12 @@
+{
+  "dataset": "zarifmahir21/bengali-asr-chunked",
+  "clips": 13547,
+  "hours": 100.1,
+  "dlsprint_recordings_in_dataset": 112,
+  "our_eval_recordings_in_dataset": 22,
+  "our_eval_recordings": 22,
+  "eval_8gram_passages_found": 13136,
+  "eval_8gram_passages": 13137,
+  "fleurs_8gram_passages_found": 0,
+  "fleurs_8gram_passages": 1845
+}

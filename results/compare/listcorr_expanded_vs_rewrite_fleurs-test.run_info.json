@@ -1,0 +1,27 @@
+{
+  "runs": [
+    {
+      "command": "python analysis/paired_compare.py --a results/list_correction/fleurs-test/rewrite/predictions.jsonl --b results/list_correction/fleurs-test/mbr_lm_x/predictions.jsonl --name listcorr_expanded_vs_rewrite_fleurs-test",
+      "git_commit": "330a190787a5297aef655df5afd623440bf41fb8",
+      "git_dirty": false,
+      "start": "2026-10-27T06:03:44",
+      "end": "2026-10-27T06:03:44",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.8",
+        "torch": "2.14.1+cpu",
+        "transformers": "5.20.2",
+        "numpy": "1.26.4",
+        "pandas": "2.3.3"
+      },
+      "inputs": {
+        "results/list_correction/fleurs-test/rewrite/predictions.jsonl": "f3cabe37f571e8bea8cb2e5d1985df00324c3a170258d2c051a0381bfab6c574",
+        "results/list_correction/fleurs-test/mbr_lm_x/predictions.jsonl": "21380cb4b768d42bbd74c8909c4fe8bf350332d84468579c939c599d26e866d6"
+      },
+      "outputs": {
+        "results/compare/listcorr_expanded_vs_rewrite_fleurs-test.json": "2349fe0fc5e1e1833568a478d08eecbef9efa2f88d5a3d896354727c6e4bae14"
+      }
+    }
+  ]
+}

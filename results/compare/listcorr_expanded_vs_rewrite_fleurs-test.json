@@ -1,0 +1,19 @@
+{
+  "a": "results/list_correction/fleurs-test/rewrite/predictions.jsonl",
+  "b": "results/list_correction/fleurs-test/mbr_lm_x/predictions.jsonl",
+  "n_utterances": 920,
+  "n_groups": 349,
+  "ref_words": 17766,
+  "wer_a": 0.20229652144545762,
+  "wer_b": 0.19481031183158842,
+  "diff_b_minus_a": -0.007486209613869189,
+  "diff_ci95": [
+    -0.013837476524439155,
+    -0.002541627963083022
+  ],
+  "p_b_better": 0.999,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

@@ -386,6 +386,8 @@ candidates agree on the same wrong form for 25.4% of spelling/dialect errors but
 of reference words that no candidate contains, a bound for any selection or word-level combination), before and
 after adding spelling rewrites to the list, and what each intervention reached. (b) The rule-based types of
 greedy's selection-proof errors: 36% are spelling/dialect variants (convention, vowel shift, segmentation).
+Two oracles appear in the text: 18.59% is the best of the 12 sampled candidates (§5.2), 18.35% the best of the 12
+plus the greedy output, the pool that list correction works on.
 
 ### 5.4 Error types
 
@@ -445,7 +447,13 @@ All settings chosen on DL Sprint dev and applied unchanged; WER points vs greedy
 Plain MBR gave nothing; an LM that knows the target spelling makes selection work (Novosad's result
 reproduced for an encoder-decoder model in Bangla). Putting the reference spelling into the list is what
 matters: expansion lowers the oracle by 4.6 points on eval and LM-MBR reaches 17.46%, below Hishab's
-zero-shot 21.18% without any training. 75% of the rewriter's gain on eval survives with spelling/dialect rules
+zero-shot 21.18% without any training. **How much of this is search, and how much is spelling?** Applying the
+same rewrite rules directly to the greedy output is the control. In domain it gets almost the same result
+(DL Sprint eval 17.58% vs 17.46%, a tie: −0.12 [−0.31, +0.06]), so on media speech the gain is mostly
+normalization to the corpus's spelling. Out of domain the list and the LM matter: expansion with LM-MBR beats the
+plain rewriter on FLEURS (−0.75 [−1.38, −0.25]) and Kathbath (−0.97 [−1.27, −0.69]), where blind rewriting
+applies DL Sprint's convention to references that use another one, and the LM decides when a rewrite fits
+(`results/compare/listcorr_expanded_vs_rewrite_*.json`). 75% of the rewriter's gain on eval survives with spelling/dialect rules
 only. Conventions are corpus-specific: the DL Sprint rewriter *hurts* Kathbath, whose references use the
 other spelling of the most frequent variant pairs. The same rewriter applied to Hishab, with rules learned from
 Hishab's own training-set errors, gives 17.76% on eval: a statistical tie with ours (−0.30 [−1.05, +0.37]), so
@@ -668,6 +676,14 @@ we checked that this does not favour it: putting the other annotator's text on e
 model's verified WER by −0.02 points on DL Sprint and −0.11 to −0.37 elsewhere, no more than for the baselines
 (zero-shot −0.11 to −0.37, Hishab 0.00 to −0.47; `analysis/labeling/adjudication_sensitivity.py`).
 
+**Sampling.** The verified references are a seeded sample: 305 DL Sprint eval clips stratified by recording and 100
+clips each from FLEURS, Common Voice and Kathbath (Kathbath stratified by speaker); about 10% of each block went to
+both annotators. The error audit uses 208 other DL Sprint eval clips, stratified by recording. The word pairs are the
+most frequent substitution pairs of the models (plus the most frequent per rule type), so the rule precisions below
+describe the frequent pairs, which carry most of the errors (222 pairs labeled as convention). An annotator corrected
+a reference only when the spoken word was written wrongly or differently from what was said; a valid alternative
+spelling (ছিল / ছিলো) was left as it was, so a corrected reference is a transcript error, not a convention.
+
 **The rules hold up:** pairs the rules call a spelling convention are spelling to the annotators in 98% of cases
 (99% in the audit); segmentation differences in 83%; the near-miss type is a genuine mix (33% spelling, 30% dialect,
 36% different word); every number difference in the audit is a transcript error (digits where words were spoken).
@@ -782,12 +798,17 @@ loss:** Hishab's non-commercial conformer is 1.36 [0.43, 2.29] points ahead, and
 Two caveats on the baselines: IndicConformer's RNN-T decoder returns an empty transcript for many clips over 15 s
 (41–75% of them on DL Sprint dev), so its row uses the better head per set, which favours it; and `psdn-ai/bangla-asr`
 writes case endings as separate words (প্রোগ্রাম এর), which gives 63–76% WER at a normal 10–17% CER, so it is left
-out of the figure. `zarifmahir21` beats our model on DL Sprint eval (8.51%), but it was trained on DL Sprint-era data
-that includes our evaluation recordings; on the three clean sets it is 3.6 to 4.5 points worse. The verified
-references confirm the contamination: on the 92 DL Sprint eval clips whose reference the annotators corrected, it is
-the only model closer to the original, erroneous transcript than to the corrected one (43 clips vs 27; ours 18 vs 45,
-zero-shot 15 vs 48), i.e. it reproduces transcript errors it was trained on. Against the corrected text it makes more
-errors than the final model on those clips (13.87% vs 11.54%; `analysis/labeling/memorization_check.py`).
+out of the figure. `zarifmahir21` beats our model on DL Sprint eval (8.51%), but it was trained on our evaluation material; on the three
+clean sets it is 3.6 to 4.5 points worse. **Direct evidence:** its model card names its training data, the public
+dataset `zarifmahir21/bengali-asr-chunked` (13,547 chunks, 100 h). That dataset contains chunks of all 112 DL Sprint
+training recordings, including all 22 of our evaluation recordings, and 13,136 of the 13,137 eight-word passages of
+our DL Sprint eval references occur in it verbatim (FLEURS test, as a control: 0 of 1,845;
+`analysis/zarif_overlap.py`). **Supporting evidence:** on the 92 eval clips whose reference our annotators corrected,
+it is the only model closer to the original, erroneous transcript than to the corrected one (43 clips vs 27; ours 18
+vs 45, zero-shot 15 vs 48), and against the corrected text it makes more errors than the final model (13.87% vs
+11.54%; `analysis/labeling/memorization_check.py`). The Team Villagers model also reports DL Sprint 4.0 training
+data, but its training set is not public and it does not show this pattern, so its DL Sprint row stays flagged rather
+than shown to overlap.
 
 | WER % (T4, greedy) | DL Sprint eval | FLEURS | Common Voice | Kathbath |
 |---|---:|---:|---:|---:|
@@ -850,10 +871,12 @@ spoken words) lowers the final model's numbers by at most 1.4 points (FLEURS 9.4
 final model stays best on DL Sprint eval, Common Voice and Kathbath among the outside models not trained on them
 (paired differences −1.1 to −17.6 points, all significant except IndicConformer RNN-T on Kathbath, −0.32 [−0.60,
 0.00]), and on FLEURS the lead of Hishab's conformer shrinks from 1.36 to
-0.73 points [0.01, 1.48], while IndicConformer RNN-T ties (−0.50 [−1.15, +0.20]). **Fine-tuning learns spelling as well
-as speech:** on DL Sprint eval it lowers the standard WER by 11.5 points and the spelling-aware WER by 7.0 [6.1, 8.0],
-so about 40% of the fine-tuning gain is the corpus's spelling convention, and the rest, a 44% cut in the remaining
-errors, is recognition.
+0.73 points [0.01, 1.48], while IndicConformer RNN-T ties (−0.50 [−1.15, +0.20]). **Much of the measured fine-tuning gain is
+spelling:** on DL Sprint eval fine-tuning lowers the standard WER by 11.5 points and the spelling-aware WER by 7.0
+[6.1, 8.0], so about 39% of the standard-WER reduction lies in differences the spelling-aware metric discounts; the
+remaining errors fall by 44%. The metric measures what changed in the output, not what the network learned
+internally, and it deliberately still counts dialect forms (নিয়া / নিয়ে) as errors, because they can carry real
+lexical or grammatical differences.
 
 ### 5.15 Release
 
@@ -922,9 +945,18 @@ speech, and on every clean test set except FLEURS; rescoring its candidates adds
 holds: about 2% of DL Sprint reference words are wrong, most of the errors no candidate can fix are spelling, dialect
 or transcript errors rather than recognizer errors, and every model's WER moves by less than 2 points. A
 spelling-aware WER that does not count the confirmed spelling differences (8.04% average for the final model) leaves
-the conclusions unchanged and shows that about 40% of the fine-tuning gain on DL Sprint is the corpus's spelling
-convention: the rest is a 44% cut in recognition errors. The model is checked for contamination against every test
+the conclusions unchanged and shows that about 39% of the standard-WER reduction on DL Sprint lies in differences it
+discounts: the remaining errors fall by 44%. The model is checked for contamination against every test
 set and released under Apache-2.0, with the segmentation, the verified references and the scoring code.
+
+**Future work.** (1) An independent, multi-domain evaluation the model played no part in: conversational, regional
+and noisy Bangla (for example Vaani, SUBAK.KO, BanSpeech, IndicVoices). Ben-10 is not independent for us, because the
+base model was trained on it. (2) Error analysis on the weaker sets (FLEURS, dialectal speech), then targeted data
+rather than more hours. (3) More verified references, and a spelling-aware metric whose boundary between spelling
+and dialect is validated on a random rather than a frequency-ranked sample of word pairs. (4) The same diagnosis on a
+second model family, to test whether the mechanism is general. (5) Deployment: the model already runs at a real-time
+factor of about 0.04 on a T4 (0.09 on whole recordings with voice detection); memory use, CPU speed and quantization
+are not measured yet.
 
 ---
 

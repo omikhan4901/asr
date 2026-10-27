@@ -1,0 +1,19 @@
+{
+  "a": "results/list_correction/kathbath-valid/rewrite/predictions.jsonl",
+  "b": "results/list_correction/kathbath-valid/mbr_lm_x/predictions.jsonl",
+  "n_utterances": 2236,
+  "n_groups": 17,
+  "ref_words": 23995,
+  "wer_a": 0.15224005001041885,
+  "wer_b": 0.14252969368618462,
+  "diff_b_minus_a": -0.009710356324234216,
+  "diff_ci95": [
+    -0.012707710975414926,
+    -0.006888367786085047
+  ],
+  "p_b_better": 1.0,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

@@ -15,7 +15,7 @@ recomputed. The saved outputs are in the files, so they can also be read directl
 | [05_training_data_and_final_model](05_training_data_and_final_model.ipynb) | How should public corpora be mixed, and what does all the data give? | The in-domain model is weaker on read speech, so the other corpora are added: each trains its own test set best, a mix gives the best average, and all ~300 h give the final model (11.8% average; 14.2% on whole recordings). |
 | [06_comparison_with_other_models](06_comparison_with_other_models.ipynb) | How does the final model compare with other open Bangla models? | Once the final model is fixed: every other open model scored with the same harness, with paired tests, plus the published numbers of larger models. |
 | [07_human_verification](07_human_verification.ipynb) | Are the references right, and are the errors really the recognizer's? | The diagnosis rests on rule-based error types and on references that may be wrong; two annotators checked 605 references and the error types by hand. |
-| [08_spelling_aware_wer](08_spelling_aware_wer.ipynb) | What if confirmed spelling differences are not counted as errors? | The human labels confirm which differences are spelling only, so a second metric can leave them out: the comparisons keep their direction, and about 40% of the fine-tuning gain turns out to be spelling. |
+| [08_spelling_aware_wer](08_spelling_aware_wer.ipynb) | What if confirmed spelling differences are not counted as errors? | The human labels confirm which differences are spelling only, so a second metric can leave them out: the comparisons keep their direction, and about 39% of the measured fine-tuning gain lies in spelling differences. |
 
 ## Running them
 

@@ -1,0 +1,27 @@
+{
+  "runs": [
+    {
+      "command": "python analysis/paired_compare.py --a results/list_correction/kathbath-valid/rewrite/predictions.jsonl --b results/list_correction/kathbath-valid/mbr_lm_x/predictions.jsonl --name listcorr_expanded_vs_rewrite_kathbath-valid",
+      "git_commit": "330a190787a5297aef655df5afd623440bf41fb8",
+      "git_dirty": false,
+      "start": "2026-10-27T06:03:49",
+      "end": "2026-10-27T06:03:49",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.8",
+        "torch": "2.14.1+cpu",
+        "transformers": "5.20.2",
+        "numpy": "1.26.4",
+        "pandas": "2.3.3"
+      },
+      "inputs": {
+        "results/list_correction/kathbath-valid/rewrite/predictions.jsonl": "9f2e746a773d3407e93500c8dd86f03f50d7ded2e80c8837365e6b53dce39a30",
+        "results/list_correction/kathbath-valid/mbr_lm_x/predictions.jsonl": "fe4e606e125febfd19039b8ecfc9003248f77569c6ef1d73083604718daf723e"
+      },
+      "outputs": {
+        "results/compare/listcorr_expanded_vs_rewrite_kathbath-valid.json": "8811a1e22e4c03710faeec5a216c2e86dd7efbcd60ce65786cd11c18278faeae"
+      }
+    }
+  ]
+}

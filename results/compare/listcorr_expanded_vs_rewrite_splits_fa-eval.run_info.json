@@ -1,0 +1,27 @@
+{
+  "runs": [
+    {
+      "command": "python analysis/paired_compare.py --a results/list_correction/splits_fa-eval/rewrite/predictions.jsonl --b results/list_correction/splits_fa-eval/mbr_lm_x/predictions.jsonl --name listcorr_expanded_vs_rewrite_splits_fa-eval",
+      "git_commit": "330a190787a5297aef655df5afd623440bf41fb8",
+      "git_dirty": false,
+      "start": "2026-10-27T06:03:39",
+      "end": "2026-10-27T06:03:39",
+      "runtime_s": 0.4,
+      "status": "ok",
+      "versions": {
+        "python": "3.14.8",
+        "torch": "2.14.1+cpu",
+        "transformers": "5.20.2",
+        "numpy": "1.26.4",
+        "pandas": "2.3.3"
+      },
+      "inputs": {
+        "results/list_correction/splits_fa-eval/rewrite/predictions.jsonl": "ba68d5d317ad1d4ee119c915df55182eabf2a79dfc99fb159045e2e6e437bf67",
+        "results/list_correction/splits_fa-eval/mbr_lm_x/predictions.jsonl": "3f1f14bbf935882119e1c657e51bfa17e28d8ea892f27f36b701575375fa3653"
+      },
+      "outputs": {
+        "results/compare/listcorr_expanded_vs_rewrite_splits_fa-eval.json": "55ec853ae62d387fe1a0e1a4b9363cf9d7729f53f1f4cef9350c11ba37da3467"
+      }
+    }
+  ]
+}

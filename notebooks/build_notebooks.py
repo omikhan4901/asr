@@ -131,6 +131,9 @@ cols = {"greedy_wer": "greedy", "mbr_lm_wer": "LM-MBR on the list", "rewrite_wer
 (100 * s[list(cols)]).rename(columns=cols).round(2)
 """),
     code('figure("f6_list_correction")'),
+    md("The control: the same rewrite rules applied straight to the greedy output, against the expanded list with LM-MBR (B minus A):"),
+    code('pd.DataFrame({SETS[s]: paired(f"listcorr_expanded_vs_rewrite_{s}") for s in ("splits_fa-eval", "fleurs-test", "kathbath-valid")}).T'),
+    md("In domain the two tie, so the gain on media speech is mostly spelling normalization; on FLEURS and Kathbath the list and the LM win, because blind rewriting applies DL Sprint's spelling where another convention is used."),
     md("The settings chosen on DL Sprint dev:"),
     code('load("results/list_correction/tuned.json")'),
     code('record("results/list_correction/run_info.json")'),
@@ -243,7 +246,8 @@ reference the annotators corrected (notebook 7), a recognizer should be closer t
 learned these transcripts reproduces the original errors:
 """),
     code('pd.read_csv(ROOT / "results/labels/memorization_check.csv").round(4)'),
-    md("It is the only system closer to the erroneous transcripts: its DL Sprint score is inflated by having seen the test material."),
+    code('pd.Series(load("results/contamination/zarif_overlap.json"))'),
+    md("It is the only system closer to the erroneous transcripts. The direct check confirms why: its public training set contains all 22 of our evaluation recordings, and almost every eight-word passage of our references occurs in it."),
     md("""
 ## Reported results of larger models (not re-scored)
 Published Bengali numbers on the same public test sets; other normalizers and sometimes other splits, so indicative only.
@@ -331,8 +335,9 @@ P["text"] = [f"{100 * d:+.2f} [{100 * lo:+.2f}, {100 * hi:+.2f}]" for d, lo, hi 
 P.pivot(index="system", columns="set", values="text")[list(SETS)].rename(columns=SETS)
 """),
     md("""
-**Conclusion:** spelling is 15–50% of every system's errors, the comparisons keep their direction, and about 40% of
-the fine-tuning gain on DL Sprint is the corpus's spelling convention; the rest is a real cut in recognition errors.
+**Conclusion:** spelling is 15–50% of every system's errors and the comparisons keep their direction. About 39% of
+the standard-WER reduction from fine-tuning on DL Sprint lies in differences this metric discounts; the remaining
+errors fall by 44%. Dialect forms are still counted as errors on purpose.
 """),
 ]
 

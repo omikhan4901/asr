@@ -15,7 +15,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
 import modal
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+# In the repository this file is web/backend/app.py; inside a Modal container it sits at /root/app.py
+_HERE = Path(__file__).resolve()
+PROJECT_ROOT = _HERE.parents[2] if len(_HERE.parents) > 2 and (_HERE.parents[2] / "web").is_dir() else Path("/root")
 
 app = modal.App("bangla-subtitle-generator")
 

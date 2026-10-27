@@ -96,7 +96,7 @@ class SubtitleWorker:
                 "result": {
                     "num_chunks": result["num_chunks"],
                     "total_speech_s": result["total_speech_s"],
-                    "preview": result["preview"],
+                    "cues": result["cues"],
                     "srt_relpath": srt_relpath,
                 },
                 "completed_at": time.time(),

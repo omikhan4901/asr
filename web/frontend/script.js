@@ -26,7 +26,7 @@ const TEXT = {
     stepUpload: "Uploading", stepAudio: "Extracting the audio", stepChunk: "Finding the speech",
     stepAsr: "Transcribing", stepSrt: "Writing the .srt file",
     coldStart: "The first file after a quiet period waits about a minute while the server starts.",
-    doneTitle: "Your subtitles are ready", download: "Download .srt", preview: "Preview", again: "Subtitle another file",
+    doneTitle: "Your subtitles are ready", download: "Download .srt", cuesLabel: "Subtitles", again: "Subtitle another file",
     errorTitle: "That didn't work", retry: "Try again",
     howTitle: "How it works",
     how1: "Voice detection finds the speech and cuts it into pieces of up to 25 seconds.",
@@ -35,7 +35,7 @@ const TEXT = {
     how4: "Your video is deleted from the server as soon as the subtitles are made.",
     research: "Research and code", model: "Model (Apache-2.0)", credit: "A CSE499 project at North South University",
     minutes: (m) => `${m} min`,
-    summary: (n, s) => `${n} subtitle segments · ${s} of speech`,
+    summary: (n, s) => `${n} subtitles · ${s} of speech`,
     count: (c, t) => `${c} / ${t}`,
     elapsed: (s) => `${s}`,
     errType: "Please choose a video or audio file.",
@@ -56,7 +56,7 @@ const TEXT = {
     stepUpload: "আপলোড হচ্ছে", stepAudio: "অডিও আলাদা করা হচ্ছে", stepChunk: "কথা খোঁজা হচ্ছে",
     stepAsr: "লেখা হচ্ছে", stepSrt: ".srt ফাইল তৈরি হচ্ছে",
     coldStart: "কিছুক্ষণ ব্যবহার না হলে প্রথম ফাইলে সার্ভার চালু হতে প্রায় এক মিনিট লাগে।",
-    doneTitle: "আপনার সাবটাইটেল তৈরি", download: ".srt ডাউনলোড করুন", preview: "প্রিভিউ", again: "আরেকটি ফাইলের সাবটাইটেল",
+    doneTitle: "আপনার সাবটাইটেল তৈরি", download: ".srt ডাউনলোড করুন", cuesLabel: "সাবটাইটেল", again: "আরেকটি ফাইলের সাবটাইটেল",
     errorTitle: "কাজটি হয়নি", retry: "আবার চেষ্টা করুন",
     howTitle: "কীভাবে কাজ করে",
     how1: "ভয়েস ডিটেকশন কথা খুঁজে সর্বোচ্চ ২৫ সেকেন্ডের অংশে ভাগ করে।",
@@ -65,7 +65,7 @@ const TEXT = {
     how4: "সাবটাইটেল তৈরি হলেই আপনার ভিডিও সার্ভার থেকে মুছে ফেলা হয়।",
     research: "গবেষণা ও কোড", model: "মডেল (Apache-2.0)", credit: "নর্থ সাউথ ইউনিভার্সিটির একটি CSE499 প্রকল্প",
     minutes: (m) => `${bn(m)} মিনিট`,
-    summary: (n, s) => `${bn(n)}টি সাবটাইটেল অংশ · ${s} কথা`,
+    summary: (n, s) => `${bn(n)}টি সাবটাইটেল · ${s} কথা`,
     count: (c, t) => `${bn(c)} / ${bn(t)}`,
     elapsed: (s) => bn(s),
     errType: "একটি ভিডিও বা অডিও ফাইল বেছে নিন।",
@@ -93,6 +93,7 @@ function setLang(next) {
   document.querySelectorAll("[data-i18n]").forEach((el) => { el.textContent = t(el.dataset.i18n); });
   document.querySelectorAll(".lang button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === next)));
   try { localStorage.setItem("lang", next); } catch (e) { /* private mode */ }
+  $("cues").setAttribute("aria-label", t("cuesLabel"));
   if (file) showFile();
   if (lastResult) showSummary();
   if (lastError) $("errorMsg").textContent = t(lastError.key, ...lastError.args);
@@ -224,12 +225,33 @@ function done(result) {
   if (!n) return fail("empty");
   lastResult = result;
   showSummary();
-  $("preview").textContent = result.preview || "";
+  showCues(result.cues || []);
   const link = $("downloadBtn");
   link.href = `${API_BASE}/jobs/${jobId}/download`;
   link.setAttribute("download", `${file.name.replace(/\.[^/.]+$/, "")}.srt`);
   show("done");
   link.focus();
+}
+
+function hms(seconds) {
+  const h = Math.floor(seconds / 3600), m = Math.floor((seconds % 3600) / 60), s = Math.floor(seconds % 60);
+  return (h ? `${h}:${String(m).padStart(2, "0")}` : `${m}`) + `:${String(s).padStart(2, "0")}`;
+}
+
+function showCues(cues) {
+  const list = $("cues");
+  list.replaceChildren(...cues.map((c) => {
+    const li = document.createElement("li");
+    const time = document.createElement("span");
+    time.className = "cue-time";
+    time.textContent = hms(c.start);
+    const text = document.createElement("span");
+    text.className = "cue-text";
+    text.textContent = c.text;
+    li.append(time, text);
+    return li;
+  }));
+  list.scrollTop = 0;
 }
 
 function showSummary() {

@@ -121,13 +121,14 @@ h2 { font-size: 1.15rem; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 
 
 /* result */
 .summary { color: var(--ink-2); margin: -8px 0 18px; font-variant-numeric: tabular-nums; }
-.preview-label { font-size: 0.8rem; color: var(--ink-3); margin: 22px 0 6px; }
-.preview {
-  font-family: var(--mono); font-size: 0.84rem; line-height: 1.6; color: var(--ink-2);
+.cues {
+  list-style: none; margin: 18px 0 14px; padding: 4px 0; max-height: min(60vh, 520px); overflow: auto;
   background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm);
-  padding: 14px 16px; margin: 0 0 14px; max-height: 260px; overflow: auto; white-space: pre-wrap;
 }
-.preview:lang(bn), .preview { font-family: var(--mono), var(--bangla); }
+.cues li { display: grid; grid-template-columns: 4.2em 1fr; gap: 12px; padding: 8px 16px; }
+.cues li + li { border-top: 1px solid var(--line); }
+.cue-time { font-family: var(--mono); font-size: 0.8rem; color: var(--ink-3); padding-top: 0.2em; font-variant-numeric: tabular-nums; }
+.cue-text { font-family: var(--bangla); white-space: pre-line; line-height: 1.6; }
 .error { color: var(--error); margin: -6px 0 18px; }
 
 /* how it works */

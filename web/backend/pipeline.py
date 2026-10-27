@@ -28,9 +28,9 @@ from bangla_asr.preprocessing.forced_align import MMSForcedAligner
 from bangla_asr.preprocessing.vad import SileroVADChunker
 
 try:
-    from web.backend.srt_utils import chunks_to_srt, get_srt_preview, visible_len, words_to_cues
+    from web.backend.srt_utils import chunks_to_srt, visible_len, words_to_cues
 except ImportError:
-    from srt_utils import chunks_to_srt, get_srt_preview, visible_len, words_to_cues
+    from srt_utils import chunks_to_srt, visible_len, words_to_cues
 
 MODEL_ID = os.environ.get("BANGLA_ASR_MODEL", "OmiKhan/bangla-asr-whisper-medium")  # released final model (Apache-2.0)
 
@@ -117,7 +117,7 @@ class SubtitleGenerator:
                 progress_cb("chunk", total_chunks, total_chunks)
 
             if total_chunks == 0:
-                return {"srt_content": "", "preview": "", "num_chunks": 0, "total_speech_s": 0.0}
+                return {"srt_content": "", "cues": [], "num_chunks": 0, "total_speech_s": 0.0}
 
             if progress_cb:
                 progress_cb("asr", 0, total_chunks)
@@ -138,7 +138,6 @@ class SubtitleGenerator:
 
             cues = words_to_cues(words, total_s=seconds)
             srt_content = chunks_to_srt(cues)
-            preview = get_srt_preview(srt_content)
 
             if progress_cb:
                 progress_cb("srt", 1, 1)
@@ -146,7 +145,7 @@ class SubtitleGenerator:
             total_speech_sec = sum(c["duration_sec"] for c in raw_chunks)
             return {
                 "srt_content": srt_content,
-                "preview": preview,
+                "cues": [{"start": round(c["start"], 2), "end": round(c["end"], 2), "text": c["text"]} for c in cues],
                 "num_chunks": len(cues),
                 "total_speech_s": round(total_speech_sec, 2),
             }

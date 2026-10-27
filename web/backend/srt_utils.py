@@ -111,9 +111,3 @@ def chunks_to_srt(subtitled_chunks: List[Dict]) -> str:
         lines.append(f"{idx}\n{start_ts} --> {end_ts}\n{text}\n")
         idx += 1
     return "\n".join(lines)
-
-
-def get_srt_preview(srt_text: str, max_entries: int = 5) -> str:
-    """Returns the first max_entries subtitle blocks for UI display."""
-    blocks = srt_text.strip().split("\n\n")
-    return "\n\n".join(blocks[:max_entries])

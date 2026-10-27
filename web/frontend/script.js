@@ -5,7 +5,7 @@
  */
 
 // The local server (same origin) on this PC; the Modal app on any public host (Vercel, a custom domain)
-const MODAL_API = "https://mehboobehsankhan--bangla-subtitle-generator-web.modal.run";
+const MODAL_API = "https://mehboobehsankhan2--bangla-subtitle-generator-web.modal.run";
 const IS_LOCAL = ["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname);
 const API_BASE = window.ASR_API_BASE || (
   window.location.protocol === "file:" ? "http://127.0.0.1:8000" : IS_LOCAL ? window.location.origin : MODAL_API

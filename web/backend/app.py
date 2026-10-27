@@ -19,11 +19,21 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 app = modal.App("bangla-subtitle-generator")
 
+def download_models():
+    """Bake the ASR model and the word aligner into the image, so a cold start downloads nothing."""
+    import torchaudio
+    from huggingface_hub import snapshot_download
+
+    snapshot_download("OmiKhan/bangla-asr-whisper-medium")
+    torchaudio.pipelines.MMS_FA.get_model(with_star=True)
+
+
 image = (
     modal.Image.debian_slim(python_version="3.10")
     .apt_install("ffmpeg")
-    .pip_install("torch")
+    .pip_install("torch", "torchaudio")
     .pip_install_from_requirements(str(PROJECT_ROOT / "web" / "requirements.txt"))
+    .run_function(download_models)
     # The library uses a src/ layout, so add both packages explicitly for
     # remote Modal containers. add_local_python_source("bangla_asr") cannot
     # discover it from the repository root.

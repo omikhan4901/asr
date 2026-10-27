@@ -5,13 +5,14 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 VENV=web/.venv-gpu
-if [ ! -f "$VENV/.installed" ]; then
-  echo "Setting up $VENV (first run only)..."
-  python3 -m venv "$VENV"
+STAMP="$(sha1sum web/requirements.txt | cut -d' ' -f1)"   # re-installs when the package list changes
+if [ "$(cat "$VENV/.installed" 2>/dev/null)" != "$STAMP" ]; then
+  echo "Setting up $VENV..."
+  [ -x "$VENV/bin/python" ] || python3 -m venv "$VENV"
   "$VENV/bin/pip" install --upgrade pip
-  "$VENV/bin/pip" install torch --index-url https://download.pytorch.org/whl/cu128
+  "$VENV/bin/pip" install torch torchaudio --index-url https://download.pytorch.org/whl/cu128
   "$VENV/bin/pip" install -r web/requirements.txt
-  touch "$VENV/.installed"
+  echo "$STAMP" > "$VENV/.installed"
 fi
 
 "$VENV/bin/python" -c "import torch; print('GPU:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'none found, running on the CPU (slow)')"

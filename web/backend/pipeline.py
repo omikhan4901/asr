@@ -2,15 +2,16 @@
 Web subtitle pipeline: audio extraction, voice-activity chunking, greedy transcription with the released model, SRT.
 
 The same path as the whole-recording evaluation of the paper (pipeline/eval_longform.py: Silero VAD chunks, greedy
-decoding, 14.2% WER on 22 raw media recordings). The demo no longer samples 12 candidates and rescores them with MBR:
-the paper shows that rescoring does not beat greedy decoding, at about 12 times the compute.
+decoding, about 14% WER on 22 raw media recordings). Word times come from MMS_FA forced alignment of each chunk's
+own transcript, so subtitles can be short without changing the text. The demo no longer samples 12 candidates and
+rescores them with MBR: the paper shows that rescoring does not beat greedy decoding, at about 12 times the compute.
 """
 
 import os
 import sys
 import tempfile
 from pathlib import Path
-from typing import Callable, Dict, Optional
+from typing import Callable, Dict, List, Optional
 
 # Ensure project root and src are on python path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -23,12 +24,13 @@ if str(src_dir) not in sys.path:
 from bangla_asr.common.audio import extract_audio_from_video, load_audio
 from bangla_asr.config import AudioConfig, WhisperConfig
 from bangla_asr.models.autoregressive.whisper_model import WhisperASRModel
+from bangla_asr.preprocessing.forced_align import MMSForcedAligner
 from bangla_asr.preprocessing.vad import SileroVADChunker
 
 try:
-    from web.backend.srt_utils import chunks_to_srt, get_srt_preview
+    from web.backend.srt_utils import chunks_to_srt, get_srt_preview, visible_len, words_to_cues
 except ImportError:
-    from srt_utils import chunks_to_srt, get_srt_preview
+    from srt_utils import chunks_to_srt, get_srt_preview, visible_len, words_to_cues
 
 MODEL_ID = os.environ.get("BANGLA_ASR_MODEL", "OmiKhan/bangla-asr-whisper-medium")  # released final model (Apache-2.0)
 
@@ -55,7 +57,31 @@ class SubtitleGenerator:
         print("Initializing SubtitleGenerator models...")
         self.vad_chunker = SileroVADChunker(audio_config=self.audio_cfg)
         self.model_wrapper = WhisperASRModel(config=self.whisper_cfg, device=device)
+        # Word timings for short, readable subtitle lines; the same aligner that built the evaluation split
+        self.aligner = MMSForcedAligner(device=device)
         print("SubtitleGenerator initialized.")
+
+    def _timed_words(self, chunk: Dict, text: str, sr: int) -> List[Dict]:
+        """Words of one chunk with times in the video, from forced alignment of the chunk's own transcript."""
+        words = text.split()
+        if not words:
+            return []
+        offset = chunk["start_sec"]
+        try:
+            aligned = self.aligner.align(chunk["audio"], words)
+        except Exception as exc:  # a failed alignment must not lose the transcript
+            print(f"Word alignment failed, spreading the words evenly: {exc}")
+            aligned = []
+        if any(w.aligned for w in aligned):
+            return [{"text": w.text, "start": offset + w.start, "end": offset + w.end} for w in aligned]
+        # Fallback: spread the words over the chunk in proportion to their length
+        weights = [visible_len(w) + 1 for w in words]
+        span = len(chunk["audio"]) / sr / sum(weights)
+        out, t = [], offset
+        for w, k in zip(words, weights):
+            out.append({"text": w, "start": t, "end": t + k * span})
+            t += k * span
+        return out
 
     def process_video(
         self,
@@ -66,8 +92,8 @@ class SubtitleGenerator:
         Executes end-to-end subtitle generation:
           1. Extract audio via ffmpeg
           2. Voice-activity chunking
-          3. Greedy transcription of every chunk with the released model
-          4. SRT generation
+          3. Greedy transcription of every chunk with the released model, then word times by forced alignment
+          4. SRT generation: words grouped into cues of at most two lines and seven seconds
         """
         if progress_cb:
             progress_cb("audio", 0, 1)
@@ -96,21 +122,22 @@ class SubtitleGenerator:
             if progress_cb:
                 progress_cb("asr", 0, total_chunks)
 
-            texts = []
+            words = []
             batch_size = self.whisper_cfg.batch_size
             for i in range(0, total_chunks, batch_size):
-                batch = [c["audio"] for c in raw_chunks[i:i + batch_size]]
-                texts.extend(self.model_wrapper.transcribe_batch(batch, sampling_rate=sr, num_beams=1))
+                chunks = raw_chunks[i:i + batch_size]
+                texts = self.model_wrapper.transcribe_batch([c["audio"] for c in chunks], sampling_rate=sr,
+                                                            num_beams=1)
+                for chunk, text in zip(chunks, texts):
+                    words.extend(self._timed_words(chunk, text, sr))
                 if progress_cb:
-                    progress_cb("asr", min(i + len(batch), total_chunks), total_chunks)
-
-            subtitled_chunks = [{"start": meta["start_sec"], "end": meta["end_sec"], "text": text}
-                                for meta, text in zip(raw_chunks, texts)]
+                    progress_cb("asr", min(i + len(chunks), total_chunks), total_chunks)
 
             if progress_cb:
                 progress_cb("srt", 0, 1)
 
-            srt_content = chunks_to_srt(subtitled_chunks)
+            cues = words_to_cues(words, total_s=seconds)
+            srt_content = chunks_to_srt(cues)
             preview = get_srt_preview(srt_content)
 
             if progress_cb:
@@ -120,6 +147,6 @@ class SubtitleGenerator:
             return {
                 "srt_content": srt_content,
                 "preview": preview,
-                "num_chunks": total_chunks,
+                "num_chunks": len(cues),
                 "total_speech_s": round(total_speech_sec, 2),
             }

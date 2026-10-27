@@ -49,6 +49,7 @@ image = (
 volume = modal.Volume.from_name("bangla-asr-web-data", create_if_missing=True)
 VOLUME_MOUNT_PATH = "/data"
 job_store = modal.Dict.from_name("bangla-asr-jobs", create_if_missing=True)
+WORKER_KEY = "_gpu_worker"  # set while a GPU container is up, for /health (job ids are hex, so no clash)
 
 MAX_UPLOAD_MB = 300
 MAX_VIDEO_DURATION_S = 15 * 60  # public demo: caps GPU time per upload
@@ -62,6 +63,11 @@ class SubtitleWorker:
     def setup(self):
         from web.backend.pipeline import SubtitleGenerator
         self.generator = SubtitleGenerator(max_duration_s=MAX_VIDEO_DURATION_S)
+        job_store[WORKER_KEY] = {"since": time.time()}
+
+    @modal.exit()
+    def shutdown(self):
+        job_store.pop(WORKER_KEY, None)
 
     @modal.method()
     def process(self, job_id: str, video_relpath: str):
@@ -121,6 +127,12 @@ fastapi_app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@fastapi_app.get("/health")
+async def health():
+    """'ready': a GPU container is up, a file starts at once. 'asleep': the first file waits about a minute."""
+    return {"status": "ready" if WORKER_KEY in job_store else "asleep"}
 
 
 @fastapi_app.post("/jobs")

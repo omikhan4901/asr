@@ -9,6 +9,8 @@
   --accent-ink: #f6f4ef;
   --accent-soft: #e3eeeb;
   --error: #a8402f;
+  --ok: #2f7d4f;
+  --warn: #b07a12;
   --shadow: 0 1px 2px rgb(60 50 30 / 0.05), 0 8px 24px -12px rgb(60 50 30 / 0.12);
 
   --sans: "Geist", "Noto Sans Bengali", system-ui, sans-serif;
@@ -30,6 +32,8 @@
     --accent-ink: #10211e;
     --accent-soft: #1f2d2a;
     --error: #e08a78;
+    --ok: #7dc79a;
+    --warn: #e0b45c;
     --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px -12px rgb(0 0 0 / 0.5);
   }
 }
@@ -54,6 +58,13 @@ a { color: inherit; }
 .brand { display: flex; align-items: baseline; gap: 10px; }
 .brand-mark { font-family: var(--bangla); font-weight: 600; font-size: 1.25rem; color: var(--accent); }
 .brand-sub { font-size: 0.85rem; color: var(--ink-3); }
+.status { display: inline-flex; align-items: center; gap: 7px; margin: 0 0 0 auto; font-size: 0.82rem; color: var(--ink-2); white-space: nowrap; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-3); flex: none; }
+.status[data-status="checking"] .dot { animation: pulse 1.2s ease-in-out infinite; }
+.status[data-status="ready"] .dot { background: var(--ok); }
+.status[data-status="asleep"] .dot { background: var(--warn); }
+.status[data-status="offline"] .dot { background: var(--error); }
+@keyframes pulse { 50% { opacity: 0.3; } }
 .lang { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: var(--surface); }
 .lang button {
   font: inherit; font-size: 0.82rem; border: 0; background: transparent; color: var(--ink-2);
@@ -147,6 +158,9 @@ h2 { font-size: 1.15rem; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 
 .foot span { margin-left: auto; }
 
 @media (max-width: 560px) {
+  .top { flex-wrap: wrap; row-gap: 10px; }
+  .brand-sub { display: none; }
+  .status { order: 3; width: 100%; margin: 0; }
   main { padding-top: 36px; }
   .card { padding: 16px; }
   .drop { padding: 40px 16px 36px; }

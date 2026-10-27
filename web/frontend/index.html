@@ -20,6 +20,7 @@
 
 <header class="top">
   <div class="brand"><span class="brand-mark" lang="bn">ক্যাপশন</span><span class="brand-sub" data-i18n="brandSub">Bangla subtitles</span></div>
+  <p class="status" id="status" data-status="checking" role="status"><span class="dot" aria-hidden="true"></span><span id="statusText">Checking the server</span></p>
   <div class="lang" role="group" aria-label="Language">
     <button type="button" data-lang="en" aria-pressed="true">English</button>
     <button type="button" data-lang="bn" aria-pressed="false" lang="bn">বাংলা</button>
@@ -62,7 +63,7 @@
         <li data-step="srt"><span class="tick" aria-hidden="true"></span><span data-i18n="stepSrt">Writing the .srt file</span></li>
       </ol>
       <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="bar"><span id="barFill"></span></div>
-      <p class="note"><span id="elapsed"></span> <span data-i18n="coldStart">The first file after a quiet period waits about a minute while the server starts.</span></p>
+      <p class="note"><span id="elapsed"></span> <span id="coldNote" data-i18n="coldStart">The first file after a quiet period waits about a minute while the server starts.</span></p>
     </div>
 
     <!-- 4. done -->

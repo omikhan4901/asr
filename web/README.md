@@ -11,11 +11,14 @@ The text is exactly what the model wrote; alignment only sets the times.
 | Part | Where | What |
 |---|---|---|
 | `frontend/` | Vercel (`asr-phi.vercel.app`) or the local server | One page, English and Bangla, no build step |
-| `backend/app.py` | Modal (A10G GPU, scales to zero) | `POST /jobs`, `GET /jobs/{id}`, `GET /jobs/{id}/download` |
+| `backend/app.py` | Modal (A10G GPU, scales to zero) | `POST /jobs`, `GET /jobs/{id}`, `GET /jobs/{id}/download`, `GET /health` |
 | `backend/local_server.py` | this PC | The same API, and it serves the frontend too |
 | `backend/pipeline.py` | both | Audio extraction, voice detection, transcription, word timing, SRT |
 
 Uploaded videos are deleted as soon as their subtitles are made; only the `.srt` is kept.
+
+The page header shows the server state from `GET /health`: green when a GPU is up (a file starts at once), amber
+when it is asleep (the first file waits about a minute while Modal starts one), red when the API cannot be reached.
 
 ## Run it on your own GPU
 

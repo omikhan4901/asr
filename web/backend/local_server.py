@@ -99,6 +99,12 @@ def _run_job(job_id: str, video_path: str):
         Path(video_path).unlink(missing_ok=True)  # the upload is only needed to make the subtitles
 
 
+@app.get("/health")
+async def health():
+    """'ready' once the models are loaded; 'asleep' before the first file, which loads them."""
+    return {"status": "ready" if _generator is not None else "asleep"}
+
+
 @app.post("/jobs")
 async def create_job(file: UploadFile = File(...)):
     job_id = uuid.uuid4().hex[:12]

@@ -26,6 +26,8 @@ const TEXT = {
     stepUpload: "Uploading", stepAudio: "Extracting the audio", stepChunk: "Finding the speech",
     stepAsr: "Transcribing", stepSrt: "Writing the .srt file",
     coldStart: "The first file after a quiet period waits about a minute while the server starts.",
+    statusChecking: "Checking the server", statusReady: "Server ready",
+    statusAsleep: "Server asleep · about 1 min to start", statusOffline: "Server offline",
     doneTitle: "Your subtitles are ready", download: "Download .srt", cuesLabel: "Subtitles", again: "Subtitle another file",
     errorTitle: "That didn't work", retry: "Try again",
     howTitle: "How it works",
@@ -56,6 +58,8 @@ const TEXT = {
     stepUpload: "আপলোড হচ্ছে", stepAudio: "অডিও আলাদা করা হচ্ছে", stepChunk: "কথা খোঁজা হচ্ছে",
     stepAsr: "লেখা হচ্ছে", stepSrt: ".srt ফাইল তৈরি হচ্ছে",
     coldStart: "কিছুক্ষণ ব্যবহার না হলে প্রথম ফাইলে সার্ভার চালু হতে প্রায় এক মিনিট লাগে।",
+    statusChecking: "সার্ভার দেখা হচ্ছে", statusReady: "সার্ভার প্রস্তুত",
+    statusAsleep: "সার্ভার ঘুমিয়ে · চালু হতে প্রায় ১ মিনিট", statusOffline: "সার্ভার বন্ধ",
     doneTitle: "আপনার সাবটাইটেল তৈরি", download: ".srt ডাউনলোড করুন", cuesLabel: "সাবটাইটেল", again: "আরেকটি ফাইলের সাবটাইটেল",
     errorTitle: "কাজটি হয়নি", retry: "আবার চেষ্টা করুন",
     howTitle: "কীভাবে কাজ করে",
@@ -83,7 +87,8 @@ const $ = (id) => document.getElementById(id);
 const card = $("app");
 let lang = "en";
 let file = null, jobId = null, poll = null, clock = null, startedAt = 0;
-let lastError = null, lastResult = null;  // kept so a language switch can re-render them
+let lastError = null, lastResult = null;
+let serverStatus = "checking";  // checking | ready | asleep | offline  // kept so a language switch can re-render them
 
 function t(key, ...args) { const v = TEXT[lang][key]; return typeof v === "function" ? v(...args) : v; }
 
@@ -94,6 +99,7 @@ function setLang(next) {
   document.querySelectorAll(".lang button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === next)));
   try { localStorage.setItem("lang", next); } catch (e) { /* private mode */ }
   $("cues").setAttribute("aria-label", t("cuesLabel"));
+  showStatus();
   if (file) showFile();
   if (lastResult) showSummary();
   if (lastError) $("errorMsg").textContent = t(lastError.key, ...lastError.args);
@@ -117,6 +123,25 @@ function fail(key, ...args) {
 }
 
 function stopTimers() { clearInterval(poll); clearInterval(clock); poll = clock = null; }
+
+/* server status: is the API reachable, and is a GPU already up (a file starts at once) or asleep (about a minute) */
+function showStatus() {
+  const key = { checking: "statusChecking", ready: "statusReady", asleep: "statusAsleep", offline: "statusOffline" }[serverStatus];
+  $("status").dataset.status = serverStatus;
+  $("statusText").textContent = t(key);
+  $("coldNote").hidden = serverStatus === "ready";
+}
+
+async function checkServer() {
+  try {
+    const res = await fetch(`${API_BASE}/health`, { cache: "no-store", signal: AbortSignal.timeout(25000) });
+    const body = res.ok ? await res.json() : {};
+    serverStatus = body.status === "ready" ? "ready" : res.ok ? "asleep" : "offline";
+  } catch (e) {
+    serverStatus = "offline";
+  }
+  showStatus();
+}
 
 /* choosing a file: type, size and length are checked before anything is uploaded */
 function mediaMinutes(f) {
@@ -276,6 +301,10 @@ $("startBtn").addEventListener("click", start);
 $("againBtn").addEventListener("click", reset);
 $("retryBtn").addEventListener("click", () => (file && lastError && lastError.key !== "errType" ? start() : reset()));
 document.querySelectorAll(".lang button").forEach((b) => b.addEventListener("click", () => setLang(b.dataset.lang)));
+
+checkServer();
+setInterval(() => { if (!document.hidden) checkServer(); }, 30000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) checkServer(); });
 
 let saved = null;
 try { saved = localStorage.getItem("lang"); } catch (e) { /* private mode */ }

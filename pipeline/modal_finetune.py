@@ -124,7 +124,8 @@ CPU_FN = dict(image=data_image, cpu=2, memory=8192, volumes={"/vol": vol}, secre
 align_image = (
     modal.Image.debian_slim(python_version="3.13")
     .pip_install("torch==2.11.0", "torchaudio==2.11.0", "uroman==1.3.1.1", "numpy==2.5.2", "pandas==3.0.5",
-                 "soundfile==0.14.0", "librosa==1.0.0", "soxr==1.1.0", "rapidfuzz==3.14.5", "huggingface_hub==1.27.0")
+                 "soundfile==0.14.0", "librosa==1.0.0", "soxr==1.1.0", "rapidfuzz==3.14.5", "jiwer==4.0.0",
+                 "huggingface_hub==1.27.0")  # rapidfuzz + jiwer: bangla_asr.common.variants -> metrics
     .env({"PYTHONPATH": f"{REMOTE_PROJ}/src", "PYTHONUNBUFFERED": "1", "PYTHONIOENCODING": "utf-8",
           "TORCH_HOME": "/vol/torch"})
     .add_local_dir("src/bangla_asr", f"{REMOTE_PROJ}/src/bangla_asr", ignore=["**/__pycache__"])

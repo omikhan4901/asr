@@ -586,8 +586,9 @@ def prep_matrix(sources: str = "kathbath,shrutilipi", max_hours: float = 34.0, p
 
 # ---------------------------------------------------------------- number fix (v1.1)
 
-# Any small GPU will do (MMS_FA is ~300M parameters); a fallback list, because the L4 queue stalled on 2026-11-04.
-@app.function(image=align_image, gpu=["L4", "A10G", "T4"], cpu=4, memory=16384, volumes={"/vol": vol},
+# MMS_FA (~300M parameters) runs on any GPU; A100 first because it is reliably available on these accounts (the L4
+# queue stalled on 2026-11-04), small GPUs as fallbacks. The run is bound by unpacking and the Python loop, not the GPU.
+@app.function(image=align_image, gpu=["A100-40GB", "L4", "A10G"], cpu=4, memory=16384, volumes={"/vol": vol},
               timeout=4 * 3600)
 def numbers_align_remote(limit: int, launch: dict | None = None) -> int:
     """Readings of every digit token scored against the audio -> /vol/manifests/matrix/numbers_report[_smoke<N>].csv."""

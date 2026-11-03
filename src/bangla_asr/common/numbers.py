@@ -137,9 +137,10 @@ def cardinal(n: int) -> str:
     return " ".join(out)
 
 
-def year(n: int) -> Optional[str]:
-    """Year form for 1100-1999 (উনিশশো চুরানব্বই); 2000-2099 are said as counting numbers (দুই হাজার বিশ)."""
-    if 1100 <= n <= 1999:
+def hundreds(n: int) -> Optional[str]:
+    """Hundreds form of 1100-9999: years (উনিশশো চুরানব্বই) and amounts (পঁচিশশো টাকা). Not when the hundreds are a
+    multiple of ten (২০০০ is দুই হাজার, never বিশশো)."""
+    if 1100 <= n <= 9999 and (n // 100) % 10:
         return f"{_UNITS[n // 100]}শো" + (f" {_UNITS[n % 100]}" if n % 100 else "")
     return None
 
@@ -152,6 +153,9 @@ def _attach(base: str, suf: str) -> Optional[List[str]]:
     """Case and counter suffixes on the last number word; None if the suffix is not handled."""
     if not suf:
         return [base]
+    if suf.startswith("টি") or suf.startswith("টা"):  # ৫টি is often said পাঁচটা and the other way round
+        other = ("টা" + suf[2:]) if suf.startswith("টি") else ("টি" + suf[2:])
+        return [base + suf] + ([base + other] if other in _COUNTERS else [])
     if suf in _COUNTERS or suf in ("কে", "ও", "তে"):
         return [base + suf]
     vowel = bool(_VOWEL_END.search(base))
@@ -173,8 +177,8 @@ def _value_forms(num: str) -> List[str]:
     if n >= 10 ** 9:
         return [digit_by_digit(s)]
     forms = [cardinal(n)]
-    if year(n):
-        forms.append(year(n))
+    if hundreds(n):
+        forms.append(hundreds(n))
     if len(s) >= 5 and "," not in s:
         forms.append(digit_by_digit(s))
     return forms
@@ -188,7 +192,7 @@ def spoken_forms(token: str, next_word: str = "") -> Optional[List[str]]:
     m = _RANGE.match(core)
     if m:
         a, b = (int(x.translate(_DIGITS)) for x in m.groups())
-        fa = [cardinal(a)] + ([year(a)] if year(a) else [])
+        fa = [cardinal(a)] + ([hundreds(a)] if hundreds(a) else [])
         return [pre + f"{x} {mid}{cardinal(b)}" + post for x in fa for mid in ("থেকে ", "")]
     m = _LABEL.match(core)
     if m:

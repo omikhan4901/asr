@@ -12,15 +12,16 @@ write digits. This rewrites every digit token as words, so the model learns one 
          best. Report per clip: verbalized text, number-word score (lowest mean character posterior over its number
          spans) and the median score of its other words. Nothing is dropped here except clips with a token the
          verbalizer does not handle (১০:৩০, ১/২, ...).
-  mix    the training list: report clips whose number score passes --min_score (set from the report's score
-         distribution, never from a test set), + as many clips that already say numbers in words, + as many other
-         clips (seed 0), all from the same manifest.
+  mix    the training list: clips whose numbers are confirmed, + as many clips that already say numbers in words,
+         + as many other clips (seed 0), all from the same manifest. Confirmed = with --judge (the default on Modal),
+         the released model in word-only mode wrote one of the token's readings word for word (judge_numbers.py; MMS
+         cannot hear long number words, 82% of years); without it, the MMS number score passes --min_score.
 
 Run on Modal next to the audio (pipeline/modal_finetune.py::numbers_align), or locally with the clips unpacked.
   PYTHONPATH=src python pipeline/data/verbalize_numbers.py align --manifest data/splits_fa/matrix/m5-300.csv \
       --out data/splits_fa/matrix/numbers_report.csv [--limit 200]
   PYTHONPATH=src python pipeline/data/verbalize_numbers.py mix --manifest data/splits_fa/matrix/m5-300.csv \
-      --report data/splits_fa/matrix/numbers_report.csv --min_score 0.3 --out data/splits_fa/matrix/numbers-v1.csv
+      --report data/splits_fa/matrix/numbers_report.csv --judge data/splits_fa/matrix/numbers_judge.csv --out data/splits_fa/matrix/numbers-v1.csv
 """
 
 import argparse
@@ -36,6 +37,8 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 from bangla_asr.common.numbers import _UNITS, spoken_forms  # noqa: E402
+from bangla_asr.common.text import normalize_bangla_text  # noqa: E402
+from bangla_asr.common.variants import fold  # noqa: E402
 
 DIGIT = re.compile(r"[0-9০-৯]")
 # Number words for the "already in words" group: 2-99 and the multipliers; এক (also "a") and নয় (also "is not") left out.
@@ -185,10 +188,54 @@ def align(args):
         print(f"number_score quantiles {q}; other-word median of medians {ok['other_median'].median():.3f}", flush=True)
 
 
+def _keys(text):
+    return [fold(w) for w in normalize_bangla_text(str(text)).split()]
+
+
+def _contains(seq, sub):
+    return any(seq[k:k + len(sub)] == sub for k in range(len(seq) - len(sub) + 1))
+
+
+def choose_by_judge(text: str, judge: str):
+    """(verbalized text, status): for each digit token the reading the judge (the model in word-only mode) wrote, word
+    for word (spelling variants allowed through fold), longest match (উনিশশো চুরানব্বই over চুরানব্বই). No reading
+    written -> the clip is dropped. No fallback to 'same value, other words': the training text must be the words said
+    (the judge's পঁচিশশো must not become দুই হাজার পাঁচশো)."""
+    p = plan(text)
+    if p is None:
+        return "", "not_handled"
+    words, slots = p
+    hk = _keys(judge)
+    choice = {}
+    for i, forms in slots.items():
+        exact = [c for c, f in enumerate(forms) if _contains(hk, _keys(f))]
+        if not exact:
+            return "", "judge_mismatch"
+        choice[i] = max(exact, key=lambda c: len(_keys(forms[c])))
+    ws, _ = render(words, slots, choice)
+    return " ".join(ws), "ok"
+
+
 def mix(args):
     df = pd.read_csv(args.manifest, encoding="utf-8-sig")
     rep = pd.read_csv(args.report, encoding="utf-8-sig")
-    passed = rep[(rep["status"] == "ok") & (rep["number_score"] >= args.min_score)]
+    if args.judge:  # readings chosen by the model in word-only mode (judge_numbers.py); MMS kept as a cross-check
+        jd = pd.read_csv(args.judge, encoding="utf-8-sig")
+        rep = rep.merge(jd, on="utt_id", how="left")
+        got = [choose_by_judge(t, j) if s == "ok" and isinstance(j, str) else ("", "no_judge")
+               for t, j, s in zip(rep["text"], rep["judge"], rep["status"])]
+        rep["verbalized"], rep["judge_status"] = [g[0] for g in got], [g[1] for g in got]
+        passed = rep[rep["judge_status"] == "ok"]
+        mms_ok = rep["number_score"] >= 0.4
+        cross = {"judge_ok": int((rep["judge_status"] == "ok").sum()),
+                 "judge_status": rep["judge_status"].value_counts().to_dict(),
+                 "mms_0.4_ok": int(mms_ok.sum()),
+                 "both_ok": int(((rep["judge_status"] == "ok") & mms_ok).sum())}
+    else:
+        if args.min_score is None:
+            sys.exit("give --judge or --min_score")
+        passed = rep[(rep["status"] == "ok") & (rep["number_score"] >= args.min_score)]
+        cross = {}
     a = df.set_index("utt_id").loc[passed["utt_id"]].reset_index()
     a["text"] = passed["verbalized"].to_numpy()
     text = df["text"].astype(str)
@@ -200,9 +247,12 @@ def mix(args):
     out = out[df.columns]
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     out.to_csv(args.out, index=False, encoding="utf-8-sig")
-    info = {"report_clips": len(rep), "passed": len(a), "min_score": args.min_score, "number_words": len(b),
-            "other": len(c), "total": len(out), "hours": round(out["duration"].sum() / 3600, 2),
-            "status": rep["status"].value_counts().to_dict()}
+    info = {"report_clips": len(rep), "passed": len(a), "rule": "judge" if args.judge else f"mms>={args.min_score}",
+            "number_words": len(b), "other": len(c), "total": len(out), "hours": round(out["duration"].sum() / 3600, 2),
+            "status": rep["status"].value_counts().to_dict(), **cross}
+    if args.judge:
+        passed.to_csv(Path(args.out).with_name(Path(args.out).stem + "_choices.csv"), index=False, encoding="utf-8-sig",
+                      columns=["utt_id", "source", "text", "judge", "verbalized", "number_score"])
     Path(args.out).with_suffix(".json").write_text(json.dumps(info, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(info, ensure_ascii=False), flush=True)
 
@@ -219,7 +269,8 @@ if __name__ == "__main__":
     m = sub.add_parser("mix")
     m.add_argument("--manifest", required=True)
     m.add_argument("--report", required=True)
-    m.add_argument("--min_score", type=float, required=True)
+    m.add_argument("--min_score", type=float, default=None, help="MMS rule (without --judge)")
+    m.add_argument("--judge", default="", help="judge_numbers.py output: readings chosen by the model")
     m.add_argument("--out", required=True)
     m.set_defaults(func=mix)
     args = ap.parse_args()

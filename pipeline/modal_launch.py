@@ -15,7 +15,8 @@ appended to logs/modal_calls.jsonl (call id, arguments, git state).
   ./Scripts/python.exe pipeline/modal_launch.py score --run tugstugi_a100 --out zeroshot --budget 3
   ./Scripts/python.exe pipeline/modal_launch.py prep --sources kathbath,shrutilipi   (matrix data, CPU only)
   ./Scripts/python.exe pipeline/modal_launch.py numbers-align --limit 300            (number fix: readings vs audio)
-  ./Scripts/python.exe pipeline/modal_launch.py numbers-mix --min_score 0.3          (number fix: training list)
+  ./Scripts/python.exe pipeline/modal_launch.py numbers-judge                        (number fix: the model writes numbers in words)
+  ./Scripts/python.exe pipeline/modal_launch.py numbers-mix                          (number fix: training list)
   ./Scripts/python.exe pipeline/modal_launch.py status                  (state of every launched job)
 Live logs: Modal website -> Apps -> bangla-asr-finetune (deployed) -> the function's calls.
 Uploads and downloads stay in modal_finetune.py (modal run ...::upload / pull / pull_results).
@@ -125,8 +126,10 @@ def main():
     pr.add_argument("--max_hours", type=float, default=34.0, help="hours per source; 34 = all of CV train, so every matrix source is the same size")
     na = sub.add_parser("numbers-align", help="score the spoken readings of every digit token against the audio")
     na.add_argument("--limit", type=int, default=0, help="random clips only (0 = all ~6,400 clips with digits)")
-    nm = sub.add_parser("numbers-mix", help="training list from the alignment report")
-    nm.add_argument("--min_score", type=float, required=True)
+    sub.add_parser("numbers-judge", help="the released model writes every number clip in words (digits blocked)")
+    nm = sub.add_parser("numbers-mix", help="training list: readings the judge wrote (default) or by MMS score")
+    nm.add_argument("--min_score", type=float, default=0.4, help="MMS rule, only with --no_judge")
+    nm.add_argument("--no_judge", action="store_true")
     s = sub.add_parser("score")
     s.add_argument("--run", required=True)
     s.add_argument("--budget", type=float, required=True)
@@ -145,8 +148,11 @@ def main():
                a.sources.split(","), a.max_hours, True)
     elif a.cmd == "numbers-align":
         _spawn("numbers_align_remote", "prep", {"run": f"numbers_align_{a.limit or 'all'}", "limit": a.limit}, a.limit)
+    elif a.cmd == "numbers-judge":
+        _spawn("numbers_judge_remote", "prep", {"run": "numbers_judge"})
     elif a.cmd == "numbers-mix":
-        _spawn("numbers_mix_remote", "prep", {"run": "numbers_mix", "min_score": a.min_score}, a.min_score)
+        _spawn("numbers_mix_remote", "prep", {"run": "numbers_mix", "judge": not a.no_judge,
+                                              "min_score": a.min_score}, a.min_score, not a.no_judge)
     elif a.cmd == "train":
         _spawn("train_remote", "train", {"run": a.run, "method": a.method, "budget": a.budget, "extra": a.extra,
                                          "source": a.source},

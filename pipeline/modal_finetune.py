@@ -125,9 +125,10 @@ align_image = (
     modal.Image.debian_slim(python_version="3.13")
     .pip_install("torch==2.11.0", "torchaudio==2.11.0", "uroman==1.3.1.1", "numpy==2.5.2", "pandas==3.0.5",
                  "soundfile==0.14.0", "librosa==1.0.0", "soxr==1.1.0", "rapidfuzz==3.14.5", "jiwer==4.0.0",
-                 "huggingface_hub==1.27.0")  # rapidfuzz + jiwer: bangla_asr.common.variants -> metrics
+                 "huggingface_hub==1.27.0",  # rapidfuzz + jiwer: bangla_asr.common.variants -> metrics
+                 "transformers==5.15.0", "accelerate==1.14.0", "safetensors==0.8.0")  # the judge (judge_numbers.py)
     .env({"PYTHONPATH": f"{REMOTE_PROJ}/src", "PYTHONUNBUFFERED": "1", "PYTHONIOENCODING": "utf-8",
-          "TORCH_HOME": "/vol/torch"})
+          "TORCH_HOME": "/vol/torch", "HF_HOME": "/vol/hf", "TRANSFORMERS_VERBOSITY": "error"})
     .add_local_dir("src/bangla_asr", f"{REMOTE_PROJ}/src/bangla_asr", ignore=["**/__pycache__"])
     .add_local_dir("pipeline/data", f"{REMOTE_PROJ}/pipeline/data", ignore=["**/__pycache__"])
 )
@@ -604,10 +605,27 @@ def numbers_align_remote(limit: int, launch: dict | None = None) -> int:
     return code
 
 
+# The released model writes every clip's numbers in words (digits blocked); mix keeps the readings it wrote (MMS cannot
+# hear long number words: 82% of years). Resumable: a re-run continues the file.
+@app.function(image=align_image, gpu=["A100-40GB", "L4", "A10G"], cpu=4, memory=24576, volumes={"/vol": vol},
+              timeout=4 * 3600)
+def numbers_judge_remote(launch: dict | None = None) -> int:
+    _prepare(NUMBERS_SETS)
+    m = "data/splits_fa/matrix"
+    cmd = [sys.executable, f"{REMOTE_PROJ}/pipeline/data/judge_numbers.py", "--manifest", f"{m}/m5-300.csv",
+           "--report", f"{m}/numbers_report.csv", "--out", f"{m}/numbers_judge.csv",
+           "--model", "OmiKhan/bangla-asr-whisper-medium"]
+    print("$", " ".join(cmd), flush=True)
+    code = subprocess.run(cmd, cwd=WORK).returncode
+    vol.commit()
+    return code
+
+
 @app.function(image=align_image, cpu=2, memory=8192, volumes={"/vol": vol}, secrets=[modal.Secret.from_name(HF_SECRET)],
               timeout=30 * 60)
-def numbers_mix_remote(min_score: float, launch: dict | None = None) -> int:
-    """Training list numbers-v1.csv from the full report (+ copies on HUB for the other accounts and Kaggle)."""
+def numbers_mix_remote(min_score: float, judge: bool, launch: dict | None = None) -> int:
+    """Training list numbers-v1.csv from the full report, readings by the judge (or by MMS score without it),
+    + copies on HUB for the other accounts and Kaggle."""
     import os
 
     from huggingface_hub import HfApi
@@ -615,13 +633,16 @@ def numbers_mix_remote(min_score: float, launch: dict | None = None) -> int:
     _prepare([])
     m = "data/splits_fa/matrix"
     cmd = [sys.executable, f"{REMOTE_PROJ}/pipeline/data/verbalize_numbers.py", "mix", "--manifest", f"{m}/m5-300.csv",
-           "--report", f"{m}/numbers_report.csv", "--min_score", str(min_score), "--out", f"{m}/numbers-v1.csv"]
+           "--report", f"{m}/numbers_report.csv", "--out", f"{m}/numbers-v1.csv"]
+    cmd += ["--judge", f"{m}/numbers_judge.csv"] if judge else ["--min_score", str(min_score)]
     print("$", " ".join(cmd), flush=True)
     code = subprocess.run(cmd, cwd=WORK).returncode
     vol.commit()
     if code == 0:
         api = HfApi(token=os.environ["HF_TOKEN"])
-        for f in ("numbers-v1.csv", "numbers-v1.json", "numbers_report.csv"):
+        files = ["numbers-v1.csv", "numbers-v1.json", "numbers_report.csv"]
+        files += ["numbers_judge.csv", "numbers-v1_choices.csv"] if judge else []
+        for f in files:
             api.upload_file(repo_id=HUB, repo_type="dataset", path_or_fileobj=f"/vol/manifests/matrix/{f}",
                             path_in_repo=f"manifests/matrix/{f}")
         print("copied to the hub", flush=True)

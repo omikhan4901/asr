@@ -81,22 +81,46 @@ def render(words, slots, choice):
     return out, spans
 
 
-def word_scores(aligner, em, words):
-    """Per-word mean character posterior (NaN for words with nothing alignable), or None if alignment fails."""
+def word_scores(aligner, em, words, frames=None):
+    """Per-word mean character posterior (NaN for words with nothing alignable), or None if alignment fails.
+    With frames=[] it is filled with each word's (start, end) frame (None for unaligned words)."""
     toks = aligner.romanize_words(words)
     keep = [i for i, t in enumerate(toks) if t]
     res = aligner._align_window(em, [toks[i] for i in keep])
     if res is None:
         return None
     scores = [float("nan")] * len(words)
-    for i, (_, _, s) in zip(keep, res):
+    if frames is not None:
+        frames[:] = [None] * len(words)
+    for i, (a, b, s) in zip(keep, res):
         scores[i] = s
+        if frames is not None:
+            frames[i] = (a, b)
     return scores
 
 
 def span_score(scores, idx):
     vals = [scores[j] for j in idx if not np.isnan(scores[j])]
     return min(vals) if vals else float("nan")
+
+
+def window_score(scores, idx, context=2):
+    """Mean over a number span and `context` words each side: a reading that is too short or too long makes its
+    neighbours stretch or squeeze, so they must count when readings are compared (span-only favoured short years)."""
+    lo, hi = max(0, idx[0] - context), min(len(scores), idx[-1] + context + 1)
+    vals = [s for s in scores[lo:hi] if not np.isnan(s)]
+    return float(np.mean(vals)) if vals else float("nan")
+
+
+def heard(aligner, em, frames, idx):
+    """What MMS hears from the end of the word before a span to the start of the word after it (romanized)."""
+    before = [frames[j] for j in range(idx[0]) if frames[j]]
+    after = [frames[j] for j in range(idx[-1] + 1, len(frames)) if frames[j]]
+    a = before[-1][1] if before else 0
+    b = after[0][0] if after else em.shape[0]
+    chars, _ = aligner._greedy_chars(em[a:b])
+    inv = {v: k for k, v in aligner.dictionary.items()}
+    return "".join(inv[c] for c in chars).replace("|", " ").strip()
 
 
 def align(args):
@@ -110,7 +134,7 @@ def align(args):
     out, t0 = [], time.time()
     for k, r in df.iterrows():
         row = {"utt_id": r["utt_id"], "source": r["source"], "text": r["text"], "verbalized": "", "choices": "",
-               "number_score": float("nan"), "other_median": float("nan"), "status": ""}
+               "number_score": float("nan"), "other_median": float("nan"), "status": "", "candidates": "", "heard": ""}
         p = plan(str(r["text"]))
         if p is None:
             row["status"] = "not_handled"
@@ -119,34 +143,35 @@ def align(args):
         words, slots = p
         em = aligner.emissions(load_audio(r["audio_path"]))
         choice = {i: 0 for i in slots}
-        failed = False
+        cand = {}
         for i, forms in slots.items():
             if len(forms) == 1:
                 continue
-            best = (-1.0, 0)
+            best, cand[words[i]] = (-1.0, 0), {}
             for c in range(len(forms)):
                 trial = {**choice, i: c}
                 ws, spans = render(words, slots, trial)
                 sc = word_scores(aligner, em, ws)
-                if sc is not None:
-                    s = span_score(sc, spans[i])
-                    if not np.isnan(s) and s > best[0]:
-                        best = (s, c)
+                s = window_score(sc, spans[i]) if sc is not None else float("nan")
+                cand[words[i]][forms[c]] = None if np.isnan(s) else round(s, 4)
+                if not np.isnan(s) and s > best[0]:
+                    best = (s, c)
             choice[i] = best[1]
         ws, spans = render(words, slots, choice)
-        sc = word_scores(aligner, em, ws)
+        frames = []
+        sc = word_scores(aligner, em, ws, frames)
+        row.update({"verbalized": " ".join(ws), "candidates": json.dumps(cand, ensure_ascii=False),
+                    "choices": json.dumps({words[i]: slots[i][c] for i, c in choice.items()}, ensure_ascii=False)})
         if sc is None:
-            failed = True
-        row.update({"verbalized": " ".join(ws), "choices": json.dumps({words[i]: slots[i][c] for i, c in choice.items()},
-                                                                       ensure_ascii=False)})
-        if failed:
             row["status"] = "align_failed"
         else:
             num_idx = {j for idx in spans.values() for j in idx}
             nums = [span_score(sc, idx) for idx in spans.values()]
             other = [s for j, s in enumerate(sc) if j not in num_idx and not np.isnan(s)]
             row.update({"number_score": min(nums) if nums else float("nan"),
-                        "other_median": statistics.median(other) if other else float("nan"), "status": "ok"})
+                        "other_median": statistics.median(other) if other else float("nan"), "status": "ok",
+                        "heard": json.dumps({words[i]: heard(aligner, em, frames, idx) for i, idx in spans.items()},
+                                            ensure_ascii=False)})
         out.append(row)
         if (k + 1) % 200 == 0:
             print(f"{k + 1}/{len(df)} clips, {time.time() - t0:.0f} s", flush=True)

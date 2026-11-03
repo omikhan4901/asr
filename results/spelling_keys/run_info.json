@@ -1,0 +1,56 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/spelling_keys.py score",
+      "git_commit": "359ccd6591069557c770609f9c59e41d32cfc3b6",
+      "git_dirty": true,
+      "start": "2026-11-03T23:55:51",
+      "end": "2026-11-03T23:55:54",
+      "runtime_s": 3.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.12.10",
+        "torch": "2.11.0+cu128",
+        "numpy": "1.26.4",
+        "pandas": "3.0.6",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/labels/pair_labels.csv": "cb7d793964628159080e17a5c12812107cb873fccec48b1d4f8b088ff8653077",
+        "results/list_correction/rules.csv": "1c4abfbfca86882ecc57c8bd63d0e7b4600125112c4388f53fc40205c1b8964e",
+        "data/backup/modal_friend/manifests/matrix/m5-300.csv": "41bfd465f07600c29020bf6235028d313a5f735c6e054402ef231f4d928f4456",
+        "results\\spelling_keys\\screen_check.csv": "9d918a02f51a6020a5e2c475595a18153070741bd47951465b5db3d620f18449"
+      },
+      "outputs": {
+        "results\\spelling_keys\\summary.csv": "9c03dfd88bf15ffa9cb3a5a1a3a7a583a68c4c5cbe7e733f66f681f4ff37bd32",
+        "results\\spelling_keys\\pairs.csv": "69136e58567ec2729aa0d27e949bef830b79020e13d04e567499271c7abb5371"
+      }
+    },
+    {
+      "command": "python.exe analysis/spelling_keys.py score",
+      "git_commit": "359ccd6591069557c770609f9c59e41d32cfc3b6",
+      "git_dirty": true,
+      "start": "2026-11-03T23:56:16",
+      "end": "2026-11-03T23:56:19",
+      "runtime_s": 3.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.12.10",
+        "torch": "2.11.0+cu128",
+        "numpy": "1.26.4",
+        "pandas": "3.0.6",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/labels/pair_labels.csv": "cb7d793964628159080e17a5c12812107cb873fccec48b1d4f8b088ff8653077",
+        "results/list_correction/rules.csv": "1c4abfbfca86882ecc57c8bd63d0e7b4600125112c4388f53fc40205c1b8964e",
+        "data/backup/modal_friend/manifests/matrix/m5-300.csv": "41bfd465f07600c29020bf6235028d313a5f735c6e054402ef231f4d928f4456",
+        "results\\spelling_keys\\screen_check.csv": "9d918a02f51a6020a5e2c475595a18153070741bd47951465b5db3d620f18449"
+      },
+      "outputs": {
+        "results\\spelling_keys\\summary.csv": "b7a3e8f0dd444fd562cea0bdf10da5e90eb6053fee987d6bd72d42224f80dc5b",
+        "results\\spelling_keys\\pairs.csv": "69136e58567ec2729aa0d27e949bef830b79020e13d04e567499271c7abb5371"
+      }
+    }
+  ]
+}

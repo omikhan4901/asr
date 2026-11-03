@@ -1,0 +1,19 @@
+prediction,contrast,sets,diff,lo,hi
+P26a,"final - zero-shot, exact",splits_fa-eval,9.35659674911112,7.186868633877101,11.46833245315005
+P26a,"final - zero-shot, exact",fleurs-test,4.5280447079726684,2.369339933055394,6.770130150230015
+P26a,"final - zero-shot, exact",cv-test,5.033384717328133,3.23837436899636,6.7946979909000245
+P26a,"final - zero-shot, exact",kathbath-valid,4.80276276379108,3.0613299014162005,6.58004167009574
+P26b,fold gain: zero-shot - final,splits_fa-eval,1.383604634844815,0.6060426977361253,2.3011799522858722
+P26b,fold gain: zero-shot - final,splits_fa-eval+fleurs-test+cv-test+kathbath-valid,0.9808275398632915,0.5065752225600815,1.4793660287475625
+P26c,final: fold - exact,splits_fa-eval,0.5644590600930854,0.13722358086991449,1.1020065277975228
+P26c,final: fold - exact,fleurs-test,1.1423004122444382,0.37519723764125956,2.052088978479831
+P26c,final: fold - exact,cv-test,0.6042541817461569,0.20846669682564745,1.0661518149408526
+P26c,final: fold - exact,kathbath-valid,0.24179634059723298,-0.3926984826644929,0.8753502485621466
+P26d,final rank by exact MAP (best other: M1),splits_fa-eval,1.0,,
+P26d,"final - M1, exact",splits_fa-eval,0.04034123441989834,-1.219656567971049,1.3150697188286988
+P26d,final rank by exact MAP (best other: Hishab),fleurs-test,2.0,,
+P26d,"final - Hishab, exact",fleurs-test,-3.823491164856776,-6.168217465087136,-1.564823581317598
+P26d,final rank by exact MAP (best other: Hishab),cv-test,2.0,,
+P26d,"final - Hishab, exact",cv-test,-4.792505097094065,-6.801911466340802,-2.606843526964511
+P26d,final rank by exact MAP (best other: Hishab),kathbath-valid,2.0,,
+P26d,"final - Hishab, exact",kathbath-valid,-1.8646005478190943,-3.172371645153258,-0.6221085294977818

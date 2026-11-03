@@ -1,0 +1,34 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/retrieval.py terms",
+      "git_commit": "359ccd6591069557c770609f9c59e41d32cfc3b6",
+      "git_dirty": true,
+      "start": "2026-11-04T00:05:05",
+      "end": "2026-11-04T00:05:06",
+      "runtime_s": 0.9,
+      "status": "ok",
+      "versions": {
+        "python": "3.12.10",
+        "torch": "2.11.0+cu128",
+        "numpy": "1.26.4",
+        "pandas": "3.0.6",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "data/splits_fa/train_clean.csv": "ece0bbd5c998b58ec5c841b92b139ebdd029f81ac15c0388ead5f601e63ca883",
+        "results\\kaggle\\finetuned\\splits_fa-eval\\soup_m1_full+m5_300+m5_300+m5_300_t4\\predictions.jsonl": "bab9bcd89e002a216fd60501bb555950fdf6bfaf11e655d56963971ac6ae3115",
+        "results\\kaggle\\finetuned\\fleurs-test\\soup_m1_full+m5_300+m5_300+m5_300_t4\\predictions.jsonl": "938a7783eb8121dae4898698f7fd2ecaf04e7bcf6ea5c55baaaf4392da6822c7",
+        "results\\kaggle\\finetuned\\cv-test\\soup_m1_full+m5_300+m5_300+m5_300_t4\\predictions.jsonl": "32ceca2f3779a6072255bba6b343ea2e279b02fcb5e5b5fbfbfd8e8d74cdcb1b",
+        "results\\kaggle\\finetuned\\kathbath-valid\\soup_m1_full+m5_300+m5_300+m5_300_t4\\predictions.jsonl": "36c377450982256a4b350eea32c253b1da4fa735cfe481a499c574232c919379"
+      },
+      "outputs": {
+        "results\\retrieval\\stopwords.csv": "08488b8e6ed3c7dc5c81171310619c4163438d5a16c5fdfbf1c1310fc6615f64",
+        "results\\retrieval\\terms_splits_fa-eval.csv": "4ef95705dd05824601cc8bf5dae57adf103bd1b71b94474ce015f8c85d10d0e1",
+        "results\\retrieval\\terms_fleurs-test.csv": "92176486bf24b6a59dfda67b0835e4aa700d1e73a73d834d5660d0ca1b2e6ab8",
+        "results\\retrieval\\terms_cv-test.csv": "9a5f713c6a24fbd7f9a1c6c1e3643be69812a6eca1bc820ecad05e2a5d2f09ab",
+        "results\\retrieval\\terms_kathbath-valid.csv": "1272bf4edc19ad49305b376a840b4ca7856be5ea896fbe640c1290f72ac6d9f9"
+      }
+    }
+  ]
+}

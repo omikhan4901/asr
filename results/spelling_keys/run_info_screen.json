@@ -1,0 +1,84 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/spelling_keys.py screen",
+      "git_commit": "359ccd6591069557c770609f9c59e41d32cfc3b6",
+      "git_dirty": true,
+      "start": "2026-11-03T23:50:51",
+      "end": "2026-11-03T23:52:04",
+      "runtime_s": 73.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.12.10",
+        "torch": "2.11.0+cu128",
+        "numpy": "1.26.4",
+        "pandas": "3.0.6",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/zeroshot/splits_fa-train/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl": "0b15af331d47fc45e2f2dcc9d661a340fd4a2f28e475cf3ca3b70fa1d862d08d",
+        "results/zeroshot/splits_fa-dev/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl": "2c53b1cc1e5e7149918b595635c8b67c11825417d38ded33b75d6bae7d2509e1",
+        "data/backup/modal_friend/manifests/matrix/m5-300.csv": "41bfd465f07600c29020bf6235028d313a5f735c6e054402ef231f4d928f4456"
+      },
+      "outputs": {
+        "results\\spelling_keys\\screen_summary.csv": "ed21fd0ce1650c8e560cc37be2ea8942a7ab78202146b703ef06f3f13e46b833",
+        "results\\spelling_keys\\screen_sibilant.csv": "da0c97ac3ba08daf5c4401e9fc3394869e2b5e8f98237d8700473502362005f5",
+        "results\\spelling_keys\\screen_sibilant_collisions.csv": "f3077e6a6df946c8fa48136509661f3d819bbcdd5f86920c6b2c0d27344d9b15",
+        "results\\spelling_keys\\screen_nn.csv": "d206ca7b2d0fa2c049b3605c6bef169be812a7bb887a310e921a13f3fa55635f",
+        "results\\spelling_keys\\screen_nn_collisions.csv": "3035f38ce5503ae7475f72317ff85554f1ce1b1927164d702e2460b55760bb58",
+        "results\\spelling_keys\\screen_ja.csv": "49d650c0634d56975dde49c48675c106b6f7e630e20a5466b0d96140e3bc2d59",
+        "results\\spelling_keys\\screen_ja_collisions.csv": "a8ca99479336b9e0efd208152c132448c75fa1b68e0fec57138124a63f2ec1c7",
+        "results\\spelling_keys\\screen_rra.csv": "6f0b4e8bd9e6be31af3c83fd900756e67ea0a7fd847627285930636e9898d261",
+        "results\\spelling_keys\\screen_rra_collisions.csv": "a385029183d0fb6aa6ff3dd58799231132cfdc806dc6094b1cbd5f2c3f2b26cd",
+        "results\\spelling_keys\\screen_vocalic_r.csv": "6d7549c9f7b938f03a7f94889363d83cf80dfc053edc5562e87a28a8be98ecff",
+        "results\\spelling_keys\\screen_vocalic_r_collisions.csv": "f651be448160ea34721b56e0008ab1d4cf7c7963dcf2aaa0dee5a886a36a6ac9",
+        "results\\spelling_keys\\screen_ksha.csv": "8eaa8a0c05aaf7a2d779b8918e0668b3d1b3b5909fdebd95672b7315fd050912",
+        "results\\spelling_keys\\screen_ksha_collisions.csv": "5701bd8fc0efd7dc511326b39b39e8cb38f83099d835cd187462cd21379ec8a2",
+        "results\\spelling_keys\\screen_ba_phala.csv": "68b955cd4bdd03173a7ad862ca3cbc3f9675ca456b75f912ce96cf388bc56c80",
+        "results\\spelling_keys\\screen_ba_phala_collisions.csv": "066557c8107f1ca34fb99fc2f6637dee0dc521b73b575d135ccb90b9083063d7",
+        "results\\spelling_keys\\screen_ya_phala.csv": "39501835727ab9960519642051631e8a02aaffd5338063184f5da562ab40d851",
+        "results\\spelling_keys\\screen_ya_phala_collisions.csv": "76094fbd31b2187fd55e21fd3d87c648235a8d2e3734fabb8906b2d71e1d4378"
+      }
+    },
+    {
+      "command": "python.exe analysis/spelling_keys.py screen",
+      "git_commit": "359ccd6591069557c770609f9c59e41d32cfc3b6",
+      "git_dirty": true,
+      "start": "2026-11-03T23:53:47",
+      "end": "2026-11-03T23:55:02",
+      "runtime_s": 74.9,
+      "status": "ok",
+      "versions": {
+        "python": "3.12.10",
+        "torch": "2.11.0+cu128",
+        "numpy": "1.26.4",
+        "pandas": "3.0.6",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/zeroshot/splits_fa-train/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl": "0b15af331d47fc45e2f2dcc9d661a340fd4a2f28e475cf3ca3b70fa1d862d08d",
+        "results/zeroshot/splits_fa-dev/bengaliAI__tugstugi_bengaliai-regional-asr_whisper-medium/predictions.jsonl": "2c53b1cc1e5e7149918b595635c8b67c11825417d38ded33b75d6bae7d2509e1",
+        "data/backup/modal_friend/manifests/matrix/m5-300.csv": "41bfd465f07600c29020bf6235028d313a5f735c6e054402ef231f4d928f4456"
+      },
+      "outputs": {
+        "results\\spelling_keys\\screen_summary.csv": "641efc78ba3e7ab849ad891cbd3b1b0785fb3ab426e22d953b9281aefb2a0898",
+        "results\\spelling_keys\\screen_sibilant.csv": "da0c97ac3ba08daf5c4401e9fc3394869e2b5e8f98237d8700473502362005f5",
+        "results\\spelling_keys\\screen_sibilant_collisions.csv": "f3077e6a6df946c8fa48136509661f3d819bbcdd5f86920c6b2c0d27344d9b15",
+        "results\\spelling_keys\\screen_nn.csv": "d206ca7b2d0fa2c049b3605c6bef169be812a7bb887a310e921a13f3fa55635f",
+        "results\\spelling_keys\\screen_nn_collisions.csv": "3035f38ce5503ae7475f72317ff85554f1ce1b1927164d702e2460b55760bb58",
+        "results\\spelling_keys\\screen_ja.csv": "49d650c0634d56975dde49c48675c106b6f7e630e20a5466b0d96140e3bc2d59",
+        "results\\spelling_keys\\screen_ja_collisions.csv": "a8ca99479336b9e0efd208152c132448c75fa1b68e0fec57138124a63f2ec1c7",
+        "results\\spelling_keys\\screen_rra.csv": "6f0b4e8bd9e6be31af3c83fd900756e67ea0a7fd847627285930636e9898d261",
+        "results\\spelling_keys\\screen_rra_collisions.csv": "a385029183d0fb6aa6ff3dd58799231132cfdc806dc6094b1cbd5f2c3f2b26cd",
+        "results\\spelling_keys\\screen_vocalic_r.csv": "6d7549c9f7b938f03a7f94889363d83cf80dfc053edc5562e87a28a8be98ecff",
+        "results\\spelling_keys\\screen_vocalic_r_collisions.csv": "f651be448160ea34721b56e0008ab1d4cf7c7963dcf2aaa0dee5a886a36a6ac9",
+        "results\\spelling_keys\\screen_ksha.csv": "8eaa8a0c05aaf7a2d779b8918e0668b3d1b3b5909fdebd95672b7315fd050912",
+        "results\\spelling_keys\\screen_ksha_collisions.csv": "5701bd8fc0efd7dc511326b39b39e8cb38f83099d835cd187462cd21379ec8a2",
+        "results\\spelling_keys\\screen_ba_phala.csv": "68b955cd4bdd03173a7ad862ca3cbc3f9675ca456b75f912ce96cf388bc56c80",
+        "results\\spelling_keys\\screen_ba_phala_collisions.csv": "06b007506c0d1cde64fdc6ca51c7b019b222d397e5bb23168e2a860d60401cfc",
+        "results\\spelling_keys\\screen_ya_phala.csv": "39501835727ab9960519642051631e8a02aaffd5338063184f5da562ab40d851",
+        "results\\spelling_keys\\screen_ya_phala_collisions.csv": "c7601915235ea34accd27bee36e0a73a52c8ef482cba4194b9770a5499b319c1"
+      }
+    }
+  ]
+}

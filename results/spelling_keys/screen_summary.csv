@@ -1,0 +1,9 @@
+rule,merged_pairs,merged_tokens,frequent_words,fold_keys,keys_lost,collision_groups
+sibilant,311,616,24901,24222,109,107
+nn,219,672,24901,24222,167,166
+ja,39,92,24901,24222,9,10
+rra,337,660,24901,24222,73,72
+vocalic_r,9,26,24901,24222,4,4
+ksha,40,105,24901,24222,9,9
+ba_phala,71,145,24901,24222,43,43
+ya_phala,107,215,24901,24222,140,137

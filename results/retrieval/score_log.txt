@@ -1,0 +1,67 @@
+﻿splits_fa-eval zero-shot: done
+splits_fa-eval list correction: done
+splits_fa-eval M1: done
+splits_fa-eval Hishab: done
+splits_fa-eval IndicConformer CTC: done
+splits_fa-eval final: done
+fleurs-test zero-shot: done
+fleurs-test list correction: done
+fleurs-test M1: done
+fleurs-test Hishab: done
+fleurs-test IndicConformer CTC: done
+fleurs-test final: done
+cv-test zero-shot: done
+cv-test M1: done
+cv-test Hishab: done
+cv-test IndicConformer CTC: done
+cv-test final: done
+kathbath-valid zero-shot: done
+kathbath-valid list correction: done
+kathbath-valid M1: done
+kathbath-valid Hishab: done
+kathbath-valid IndicConformer CTC: done
+kathbath-valid final: done
+condition                          char3  deep  exact  fold  uzzaman04
+set            system                                                 
+cv-test        Hishab               81.6  90.3   90.5  90.4       89.7
+               IndicConformer CTC   75.8  80.3   79.7  80.5       81.3
+               M1                   76.4  84.0   82.9  83.8       84.0
+               final                77.8  86.4   85.7  86.3       86.2
+               zero-shot            75.3  82.4   80.7  82.1       82.6
+fleurs-test    Hishab               86.1  82.4   80.5  81.4       84.0
+               IndicConformer CTC   84.2  78.7   76.4  77.4       80.1
+               M1                   83.1  76.3   73.2  74.2       77.9
+               final                84.1  79.5   76.7  77.8       81.2
+               list correction      82.5  75.6   72.4  73.9       77.6
+               zero-shot            81.9  75.6   72.2  74.1       78.4
+kathbath-valid Hishab               89.0  91.6   91.8  91.4       90.8
+               IndicConformer CTC   87.4  88.4   88.2  88.3       88.1
+               M1                   85.9  87.2   85.8  86.5       86.2
+               final                88.0  90.3   89.9  90.2       89.8
+               list correction      84.0  85.4   83.6  84.8       84.7
+               zero-shot            85.3  86.7   85.1  86.3       86.6
+splits_fa-eval Hishab               66.2  73.0   71.2  72.8       73.2
+               IndicConformer CTC   60.1  67.5   65.3  67.3       67.2
+               M1                   69.9  81.4   80.8  81.7       80.9
+               final                70.0  81.2   80.9  81.4       80.8
+               list correction      65.2  74.8   73.8  74.9       75.1
+               zero-shot            64.7  73.7   71.5  73.5       74.2
+prediction                                     contrast                                              sets      diff        lo        hi
+      P26a                     final - zero-shot, exact                                    splits_fa-eval  9.356597  7.186869 11.468332
+      P26a                     final - zero-shot, exact                                       fleurs-test  4.528045  2.369340  6.770130
+      P26a                     final - zero-shot, exact                                           cv-test  5.033385  3.238374  6.794698
+      P26a                     final - zero-shot, exact                                    kathbath-valid  4.802763  3.061330  6.580042
+      P26b                 fold gain: zero-shot - final                                    splits_fa-eval  1.383605  0.606043  2.301180
+      P26b                 fold gain: zero-shot - final splits_fa-eval+fleurs-test+cv-test+kathbath-valid  0.980828  0.506575  1.479366
+      P26c                          final: fold - exact                                    splits_fa-eval  0.564459  0.137224  1.102007
+      P26c                          final: fold - exact                                       fleurs-test  1.142300  0.375197  2.052089
+      P26c                          final: fold - exact                                           cv-test  0.604254  0.208467  1.066152
+      P26c                          final: fold - exact                                    kathbath-valid  0.241796 -0.392698  0.875350
+      P26d     final rank by exact MAP (best other: M1)                                    splits_fa-eval  1.000000       NaN       NaN
+      P26d                            final - M1, exact                                    splits_fa-eval  0.040341 -1.219657  1.315070
+      P26d final rank by exact MAP (best other: Hishab)                                       fleurs-test  2.000000       NaN       NaN
+      P26d                        final - Hishab, exact                                       fleurs-test -3.823491 -6.168217 -1.564824
+      P26d final rank by exact MAP (best other: Hishab)                                           cv-test  2.000000       NaN       NaN
+      P26d                        final - Hishab, exact                                           cv-test -4.792505 -6.801911 -2.606844
+      P26d final rank by exact MAP (best other: Hishab)                                    kathbath-valid  2.000000       NaN       NaN
+      P26d                        final - Hishab, exact                                    kathbath-valid -1.864601 -3.172372 -0.622109

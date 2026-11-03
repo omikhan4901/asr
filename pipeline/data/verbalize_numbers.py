@@ -192,8 +192,29 @@ def _keys(text):
     return [fold(w) for w in normalize_bangla_text(str(text)).split()]
 
 
-def _contains(seq, sub):
-    return any(seq[k:k + len(sub)] == sub for k in range(len(seq) - len(sub) + 1))
+def _anchors(words, i):
+    """Keys of the nearest words before and after token i that are not numbers ('' at the edges)."""
+    def find(rng):
+        for j in rng:
+            k = _keys(words[j])
+            if k and not DIGIT.search(words[j]):
+                return k[-1] if j < i else k[0]
+        return ""
+    return find(range(i - 1, -1, -1)), find(range(i + 1, len(words)))
+
+
+def _at(hk, sub, left, right):
+    """sub occurs in hk right after `left` or right before `right`: at the number's place, not anywhere (a short year
+    such as পাঁচ or নয় is also a common word elsewhere in the sentence). No anchors at all: anywhere."""
+    n = len(sub)
+    for k in range(len(hk) - n + 1):
+        if hk[k:k + n] != sub:
+            continue
+        if not left and not right:
+            return True
+        if (left and k > 0 and hk[k - 1] == left) or (right and k + n < len(hk) and hk[k + n] == right):
+            return True
+    return False
 
 
 def choose_by_judge(text: str, judge: str):
@@ -208,7 +229,8 @@ def choose_by_judge(text: str, judge: str):
     hk = _keys(judge)
     choice = {}
     for i, forms in slots.items():
-        exact = [c for c, f in enumerate(forms) if _contains(hk, _keys(f))]
+        left, right = _anchors(words, i)
+        exact = [c for c, f in enumerate(forms) if _at(hk, _keys(f), left, right)]
         if not exact:
             return "", "judge_mismatch"
         choice[i] = max(exact, key=lambda c: len(_keys(forms[c])))

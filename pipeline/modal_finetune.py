@@ -73,6 +73,9 @@ TRAIN_SOURCES = {
     # final model: M5's recipe on every hour of the four corpora (156 h), then + OpenSLR 53 (~144 h, joined clips)
     "m5full": ("data/splits_fa/matrix/m5-full.csv", ["splits_fa-train", "cv-train", "kathbath-train", "shrutilipi-train"]),
     "m5_300": ("data/splits_fa/matrix/m5-300.csv", ["splits_fa-train", "cv-train", "kathbath-train", "shrutilipi-train", "openslr53-train"]),
+    # number fix (v1.1): m5-300 clips with digits rewritten as spoken words + number-word clips + other clips
+    # (numbers_align_remote, numbers_mix_remote); trained from the released model, --model OmiKhan/bangla-asr-whisper-medium
+    "numbers": ("data/splits_fa/matrix/numbers-v1.csv", ["splits_fa-train", "cv-train", "kathbath-train", "shrutilipi-train", "openslr53-train"]),
 }
 REMOTE_PROJ, WORK = "/root/proj", "/root/work"
 
@@ -116,6 +119,18 @@ data_image = (
     .add_local_dir("pipeline/data", f"{REMOTE_PROJ}/pipeline/data", ignore=["**/__pycache__"])
 )
 CPU_FN = dict(image=data_image, cpu=2, memory=8192, volumes={"/vol": vol}, secrets=[modal.Secret.from_name(HF_SECRET)])
+# Number fix (pipeline/data/verbalize_numbers.py): MMS_FA forced alignment needs torchaudio + uroman; its own image so
+# the training image stays cached. torch/torchaudio 2.11 = the versions the script was tested with on the RTX 3060.
+align_image = (
+    modal.Image.debian_slim(python_version="3.13")
+    .pip_install("torch==2.11.0", "torchaudio==2.11.0", "uroman==1.3.1.1", "numpy==2.5.2", "pandas==3.0.5",
+                 "soundfile==0.14.0", "librosa==1.0.0", "soxr==1.1.0", "rapidfuzz==3.14.5", "huggingface_hub==1.27.0")
+    .env({"PYTHONPATH": f"{REMOTE_PROJ}/src", "PYTHONUNBUFFERED": "1", "PYTHONIOENCODING": "utf-8",
+          "TORCH_HOME": "/vol/torch"})
+    .add_local_dir("src/bangla_asr", f"{REMOTE_PROJ}/src/bangla_asr", ignore=["**/__pycache__"])
+    .add_local_dir("pipeline/data", f"{REMOTE_PROJ}/pipeline/data", ignore=["**/__pycache__"])
+)
+NUMBERS_SETS = ["splits_fa-train", "openslr53-train"]  # the only sources whose text has digits
 
 
 # ---------------------------------------------------------------- local side: data
@@ -566,3 +581,44 @@ def prep_matrix(sources: str = "kathbath,shrutilipi", max_hours: float = 34.0, p
     """Kathbath / Shrutilipi train from Hugging Face -> 16 kHz FLAC zips + manifests on this volume (+ HUB),
     then the M5 merged manifest. Needs cv-train and the DL Sprint manifests on the volume first (from_hf)."""
     _finish(prep_matrix_remote.remote(sources.split(","), max_hours, push))
+
+
+# ---------------------------------------------------------------- number fix (v1.1)
+
+@app.function(image=align_image, gpu="L4", cpu=4, memory=16384, volumes={"/vol": vol}, timeout=4 * 3600)
+def numbers_align_remote(limit: int, launch: dict | None = None) -> int:
+    """Readings of every digit token scored against the audio -> /vol/manifests/matrix/numbers_report[_smoke<N>].csv."""
+    _prepare(NUMBERS_SETS)
+    name = "numbers_report" + (f"_smoke{limit}" if limit else "")
+    cmd = [sys.executable, f"{REMOTE_PROJ}/pipeline/data/verbalize_numbers.py", "align", "--device", "cuda",
+           "--manifest", "data/splits_fa/matrix/m5-300.csv", "--out", f"data/splits_fa/matrix/{name}.csv"]
+    if limit:
+        cmd += ["--limit", str(limit)]
+    print("$", " ".join(cmd), flush=True)
+    code = subprocess.run(cmd, cwd=WORK).returncode
+    vol.commit()
+    return code
+
+
+@app.function(image=align_image, cpu=2, memory=8192, volumes={"/vol": vol}, secrets=[modal.Secret.from_name(HF_SECRET)],
+              timeout=30 * 60)
+def numbers_mix_remote(min_score: float, launch: dict | None = None) -> int:
+    """Training list numbers-v1.csv from the full report (+ copies on HUB for the other accounts and Kaggle)."""
+    import os
+
+    from huggingface_hub import HfApi
+
+    _prepare([])
+    m = "data/splits_fa/matrix"
+    cmd = [sys.executable, f"{REMOTE_PROJ}/pipeline/data/verbalize_numbers.py", "mix", "--manifest", f"{m}/m5-300.csv",
+           "--report", f"{m}/numbers_report.csv", "--min_score", str(min_score), "--out", f"{m}/numbers-v1.csv"]
+    print("$", " ".join(cmd), flush=True)
+    code = subprocess.run(cmd, cwd=WORK).returncode
+    vol.commit()
+    if code == 0:
+        api = HfApi(token=os.environ["HF_TOKEN"])
+        for f in ("numbers-v1.csv", "numbers-v1.json", "numbers_report.csv"):
+            api.upload_file(repo_id=HUB, repo_type="dataset", path_or_fileobj=f"/vol/manifests/matrix/{f}",
+                            path_in_repo=f"manifests/matrix/{f}")
+        print("copied to the hub", flush=True)
+    return code

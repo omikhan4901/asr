@@ -43,6 +43,7 @@ all = [
     "matplotlib",
     "pyctcdecode",
     "pyyaml",
+    "uroman",
 ]
 notebooks = ["nbformat", "nbclient", "ipykernel", "matplotlib"]
 dev = ["pytest"]

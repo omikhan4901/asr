@@ -14,6 +14,8 @@ appended to logs/modal_calls.jsonl (call id, arguments, git state).
   ./Scripts/python.exe pipeline/modal_launch.py score --run m1_lora --adapter checkpoints/m1_lora/final --budget 3
   ./Scripts/python.exe pipeline/modal_launch.py score --run tugstugi_a100 --out zeroshot --budget 3
   ./Scripts/python.exe pipeline/modal_launch.py prep --sources kathbath,shrutilipi   (matrix data, CPU only)
+  ./Scripts/python.exe pipeline/modal_launch.py numbers-align --limit 300            (number fix: readings vs audio)
+  ./Scripts/python.exe pipeline/modal_launch.py numbers-mix --min_score 0.3          (number fix: training list)
   ./Scripts/python.exe pipeline/modal_launch.py status                  (state of every launched job)
 Live logs: Modal website -> Apps -> bangla-asr-finetune (deployed) -> the function's calls.
 Uploads and downloads stay in modal_finetune.py (modal run ...::upload / pull / pull_results).
@@ -33,11 +35,13 @@ from modal_finetune import APP, SHIPPED, TEST_SETS, TRAIN_SOURCES, TUGSTUGI, _gi
 
 CALLS = Path("logs/modal_calls.jsonl")
 DEPLOYED = Path("logs/modal_deployed.json")
+# The Modal CLI next to the Python running this script (.venv\Scripts on Windows, .venv/bin on Linux).
+MODAL = str(Path(sys.executable).parent / ("modal.exe" if sys.platform == "win32" else "modal"))
 
 
 def _profile() -> str:
     """The Modal account (profile) commands go to; deployments are per account."""
-    out = subprocess.run([str(Path("Scripts/modal.exe")), "profile", "current"], capture_output=True, text=True)
+    out = subprocess.run([MODAL, "profile", "current"], capture_output=True, text=True)
     return out.stdout.strip()
 
 
@@ -46,7 +50,7 @@ def deploy():
     if state["git_dirty_shipped"]:
         sys.exit("Commit the changes to the shipped files first (src/bangla_asr, pipeline/*.py used on Modal), "
                  "so every job can be traced to a commit.")
-    code = subprocess.run([str(Path("Scripts/modal.exe")), "deploy", "pipeline/modal_finetune.py"]).returncode
+    code = subprocess.run([MODAL, "deploy", "pipeline/modal_finetune.py"]).returncode
     if code:
         sys.exit(f"modal deploy failed (exit {code})")
     DEPLOYED.parent.mkdir(parents=True, exist_ok=True)
@@ -119,6 +123,10 @@ def main():
     pr = sub.add_parser("prep")
     pr.add_argument("--sources", default="kathbath,shrutilipi")
     pr.add_argument("--max_hours", type=float, default=34.0, help="hours per source; 34 = all of CV train, so every matrix source is the same size")
+    na = sub.add_parser("numbers-align", help="score the spoken readings of every digit token against the audio")
+    na.add_argument("--limit", type=int, default=0, help="random clips only (0 = all ~6,400 clips with digits)")
+    nm = sub.add_parser("numbers-mix", help="training list from the alignment report")
+    nm.add_argument("--min_score", type=float, required=True)
     s = sub.add_parser("score")
     s.add_argument("--run", required=True)
     s.add_argument("--budget", type=float, required=True)
@@ -135,6 +143,10 @@ def main():
     elif a.cmd == "prep":
         _spawn("prep_matrix_remote", "prep", {"run": "matrix_data", "sources": a.sources, "max_hours": a.max_hours},
                a.sources.split(","), a.max_hours, True)
+    elif a.cmd == "numbers-align":
+        _spawn("numbers_align_remote", "prep", {"run": f"numbers_align_{a.limit or 'all'}", "limit": a.limit}, a.limit)
+    elif a.cmd == "numbers-mix":
+        _spawn("numbers_mix_remote", "prep", {"run": "numbers_mix", "min_score": a.min_score}, a.min_score)
     elif a.cmd == "train":
         _spawn("train_remote", "train", {"run": a.run, "method": a.method, "budget": a.budget, "extra": a.extra,
                                          "source": a.source},

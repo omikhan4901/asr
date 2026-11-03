@@ -1,0 +1,42 @@
+﻿splits_fa-eval: done
+fleurs-test: done
+cv-test: done
+kathbath-valid: done
+                                     WER  ref_rate   CWER   FWER  IDF_WER  diff_per_1k  spell_per_1k  content_share
+set            system                                                                                              
+splits_fa-eval zero-shot           22.70     20.01  23.53  15.07    26.16         6.75         45.06          58.42
+               list correction     17.58     14.86  20.49   6.94    22.05         5.37          7.84          58.42
+               M1                  11.34      9.64  13.63   4.05    14.74         2.13          4.92          58.42
+               Hishab              21.18     19.24  24.14  12.34    25.08         4.02         20.51          58.42
+               IndicConformer CTC  28.13     26.78  30.66  21.34    31.25         2.75         18.04          58.42
+               final               11.18      9.58  13.47   4.11    14.53         2.02          5.27          58.42
+fleurs-test    zero-shot           21.54     17.78  21.54   7.45    25.40         3.77         36.19          73.34
+               list correction     20.23     16.48  21.14   3.65    24.94         5.63         18.74          73.34
+               M1                  18.34     15.37  19.79   3.23    22.81         3.88         15.93          73.34
+               Hishab              14.24     12.14  14.99   4.29    16.91         1.97         12.89          73.34
+               IndicConformer CTC  16.03     14.30  17.92   4.33    19.76         2.20         14.97          73.34
+               final               15.60     13.44  16.94   3.82    19.20         3.77         14.41          73.34
+cv-test        zero-shot           14.80     13.40  14.51   9.40    16.22         2.01         18.63          78.18
+               M1                  12.80     11.52  13.46   4.55    14.92         2.54          6.92          78.18
+               Hishab               7.72      7.42   8.32   4.21     8.60         1.44          4.44          78.18
+               IndicConformer CTC  14.04     12.96  14.99   5.68    16.24         2.38          6.63          78.18
+               final               10.13      9.29  10.69   4.29    11.69         1.90          6.18          78.18
+kathbath-valid zero-shot           14.81     12.79  14.20   6.34    16.74         1.21         13.38          82.06
+               list correction     15.22     13.22  15.38   3.32    17.76         1.67          8.46          82.06
+               M1                  13.48     11.89  13.71   3.60    15.87         1.42          7.54          82.06
+               Hishab               8.32      7.64   8.64   3.04     9.61         0.54          3.88          82.06
+               IndicConformer CTC  11.20     10.43  11.85   3.95    12.99         0.71          4.50          82.06
+               final               10.28      9.28  10.62   3.14    12.04         0.96          4.96          82.06
+prediction            set                               contrast   diff     lo     hi
+      P27a splits_fa-eval                 final CWER - final WER  2.291  1.985  2.649
+      P27a splits_fa-eval            final CWER - final ref_rate  3.891  3.446  4.407
+      P27b splits_fa-eval relative gain CWER - relative gain WER -0.080 -0.091 -0.069
+      P27a    fleurs-test                 final CWER - final WER  1.342  0.874  1.789
+      P27a    fleurs-test            final CWER - final ref_rate  3.498  3.131  3.882
+      P27b    fleurs-test relative gain CWER - relative gain WER -0.062 -0.081 -0.045
+      P27a        cv-test                 final CWER - final WER  0.555  0.449  0.658
+      P27a        cv-test            final CWER - final ref_rate  1.397  1.305  1.483
+      P27b        cv-test relative gain CWER - relative gain WER -0.052 -0.058 -0.046
+      P27a kathbath-valid                 final CWER - final WER  0.343  0.177  0.535
+      P27a kathbath-valid            final CWER - final ref_rate  1.343  1.212  1.489
+      P27b kathbath-valid relative gain CWER - relative gain WER -0.054 -0.062 -0.047

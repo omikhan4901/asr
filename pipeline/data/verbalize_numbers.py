@@ -238,6 +238,33 @@ def choose_by_judge(text: str, judge: str):
     return " ".join(ws), "ok"
 
 
+def _take_hours(pool: pd.DataFrame, hours: float) -> pd.DataFrame:
+    """Random clips of pool (seed 0) until their duration reaches `hours`."""
+    if hours <= 0 or pool.empty:
+        return pool.iloc[:0]
+    s = pool.sample(frac=1, random_state=0)
+    return s[s["duration"].cumsum() <= hours * 3600]
+
+
+def balanced_filler(df, a, has_digit, has_words):
+    """Filler clips so every source keeps its share of hours in the manifest (v1.2). The confirmed number clips `a` are
+    almost all OpenSLR, which made v1.1's mix 73% OpenSLR (manifest 48%) and drifted DL Sprint dev. The list size is set
+    so no source exceeds its share; each source is then filled half with number-word clips, half with other clips."""
+    share = df.groupby("source")["duration"].sum() / df["duration"].sum()
+    a_h = a.groupby("source")["duration"].sum().reindex(share.index, fill_value=0) / 3600
+    total = float((a_h / share).max())
+    b_parts, c_parts = [], []
+    for src in share.index:
+        need = share[src] * total - a_h[src]
+        pool_b = df[(df["source"] == src) & ~has_digit & has_words]
+        pool_c = df[(df["source"] == src) & ~has_digit & ~has_words]
+        b_s = _take_hours(pool_b, need / 2)
+        c_s = _take_hours(pool_c, need - b_s["duration"].sum() / 3600)
+        b_parts.append(b_s)
+        c_parts.append(c_s)
+    return pd.concat(b_parts), pd.concat(c_parts)
+
+
 def mix(args):
     df = pd.read_csv(args.manifest, encoding="utf-8-sig")
     rep = pd.read_csv(args.report, encoding="utf-8-sig")
@@ -263,15 +290,22 @@ def mix(args):
     text = df["text"].astype(str)
     has_digit = text.str.contains(DIGIT)
     has_words = text.map(lambda t: any(w in NUMBER_WORDS for w in t.split()))
-    b = df[~has_digit & has_words].sample(n=min(len(a), int((~has_digit & has_words).sum())), random_state=0)
-    c = df[~has_digit & ~has_words].sample(n=min(len(a), int((~has_digit & ~has_words).sum())), random_state=0)
+    if args.balance:
+        b, c = balanced_filler(df, a, has_digit, has_words)
+    else:
+        b = df[~has_digit & has_words].sample(n=min(len(a), int((~has_digit & has_words).sum())), random_state=0)
+        c = df[~has_digit & ~has_words].sample(n=min(len(a), int((~has_digit & ~has_words).sum())), random_state=0)
     out = pd.concat([a, b, c]).sample(frac=1, random_state=0).reset_index(drop=True)
     out = out[df.columns]
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     out.to_csv(args.out, index=False, encoding="utf-8-sig")
     info = {"report_clips": len(rep), "passed": len(a), "rule": "judge" if args.judge else f"mms>={args.min_score}",
             "number_words": len(b), "other": len(c), "total": len(out), "hours": round(out["duration"].sum() / 3600, 2),
-            "status": rep["status"].value_counts().to_dict(), **cross}
+            "status": rep["status"].value_counts().to_dict(), **cross, "balanced": bool(args.balance),
+            "hours_share": {s: round(float(v), 1) for s, v in
+                            (out.groupby("source")["duration"].sum() / out["duration"].sum() * 100).items()},
+            "hours_share_manifest": {s: round(float(v), 1) for s, v in
+                                     (df.groupby("source")["duration"].sum() / df["duration"].sum() * 100).items()}}
     if args.judge:
         passed.to_csv(Path(args.out).with_name(Path(args.out).stem + "_choices.csv"), index=False, encoding="utf-8-sig",
                       columns=["utt_id", "source", "text", "judge", "verbalized", "number_score"])
@@ -293,6 +327,7 @@ if __name__ == "__main__":
     m.add_argument("--report", required=True)
     m.add_argument("--min_score", type=float, default=None, help="MMS rule (without --judge)")
     m.add_argument("--judge", default="", help="judge_numbers.py output: readings chosen by the model")
+    m.add_argument("--balance", action="store_true", help="filler keeps every source's share of hours (v1.2)")
     m.add_argument("--out", required=True)
     m.set_defaults(func=mix)
     args = ap.parse_args()

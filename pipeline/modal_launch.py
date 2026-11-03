@@ -130,6 +130,7 @@ def main():
     nm = sub.add_parser("numbers-mix", help="training list: readings the judge wrote (default) or by MMS score")
     nm.add_argument("--min_score", type=float, default=0.4, help="MMS rule, only with --no_judge")
     nm.add_argument("--no_judge", action="store_true")
+    nm.add_argument("--balance", action="store_true", help="filler keeps m5-300's source shares -> numbers-v2 (v1.2)")
     s = sub.add_parser("score")
     s.add_argument("--run", required=True)
     s.add_argument("--budget", type=float, required=True)
@@ -151,8 +152,9 @@ def main():
     elif a.cmd == "numbers-judge":
         _spawn("numbers_judge_remote", "prep", {"run": "numbers_judge"})
     elif a.cmd == "numbers-mix":
-        _spawn("numbers_mix_remote", "prep", {"run": "numbers_mix", "judge": not a.no_judge,
-                                              "min_score": a.min_score}, a.min_score, not a.no_judge)
+        _spawn("numbers_mix_remote", "prep", {"run": "numbers_mix" + ("_v2" if a.balance else ""), "judge": not a.no_judge,
+                                              "min_score": a.min_score, "balance": a.balance},
+               a.min_score, not a.no_judge, a.balance)
     elif a.cmd == "train":
         _spawn("train_remote", "train", {"run": a.run, "method": a.method, "budget": a.budget, "extra": a.extra,
                                          "source": a.source},

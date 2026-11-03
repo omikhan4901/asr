@@ -76,6 +76,8 @@ TRAIN_SOURCES = {
     # number fix (v1.1): m5-300 clips with digits rewritten as spoken words + number-word clips + other clips
     # (numbers_align_remote, numbers_mix_remote); trained from the released model, --model OmiKhan/bangla-asr-whisper-medium
     "numbers": ("data/splits_fa/matrix/numbers-v1.csv", ["splits_fa-train", "cv-train", "kathbath-train", "shrutilipi-train", "openslr53-train"]),
+    # v1.2: the same number clips, filler rebalanced to m5-300's source shares (v1.1's mix was 73% OpenSLR)
+    "numbers2": ("data/splits_fa/matrix/numbers-v2.csv", ["splits_fa-train", "cv-train", "kathbath-train", "shrutilipi-train", "openslr53-train"]),
 }
 REMOTE_PROJ, WORK = "/root/proj", "/root/work"
 
@@ -623,7 +625,7 @@ def numbers_judge_remote(launch: dict | None = None) -> int:
 
 @app.function(image=align_image, cpu=2, memory=8192, volumes={"/vol": vol}, secrets=[modal.Secret.from_name(HF_SECRET)],
               timeout=30 * 60)
-def numbers_mix_remote(min_score: float, judge: bool, launch: dict | None = None) -> int:
+def numbers_mix_remote(min_score: float, judge: bool, balance: bool = False, launch: dict | None = None) -> int:
     """Training list numbers-v1.csv from the full report, readings by the judge (or by MMS score without it),
     + copies on HUB for the other accounts and Kaggle."""
     import os
@@ -632,16 +634,18 @@ def numbers_mix_remote(min_score: float, judge: bool, launch: dict | None = None
 
     _prepare([])
     m = "data/splits_fa/matrix"
+    name = "numbers-v2" if balance else "numbers-v1"
     cmd = [sys.executable, f"{REMOTE_PROJ}/pipeline/data/verbalize_numbers.py", "mix", "--manifest", f"{m}/m5-300.csv",
-           "--report", f"{m}/numbers_report.csv", "--out", f"{m}/numbers-v1.csv"]
+           "--report", f"{m}/numbers_report.csv", "--out", f"{m}/{name}.csv"]
     cmd += ["--judge", f"{m}/numbers_judge.csv"] if judge else ["--min_score", str(min_score)]
+    cmd += ["--balance"] if balance else []
     print("$", " ".join(cmd), flush=True)
     code = subprocess.run(cmd, cwd=WORK).returncode
     vol.commit()
     if code == 0:
         api = HfApi(token=os.environ["HF_TOKEN"])
-        files = ["numbers-v1.csv", "numbers-v1.json", "numbers_report.csv"]
-        files += ["numbers_judge.csv", "numbers-v1_choices.csv"] if judge else []
+        files = [f"{name}.csv", f"{name}.json", "numbers_report.csv"]
+        files += ["numbers_judge.csv", f"{name}_choices.csv"] if judge else []
         for f in files:
             api.upload_file(repo_id=HUB, repo_type="dataset", path_or_fileobj=f"/vol/manifests/matrix/{f}",
                             path_in_repo=f"manifests/matrix/{f}")

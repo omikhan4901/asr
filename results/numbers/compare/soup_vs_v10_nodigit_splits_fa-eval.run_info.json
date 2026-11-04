@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a C:/Users/omikh/AppData/Local/Temp/claude/6da38387b774aeea/4af7a557-6915-4f2d-a7a8-697713b44c8b/scratchpad/nodigit_soup/splits_fa-eval__final_a100.jsonl --b C:/Users/omikh/AppData/Local/Temp/claude/6da38387b774aeea/4af7a557-6915-4f2d-a7a8-697713b44c8b/scratchpad/nodigit_soup/splits_fa-eval__numbers_soup.jsonl --name soup_vs_v10_nodigit_splits_fa-eval --out_dir results/numbers/compare",
+      "git_commit": "e9dc4b134fe1fb3e3d0075a7de00635f25f8f429",
+      "git_dirty": true,
+      "start": "2026-11-04T14:45:58",
+      "end": "2026-11-04T14:45:59",
+      "runtime_s": 0.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.12.10",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.22.1",
+        "numpy": "1.26.4",
+        "pandas": "3.0.6",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "C:/Users/omikh/AppData/Local/Temp/claude/6da38387b774aeea/4af7a557-6915-4f2d-a7a8-697713b44c8b/scratchpad/nodigit_soup/splits_fa-eval__final_a100.jsonl": "e252584c9b4116498e60e3b55194507d924300b849c93a20acf4d8e1119fe92e",
+        "C:/Users/omikh/AppData/Local/Temp/claude/6da38387b774aeea/4af7a557-6915-4f2d-a7a8-697713b44c8b/scratchpad/nodigit_soup/splits_fa-eval__numbers_soup.jsonl": "5d07c0797133015b7f5e9f0dc3ebd214d602a43b375288c27e8d8a3a6f17af4e"
+      },
+      "outputs": {
+        "results\\numbers\\compare\\soup_vs_v10_nodigit_splits_fa-eval.json": "c25b4b6a91b271ce44da1c351de4289fb14a8961a8cacca61e596015b50931a5"
+      }
+    }
+  ]
+}

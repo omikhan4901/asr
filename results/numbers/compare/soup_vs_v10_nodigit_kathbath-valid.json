@@ -1,0 +1,19 @@
+{
+  "a": "C:/Users/omikh/AppData/Local/Temp/claude/6da38387b774aeea/4af7a557-6915-4f2d-a7a8-697713b44c8b/scratchpad/nodigit_soup/kathbath-valid__final_a100.jsonl",
+  "b": "C:/Users/omikh/AppData/Local/Temp/claude/6da38387b774aeea/4af7a557-6915-4f2d-a7a8-697713b44c8b/scratchpad/nodigit_soup/kathbath-valid__numbers_soup.jsonl",
+  "n_utterances": 2236,
+  "n_groups": 17,
+  "ref_words": 23995,
+  "wer_a": 0.10281308605959574,
+  "wer_b": 0.10177120233381955,
+  "diff_b_minus_a": -0.0010418837257762034,
+  "diff_ci95": [
+    -0.0021052843445442345,
+    4.078640541360326e-05
+  ],
+  "p_b_better": 0.9695,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a C:/Users/omikh/AppData/Local/Temp/claude/6da38387b774aeea/4af7a557-6915-4f2d-a7a8-697713b44c8b/scratchpad/nodigit_soup/fleurs-test__final_a100.jsonl --b C:/Users/omikh/AppData/Local/Temp/claude/6da38387b774aeea/4af7a557-6915-4f2d-a7a8-697713b44c8b/scratchpad/nodigit_soup/fleurs-test__numbers_soup.jsonl --name soup_vs_v10_nodigit_fleurs-test --out_dir results/numbers/compare",
+      "git_commit": "e9dc4b134fe1fb3e3d0075a7de00635f25f8f429",
+      "git_dirty": true,
+      "start": "2026-11-04T14:46:05",
+      "end": "2026-11-04T14:46:05",
+      "runtime_s": 0.1,
+      "status": "ok",
+      "versions": {
+        "python": "3.12.10",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.22.1",
+        "numpy": "1.26.4",
+        "pandas": "3.0.6",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "C:/Users/omikh/AppData/Local/Temp/claude/6da38387b774aeea/4af7a557-6915-4f2d-a7a8-697713b44c8b/scratchpad/nodigit_soup/fleurs-test__final_a100.jsonl": "42ceb19056db2d38c8d0ef4e56a659a570e3ae02bbe85d2122326a99173a17e8",
+        "C:/Users/omikh/AppData/Local/Temp/claude/6da38387b774aeea/4af7a557-6915-4f2d-a7a8-697713b44c8b/scratchpad/nodigit_soup/fleurs-test__numbers_soup.jsonl": "1330cf9b839a275ab859d3122c9e01fd4e3ca748bb4ed7cb62ddb24330dd4a6f"
+      },
+      "outputs": {
+        "results\\numbers\\compare\\soup_vs_v10_nodigit_fleurs-test.json": "f5a243050abfbbf13aeca4bd46eb8143f3549910752b607a1f73253e6d4463b1"
+      }
+    }
+  ]
+}

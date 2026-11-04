@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/splits_fa/eval.csv --model checkpoints/numbers_soup/final --name numbers_soup --out_dir results/finetuned --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-11-04T07:42:28",
+      "end": "2026-11-04T08:01:40",
+      "runtime_s": 1152.2,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100 80GB PCIe"
+      },
+      "inputs": {
+        "data/splits_fa/eval.csv": "6ce00c484d1581ac60849749e8a20211518b1046a61dfce02015725fedd80238"
+      },
+      "outputs": {
+        "results/finetuned/splits_fa-eval/numbers_soup/predictions.jsonl": "de091bcfce7551862ebe0652862d1a0f12e0d10049823bec822e0e270a2c95b8",
+        "results/finetuned/splits_fa-eval/numbers_soup/metrics.json": "3e1e171f33785fd34240e993200c7a445058355ea49afe6e9f65ec61097e84e8"
+      }
+    }
+  ]
+}

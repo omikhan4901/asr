@@ -1,0 +1,26 @@
+{
+  "wer": 0.10080445615771484,
+  "cer": 0.02327606064508406,
+  "n_utterances": 9408,
+  "ref_words": 86891,
+  "n_groups": 7377,
+  "wer_ci95": [
+    0.09801205941924669,
+    0.10374829738407551
+  ],
+  "cer_ci95": [
+    0.022246878824221644,
+    0.024337404713419882
+  ],
+  "set": "cv-test",
+  "model": "checkpoints/numbers_soup/final",
+  "adapter": null,
+  "num_beams": 1,
+  "family": "whisper",
+  "manifest": "data/external/cv/test.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy",
+  "last_run_seconds": 1228.2,
+  "last_run_audio_hours": 16.751,
+  "last_run_rtf": 0.0204
+}

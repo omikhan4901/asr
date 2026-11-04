@@ -1,0 +1,19 @@
+{
+  "a": "C:/Users/omikh/AppData/Local/Temp/claude/6da38387b774aeea/4af7a557-6915-4f2d-a7a8-697713b44c8b/scratchpad/nodigit_soup/splits_fa-eval__final_a100.jsonl",
+  "b": "C:/Users/omikh/AppData/Local/Temp/claude/6da38387b774aeea/4af7a557-6915-4f2d-a7a8-697713b44c8b/scratchpad/nodigit_soup/splits_fa-eval__numbers_soup.jsonl",
+  "n_utterances": 4072,
+  "n_groups": 22,
+  "ref_words": 114341,
+  "wer_a": 0.11000428542692472,
+  "wer_b": 0.11098381158114762,
+  "diff_b_minus_a": 0.0009795261542228947,
+  "diff_ci95": [
+    -0.0007624822823920702,
+    0.0022913891033652218
+  ],
+  "p_b_better": 0.1155,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

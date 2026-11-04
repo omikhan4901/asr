@@ -1,0 +1,19 @@
+{
+  "a": "C:/Users/omikh/AppData/Local/Temp/claude/6da38387b774aeea/4af7a557-6915-4f2d-a7a8-697713b44c8b/scratchpad/nodigit_soup/fleurs-test__final_a100.jsonl",
+  "b": "C:/Users/omikh/AppData/Local/Temp/claude/6da38387b774aeea/4af7a557-6915-4f2d-a7a8-697713b44c8b/scratchpad/nodigit_soup/fleurs-test__numbers_soup.jsonl",
+  "n_utterances": 733,
+  "n_groups": 275,
+  "ref_words": 13824,
+  "wer_a": 0.13599537037037038,
+  "wer_b": 0.13375289351851852,
+  "diff_b_minus_a": -0.002242476851851852,
+  "diff_ci95": [
+    -0.004739726104211356,
+    0.00021801104466534659
+  ],
+  "p_b_better": 0.953,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

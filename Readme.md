@@ -1052,13 +1052,22 @@ holds: about 2% of DL Sprint reference words are wrong, most of the errors no ca
 or transcript errors rather than recognizer errors, and every model's WER moves by less than 2 points. A
 spelling-aware WER that does not count the confirmed spelling differences (8.04% average for the final model) leaves
 the conclusions unchanged and shows that about 39% of the standard-WER reduction on DL Sprint lies in differences it
-discounts: the remaining errors fall by 44%. The model is checked for contamination against every test
+discounts: the remaining errors fall by 44%. WER charges a spelling variant exactly like a wrong word, while the
+spelling-aware WER charges it less in most comparisons and almost never more; no metric we tested handles dialect
+forms. Three follow-up questions sharpen what the spelling result means. Rule-based spelling keys handle words never
+seen in training, which a learned rewrite table cannot (and a 2004 phonetic key does it best). For keyword search over
+the transcripts, a better recognizer is what helps (+4.5 to +9.4 MAP), and after fine-tuning spelling normalization is
+statistically equivalent to no gain on two of the read-speech sets; handling inflected word forms matters far more,
+for every system alike. And the errors that remain sit in content words (13.5% vs 4.1% on function words on DL
+Sprint), the words that carry the meaning. The model is checked for contamination against every test
 set and released under Apache-2.0, with the segmentation, the verified references and the scoring code.
 
 **Future work.** (1) An independent, multi-domain evaluation the model played no part in: conversational, regional
 and noisy Bangla (for example Vaani, SUBAK.KO, BanSpeech, IndicVoices). Ben-10 is not independent for us, because the
 base model was trained on it. (2) Error analysis on the weaker sets (FLEURS, dialectal speech), then targeted data
-rather than more hours. (3) More verified references, and a spelling-aware metric whose boundary between spelling
+rather than more hours. Numbers are a known weak spot: the training text mixes digits and number words, and in digit mode the model guesses
+sound-alike values on casual speech; a short retraining on spoken-word numbers fixes this but drifts elsewhere, so it
+belongs in a full retrain (notebook 11). (3) More verified references, and a spelling-aware metric whose boundary between spelling
 and dialect is validated on a random rather than a frequency-ranked sample of word pairs. (4) The same diagnosis on a
 second model family, to test whether the mechanism is general. (5) Deployment: the model already runs at a real-time
 factor of about 0.04 on a T4 (0.09 on whole recordings with voice detection); memory use, CPU speed and quantization

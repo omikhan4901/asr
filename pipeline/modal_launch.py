@@ -14,6 +14,7 @@ appended to logs/modal_calls.jsonl (call id, arguments, git state).
   ./Scripts/python.exe pipeline/modal_launch.py score --run m1_lora --adapter checkpoints/m1_lora/final --budget 3
   ./Scripts/python.exe pipeline/modal_launch.py score --run tugstugi_a100 --out zeroshot --budget 3
   ./Scripts/python.exe pipeline/modal_launch.py prep --sources kathbath,shrutilipi   (matrix data, CPU only)
+  ./Scripts/python.exe pipeline/modal_launch.py prep-extra --source kathbath --max_hours 82 --set_name kathbath-full
   ./Scripts/python.exe pipeline/modal_launch.py numbers-align --limit 300            (number fix: readings vs audio)
   ./Scripts/python.exe pipeline/modal_launch.py numbers-judge                        (number fix: the model writes numbers in words)
   ./Scripts/python.exe pipeline/modal_launch.py numbers-mix                          (number fix: training list)
@@ -124,6 +125,10 @@ def main():
     pr = sub.add_parser("prep")
     pr.add_argument("--sources", default="kathbath,shrutilipi")
     pr.add_argument("--max_hours", type=float, default=34.0, help="hours per source; 34 = all of CV train, so every matrix source is the same size")
+    px = sub.add_parser("prep-extra", help="Kathbath or Shrutilipi under a new set name (does not touch the train pulls or m5 lists)")
+    px.add_argument("--source", required=True, choices=["kathbath", "shrutilipi"])
+    px.add_argument("--max_hours", type=float, required=True)
+    px.add_argument("--set_name", required=True)
     na = sub.add_parser("numbers-align", help="score the spoken readings of every digit token against the audio")
     na.add_argument("--limit", type=int, default=0, help="random clips only (0 = all ~6,400 clips with digits)")
     sub.add_parser("numbers-judge", help="the released model writes every number clip in words (digits blocked)")
@@ -147,6 +152,8 @@ def main():
     elif a.cmd == "prep":
         _spawn("prep_matrix_remote", "prep", {"run": "matrix_data", "sources": a.sources, "max_hours": a.max_hours},
                a.sources.split(","), a.max_hours, True)
+    elif a.cmd == "prep-extra":
+        _spawn("prep_extra_remote", "prep", {"run": f"prep_{a.set_name}", "source": a.source, "max_hours": a.max_hours, "set_name": a.set_name}, a.source, a.max_hours, a.set_name)
     elif a.cmd == "numbers-align":
         _spawn("numbers_align_remote", "prep", {"run": f"numbers_align_{a.limit or 'all'}", "limit": a.limit}, a.limit)
     elif a.cmd == "numbers-judge":

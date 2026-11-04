@@ -78,6 +78,8 @@ TRAIN_SOURCES = {
     "numbers": ("data/splits_fa/matrix/numbers-v1.csv", ["splits_fa-train", "cv-train", "kathbath-train", "shrutilipi-train", "openslr53-train"]),
     # v1.2: the same number clips, filler rebalanced to m5-300's source shares (v1.1's mix was 73% OpenSLR)
     "numbers2": ("data/splits_fa/matrix/numbers-v2.csv", ["splits_fa-train", "cv-train", "kathbath-train", "shrutilipi-train", "openslr53-train"]),
+    # retrain v2: M5-300 + number fix + extra Kathbath/Shrutilipi, PLAN §13
+    "retrain_v2": ("data/splits_fa/matrix/retrain-v2.csv", ["splits_fa-train", "cv-train", "kathbath-train", "shrutilipi-train", "openslr53-train", "kathbath-full", "shrutilipi-150"]),
 }
 REMOTE_PROJ, WORK = "/root/proj", "/root/work"
 
@@ -576,6 +578,32 @@ def prep_matrix_remote(sources: list[str], max_hours: float, push: bool, launch:
                 continue
             api.upload_file(repo_id=HUB, repo_type="dataset", path_or_fileobj=f"/vol/zips/{s}-train.zip",
                             path_in_repo=f"zips/{s}-train.zip")
+    print("done", flush=True)
+    return 0
+
+
+@app.function(**CPU_FN, timeout=6 * 3600)
+def prep_extra_remote(source: str, max_hours: float, set_name: str, launch: dict | None = None) -> int:
+    """A bigger Kathbath or Shrutilipi pull under a new set name. Does not build an m5 list or push to the hub."""
+    import shutil
+
+    if set_name in ("kathbath-train", "shrutilipi-train"):
+        print(f"refusing set_name {set_name}: those names are the existing pulls", flush=True)
+        return 1
+    out = Path("/tmp/matrix")
+    script = f"{REMOTE_PROJ}/pipeline/data/prepare_matrix.py"
+    cmd = [sys.executable, script, source, "--out", str(out), "--max_hours", str(max_hours), "--set_name", set_name]
+    if source == "kathbath":
+        cmd += ["--exclude_groups", "/vol/manifests/matrix/kathbath_valid_speakers.txt"]
+    print("$", " ".join(cmd), flush=True)
+    subprocess.run(cmd, check=True)
+    Path("/vol/manifests/matrix").mkdir(parents=True, exist_ok=True)
+    Path("/vol/zips").mkdir(parents=True, exist_ok=True)
+    shutil.copy(out / set_name / "manifest.csv", f"/vol/manifests/matrix/{set_name}.csv")
+    shutil.copy(out / set_name / "report.json", f"/vol/manifests/matrix/{set_name}_report.json")
+    shutil.copy(out / "zips" / f"{set_name}.zip", f"/vol/zips/{set_name}.zip")
+    shutil.rmtree("/vol/hf_data", ignore_errors=True)  # downloaded parquet shards: not needed any more
+    vol.commit()
     print("done", flush=True)
     return 0
 

@@ -110,7 +110,7 @@ def hf_source(args):
     from huggingface_hub import HfApi, hf_hub_download
 
     repo, prefix, text_cols, group_cols = HF[args.cmd]
-    name = f"{args.cmd}-train"
+    name = args.set_name or f"{args.cmd}-train"
     exclude = set(Path(args.exclude_groups).read_text(encoding="utf-8").split()) if args.exclude_groups else set()
     files = sorted(f for f in HfApi().list_repo_files(repo, repo_type="dataset")
                    if f.startswith(prefix) and f.endswith(".parquet"))[: args.max_files]
@@ -220,6 +220,7 @@ def main():
     p.add_argument("--hours_each", type=float, default=10.0)
     p.add_argument("--from", dest="sources", nargs="*", default=[])
     p.add_argument("--name", default="m5-merged", help="merged: list name (folder under --out)")
+    p.add_argument("--set_name", default=None, help="kathbath/shrutilipi: output set name (default <cmd>-train)")
     args = p.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     {"cv": cv, "kathbath": hf_source, "shrutilipi": hf_source, "merged": merged}[args.cmd](args)

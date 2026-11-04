@@ -12,14 +12,17 @@ Does a better recognizer, and does spelling-insensitive matching, help someone s
   Ranking: BM25 (k1 1.2, b 0.75) over each system's transcripts. Metrics: MAP (primary), recall@10 (keywords),
       P@1 (sentences). Docs with score 0 are not retrieved; ties broken by clip order.
   Matching conditions, applied to query and transcripts alike: exact words, fold(), the deep key and UzZaman & Khan
-      2004 (analysis/spelling_keys.py), character 3-grams inside words.
+      2004 (analysis/spelling_keys.py), character 3-grams inside words, and family() (one ending stripped, then fold).
   CIs: 2,000 bootstrap resamples of queries (terms or sentences), seed 0, paired across systems and conditions.
+  `--relevance family` decides relevance and matching by word family (one inflectional ending stripped, then fold) and
+      skips the sentence task.
 
 Inputs: saved predictions.jsonl only (no inference). Stopwords: the 200 most frequent words of DL Sprint train
 references (data/splits_fa/train_clean.csv).
 Outputs: results/retrieval/{terms_<set>.csv, per_query.csv, summary.csv, predictions.csv, run_info*.json}
   PYTHONPATH=src .venv/bin/python analysis/retrieval.py terms
   PYTHONPATH=src .venv/bin/python analysis/retrieval.py score
+  PYTHONPATH=src .venv/bin/python analysis/retrieval.py score --relevance family --conditions exact,fold,family --out_dir results/retrieval_family
 """
 
 import argparse
@@ -35,6 +38,7 @@ import pandas as pd
 sys.path.insert(0, "src")
 sys.path.insert(0, "analysis")
 from bangla_asr.common.provenance import RunRecord  # noqa: E402
+from bangla_asr.common.stem import family  # noqa: E402
 from bangla_asr.common.text import normalize_bangla_text  # noqa: E402
 from bangla_asr.common.variants import fold  # noqa: E402
 from spelling_keys import deep, uzzaman04  # noqa: E402
@@ -66,6 +70,7 @@ CONDITIONS = {
     "fold": lambda w: [fold(w)],
     "deep": lambda w: [deep(w)],
     "uzzaman04": lambda w: [uzzaman04(w)],
+    "family": lambda w: [family(w)],
     "char3": char3,
 }
 
@@ -148,11 +153,13 @@ def keyed(words, cond):
 
 
 def score(args):
-    OUT.mkdir(parents=True, exist_ok=True)
+    out = Path(args.out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    conds = [c.strip() for c in args.conditions.split(",") if c.strip()]
     inputs = [OUT / f"terms_{s}.csv" for s in SETS]
     for s in SETS:
         inputs += [Path(p.format(s)) / "predictions.jsonl" for p in SYSTEMS.values() if Path(p.format(s)).exists()]
-    with RunRecord(OUT / "run_info.json", inputs=inputs) as rec:
+    with RunRecord(out / "run_info.json", inputs=inputs) as rec:
         rows = []
         for s in SETS:
             refs = references(s)
@@ -160,9 +167,13 @@ def score(args):
             pos = {u: i for i, u in enumerate(ids)}
             ref_sets = [set(refs[u]) for u in ids]
             T = pd.read_csv(OUT / f"terms_{s}.csv", encoding="utf-8-sig")
-            kw_rel = {t: np.array([t in rs for rs in ref_sets]) for t in T["term"]}
+            if args.relevance == "family":  # family keys computed once per clip, not once per term
+                ref_fams = [{family(w) for w in rs} for rs in ref_sets]
+                kw_rel = {t: np.array([family(t) in fs for fs in ref_fams]) for t in T["term"]}
+            else:
+                kw_rel = {t: np.array([t in rs for rs in ref_sets]) for t in T["term"]}
             sent_rel = {}
-            if s == "fleurs-test":
+            if s == "fleurs-test" and args.relevance != "family":
                 by_sent = defaultdict(list)
                 for u in ids:
                     by_sent[" ".join(refs[u])].append(pos[u])
@@ -178,7 +189,7 @@ def score(args):
                 missing = [u for u in ids if u not in hyp]
                 if missing:
                     raise SystemExit(f"{path}: {len(missing)} of {len(ids)} clips missing")
-                for cond in CONDITIONS:
+                for cond in conds:
                     index = BM25([keyed(hyp[u], cond) for u in ids])
                     for t, rel in kw_rel.items():
                         ap, r10, _ = rank_metrics(index.scores(keyed([t], cond)), rel)
@@ -190,11 +201,11 @@ def score(args):
                                      "ap": ap, "recall10": np.nan, "p1": p1})
                 print(f"{s} {sys_name}: done", flush=True)
         Q = pd.DataFrame(rows)
-        Q.to_csv(OUT / "per_query.csv", index=False, encoding="utf-8-sig")
-        summ, preds = summarize(Q)
-        summ.to_csv(OUT / "summary.csv", index=False)
-        preds.to_csv(OUT / "predictions.csv", index=False)
-        rec.outputs = [OUT / "per_query.csv", OUT / "summary.csv", OUT / "predictions.csv"]
+        Q.to_csv(out / "per_query.csv", index=False, encoding="utf-8-sig")
+        summ, preds = summarize(Q, args.relevance)
+        summ.to_csv(out / "summary.csv", index=False)
+        preds.to_csv(out / "predictions.csv", index=False)
+        rec.outputs = [out / "per_query.csv", out / "summary.csv", out / "predictions.csv"]
         print(summ[summ["task"] == "keyword"].pivot_table(index=["set", "system"], columns="condition", values="map")
               .round(1).to_string())
         print(preds.to_string(index=False))
@@ -209,7 +220,7 @@ def boot_means(Q: pd.DataFrame, s: str, task: str, rng):
     return M.columns, 100 * vals.mean(axis=0), 100 * vals[idx].mean(axis=1)  # MAP in points (0-100)
 
 
-def summarize(Q: pd.DataFrame):
+def summarize(Q: pd.DataFrame, relevance: str = "exact"):
     rng = np.random.default_rng(SEED)
     summ, reps = [], {}
     for task in ("keyword", "sentence"):
@@ -230,9 +241,9 @@ def summarize(Q: pd.DataFrame):
         return {"contrast": name, "sets": "+".join(sets), "diff": pa,
                 "lo": np.percentile(ba, 2.5), "hi": np.percentile(ba, 97.5)}
 
-    def did(name, sysa, sysb, sets):  # (fold - exact) of sysa minus the same for sysb
+    def did(name, sysa, sysb, sets, cond="fold"):  # (cond - exact) of sysa minus the same for sysb
         def gain(s, sysn):
-            pa, ba = reps[("keyword", s, sysn, "fold")]
+            pa, ba = reps[("keyword", s, sysn, cond)]
             pb, bb = reps[("keyword", s, sysn, "exact")]
             return pa - pb, ba - bb
         p = np.mean([gain(s, sysa)[0] - gain(s, sysb)[0] for s in sets])
@@ -241,20 +252,28 @@ def summarize(Q: pd.DataFrame):
                 "lo": np.percentile(b, 2.5), "hi": np.percentile(b, 97.5)}
 
     pr = []
-    for s in SETS:
-        pr.append({"prediction": "P26a", **diff("final - zero-shot, exact", (FINAL, "exact"), (ZERO, "exact"), [s])})
-    for sets in (["splits_fa-eval"], SETS):
-        pr.append({"prediction": "P26b", **did("fold gain: zero-shot - final", ZERO, FINAL, sets)})
-    for s in SETS:
-        pr.append({"prediction": "P26c", **diff("final: fold - exact", (FINAL, "fold"), (FINAL, "exact"), [s])})
-    for s in SETS:  # P26d: rank of the final model among the systems by exact keyword MAP
-        k = summ[(summ["task"] == "keyword") & (summ["set"] == s) & (summ["condition"] == "exact")]
-        k = k.sort_values("map", ascending=False).reset_index(drop=True)
-        best_other = k[k["system"] != FINAL].iloc[0]
-        pr.append({"prediction": "P26d", "contrast": f"final rank by exact MAP (best other: {best_other['system']})",
-                   "sets": s, "diff": float(k.index[k["system"] == FINAL][0] + 1), "lo": np.nan, "hi": np.nan})
-        pr.append({"prediction": "P26d", **diff(f"final - {best_other['system']}, exact", (FINAL, "exact"),
-                                                (best_other["system"], "exact"), [s])})
+    if relevance == "family":
+        for s in SETS:
+            pr.append({"prediction": "P28a", **diff("final - zero-shot, family", (FINAL, "family"), (ZERO, "family"), [s])})
+        for sets in (["splits_fa-eval"], SETS):
+            pr.append({"prediction": "P28b", **did("family gain: zero-shot - final", ZERO, FINAL, sets, "family")})
+        for s in SETS:
+            pr.append({"prediction": "P28c", **diff("final: family - exact", (FINAL, "family"), (FINAL, "exact"), [s])})
+    else:
+        for s in SETS:
+            pr.append({"prediction": "P26a", **diff("final - zero-shot, exact", (FINAL, "exact"), (ZERO, "exact"), [s])})
+        for sets in (["splits_fa-eval"], SETS):
+            pr.append({"prediction": "P26b", **did("fold gain: zero-shot - final", ZERO, FINAL, sets)})
+        for s in SETS:
+            pr.append({"prediction": "P26c", **diff("final: fold - exact", (FINAL, "fold"), (FINAL, "exact"), [s])})
+        for s in SETS:  # P26d: rank of the final model among the systems by exact keyword MAP
+            k = summ[(summ["task"] == "keyword") & (summ["set"] == s) & (summ["condition"] == "exact")]
+            k = k.sort_values("map", ascending=False).reset_index(drop=True)
+            best_other = k[k["system"] != FINAL].iloc[0]
+            pr.append({"prediction": "P26d", "contrast": f"final rank by exact MAP (best other: {best_other['system']})",
+                       "sets": s, "diff": float(k.index[k["system"] == FINAL][0] + 1), "lo": np.nan, "hi": np.nan})
+            pr.append({"prediction": "P26d", **diff(f"final - {best_other['system']}, exact", (FINAL, "exact"),
+                                                    (best_other["system"], "exact"), [s])})
     return summ, pd.DataFrame(pr)
 
 
@@ -265,6 +284,10 @@ if __name__ == "__main__":
     t.add_argument("--force", action="store_true")
     t.set_defaults(func=terms)
     c = sub.add_parser("score")
+    c.add_argument("--relevance", choices=("exact", "family"), default="exact")
+    c.add_argument("--out_dir", default="results/retrieval")
+    c.add_argument("--conditions", default="exact,fold,deep,uzzaman04,char3",
+                   help="default = E26's five conditions, so the default run reproduces results/retrieval exactly")
     c.set_defaults(func=score)
     a = ap.parse_args()
     a.func(a)

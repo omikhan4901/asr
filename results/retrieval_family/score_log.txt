@@ -1,0 +1,59 @@
+splits_fa-eval zero-shot: done
+splits_fa-eval list correction: done
+splits_fa-eval M1: done
+splits_fa-eval Hishab: done
+splits_fa-eval IndicConformer CTC: done
+splits_fa-eval final: done
+fleurs-test zero-shot: done
+fleurs-test list correction: done
+fleurs-test M1: done
+fleurs-test Hishab: done
+fleurs-test IndicConformer CTC: done
+fleurs-test final: done
+cv-test zero-shot: done
+cv-test M1: done
+cv-test Hishab: done
+cv-test IndicConformer CTC: done
+cv-test final: done
+kathbath-valid zero-shot: done
+kathbath-valid list correction: done
+kathbath-valid M1: done
+kathbath-valid Hishab: done
+kathbath-valid IndicConformer CTC: done
+kathbath-valid final: done
+condition                          exact  family  fold
+set            system                                 
+cv-test        Hishab               65.2    92.1  65.8
+               IndicConformer CTC   56.5    81.6  57.3
+               M1                   60.1    85.2  61.0
+               final                62.0    87.5  62.6
+               zero-shot            57.8    83.3  59.3
+fleurs-test    Hishab               68.8    82.6  69.8
+               IndicConformer CTC   65.2    78.8  66.4
+               M1                   61.7    75.4  63.1
+               final                65.1    79.0  66.5
+               list correction      61.2    75.3  63.0
+               zero-shot            61.2    75.5  63.3
+kathbath-valid Hishab               68.4    93.5  69.2
+               IndicConformer CTC   65.4    90.4  66.5
+               M1                   63.5    88.7  65.1
+               final                67.0    92.1  68.2
+               list correction      61.8    87.1  63.8
+               zero-shot            62.9    88.4  64.8
+splits_fa-eval Hishab               51.3    74.9  53.1
+               IndicConformer CTC   46.8    69.7  49.2
+               M1                   57.5    83.6  59.5
+               final                57.7    83.2  59.4
+               list correction      52.6    76.6  54.6
+               zero-shot            50.9    75.1  53.4
+prediction                       contrast                                              sets      diff        lo        hi
+      P28a      final - zero-shot, family                                    splits_fa-eval  8.159716  6.326999  9.870148
+      P28a      final - zero-shot, family                                       fleurs-test  3.478797  1.579717  5.386772
+      P28a      final - zero-shot, family                                           cv-test  4.259335  2.777816  5.828673
+      P28a      final - zero-shot, family                                    kathbath-valid  3.732045  2.377273  5.187533
+      P28b family gain: zero-shot - final                                    splits_fa-eval -1.402620 -2.456572 -0.240259
+      P28b family gain: zero-shot - final splits_fa-eval+fleurs-test+cv-test+kathbath-valid -0.161736 -0.702301  0.407724
+      P28c          final: family - exact                                    splits_fa-eval 25.556486 22.724256 28.311734
+      P28c          final: family - exact                                       fleurs-test 13.924170 11.545773 16.359205
+      P28c          final: family - exact                                           cv-test 25.494625 22.728161 28.324155
+      P28c          final: family - exact                                    kathbath-valid 25.115135 22.240810 27.617051

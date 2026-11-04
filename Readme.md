@@ -41,6 +41,7 @@ cause. (b) The final model on the four test sets, with 95% confidence intervals.
 | Final model on all four corpora (156 h, then ~300 h), whole-recording evaluation (§5.12) | done |
 | Comparison with other open Bangla models (§5.13) | done |
 | Spelling-aware WER as a second metric (§5.14) | done |
+| Spelling keys, searching the transcripts, errors on meaning-carrying words (§5.15–5.17) | done |
 | Results frozen / final report | Nov 12 / Dec 1, 2026 |
 | Release: model on Hugging Face (Apache-2.0), segmentation, verified references and scoring code in this repository | done: [huggingface.co/OmiKhan/bangla-asr-whisper-medium](https://huggingface.co/OmiKhan/bangla-asr-whisper-medium) |
 
@@ -164,6 +165,14 @@ WER standardization [12] and Vimarsha's lattice of valid spellings for Indian la
 default normalizer removes Indic vowel signs [14]. We do not propose a metric: we keep strict WER, publish
 our normalizer, and use spelling analysis to explain rescoring and fine-tuning behavior.
 
+**Spelling, dialect and search.** Rule-based phonetic keys for Bangla spelling go back to UzZaman and Khan's
+Soundex-style encoding [21]; we use it as a baseline, not a contribution (§5.15). Chari et al. measured how regional
+spelling conventions (American vs British English) affect lexical and neural retrieval and found that normalizing
+documents to the query's convention helps BM25 [19]; we ask the same question for Bangla over ASR transcripts and
+add the effect of fine-tuning (§5.16). Sun et al. defined a dialect-robust metric as one that charges a dialect
+change less than a change of meaning, and showed that standard text-generation metrics fail this [20]; we apply
+their test to WER and our spelling-aware WER (§5.14).
+
 **Fine-tuning Whisper.** On DL Sprint data, Bangla-WhisperDiar reports 31.32% WER with LoRA and 24.41% with
 full fine-tuning [3]. A study on Russian found that Whisper fine-tuning gains vanish when the test set
 accepts multiple spellings [15]. We use the LoRA / decoder-only / encoder-only / full contrast diagnostically,
@@ -227,7 +236,9 @@ first three form the **variant share**. The rules are proxies; human labels meas
 (§5.11).
 
 ### 3.6 List correction: raising the ceiling without retraining
-Each clip's pool is the 12 sampled candidates plus the greedy output, scored by
+List correction is a diagnostic, not a proposed method: it measures how much of the zero-shot error disappears
+when only the missing spelling enters the candidate list. The released model is the fine-tuned one (§3.7), and it
+uses no rewrite table. Each clip's pool is the 12 sampled candidates plus the greedy output, scored by
 
 $$s(h) = \log P_{\mathrm{AM}}(h \mid x) + \lambda \log P_{\mathrm{LM}}(h) + \beta |h|,$$
 
@@ -457,7 +468,9 @@ applies DL Sprint's convention to references that use another one, and the LM de
 only. Conventions are corpus-specific: the DL Sprint rewriter *hurts* Kathbath, whose references use the
 other spelling of the most frequent variant pairs. The same rewriter applied to Hishab, with rules learned from
 Hishab's own training-set errors, gives 17.76% on eval: a statistical tie with ours (−0.30 [−1.05, +0.37]), so
-the convention fix is model-agnostic.
+the convention fix is model-agnostic. A word-to-word rewrite table has two limits shown later: it cannot
+handle words it has not seen (0 of 36 unseen-word spelling pairs, §5.15), and on read speech it turns some correct
+words into other words (FLEURS পিসি 'PC' -> পিশি 'aunt'), adding meaning-changing errors (§5.17).
 
 ### 5.6 Fine-tuning
 
@@ -878,7 +891,100 @@ remaining errors fall by 44%. The metric measures what changed in the output, no
 internally, and it deliberately still counts dialect forms (নিয়া / নিয়ে) as errors, because they can carry real
 lexical or grammatical differences.
 
-### 5.15 Release
+**Is the metric fair to spelling and dialect?** Sun et al. call a metric dialect-robust when a change of form
+costs less than a change of meaning [20]. The annotators' 742 adjudicated word pairs (381 spelling, 197 dialect, 164
+different word) make this testable: for every spelling pair against every different-word pair, which one does the
+metric charge less? WER cannot tell them apart (0% robust, 100% ties). The spelling-aware WER charges the spelling
+variant less in 56% [51, 61] of the comparisons and more in only 1%; CER charges it less in 69% but more in 21%,
+because a misspelled long word can be more characters away than a short wrong word. **No metric is robust to dialect
+forms:** the spelling-aware WER in 0.5% of dialect comparisons, the best rule key in 16%, CER in 57% with 31%
+reversals (`analysis/metric_robustness.py`, `results/robustness/`). This is why the spelling-aware WER stands next to
+WER rather than replacing it, and why dialect forms stay counted as errors.
+
+### 5.15 Spelling keys beyond a lookup table
+
+A rewrite table (§3.6) can only fix words it has seen. A rule key instead treats letters as equivalent (ি/ী, ণ/ন,
+শ/ষ/স, ...), so it also applies to unseen words. We score keys as same-word detectors on the human-labelled pairs:
+"same word" if the keys are equal, scored against the labels spelling (should merge) and different word (should not),
+split by whether the reference word occurs in the final model's training text. The extra rules of the deep key were
+screened on DL Sprint train/dev error pairs only, before any label was read (ড়/র was dropped: its merged pairs were
+mostly different words, পড়ে/পরে, করা/কড়া).
+
+| Same-word detector | Precision | Recall | Recall, words unseen in training |
+|---|---:|---:|---:|
+| Rewrite table (§3.6) | 0.903 [0.866, 0.938] | 0.588 | 0 / 36 |
+| `fold` (§3.5) | 0.982 [0.962, 0.996] | 0.570 | 0.36 [0.21, 0.53] |
+| `fold` + 7 rules (deep key) | 0.978 [0.958, 0.993] | 0.693 | 0.61 [0.45, 0.77] |
+| UzZaman & Khan 2004 phonetic key [21] | 0.962 [0.940, 0.981] | **0.803** | **0.78** [0.64, 0.91] |
+
+**Rule keys work where the table cannot:** the table finds none of the spelling pairs of unseen words, the keys find
+36-78% of them. The table is also the least precise detector (24 false merges, and it merges 53% of the dialect
+pairs), because it learned frequent confusions, not spellings. **The 2004 key, prior work, gives the best trade-off;
+our deep key does not beat it**, so the key itself is not a contribution of this work. All four pre-registered
+predictions held. Caveats: the labelled pairs are a stratified sample of zero-shot errors, so precision is not a
+population rate, and only 55 pairs have an unseen reference word (`analysis/spelling_keys.py`,
+`results/spelling_keys/`).
+
+### 5.16 Searching the transcripts
+
+Is spelling normalization needed at all once the model is fine-tuned? We answer with a downstream task: keyword search
+over ASR transcripts, in the style of the TREC spoken-document-retrieval evaluations. Per test set, 500 query words
+were drawn by a fixed rule (not a stopword, in 2-50 clips) before any system was scored; each system's 1-best
+transcripts are indexed with BM25 and scored by mean average precision (MAP, 0-100). A clip is relevant if its
+reference contains the word, either in exactly that form or, in the word-family version, in any form after one
+inflectional ending is removed and spelling is folded (ঢাকা, ঢাকায়, ঢাকার count as one word).
+
+| MAP (exact form / word family) | DL Sprint eval | FLEURS | Common Voice | Kathbath |
+|---|---:|---:|---:|---:|
+| **Final model** | **80.9** / **83.2** | 76.7 / 79.0 | **85.7** / **87.5** | **89.9** / **92.1** |
+| tugstugi zero-shot | 71.5 / 75.1 | 72.2 / 75.5 | 80.7 / 83.3 | 85.1 / 88.4 |
+| Hishab conformer large | 71.2 / 74.9 | **80.5** / **82.6** | 90.5‡ / 92.1‡ | 91.8‡ / 93.5‡ |
+| IndicConformer CTC | 65.3 / 69.7 | 76.4 / 78.8 | 79.7 / 81.6 | 88.2 / 90.4 |
+
+‡ trained on this corpus's test material (Kathbath validation and Common Voice test clips are in its declared
+training data, §5.13): not a fair comparison.
+
+**A better recognizer is what makes the transcripts searchable:** fine-tuning adds 4.5 to 9.4 MAP points (exact form;
++3.5 to +8.2 with word families), significant on every set. **After fine-tuning, spelling normalization is not
+needed:** matching with spelling folded adds 0.2-1.1 points to the final model, and by two one-sided tests (the
+procedure of Chari et al. [19]) that gain is statistically equivalent to zero within ±1 MAP point on Common Voice and
+Kathbath (90% CIs [0.27, 0.98] and [-0.28, 0.74]; DL Sprint [0.18, 1.01] misses by 0.01). The zero-shot model gains
+1.2-1.9 points and is never equivalent. **Inflection is a different matter:** matching word families adds 14-26
+points for every system alike, so a Bangla search engine has to handle word forms whichever model wrote the
+transcript; that is a property of the search, not of the recognizer. The rewrite table helps little or hurts (vs
+zero-shot: +2.3 DL Sprint, +0.2 FLEURS, -1.5 Kathbath). Of the pre-registered predictions, the fine-tuning gain held
+everywhere; "spelling folding adds below 1 point" held except FLEURS (1.14); "the final model ranks first" failed on
+Common Voice and Kathbath, where only Hishab, trained on those test clips, is ahead. Limitations: the queries are
+single words rather than real user queries, relevance comes from references with 2-4% word errors (§5.11), only the
+1-best transcript is searched, and searching whole sentences on FLEURS is at the ceiling (MAP 100 for every system)
+(`analysis/retrieval.py`, `analysis/equivalence_tost.py`, `results/retrieval*`, `results/robustness/tost.csv`).
+
+### 5.17 Errors on meaning-carrying words
+
+WER treats every word alike. Splitting each reference into function words (the 200 most frequent words of the DL
+Sprint training text: না, আমি, করে, ছিল, ...) and content words (everything else: names, places, rare words) shows
+where the remaining errors are.
+
+| Error rate %, function words / content words | DL Sprint eval | FLEURS | Common Voice | Kathbath |
+|---|---:|---:|---:|---:|
+| tugstugi zero-shot | 15.1 / 23.5 | 7.5 / 21.5 | 9.4 / 14.5 | 6.3 / 14.2 |
+| Rewrite table on zero-shot (§3.6) | 6.9 / 20.5 | 3.7 / 21.1 | - | 3.3 / 15.4 |
+| **Final model** | **4.1** / **13.5** | 3.8 / 16.9 | 4.3 / **10.7** | 3.1 / **10.6** |
+| Hishab conformer large | 12.3 / 24.1 | 4.3 / **15.0** | 4.2‡ / 8.3‡ | 3.0‡ / 8.6‡ |
+| IndicConformer CTC | 21.3 / 30.7 | 4.3 / 17.9 | 5.7 / 15.0 | 4.0 / 11.9 |
+
+**Fine-tuning removes function-word errors far more than content-word errors** (DL Sprint: -73% vs -43%), so the
+final model's remaining errors sit in the words that carry the meaning; its content-word error rate is above its WER
+on every set, and the relative fine-tuning gain is smaller on content words than on WER (both pre-registered, both
+held; `analysis/meaning_errors.py`). On content words the final model is the best rankable system on DL Sprint,
+Common Voice and Kathbath; Hishab's FLEURS lead is a content-word lead (15.0 vs 16.9), which matches §5.10: most of its
+lead is formal and technical vocabulary misheard in read speech. **The rewrite table trades spelling fixes for meaning errors on read speech:** it removes
+most spelling-pair errors but adds substitutions the annotators labelled as different words (FLEURS 3.8 -> 5.6 per
+1,000 words, Kathbath 1.2 -> 1.7), for example turning a correct পিসি ('PC') into পিশি ('aunt'), a convention it
+learned from DL Sprint drama. Caveats: "function word" is a frequency cut-off, not a part-of-speech tag, and the
+labelled pair lists come from zero-shot errors, so the pair counts are lower bounds.
+
+### 5.18 Release
 
 The final model is published at [huggingface.co/OmiKhan/bangla-asr-whisper-medium](https://huggingface.co/OmiKhan/bangla-asr-whisper-medium) under Apache-2.0 (model card: `docs/model_card.md`). It is
 built from M1 and M5-300 by `runs/release_model.py`, which also checks it: transcribing the first 20 FLEURS test clips
@@ -1068,6 +1174,9 @@ cloud runners), `analysis/` (every analysis behind the numbers above), `runs/` (
 16. Singh et al. BuzzASR: a swarm of 100+ monolingual speech recognition models. arXiv:2609.09554 (Tables 7 and 8).
 17. Fleurs-SLU: a massively multilingual benchmark for spoken language understanding. arXiv:2501.06117.
 18. ehzawad/Voxtral-Mini-3B-2507-bn-BD, model card, Hugging Face (2026).
+19. Chari, MacAvaney and Ounis. On the effects of regional spelling conventions in retrieval models. SIGIR 2023, doi:10.1145/3539618.3592030.
+20. Sun et al. Dialect-robust evaluation of generated text. ACL 2023, pages 6010-6028.
+21. UzZaman and Khan. A Bangla phonetic encoding for better spelling suggestions. ICCIT 2004.
 
 Data: DL Sprint 4.0 / Bengali-Loop (CC-BY-4.0), FLEURS (CC-BY-4.0), Kathbath (CC-BY-4.0), Common Voice (CC0).
 Base model: `bengaliAI/tugstugi_bengaliai-regional-asr_whisper-medium` (Apache-2.0).

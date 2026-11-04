@@ -1,0 +1,48 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis\\equivalence_tost.py",
+      "git_commit": "c29933caea3d3a42e6d8058b97abe201f2795d4f",
+      "git_dirty": true,
+      "start": "2026-11-04T12:52:10",
+      "end": "2026-11-04T12:52:11",
+      "runtime_s": 0.5,
+      "status": "ok",
+      "versions": {
+        "python": "3.12.10",
+        "torch": "2.11.0+cu128",
+        "numpy": "1.26.4",
+        "pandas": "3.0.6",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/retrieval/per_query.csv": "7d3da3cc91c35a2971657bd48a76afb91313c76f5eda096080b0ff6f6d02471e"
+      },
+      "outputs": {
+        "results\\robustness\\tost.csv": "cf4f64218f00830a5b97f664174b6106edbfdc9ab99dcbcf39ddb4220ff1863d"
+      }
+    },
+    {
+      "command": "python.exe analysis/equivalence_tost.py",
+      "git_commit": "c29933caea3d3a42e6d8058b97abe201f2795d4f",
+      "git_dirty": true,
+      "start": "2026-11-04T12:53:14",
+      "end": "2026-11-04T12:53:15",
+      "runtime_s": 0.3,
+      "status": "ok",
+      "versions": {
+        "python": "3.12.10",
+        "torch": "2.11.0+cu128",
+        "numpy": "1.26.4",
+        "pandas": "3.0.6",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/retrieval/per_query.csv": "7d3da3cc91c35a2971657bd48a76afb91313c76f5eda096080b0ff6f6d02471e"
+      },
+      "outputs": {
+        "results\\robustness\\tost.csv": "cf4f64218f00830a5b97f664174b6106edbfdc9ab99dcbcf39ddb4220ff1863d"
+      }
+    }
+  ]
+}

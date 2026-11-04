@@ -1,0 +1,48 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis\\metric_robustness.py",
+      "git_commit": "c29933caea3d3a42e6d8058b97abe201f2795d4f",
+      "git_dirty": true,
+      "start": "2026-11-04T12:52:10",
+      "end": "2026-11-04T12:52:12",
+      "runtime_s": 1.4,
+      "status": "ok",
+      "versions": {
+        "python": "3.12.10",
+        "torch": "2.11.0+cu128",
+        "numpy": "1.26.4",
+        "pandas": "3.0.6",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/labels/pair_labels.csv": "cb7d793964628159080e17a5c12812107cb873fccec48b1d4f8b088ff8653077"
+      },
+      "outputs": {
+        "results\\robustness\\metric_robustness.csv": "de0c9ef6750ec10fb1cdc412a6ee327319b7ec92153b6a22b6eef081e895430e"
+      }
+    },
+    {
+      "command": "python.exe analysis/metric_robustness.py",
+      "git_commit": "c29933caea3d3a42e6d8058b97abe201f2795d4f",
+      "git_dirty": true,
+      "start": "2026-11-04T12:53:19",
+      "end": "2026-11-04T12:53:21",
+      "runtime_s": 1.3,
+      "status": "ok",
+      "versions": {
+        "python": "3.12.10",
+        "torch": "2.11.0+cu128",
+        "numpy": "1.26.4",
+        "pandas": "3.0.6",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results/labels/pair_labels.csv": "cb7d793964628159080e17a5c12812107cb873fccec48b1d4f8b088ff8653077"
+      },
+      "outputs": {
+        "results\\robustness\\metric_robustness.csv": "de0c9ef6750ec10fb1cdc412a6ee327319b7ec92153b6a22b6eef081e895430e"
+      }
+    }
+  ]
+}

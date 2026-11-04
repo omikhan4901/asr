@@ -42,7 +42,10 @@ from prepare_hf import decode  # noqa: E402  (same decoder and resampling as the
 
 SEED = 0
 HF = {"kathbath": ("ai4bharat/Kathbath", "bengali/train-", ["text", "transcript", "sentence"], ["speaker_id", "speaker"]),
-      "shrutilipi": ("ai4bharat/Shrutilipi", "bengali/train-", ["transcriptions", "text", "transcript"], ["speaker_id", "speaker", "source"])}
+      "shrutilipi": ("ai4bharat/Shrutilipi", "bengali/train-", ["transcriptions", "text", "transcript"], ["speaker_id", "speaker", "source"]),
+      # IndicVoices (CC-BY-4.0, gated): read, extempore and conversational speech from many districts; schema probed on Modal
+      "indicvoices": ("ai4bharat/IndicVoices", "bengali/train-", ["normalized", "text", "transcript", "transcription", "verbatim", "sentence"],
+                      ["speaker_id", "speaker", "spkid", "speaker_name"])}
 
 
 def clean(text) -> str | None:
@@ -210,7 +213,7 @@ def merged(args):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("cmd", choices=["cv", "kathbath", "shrutilipi", "merged"])
+    p.add_argument("cmd", choices=["cv", "kathbath", "shrutilipi", "indicvoices", "merged"])
     p.add_argument("--out", type=Path, required=True)
     p.add_argument("--cv_root", default="data/CommonVoiceCorpus/bn")
     p.add_argument("--max_hours", type=float, default=50.0)
@@ -223,7 +226,7 @@ def main():
     p.add_argument("--set_name", default=None, help="kathbath/shrutilipi: output set name (default <cmd>-train)")
     args = p.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
-    {"cv": cv, "kathbath": hf_source, "shrutilipi": hf_source, "merged": merged}[args.cmd](args)
+    {"cv": cv, "kathbath": hf_source, "shrutilipi": hf_source, "indicvoices": hf_source, "merged": merged}[args.cmd](args)
 
 
 if __name__ == "__main__":

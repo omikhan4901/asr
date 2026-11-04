@@ -583,7 +583,8 @@ def prep_matrix_remote(sources: list[str], max_hours: float, push: bool, launch:
 
 
 @app.function(**CPU_FN, timeout=6 * 3600)
-def prep_extra_remote(source: str, max_hours: float, set_name: str, launch: dict | None = None) -> int:
+def prep_extra_remote(source: str, max_hours: float, set_name: str, max_files: int = 0, limit: int = 0,
+                      launch: dict | None = None) -> int:
     """A bigger Kathbath or Shrutilipi pull under a new set name. Does not build an m5 list or push to the hub."""
     import shutil
 
@@ -593,6 +594,7 @@ def prep_extra_remote(source: str, max_hours: float, set_name: str, launch: dict
     out = Path("/tmp/matrix")
     script = f"{REMOTE_PROJ}/pipeline/data/prepare_matrix.py"
     cmd = [sys.executable, script, source, "--out", str(out), "--max_hours", str(max_hours), "--set_name", set_name]
+    cmd += (["--max_files", str(max_files)] if max_files else []) + (["--limit", str(limit)] if limit else [])  # probes
     if source == "kathbath":
         cmd += ["--exclude_groups", "/vol/manifests/matrix/kathbath_valid_speakers.txt"]
     print("$", " ".join(cmd), flush=True)

@@ -126,9 +126,11 @@ def main():
     pr.add_argument("--sources", default="kathbath,shrutilipi")
     pr.add_argument("--max_hours", type=float, default=34.0, help="hours per source; 34 = all of CV train, so every matrix source is the same size")
     px = sub.add_parser("prep-extra", help="Kathbath or Shrutilipi under a new set name (does not touch the train pulls or m5 lists)")
-    px.add_argument("--source", required=True, choices=["kathbath", "shrutilipi"])
+    px.add_argument("--source", required=True, choices=["kathbath", "shrutilipi", "indicvoices"])
     px.add_argument("--max_hours", type=float, required=True)
     px.add_argument("--set_name", required=True)
+    px.add_argument("--max_files", type=int, default=0, help="probe: only the first N parquet files")
+    px.add_argument("--limit", type=int, default=0, help="probe: stop after N usable rows")
     na = sub.add_parser("numbers-align", help="score the spoken readings of every digit token against the audio")
     na.add_argument("--limit", type=int, default=0, help="random clips only (0 = all ~6,400 clips with digits)")
     sub.add_parser("numbers-judge", help="the released model writes every number clip in words (digits blocked)")
@@ -153,7 +155,8 @@ def main():
         _spawn("prep_matrix_remote", "prep", {"run": "matrix_data", "sources": a.sources, "max_hours": a.max_hours},
                a.sources.split(","), a.max_hours, True)
     elif a.cmd == "prep-extra":
-        _spawn("prep_extra_remote", "prep", {"run": f"prep_{a.set_name}", "source": a.source, "max_hours": a.max_hours, "set_name": a.set_name}, a.source, a.max_hours, a.set_name)
+        _spawn("prep_extra_remote", "prep", {"run": f"prep_{a.set_name}", "source": a.source, "max_hours": a.max_hours, "set_name": a.set_name, "max_files": a.max_files, "limit": a.limit},
+               a.source, a.max_hours, a.set_name, a.max_files, a.limit)
     elif a.cmd == "numbers-align":
         _spawn("numbers_align_remote", "prep", {"run": f"numbers_align_{a.limit or 'all'}", "limit": a.limit}, a.limit)
     elif a.cmd == "numbers-judge":

@@ -33,7 +33,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import modal  # noqa: E402
 
-from modal_finetune import APP, SHIPPED, TEST_SETS, TRAIN_SOURCES, TUGSTUGI, _git_state  # noqa: E402
+from modal_finetune import APP, SETS, SHIPPED, TEST_SETS, TRAIN_SOURCES, TUGSTUGI, _git_state  # noqa: E402
 
 CALLS = Path("logs/modal_calls.jsonl")
 DEPLOYED = Path("logs/modal_deployed.json")
@@ -143,7 +143,7 @@ def main():
     s.add_argument("--budget", type=float, required=True)
     s.add_argument("--model", default=TUGSTUGI, help="HF id or a volume path such as checkpoints/m1_full/final")
     s.add_argument("--adapter", default="", help="LoRA final/ on the volume")
-    s.add_argument("--sets", default="all", help="comma list or 'all': " + ",".join(TEST_SETS))
+    s.add_argument("--sets", default="all", help="comma list or 'all': " + ",".join(TEST_SETS) + "; extra sets such as subakko-test")
     s.add_argument("--out", default="finetuned", help="results/<out>/ on the volume (zeroshot for the baseline)")
     a = p.parse_args()
 
@@ -171,8 +171,8 @@ def main():
                a.method, a.run, a.extra.split(), a.budget, source=a.source)
     else:
         sets = TEST_SETS if a.sets == "all" else a.sets.split(",")
-        if set(sets) - set(TEST_SETS):
-            sys.exit(f"unknown sets {set(sets) - set(TEST_SETS)}; choose from {TEST_SETS}")
+        if set(sets) - set(SETS):
+            sys.exit(f"unknown sets {set(sets) - set(SETS)}; choose from {list(SETS)}")
         _spawn("score_remote", "score", {"run": a.run, "model": a.model, "adapter": a.adapter, "sets": sets,
                                          "out": a.out, "budget": a.budget},
                a.run, a.model, a.adapter, sets, a.out, a.budget)

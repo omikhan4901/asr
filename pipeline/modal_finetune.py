@@ -93,6 +93,7 @@ SETS = {
     "fleurs-test": ("data/kaggle_hishab/zips/fleurs-test.zip", "data/external/fleurs/test.csv", "external/fleurs/test.csv", "flac"),
     "kathbath-valid": ("data/kaggle_hishab/zips/kathbath-valid.zip", "data/external/kathbath/valid.csv", "external/kathbath/valid.csv", "flac"),
     "cv-test": ("data/modal/cv-test-mp3.zip", "data/external/cv/test.csv", "external/cv/test.csv", "mp3"),
+    "subakko-test": ("data/modal/subakko-test.zip", "data/external/subakko/test.csv", "external/subakko/test.csv", "flac"),
 }
 TRAIN_SETS = ["splits_fa-train", "splits_fa-dev"]
 TEST_SETS = ["splits_fa-dev", "splits_fa-eval", "fleurs-test", "kathbath-valid", "cv-test"]  # the runners' order
@@ -211,6 +212,27 @@ def upload():
                 print(f"uploading {local} ({size / 1e9:.2f} GB); this can take a while")
                 batch.put_file(local, f"/zips/{s}.zip")
     print("done:", [(e.path, round(e.size / 1e9, 2)) for e in vol.listdir("/zips")])
+
+
+@app.local_entrypoint()
+def upload_set(set_name: str):
+    """Upload one set's zip (skip if the same size is already on the volume) and its manifest."""
+    import tempfile
+
+    if set_name not in SETS:
+        sys.exit(f"unknown set {set_name}; choose from {list(SETS)}")
+    have = {e.path.strip("/"): e.size for e in vol.listdir("/zips")} if _exists("/zips") else {}
+    with tempfile.TemporaryDirectory() as tmp:
+        manifest = build_manifest(set_name, Path(tmp) / SETS[set_name][2])
+        with vol.batch_upload(force=True) as batch:
+            batch.put_file(str(manifest), f"/manifests/{SETS[set_name][2]}")
+            local = SETS[set_name][0]
+            size = Path(local).stat().st_size
+            if have.get(f"zips/{set_name}.zip") == size:
+                print(f"{set_name}.zip already on the volume, skipped")
+            else:
+                print(f"uploading {local} ({size / 1e9:.2f} GB); this can take a while")
+                batch.put_file(local, f"/zips/{set_name}.zip")
 
 
 @app.local_entrypoint()

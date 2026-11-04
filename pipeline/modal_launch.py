@@ -104,7 +104,7 @@ def status():
             state = f"finished, exit code {out}"
         except TimeoutError:
             state = "running"
-        except Exception as ex:  # cancelled, failed, or results expired (7 days)
+        except (Exception, SystemExit) as ex:  # cancelled, failed, refused (sys.exit), or results expired (7 days)
             state = f"{type(ex).__name__}: {str(ex)[:80]}"
         print(f"{e['time']}  {e['kind']:5}  {e['run']:16} {state}")
     print(f"(account '{profile}'; {other} older jobs of other accounts not shown)")

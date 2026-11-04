@@ -1,0 +1,19 @@
+{
+  "a": "C:\\Users\\omikh\\AppData\\Local\\Temp\\tmp2hje5rdz\\splits_fa-eval_v10.jsonl",
+  "b": "C:\\Users\\omikh\\AppData\\Local\\Temp\\tmp2hje5rdz\\splits_fa-eval_v12.jsonl",
+  "n_utterances": 4072,
+  "n_groups": 22,
+  "ref_words": 114341,
+  "wer_a": 0.11000428542692472,
+  "wer_b": 0.11298659273576407,
+  "diff_b_minus_a": 0.002982307308839349,
+  "diff_ci95": [
+    0.0012664442674452628,
+    0.00470812364035176
+  ],
+  "p_b_better": 0.001,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

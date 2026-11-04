@@ -1,0 +1,19 @@
+{
+  "a": "C:\\Users\\omikh\\AppData\\Local\\Temp\\tmp2hje5rdz\\cv-test_v10.jsonl",
+  "b": "C:\\Users\\omikh\\AppData\\Local\\Temp\\tmp2hje5rdz\\cv-test_v12.jsonl",
+  "n_utterances": 9408,
+  "n_groups": 7377,
+  "ref_words": 86891,
+  "wer_a": 0.10135687240335593,
+  "wer_b": 0.10379671082160408,
+  "diff_b_minus_a": 0.00243983841824815,
+  "diff_ci95": [
+    0.0011742085415001474,
+    0.003683027469497207
+  ],
+  "p_b_better": 0.0,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

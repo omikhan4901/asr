@@ -1,6 +1,6 @@
 # Notebooks
 
-Eight notebooks walk through the paper's argument in order, one question each. They only read files that are already in
+Eleven notebooks walk through the paper's argument in order, one question each. They only read files that are already in
 the repository (`results/`, `figures/`), so they run in seconds on any laptop: no audio, no GPU, and nothing is
 recomputed. The saved outputs are in the files, so they can also be read directly on GitHub.
 
@@ -16,13 +16,16 @@ recomputed. The saved outputs are in the files, so they can also be read directl
 | [06_comparison_with_other_models](06_comparison_with_other_models.ipynb) | How does the final model compare with other open Bangla models? | Once the final model is fixed: every other open model scored with the same harness, with paired tests, plus the published numbers of larger models. |
 | [07_human_verification](07_human_verification.ipynb) | Are the references right, and are the errors really the recognizer's? | The diagnosis rests on rule-based error types and on references that may be wrong; two annotators checked 605 references and the error types by hand. |
 | [08_spelling_aware_wer](08_spelling_aware_wer.ipynb) | What if confirmed spelling differences are not counted as errors? | The human labels confirm which differences are spelling only, so a second metric can leave them out: the comparisons keep their direction, and about 39% of the measured fine-tuning gain lies in spelling differences. |
+| [09_spelling_keys_and_search](09_spelling_keys_and_search.ipynb) | Can rule-based spelling keys beat a lookup table, and does spelling normalization help someone search the transcripts? | The spelling-aware metric leaves confirmed spelling differences uncounted. This notebook asks whether a rule finds those spellings, including words the lookup table never saw, and whether the spelling that remains changes search. |
+| [10_meaning_words_and_metric_fairness](10_meaning_words_and_metric_fairness.ipynb) | Where are the remaining errors, and does WER treat spelling fairly? | Search does not say which words the remaining errors are in. Content words carry the meaning, and a fair metric should charge a spelling variant less than a wrong word. |
+| [11_numbers](11_numbers.ipynb) | Why did the model write numbers badly, and did retraining on spoken-word numbers fix it? | Numbers are the last measured failure: the training text mixed digits and words. A retrain writes numbers as words, and the pre-registered test decides whether it replaces the released model. |
 
 ## Running them
 
 ```bash
 python -m venv .venv && .venv/bin/pip install -e ".[notebooks]"   # once
 .venv/bin/pip install jupyterlab && .venv/bin/jupyter lab notebooks/  # to open them interactively
-PYTHONPATH=src .venv/bin/python notebooks/build_notebooks.py          # or: rebuild and re-execute all eight
+PYTHONPATH=src .venv/bin/python notebooks/build_notebooks.py          # or: rebuild and re-execute all eleven
 ```
 
 The notebooks are generated from `build_notebooks.py` (cell text and code) and share the small helper `nbutil.py`;

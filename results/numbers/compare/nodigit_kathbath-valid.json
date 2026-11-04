@@ -1,0 +1,19 @@
+{
+  "a": "C:\\Users\\omikh\\AppData\\Local\\Temp\\tmp2hje5rdz\\kathbath-valid_v10.jsonl",
+  "b": "C:\\Users\\omikh\\AppData\\Local\\Temp\\tmp2hje5rdz\\kathbath-valid_v12.jsonl",
+  "n_utterances": 2236,
+  "n_groups": 17,
+  "ref_words": 23995,
+  "wer_a": 0.10281308605959574,
+  "wer_b": 0.10235465722025422,
+  "diff_b_minus_a": -0.0004584288393415295,
+  "diff_ci95": [
+    -0.0023186665859398553,
+    0.0014976912547428394
+  ],
+  "p_b_better": 0.6725,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

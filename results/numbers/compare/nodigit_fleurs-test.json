@@ -1,0 +1,19 @@
+{
+  "a": "C:\\Users\\omikh\\AppData\\Local\\Temp\\tmp2hje5rdz\\fleurs-test_v10.jsonl",
+  "b": "C:\\Users\\omikh\\AppData\\Local\\Temp\\tmp2hje5rdz\\fleurs-test_v12.jsonl",
+  "n_utterances": 733,
+  "n_groups": 275,
+  "ref_words": 13824,
+  "wer_a": 0.13599537037037038,
+  "wer_b": 0.13599537037037038,
+  "diff_b_minus_a": 0.0,
+  "diff_ci95": [
+    -0.004759677524714373,
+    0.005250499967222736
+  ],
+  "p_b_better": 0.521,
+  "n_boot": 2000,
+  "seed": 0,
+  "mbr_temperature": 0.5,
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text"
+}

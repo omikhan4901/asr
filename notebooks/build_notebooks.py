@@ -341,6 +341,154 @@ errors fall by 44%. Dialect forms are still counted as errors on purpose.
 """),
 ]
 
+NOTEBOOKS["09_spelling_keys_and_search"] = [
+    md("""
+# 9. Spelling keys and search
+
+Can rule-based spelling keys beat a lookup table, and does spelling normalization help someone search the transcripts?
+"""),
+    code(SETUP),
+    md("## Spelling keys on the labelled pairs\nPrecision and recall (%) for every detector, on all pairs and on pairs the lookup table has seen or never seen."),
+    code("""
+K = pd.read_csv(ROOT / "results/spelling_keys/summary.csv", encoding="utf-8-sig")
+sub = K[K["subset"].isin(["all", "seen", "unseen"])][["subset", "detector", "spelling", "precision", "recall"]]
+sub.assign(precision=(100 * sub["precision"]).round(1), recall=(100 * sub["recall"]).round(1))
+"""),
+    md("## Keyword search\nMean average precision, system by test set. Exact match, then the fold (spelling-normalized) column."),
+    code("""
+R = pd.read_csv(ROOT / "results/retrieval/summary.csv", encoding="utf-8-sig")
+kw = R[R["task"] == "keyword"]
+for cond in ("exact", "fold"):
+    t = kw[kw["condition"] == cond].pivot(index="system", columns="set", values="map")
+    display(Markdown("**" + cond + "**"))
+    display(t.reindex(columns=list(SETS)).rename(columns=SETS).round(1))
+"""),
+    code("""
+pd.read_csv(ROOT / "results/retrieval/predictions.csv", encoding="utf-8-sig").round(2)
+"""),
+    md("## Is spelling normalization equivalent to no gain?\nTOST on the per-term MAP difference (fold minus exact), margin ±1 point."),
+    code("""
+T = pd.read_csv(ROOT / "results/robustness/tost.csv", encoding="utf-8-sig")
+for c in ("mean_d", "ci90_lo", "ci90_hi", "ci95_lo", "ci95_hi"):
+    T[c] = T[c].round(2)
+T
+"""),
+    md("## Word families\nMean average precision when the query matches any inflected form, and the paired differences."),
+    code("""
+F = pd.read_csv(ROOT / "results/retrieval_family/summary.csv", encoding="utf-8-sig")
+fam = F[F["condition"] == "family"].pivot(index="system", columns="set", values="map")
+display(fam.reindex(columns=list(SETS)).rename(columns=SETS).round(1))
+pd.read_csv(ROOT / "results/retrieval_family/predictions.csv", encoding="utf-8-sig").round(2)
+"""),
+    md("""
+**Conclusion:** rule keys find spellings of unseen words (the lookup table finds 0 of 36). The 2004 key is best.
+Fine-tuning makes transcripts more searchable (+4.5 to +9.4 MAP). After fine-tuning, spelling normalization is
+equivalent to no gain on Common Voice and Kathbath (TOST, ±1 MAP). Word families add 14-26 points for every system:
+a search problem, not the recognizer's.
+"""),
+]
+
+NOTEBOOKS["10_meaning_words_and_metric_fairness"] = [
+    md("""
+# 10. Meaning-carrying words and metric fairness
+
+Where are the remaining errors, and does WER treat spelling fairly?
+"""),
+    code(SETUP),
+    md("## Content words and function words\nWER, content-word error rate and function-word error rate (%), per system and test set."),
+    code("""
+M = pd.read_csv(ROOT / "results/meaning_errors/summary.csv", encoding="utf-8-sig")
+for col in ("WER", "CWER", "FWER"):
+    t = M.pivot(index="system", columns="set", values=col)
+    display(Markdown("**" + col + "**"))
+    display(t.reindex(columns=list(SETS)).rename(columns=SETS).round(2))
+"""),
+    code("""
+pd.read_csv(ROOT / "results/meaning_errors/predictions.csv", encoding="utf-8-sig").round(3)
+"""),
+    md("## Does the metric charge a spelling variant less than a wrong word?\nShare of spelling-versus-different and dialect-versus-different pair combinations where the first costs strictly less."),
+    code("""
+mr = pd.read_csv(ROOT / "results/robustness/metric_robustness.csv", encoding="utf-8-sig")
+for c in ("robust", "robust_lo", "robust_hi", "tie", "reversed"):
+    mr[c] = (100 * mr[c]).round(1)
+mr
+"""),
+    md("""
+**Conclusion:** fine-tuning removes function-word errors far more than content-word errors. The remaining errors
+carry meaning. WER cannot tell a spelling variant from a wrong word. Spelling-aware WER almost never charges a
+spelling variant more than a wrong word. No metric handles dialect.
+"""),
+]
+
+NOTEBOOKS["11_numbers"] = [
+    md("""
+# 11. Numbers
+
+Why did the model write numbers badly, and did retraining on spoken-word numbers fix it?
+"""),
+    code(SETUP),
+    md("## The casual-speech clip\nOne Enayet Chowdhury video. The released model writes the wrong digits; v1.1 writes the number in words."),
+    code("""
+pd.read_csv(ROOT / "results/numbers/enayet_clip_numbers.csv", encoding="utf-8-sig")
+"""),
+    md("""
+## How the training corpora write numbers
+
+| Corpus | Clips with a digit |
+|---|---|
+| Common Voice, Kathbath, Shrutilipi | 0% |
+| DL Sprint | 3.2% |
+| OpenSLR 53 | 25.9% |
+"""),
+    md("""
+## The two training lists
+Every training clip with digits was rewritten in spoken words. The reading (উনিশশো চুরানব্বই, চুরানব্বই, দুই হাজার বিশ, ...)
+is the one the released model itself wrote with digit tokens blocked, kept only where it wrote every number of the
+clip (3,473 of 6,188 clips); forced alignment could not hear 82% of the years, so it could not choose. v1.1 adds as
+many number-word clips and other clips (73% of its hours ended up OpenSLR read news); v1.2 rebalances the filler to
+the original source shares. Both: one epoch from the released model, learning rate 5e-6.
+"""),
+    code("""
+rows = {}
+for name in ("mix_v1.1.json", "mix_v1.2.json"):
+    m = load("results/numbers/" + name)
+    rows[name] = {k: v for k, v in m.items() if not isinstance(v, dict)}
+pd.DataFrame(rows).T
+"""),
+    md("## Dev loss while training"),
+    code("""
+a = pd.read_csv(ROOT / "results/numbers/v1.1/dev_log.csv")
+b = pd.read_csv(ROOT / "results/numbers/v1.2/dev_log.csv")
+a.insert(0, "run", "v1.1")
+b.insert(0, "run", "v1.2")
+pd.concat([a, b], ignore_index=True)
+"""),
+    md("## Dev WER, split by whether the reference contains a digit"),
+    code("""
+pd.read_csv(ROOT / "results/numbers/dev_split.csv", encoding="utf-8-sig").round(2)
+"""),
+    md("## Test clips with no digit in the reference\nv1.2 minus v1.0, WER in percentage points."),
+    code("""
+t = pd.read_csv(ROOT / "results/numbers/test_drift.csv", encoding="utf-8-sig")
+t["set"] = t["set"].map(SETS)
+for c in ("wer_v10", "wer_v12", "diff", "ci_lo", "ci_hi"):
+    t[c] = t[c].round(2)
+t
+"""),
+    md("## Number value accuracy\nReference digit values that appear in the hypothesis, in any written form."),
+    code("""
+acc = pd.read_csv(ROOT / "results/numbers/number_accuracy.csv", encoding="utf-8-sig")
+acc["set"] = acc["set"].map(SETS)
+acc.assign(percent=(100 * acc["share"]).round(1))[["set", "model", "right", "total", "percent"]]
+"""),
+    md("""
+**Conclusion:** training text mixed digits and number words, and in digit mode the model guessed sound-alike values.
+v1.1 and v1.2 write numbers in words and fix the casual-speech clip. On the test sets they get more numbers right
+(DL Sprint 69.7% -> 73.1%, FLEURS 55.6% -> 61.1%) but drift on clips without digits (DL Sprint +0.30, Common Voice
++0.24, significant), so the released model stays v1.0 and the fix moves into the clean retrain.
+"""),
+]
+
 
 def main():
     ap = argparse.ArgumentParser()

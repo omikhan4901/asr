@@ -1,0 +1,26 @@
+{
+  "wer": 0.15597208150399638,
+  "cer": 0.04373734503214806,
+  "n_utterances": 920,
+  "ref_words": 17766,
+  "n_groups": 349,
+  "wer_ci95": [
+    0.1442031389700137,
+    0.1677023181411549
+  ],
+  "cer_ci95": [
+    0.03860247272250297,
+    0.048601665273542524
+  ],
+  "set": "fleurs-test",
+  "model": "OmiKhan/bangla-asr-whisper-medium",
+  "adapter": null,
+  "num_beams": 1,
+  "family": "whisper",
+  "manifest": "data/external/fleurs/test.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy",
+  "last_run_seconds": 283.6,
+  "last_run_audio_hours": 3.433,
+  "last_run_rtf": 0.0229
+}

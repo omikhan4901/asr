@@ -1,0 +1,36 @@
+{
+  "report_clips": 6387,
+  "passed": 3473,
+  "rule": "judge",
+  "number_words": 3322,
+  "other": 7596,
+  "total": 14391,
+  "hours": 45.29,
+  "status": {
+    "ok": 6188,
+    "not_handled": 199
+  },
+  "judge_ok": 3473,
+  "judge_status": {
+    "ok": 3473,
+    "judge_mismatch": 2715,
+    "no_judge": 199
+  },
+  "mms_0.4_ok": 2294,
+  "both_ok": 1559,
+  "balanced": true,
+  "hours_share": {
+    "cv-train": 11.5,
+    "kathbath-train": 11.3,
+    "openslr53-train": 48.0,
+    "shrutilipi-train": 9.4,
+    "train_clean": 19.9
+  },
+  "hours_share_manifest": {
+    "cv-train": 11.5,
+    "kathbath-train": 11.3,
+    "openslr53-train": 48.0,
+    "shrutilipi-train": 9.4,
+    "train_clean": 19.9
+  }
+}

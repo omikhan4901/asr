@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/external/kathbath/valid.csv --model checkpoints/numbers_v2/final --name numbers_v2 --out_dir results/finetuned --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-11-04T00:56:34",
+      "end": "2026-11-04T01:03:41",
+      "runtime_s": 427.0,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/external/kathbath/valid.csv": "48520d1d09f4a741f0669d5d99f8e63953424febed731a0cd19673e7dd1abfbc"
+      },
+      "outputs": {
+        "results/finetuned/kathbath-valid/numbers_v2/predictions.jsonl": "24151e797529f227925895131727f88d9b43561d4586432880707ef0bd7cdc8e",
+        "results/finetuned/kathbath-valid/numbers_v2/metrics.json": "37a454d51de2e25855ec76eff6314b29efe80d94b74bf22e1549371e7e9c96db"
+      }
+    }
+  ]
+}

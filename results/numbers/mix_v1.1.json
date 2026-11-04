@@ -1,0 +1,21 @@
+{
+  "report_clips": 6387,
+  "passed": 3473,
+  "rule": "judge",
+  "number_words": 3473,
+  "other": 3473,
+  "total": 10419,
+  "hours": 43.69,
+  "status": {
+    "ok": 6188,
+    "not_handled": 199
+  },
+  "judge_ok": 3473,
+  "judge_status": {
+    "ok": 3473,
+    "judge_mismatch": 2715,
+    "no_judge": 199
+  },
+  "mms_0.4_ok": 2294,
+  "both_ok": 1559
+}

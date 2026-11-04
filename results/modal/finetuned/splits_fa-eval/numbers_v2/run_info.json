@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/splits_fa/eval.csv --model checkpoints/numbers_v2/final --name numbers_v2 --out_dir results/finetuned --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-11-04T00:20:26",
+      "end": "2026-11-04T00:51:10",
+      "runtime_s": 1843.9,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/splits_fa/eval.csv": "6ce00c484d1581ac60849749e8a20211518b1046a61dfce02015725fedd80238"
+      },
+      "outputs": {
+        "results/finetuned/splits_fa-eval/numbers_v2/predictions.jsonl": "05cf4e32cd136766a807c1d237b80b562825ad1a9a31021a2cd9e2c7b9224181",
+        "results/finetuned/splits_fa-eval/numbers_v2/metrics.json": "3e635f57c0e9706be2e75d24f0d4da2ec89b2479fc6d42e4238d5ddcf6d2b6aa"
+      }
+    }
+  ]
+}

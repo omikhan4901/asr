@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python /root/proj/pipeline/eval_zero_shot.py --manifest data/splits_fa/dev.csv --model OmiKhan/bangla-asr-whisper-medium --name final_a100 --out_dir results/finetuned --batch_size 8",
+      "git_commit": "",
+      "git_dirty": false,
+      "start": "2026-11-04T00:15:31",
+      "end": "2026-11-04T00:19:50",
+      "runtime_s": 259.3,
+      "status": "ok",
+      "versions": {
+        "python": "3.13.3",
+        "torch": "2.13.0+cu130",
+        "transformers": "5.15.0",
+        "numpy": "2.5.2",
+        "pandas": "3.0.5",
+        "gpu": "NVIDIA A100-SXM4-40GB"
+      },
+      "inputs": {
+        "data/splits_fa/dev.csv": "99325905fab2fdcb48f01ddf066ee4d5cd47da60eb4310336c10da148573d7db"
+      },
+      "outputs": {
+        "results/finetuned/splits_fa-dev/final_a100/predictions.jsonl": "11348b523613a2b40c7a69b20e187e7ebc892c14782f2a8b8c69033a3a77d3cc",
+        "results/finetuned/splits_fa-dev/final_a100/metrics.json": "cb9f7caafe8b8ce075bbe6d73e3092cfa39f047bfaae1bf7b1d245bc5b5a0e77"
+      }
+    }
+  ]
+}

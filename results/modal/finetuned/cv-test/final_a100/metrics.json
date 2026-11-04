@@ -1,0 +1,26 @@
+{
+  "wer": 0.10135687240335593,
+  "cer": 0.023453809725051195,
+  "n_utterances": 9408,
+  "ref_words": 86891,
+  "n_groups": 7377,
+  "wer_ci95": [
+    0.09869034294301413,
+    0.10438733759199807
+  ],
+  "cer_ci95": [
+    0.022434632287880202,
+    0.02451497654355416
+  ],
+  "set": "cv-test",
+  "model": "OmiKhan/bangla-asr-whisper-medium",
+  "adapter": null,
+  "num_beams": 1,
+  "family": "whisper",
+  "manifest": "data/external/cv/test.csv",
+  "normalizer": "bangla_asr.common.text.normalize_bangla_text",
+  "decoding": "greedy",
+  "last_run_seconds": 1683.0,
+  "last_run_audio_hours": 16.751,
+  "last_run_rtf": 0.0279
+}

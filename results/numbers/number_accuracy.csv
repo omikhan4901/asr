@@ -1,0 +1,5 @@
+﻿set,model,right,total,share
+splits_fa-eval,v1.0,166,238,0.6974789915966386
+splits_fa-eval,v1.2,174,238,0.7310924369747899
+fleurs-test,v1.0,163,293,0.5563139931740614
+fleurs-test,v1.2,179,293,0.6109215017064846

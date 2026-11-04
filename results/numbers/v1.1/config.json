@@ -1,0 +1,18 @@
+{
+  "model": "OmiKhan/bangla-asr-whisper-medium",
+  "method": "full",
+  "train_manifest": "data/splits_fa/matrix/numbers-v1.csv",
+  "lr": 5e-06,
+  "batch_size": 8,
+  "grad_accum": 4,
+  "epochs": 1,
+  "max_steps": null,
+  "warmup_steps": 50,
+  "weight_decay": 0.01,
+  "max_grad_norm": 1.0,
+  "lora_r": 32,
+  "lora_alpha": 64,
+  "lora_dropout": 0.05,
+  "seed": 42,
+  "train_limit": null
+}

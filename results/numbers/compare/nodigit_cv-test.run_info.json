@@ -1,0 +1,28 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis/paired_compare.py --a C:\\Users\\omikh\\AppData\\Local\\Temp\\tmp2hje5rdz\\cv-test_v10.jsonl --b C:\\Users\\omikh\\AppData\\Local\\Temp\\tmp2hje5rdz\\cv-test_v12.jsonl --name nodigit_cv-test --out_dir results\\numbers\\compare",
+      "git_commit": "2fd3700a779a7be56e7ea3f29879116300daeb48",
+      "git_dirty": true,
+      "start": "2026-11-04T13:22:39",
+      "end": "2026-11-04T13:22:40",
+      "runtime_s": 0.6,
+      "status": "ok",
+      "versions": {
+        "python": "3.12.10",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.22.1",
+        "numpy": "1.26.4",
+        "pandas": "3.0.6",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "C:\\Users\\omikh\\AppData\\Local\\Temp\\tmp2hje5rdz\\cv-test_v10.jsonl": "d8a82b28f5003a7d008a8261b24587c3507241f67f9b42a33e066557def5e004",
+        "C:\\Users\\omikh\\AppData\\Local\\Temp\\tmp2hje5rdz\\cv-test_v12.jsonl": "931f73da2da99f300d3abf652cf3eefa8f7b228db221f0febc2a0be3978ee43d"
+      },
+      "outputs": {
+        "results\\numbers\\compare\\nodigit_cv-test.json": "7214eb768d2dd5d0f544c977b24c891478d48bd46e248164ad70aa3633fbe3da"
+      }
+    }
+  ]
+}

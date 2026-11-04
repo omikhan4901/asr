@@ -1,0 +1,42 @@
+{
+  "runs": [
+    {
+      "command": "python.exe analysis\\number_fix_eval.py",
+      "git_commit": "2fd3700a779a7be56e7ea3f29879116300daeb48",
+      "git_dirty": true,
+      "start": "2026-11-04T13:22:20",
+      "end": "2026-11-04T13:22:49",
+      "runtime_s": 28.3,
+      "status": "ok",
+      "versions": {
+        "python": "3.12.10",
+        "torch": "2.11.0+cu128",
+        "numpy": "1.26.4",
+        "pandas": "3.0.6",
+        "gpu": "NVIDIA GeForce RTX 3060"
+      },
+      "inputs": {
+        "results\\numbers\\v1.1\\step_0.jsonl": "9d3ac3857bf5d4ef51e947d5ef509691bc541ce6b266459496ac94c00b140b1c",
+        "results\\numbers\\v1.1\\step_325.jsonl": "ffb5dccbbc3b56fddfc522b5c886d915d5dfeeed83eeef85e3d51984a0aedcee",
+        "results\\numbers\\v1.2\\step_449.jsonl": "68ce2e953e0867510f2ae7bb1179b8525b790acc54c0e882eeb8d37eed158de3",
+        "results\\modal\\finetuned\\splits_fa-eval\\final_a100\\predictions.jsonl": "a93ad78eab746b0761ba39e361cf92ee0318687ac2dfd38f01ea7b5b8067da49",
+        "results\\modal\\finetuned\\splits_fa-eval\\numbers_v2\\predictions.jsonl": "05cf4e32cd136766a807c1d237b80b562825ad1a9a31021a2cd9e2c7b9224181",
+        "results\\modal\\finetuned\\fleurs-test\\final_a100\\predictions.jsonl": "db0d45a8a560e6293039abbaf02143ca6516ef3790f432368eb3986354e9bf35",
+        "results\\modal\\finetuned\\fleurs-test\\numbers_v2\\predictions.jsonl": "d7d8d3bb3632f2ba85f174b169ef2e2597b665e90776ed6533aa6195a0e66819",
+        "results\\modal\\finetuned\\cv-test\\final_a100\\predictions.jsonl": "21d61b5d0a6093e7df7a5d822fc0f9474a07dfbebb3ae1471549d234a5e0712f",
+        "results\\modal\\finetuned\\cv-test\\numbers_v2\\predictions.jsonl": "42347a1e05709be4a920536242a69b4a46110315707fc7003a23ac16959b9ea4",
+        "results\\modal\\finetuned\\kathbath-valid\\final_a100\\predictions.jsonl": "7b9438c6ae4d74a15a90dca83608a3c46de6dc947dbb94089cfd57e9bb4c8e70",
+        "results\\modal\\finetuned\\kathbath-valid\\numbers_v2\\predictions.jsonl": "24151e797529f227925895131727f88d9b43561d4586432880707ef0bd7cdc8e"
+      },
+      "outputs": {
+        "results\\numbers\\dev_split.csv": "40dceef34a08fbe18404a5a0cc659c86e310cb4c80a06e0cbd1cd9c120e77335",
+        "results\\numbers\\test_drift.csv": "6fce3afb7abb8e82d77da6e9757baff5fdd1c1c5c1cacbc9c01e23a9b8ea67c5",
+        "results\\numbers\\number_accuracy.csv": "56e727936c899b00404b182ce2fc6fddd9da6c3f960cafd547e55c00216cc2dd",
+        "results\\numbers\\compare\\nodigit_splits_fa-eval.json": "1f52e8c41c6a5eea62e6b58faf19389ac28fe904fe408d8f8ec2aead074bb4fc",
+        "results\\numbers\\compare\\nodigit_fleurs-test.json": "06f3fbe79c670b385a9d72b99823744915cf8de6c337e54a4c7fea1a7cef6411",
+        "results\\numbers\\compare\\nodigit_cv-test.json": "7214eb768d2dd5d0f544c977b24c891478d48bd46e248164ad70aa3633fbe3da",
+        "results\\numbers\\compare\\nodigit_kathbath-valid.json": "4630eaee0a82aa7ae88dadd8b9229f99a9eefda6020bd5786aa1656dd6b28e4c"
+      }
+    }
+  ]
+}

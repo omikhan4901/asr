@@ -949,9 +949,13 @@ training data, §5.13): not a fair comparison.
 needed:** matching with spelling folded adds 0.2-1.1 points to the final model, and by two one-sided tests (the
 procedure of Chari et al. [19]) that gain is statistically equivalent to zero within ±1 MAP point on Common Voice and
 Kathbath (90% CIs [0.27, 0.98] and [-0.28, 0.74]; DL Sprint [0.18, 1.01] misses by 0.01). The zero-shot model gains
-1.2-1.9 points and is never equivalent. **Inflection is a different matter:** matching word families adds 14-26
-points for every system alike, so a Bangla search engine has to handle word forms whichever model wrote the
-transcript; that is a property of the search, not of the recognizer. The rewrite table helps little or hurts (vs
+1.2-1.9 points and is never equivalent. **Inflection is a different matter:** when every form of a word counts as a
+hit, searching with exact words loses 14-26 MAP points for every system alike, so a Bangla search engine has to handle
+word forms whichever model wrote the transcript; that is a property of the search, not of the recognizer. Scored as
+detection instead of ranking (does a clip's transcript contain the word; per-term precision and recall), the same
+picture holds: the final model's F1 is 88.2 / 86.3 / 91.4 / 93.7 against zero-shot's 82.6 / 83.7 / 88.1 / 90.7
+(all differences significant), and spelling folding helps the zero-shot model more than the final one
+(`analysis/keyword_detection.py`). The rewrite table helps little or hurts (vs
 zero-shot: +2.3 DL Sprint, +0.2 FLEURS, -1.5 Kathbath). Of the pre-registered predictions, the fine-tuning gain held
 everywhere; "spelling folding adds below 1 point" held except FLEURS (1.14); "the final model ranks first" failed on
 Common Voice and Kathbath, where only Hishab, trained on those test clips, is ahead. Limitations: the queries are

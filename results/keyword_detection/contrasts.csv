@@ -1,0 +1,11 @@
+prediction,contrast,sets,diff,ci_lo,ci_hi,significant
+P33a,"final - zero-shot, exact",splits_fa-eval,5.583720309197275,4.107573611786371,7.035345482852069,True
+P33a,"final - zero-shot, exact",fleurs-test,2.6226644842071494,1.166134586544222,4.072159297296306,True
+P33a,"final - zero-shot, exact",cv-test,3.334247718579306,2.243696658760854,4.44899074343126,True
+P33a,"final - zero-shot, exact",kathbath-valid,2.984110103333407,1.960038432817763,4.090736370970285,True
+P33b,fold gain: zero-shot - final,splits_fa-eval,1.04718208492109,0.42484969956376695,1.7478927909919657,True
+P33b,fold gain: zero-shot - final,splits_fa-eval+fleurs-test+cv-test+kathbath-valid,0.6397629322304432,0.3296624776146122,0.9563578446694385,True
+P33c,"final - zero-shot, family",splits_fa-eval,4.845224259944061,3.6170701241593344,6.011423177760291,True
+P33c,"final - zero-shot, family",fleurs-test,2.0124147794848,0.8613404955905632,3.2349010536054315,True
+P33c,"final - zero-shot, family",cv-test,2.493064634359726,1.5960532139380732,3.418557101114386,True
+P33c,"final - zero-shot, family",kathbath-valid,2.3711498575006544,1.5677546941141525,3.2624217207698187,True
